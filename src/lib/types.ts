@@ -1,50 +1,47 @@
-import type { CityId, CategoryId, Tier } from "./constants";
-
 export interface Listing {
-  id: string;
-  slug: string;
-  businessName: string;
-  tagline?: string;
-  description?: string;
-  logoUrl?: string;
-  websiteUrl?: string;
-  phone?: string;
-  email?: string;
-  cityId: CityId;
-  categoryId: CategoryId;
-  tier: Tier;
-  isApproved: boolean;
-  isActive: boolean;
-  priorityScore: number;
-  images: string[];
-  createdAt: string;
-}
-
-export interface Event {
-  id: string;
-  listingId: string;
-  listingName: string;
+  id: number;
   title: string;
-  description?: string;
-  eventDate: string;
-  location?: string;
-  address?: string;
-  cityId: CityId;
-  categoryId: CategoryId;
-  price?: number;
-  priceNotes?: string;
-  bookingUrl?: string;
-  isApproved: boolean;
-}
-
-export interface City {
-  id: CityId;
-  name: string;
-  state: string;
+  tagline: string | null;
+  description: string | null;
+  promo: string | null;
+  phone: string | null;
+  mobile: string | null;
+  email: string | null;
+  web: string | null;
+  image_url: string | null;
+  location: string | null;
+  location_city: string | null;
+  location_state: string | null;
+  listing_type: string | null;
+  confidence_score: number;
+  business_name: string | null;
+  business_website: string | null;
 }
 
 export interface Category {
-  id: CategoryId;
-  name: string;
-  description: string;
+  slug: string;
+  label: string;
+  parent_slug: string | null;
+  description: string | null;
+  seo_intro: string | null;
+  listing_count: number;
+}
+
+export interface City {
+  slug: string;
+  label: string;
+  state: string | null;
+  listing_count: number;
+}
+
+export interface Banner {
+  id: number;
+  image_url: string;
+  click_url: string;
+  alt_text: string;
+}
+
+export interface PlacementCombo {
+  category_slug: string;
+  city_slug: string | null;
 }

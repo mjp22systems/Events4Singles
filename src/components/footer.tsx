@@ -1,89 +1,58 @@
 import Link from "next/link";
-import { CITIES, CATEGORIES } from "@/lib/constants";
+import { getAllCategories, getAllCities } from "@/lib/data";
+import { toUrlSlug } from "@/lib/constants";
 
 export default function Footer() {
+  const categories = getAllCategories().filter((c) => !c.parent_slug).slice(0, 12);
+  const cities = getAllCities();
+
   return (
-    <footer className="bg-slate-900 text-slate-300 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-          <div>
-            <p className="text-white font-bold text-lg mb-1">
-              Events<span className="text-teal-400">4Singles</span>
-            </p>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Australia&apos;s singles events directory since 2001.
-            </p>
-          </div>
+    <footer className="e4s-footer" role="contentinfo">
+      <div className="e4s-shell e4s-footer__grid">
+        <section>
+          <h2>Events4Singles</h2>
+          <p>
+            Australian singles events, dating resources, social clubs, dinners,
+            dancing, speed dating and activities across major cities.
+          </p>
+        </section>
 
-          <div>
-            <p className="text-white text-sm font-semibold mb-3 uppercase tracking-wider">Cities</p>
-            <ul className="space-y-1.5">
-              {CITIES.map((city) => (
-                <li key={city.id}>
-                  <Link
-                    href={`/${city.id}`}
-                    className="text-slate-400 hover:text-teal-400 text-sm transition-colors"
-                  >
-                    {city.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <nav aria-label="Footer cities">
+          <h2>Cities</h2>
+          {cities.map((city) => (
+            <Link key={city.slug} href={`/${toUrlSlug(city.slug)}`}>
+              {city.label}
+            </Link>
+          ))}
+        </nav>
 
-          <div>
-            <p className="text-white text-sm font-semibold mb-3 uppercase tracking-wider">Categories</p>
-            <ul className="space-y-1.5">
-              {CATEGORIES.map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    href={`/sydney/${cat.id}`}
-                    className="text-slate-400 hover:text-teal-400 text-sm transition-colors"
-                  >
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <nav aria-label="Footer categories">
+          <h2>Categories</h2>
+          {categories.map((cat) => (
+            <Link key={cat.slug} href={`/${toUrlSlug(cat.slug)}`}>
+              {cat.label}
+            </Link>
+          ))}
+        </nav>
 
-          <div>
-            <p className="text-white text-sm font-semibold mb-3 uppercase tracking-wider">Advertise</p>
-            <ul className="space-y-1.5">
-              <li>
-                <Link href="/portal" className="text-slate-400 hover:text-teal-400 text-sm transition-colors">
-                  List Your Business
-                </Link>
-              </li>
-              <li>
-                <Link href="/portal" className="text-slate-400 hover:text-teal-400 text-sm transition-colors">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/portal" className="text-slate-400 hover:text-teal-400 text-sm transition-colors">
-                  Advertiser Portal
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="mailto:info@events4singles.com"
-                  className="text-slate-400 hover:text-teal-400 text-sm transition-colors"
-                >
-                  Contact Us
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <nav aria-label="Footer information">
+          <h2>Advertise</h2>
+          <Link href="/portal">Create listing</Link>
+          <Link href="/portal">Pricing</Link>
+          <Link href="/portal">Advertiser portal</Link>
+          <Link href="/about">About us</Link>
+          <Link href="/contact">Contact</Link>
+          <Link href="/terms">Terms of use</Link>
+        </nav>
+      </div>
 
-        <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between gap-3 text-xs text-slate-500">
-          <p>&copy; {new Date().getFullYear()} Events4Singles. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms of Use</Link>
-          </div>
-        </div>
+      <div className="e4s-shell e4s-footer__legal">
+        <p>&copy; {new Date().getFullYear()} Events4Singles. All rights reserved.</p>
+        <p>
+          <Link href="/privacy">Privacy Policy</Link>
+          {" · "}
+          <Link href="/terms">Terms of Use</Link>
+        </p>
       </div>
     </footer>
   );

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Melbourne location artwork">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#284a63"/>
+      <stop offset="0.58" stop-color="#7aa8a6"/>
+      <stop offset="1" stop-color="#f4d4e4"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#dff3f1" stop-opacity="0.68"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.28"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" fill="url(#sky)"/>
+  <circle cx="1020" cy="78" r="54" fill="#fff6d7" opacity="0.68"/>
+  <path d="M0 182 C130 146 260 156 390 130 C540 100 690 154 850 120 C1030 82 1160 128 1280 104 L1280 320 L0 320 Z" fill="#063d46" opacity="0.34"/>
+  <path d="M88 226 H250 C265 226 278 238 278 252 H74 C74 238 78 226 88 226 Z M108 212 H212 L238 226 H92 Z" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.44"/>
+  <path d="M170 212 H1030 V236 H170 Z M230 168 H270 V212 H230 Z M320 142 H372 V212 H320 Z M450 180 H492 V212 H450 Z M610 125 H670 V212 H610 Z M760 158 H828 V212 H760 Z M905 134 H950 V212 H905 Z" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0.72"/>
+  <path d="M0 238 C170 210 330 252 510 224 C710 192 900 240 1280 202 L1280 320 L0 320 Z" fill="url(#water)" opacity="0.72"/>
+  <path d="M80 264 C250 244 430 274 610 252 C790 230 1010 258 1200 238" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.32"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Sunshine Coast location artwork">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#116f74"/>
+      <stop offset="0.58" stop-color="#f0bb5f"/>
+      <stop offset="1" stop-color="#f4d4e4"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#dff3f1" stop-opacity="0.68"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.28"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" fill="url(#sky)"/>
+  <circle cx="1020" cy="78" r="54" fill="#fff6d7" opacity="0.68"/>
+  <path d="M0 176 C180 128 330 154 505 112 C690 68 850 132 1010 92 C1160 60 1235 84 1280 70 L1280 320 L0 320 Z" fill="#063d46" opacity="0.34"/>
+  <path d="M914 126 A42 42 0 1 0 998 126 A42 42 0 1 0 914 126" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.44"/>
+  <path d="M0 246 C160 214 320 254 520 224 C730 192 930 242 1280 202 L1280 320 L0 320 Z" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0.72"/>
+  <path d="M0 238 C170 210 330 252 510 224 C710 192 900 240 1280 202 L1280 320 L0 320 Z" fill="url(#water)" opacity="0.72"/>
+  <path d="M80 264 C250 244 430 274 610 252 C790 230 1010 258 1200 238" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.32"/>
+</svg>

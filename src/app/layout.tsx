@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
   title: {
@@ -13,7 +10,7 @@ export const metadata: Metadata = {
   },
   description:
     "Find speed dating, dinner parties, dance classes, and social clubs for singles across Sydney, Melbourne, Brisbane, Perth, Adelaide and more.",
-  metadataBase: new URL("https://www.events4singles.com"),
+  metadataBase: new URL("https://www.events4singles.com.au"),
   openGraph: {
     siteName: "Events4Singles",
     locale: "en_AU",
@@ -22,10 +19,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-AU" className={`${geist.variable} h-full`}>
-      <body className="min-h-full flex flex-col bg-white text-slate-900 antialiased">
+    <html lang="en-AU">
+      <head>
+        <link rel="stylesheet" href="/site.css" />
+      </head>
+      <body className="e4s-fixed-header">
         <Nav />
-        <main className="flex-1">{children}</main>
+        {children}
         <Footer />
       </body>
     </html>

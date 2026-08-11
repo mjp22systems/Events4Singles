@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 320" role="img" aria-label="Advertise here">
+  <defs>
+    <linearGradient id="ad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#064e4d"/>
+      <stop offset="0.55" stop-color="#087271"/>
+      <stop offset="1" stop-color="#c4145e"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="320" rx="10" fill="url(#ad)"/>
+  <rect x="8" y="8" width="144" height="304" rx="8" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.5"/>
+  <path d="M0 210 C40 185 80 225 160 190 L160 320 L0 320 Z" fill="#ffffff" opacity=".14"/>
+  <text x="80" y="148" text-anchor="middle" fill="#fff" font-family="Verdana, Arial, sans-serif" font-size="18" font-weight="700">Advertise</text>
+  <text x="80" y="172" text-anchor="middle" fill="#dff3f1" font-family="Verdana, Arial, sans-serif" font-size="18" font-weight="700">Here</text>
+  <text x="80" y="200" text-anchor="middle" fill="#fff" font-family="Verdana, Arial, sans-serif" font-size="11" font-weight="400" opacity=".75">from $39/mo</text>
+</svg>
