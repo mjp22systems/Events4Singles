@@ -6,7 +6,7 @@
       <stop offset="1" stop-color="#c4145e"/>
     </linearGradient>
   </defs>
-  <rect width="180" height="120" rx="12" fill="url(#ad)"/>
+  <rect width="180" height="120" rx="8" fill="url(#ad)"/>
   <rect x="10" y="10" width="160" height="100" rx="10" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2"/>
   <text x="90" y="53" text-anchor="middle" fill="#fff" font-family="Verdana, Arial, sans-serif" font-size="17" font-weight="700">Advertise</text>
   <text x="90" y="76" text-anchor="middle" fill="#dff3f1" font-family="Verdana, Arial, sans-serif" font-size="16" font-weight="700">Here</text>

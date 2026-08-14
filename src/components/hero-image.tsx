@@ -3,28 +3,24 @@ import { useState } from "react";
 
 interface Props {
   src: string;
-  fallbackSrc?: string;
+  fallbacks?: string[];
   alt: string;
+  title?: string;
 }
 
-export default function HeroImage({ src, fallbackSrc, alt }: Props) {
-  const [currentSrc, setCurrentSrc] = useState(src);
-  const [hidden, setHidden] = useState(false);
+export default function HeroImage({ src, fallbacks = [], alt, title }: Props) {
+  const srcs = [src, ...fallbacks];
+  const [idx, setIdx] = useState(0);
 
-  if (hidden) return null;
+  if (idx >= srcs.length) return null;
 
   return (
     <img
       alt={alt}
       loading="eager"
-      src={currentSrc}
-      onError={() => {
-        if (fallbackSrc && currentSrc !== fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
-        } else {
-          setHidden(true);
-        }
-      }}
+      src={srcs[idx]}
+      title={title || alt}
+      onError={() => setIdx((i) => i + 1)}
     />
   );
 }

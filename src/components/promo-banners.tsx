@@ -1,35 +1,42 @@
 import { getBannersForCity, getBannersForPage } from "@/lib/data";
 import type { Banner } from "@/lib/types";
+import type { CSSProperties } from "react";
 
-const SLOTS = 6;
+const SLOTS_PER_ROW = 6;
+const MAX_SLOTS = SLOTS_PER_ROW * 2;
 
 type Props =
   | { mode: "category"; categoryDbSlug: string; cityDbSlug?: string | null }
   | { mode: "city"; cityDbSlug: string };
 
-export default function PromoBanners(props: Props) {
+export default async function PromoBanners(props: Props) {
   let banners: Banner[];
 
   if (props.mode === "city") {
-    banners = getBannersForCity(props.cityDbSlug);
+    banners = await getBannersForCity(props.cityDbSlug);
   } else {
-    banners = getBannersForPage(props.categoryDbSlug, props.cityDbSlug);
+    banners = await getBannersForPage(props.categoryDbSlug, props.cityDbSlug);
   }
 
-  const placeholderCount = Math.max(0, SLOTS - banners.length);
+  const slotCount = banners.length >= MAX_SLOTS ? MAX_SLOTS : SLOTS_PER_ROW;
+  const visibleBanners = banners.slice(0, slotCount);
+  const placeholderCount = Math.max(0, slotCount - visibleBanners.length);
+  const rowClass = slotCount > SLOTS_PER_ROW
+    ? "e4s-promo-banners--two-row"
+    : "e4s-promo-banners--one-row";
 
-  if (banners.length === 0 && placeholderCount === 0) return null;
+  if (visibleBanners.length === 0 && placeholderCount === 0) return null;
 
   return (
-    <section aria-label="Featured advertisers" className="e4s-promo-banners">
-      {banners.map((b) => (
-        <a key={b.id} href={b.click_url} rel="noopener" target="_blank">
-          <img alt={b.alt_text} loading="lazy" src={b.image_url} />
+    <section aria-label="Featured advertisers" className={`e4s-promo-banners ${rowClass}`}>
+      {visibleBanners.map((b, i) => (
+        <a key={b.id} href={b.click_url} rel="noopener" style={{ "--e4s-promo-index": i } as CSSProperties} target="_blank" title={b.alt_text}>
+          <img alt={`${b.alt_text} advertiser tile`} loading="lazy" src={b.image_url} title={b.alt_text} />
         </a>
       ))}
       {Array.from({ length: placeholderCount }).map((_, i) => (
-        <a key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise">
-          <img alt="Advertise here" loading="lazy" src="/images/advertise-here-180x120.svg" />
+        <a key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" style={{ "--e4s-promo-index": visibleBanners.length + i } as CSSProperties} title="Advertise on Events4Singles">
+          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
         </a>
       ))}
     </section>

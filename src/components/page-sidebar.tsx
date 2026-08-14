@@ -29,8 +29,8 @@ export default function PageSidebar(props: Props) {
     return (
       <aside className="e4s-sidebar">
         <SidebarNav heading="Browse by category" items={items} />
-        <a className="e4s-sidebar-ad" href="/advertise">
-          <img alt="Advertise here — from $39/mo" loading="lazy" src="/images/advertise-here-160x120.svg" />
+        <a className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
+          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
         </a>
       </aside>
     );
@@ -52,7 +52,7 @@ export default function PageSidebar(props: Props) {
     <aside className="e4s-sidebar">
       {props.backLabel && (
         <Link className="e4s-sidebar-back" href={`/${props.categoryUrlSlug}`}>
-          ← {props.backLabel}
+          &lt;- {props.backLabel}
         </Link>
       )}
       <SidebarNav
@@ -60,8 +60,8 @@ export default function PageSidebar(props: Props) {
         items={items}
         topItem={topItem}
       />
-      <a className="e4s-sidebar-ad" href="/advertise">
-        <img alt="Advertise here — from $39/mo" loading="lazy" src="/images/advertise-here-160x120.svg" />
+      <a className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
+        <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
       </a>
     </aside>
   );

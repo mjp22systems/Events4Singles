@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-*/
 /out/
 
 # production
@@ -40,6 +41,18 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# SQLite WAL journal files (listings.db is committed; these are runtime temp files)
+# SQLite / DB files — data lives in Cloudflare D1, not in git
+*.db
 *.db-shm
 *.db-wal
+
+# Temp/QA dirs
+/homepage-qa/
+/scripts/
+
+# D1 migration SQL files — contain business data, generated locally
+/tools/data-d1.sql
+/tools/schema-d1.sql
+
+# Wrangler build output (CF Pages)
+/.wrangler/

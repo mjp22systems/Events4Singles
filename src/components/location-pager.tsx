@@ -9,10 +9,10 @@ interface Props {
 
 export default function LocationPager({ cities, currentDbSlug }: Props) {
   const idx = cities.findIndex((c) => c.slug === currentDbSlug);
-  if (idx === -1) return null;
+  if (idx === -1 || cities.length < 2) return null;
 
-  const prev = idx > 0 ? cities[idx - 1] : null;
-  const next = idx < cities.length - 1 ? cities[idx + 1] : null;
+  const prev = cities[(idx - 1 + cities.length) % cities.length];
+  const next = cities[(idx + 1) % cities.length];
 
   return (
     <>

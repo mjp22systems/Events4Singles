@@ -29,7 +29,7 @@ Treat this file as the human-readable decision source. Treat the render/data doc
 - The app is a static Next.js build backed at build time by SQLite.
 - The active staging source is `listings.staging.db` when present. `src/lib/db.ts` prefers `E4S_DB_PATH`, then `listings.staging.db`, then `listings.db`.
 - Public listing/category/city pages are template-driven from database queries in `src/lib/data.ts`.
-- Current stylesheet source is still `public/site.css`; a versioned copy `public/site-filter-clear-20260813.css` is currently linked from `src/app/layout.tsx` to avoid stale Cloudflare/browser cache on dev.
+- Current stylesheet source is `public/site.css`; `src/app/layout.tsx` links it with a cache-busting query string, currently `/site.css?v=20260813-restore`.
 - Local development port convention is `10400` for the original new app and `10402` for the richer staging variant.
 - Earlier Claude memory named the stack as Next.js 16, TypeScript, `better-sqlite3`, `site.css`, static generation, and Cloudflare Pages.
 

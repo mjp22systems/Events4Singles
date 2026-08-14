@@ -10,5 +10,5 @@
   <rect x="6" y="6" width="148" height="108" rx="6" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1.2"/>
   <text x="80" y="52" text-anchor="middle" fill="#fff" font-family="Verdana, Arial, sans-serif" font-size="14" font-weight="700">Advertise</text>
   <text x="80" y="70" text-anchor="middle" fill="#dff3f1" font-family="Verdana, Arial, sans-serif" font-size="14" font-weight="700">Here</text>
-  <text x="80" y="88" text-anchor="middle" fill="#fff" font-family="Verdana, Arial, sans-serif" font-size="10" font-weight="400" opacity=".75">from $39/mo</text>
+  <text x="80" y="88" text-anchor="middle" fill="#dff3f1" font-family="Verdana, Arial, sans-serif" font-size="10" font-weight="400" opacity=".75">Get Listed Today</text>
 </svg>

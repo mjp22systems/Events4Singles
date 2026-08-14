@@ -4,6 +4,7 @@ export interface Listing {
   tagline: string | null;
   description: string | null;
   promo: string | null;
+  contact_name: string | null;
   phone: string | null;
   mobile: string | null;
   email: string | null;
@@ -14,8 +15,25 @@ export interface Listing {
   location_state: string | null;
   listing_type: string | null;
   confidence_score: number;
+  business_id: number | null;
   business_name: string | null;
   business_website: string | null;
+  category_slug: string | null;
+  city_slug: string | null;
+  category_label: string | null;
+  city_label: string | null;
+  category_slugs?: string | null;
+  city_slugs?: string | null;
+  city_labels?: string | null;
+  licence_no: string | null;
+  abn: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
+  linkedin_url: string | null;
+  trading_hours: string | null;
+  contact_hours: string | null;
 }
 
 export interface Category {

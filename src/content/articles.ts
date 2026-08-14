@@ -1,12 +1,18 @@
+import { legacyAdviceArticles } from "./legacy-advice";
+
 export interface Article {
   slug: string;
   title: string;
   description: string;
   publishedAt: string;
   content: string;
+  category?: string;
+  legacyPath?: string;
+  migratedAt?: string;
+  file?: string;
 }
 
-export const articles: Article[] = [
+const currentArticles: Article[] = [
   {
     slug: "dating-tips-for-women",
     title: "Dating Tips for Women",
@@ -77,7 +83,69 @@ export const articles: Article[] = [
 <p>Most speed dating organisers send match notifications within 24–48 hours. If you match with someone, message them promptly. A short, specific message referencing something you discussed is far better than a generic "hey".</p>
 `,
   },
+  {
+    slug: "finding-romance-after-40",
+    title: "Finding Romance After 40",
+    description: "Why singles events are particularly well-suited to mature daters — and how to approach them with confidence.",
+    publishedAt: "2024-03-01",
+    content: `
+<p>Dating after 40 is different — and in many ways better. You know yourself, you know what you want, and you're not interested in wasting time. Singles events suit this stage of life perfectly.</p>
+
+<h2>Why events work better than apps for mature singles</h2>
+<p>Dating apps optimise for quantity of matches, not quality of connection. For singles over 40, face-to-face events cut through the noise. You meet real people, in real settings, with real conversation — not a filtered profile and a brief exchange of messages.</p>
+
+<h2>Choose events that suit your lifestyle</h2>
+<p>Introduction agencies suit people who want a more curated, personal experience. Singles dinner parties are ideal for those who enjoy conversation over a meal. Dance classes add a social, physical element that removes pressure from direct conversation. There's no one right format — try a few and see what fits.</p>
+
+<h2>Don't underestimate the social side</h2>
+<p>Many mature singles find that regular attendance at social clubs and events builds a genuine community — one that often includes friendships as meaningful as any romantic outcome. The social network that grows from events can be one of the most valuable things you take away.</p>
+
+<h2>Take your time</h2>
+<p>The singles events scene is not about rushing. The best connections develop naturally over time, through repeated encounters in comfortable social settings. Consistency and patience produce better results than intensity.</p>
+`,
+  },
+  {
+    slug: "wellbeing-and-the-single-life",
+    title: "Wellbeing and the Single Life",
+    description: "How singles events, social clubs and activities like yoga, dance and walks connect wellbeing with finding connection.",
+    publishedAt: "2024-03-01",
+    content: `
+<p>The best singles events are the ones that would be worth attending even if you didn't meet anyone romantic. Events built around shared activities — dance classes, yoga, bush walks, singles health retreats — attract people who are investing in themselves, not just looking for a partner.</p>
+
+<h2>Activity-based events create natural connection</h2>
+<p>When you're doing something together — dancing, walking, cooking — conversation flows without the awkwardness of a face-to-face "interview". The shared activity gives you something to talk about, something to laugh about, and a natural reason to talk again.</p>
+
+<h2>Your social life and your wellbeing are connected</h2>
+<p>Research consistently shows that social connection is one of the strongest predictors of wellbeing. Attending regular singles events isn't just about finding a partner — it's a genuine investment in your mental and emotional health.</p>
+
+<h2>Types of wellbeing-focused singles events</h2>
+<p>Look for: singles yoga classes, walks for singles, floatation and wellness experiences marketed to the singles community, singles health retreats, and seminars and workshops focused on personal growth. Events4Singles lists these under Singles Health, Yoga Classes, Walks for Singles, and Seminars & Workshops.</p>
+`,
+  },
+  {
+    slug: "making-the-most-of-introduction-agencies",
+    title: "Making the Most of Introduction Agencies",
+    description: "What to expect from a professional introduction agency, and how to get the best results from the process.",
+    publishedAt: "2024-03-01",
+    content: `
+<p>Introduction agencies are different from dating apps and singles events — they offer a personal, managed matching service. Understanding how they work helps you get the most from the experience.</p>
+
+<h2>What an introduction agency actually does</h2>
+<p>A reputable agency takes the time to understand who you are and what you're looking for, then makes considered introductions based on compatibility rather than just appearance. The best agencies have been running for years and have strong track records of successful matches.</p>
+
+<h2>Be honest in your profile</h2>
+<p>Agencies work from the information you provide. The more accurate and honest your profile, the better the introductions they can make. Understating your age or overstating your interests to seem more appealing typically leads to poorly matched introductions.</p>
+
+<h2>Give it time</h2>
+<p>Introduction agencies work on a different timescale to apps. Quality introductions take time. Most clients who get lasting results from agencies commit to at least six months and approach each introduction with genuine openness.</p>
+
+<h2>Ask the right questions before signing up</h2>
+<p>Before engaging an agency, ask about their database size in your city, their typical client age range, how they make introductions, and what their refund or pause policy is. A reputable agency will answer all of these clearly.</p>
+`,
+  },
 ];
+
+export const articles: Article[] = [...currentArticles, ...legacyAdviceArticles];
 
 export function getArticle(slug: string): Article | null {
   return articles.find((a) => a.slug === slug) ?? null;

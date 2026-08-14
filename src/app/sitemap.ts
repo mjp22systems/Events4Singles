@@ -1,0 +1,54 @@
+import type { MetadataRoute } from "next";
+import {
+  getAllCategories,
+  getAllCities,
+  getAllListingParams,
+  getAllCategoryCityParams,
+} from "@/lib/data";
+import { articles } from "@/content/articles";
+import { toUrlSlug } from "@/lib/constants";
+import { SITE_URL } from "@/lib/seo";
+
+export const dynamic = "force-static";
+
+const STATIC_PATHS = [
+  "/",
+  "/about",
+  "/advertise",
+  "/contact",
+  "/dating-resources",
+  "/events",
+  "/privacy",
+  "/terms",
+];
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const paths = new Set(STATIC_PATHS);
+
+  for (const city of await getAllCities()) {
+    paths.add(`/${toUrlSlug(city.slug)}`);
+  }
+
+  for (const category of await getAllCategories()) {
+    if (!category.parent_slug) {
+      paths.add(`/${toUrlSlug(category.slug)}`);
+    }
+  }
+
+  for (const combo of await getAllCategoryCityParams()) {
+    paths.add(`/${combo.category}/${combo.city}`);
+  }
+
+  for (const listing of await getAllListingParams()) {
+    paths.add(`/listing/${listing.slug}`);
+  }
+
+  for (const article of articles) {
+    paths.add(`/dating-resources/${article.slug}`);
+  }
+
+  return [...paths].sort().map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: new Date(),
+  }));
+}

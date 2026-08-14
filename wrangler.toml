@@ -1,0 +1,9 @@
+name = "events4singles"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Run `npx wrangler d1 create events4singles` and paste the database_id below
+[[d1_databases]]
+binding = "DB"
+database_name = "events4singles"
+database_id = "dbf297b7-b762-4126-ac83-8014f18dcb1d"
