@@ -17,7 +17,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   const city = await getCityBySlug(slug);
   if (!city) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const allowed = ["label", "state", "region", "seo_title", "seo_description"];
   const fields: Record<string, unknown> = {};
   for (const key of allowed) {

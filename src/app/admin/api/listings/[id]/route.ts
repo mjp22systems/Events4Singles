@@ -18,7 +18,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   const listing = await getListingById(numId);
   if (!listing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const allowed = [
     "title", "tagline", "description", "promo",
     "contact_name", "phone", "mobile", "email", "web", "image_url",

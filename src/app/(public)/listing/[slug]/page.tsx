@@ -1,15 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getListingById, getAllListingParams, getListingPlacements, getBusinessListings } from "@/lib/data";
+import { getListingById, getListingPlacements, getBusinessListings } from "@/lib/data";
 import { toUrlSlug, idFromListingSlug, slugToLabel } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
 import { cleanDescription, pageMetadata } from "@/lib/seo";
+import type { Listing } from "@/lib/types";
 
-export function generateStaticParams() {
-  return getAllListingParams();
-}
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -48,7 +47,7 @@ function splitList(value?: string | null) {
     .filter(Boolean);
 }
 
-function listingLocationBadges(listing: NonNullable<ReturnType<typeof getListingById>>) {
+function listingLocationBadges(listing: Listing) {
   const labels = splitList(listing.city_labels);
   if (labels.length > 0) return labels.slice(0, 3);
 

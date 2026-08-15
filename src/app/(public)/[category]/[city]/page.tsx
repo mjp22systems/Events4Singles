@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  getAllCategoryCityParams,
   getCategoryMeta,
   getCitiesForCategory,
   getListingsForPage,
@@ -24,9 +23,7 @@ interface Props {
   params: Promise<{ category: string; city: string }>;
 }
 
-export async function generateStaticParams() {
-  return getAllCategoryCityParams();
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category, city } = await params;

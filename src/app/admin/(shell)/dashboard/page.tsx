@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
-import { getDashboardStats, getRecentActivity } from "@/lib/admin-db";
+import { getDashboardStats, getRecentActivity, type ActivityRow } from "@/lib/admin-db";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Dashboard" };
 export const dynamic = "force-dynamic";
 
-interface ActivityRow {
-  id: number;
-  action: string;
-  entity_type: string | null;
-  entity_id: string | null;
-  created_at: number;
-}
-
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
-  const activity = (await getRecentActivity(20)) as ActivityRow[];
+  const activity: ActivityRow[] = await getRecentActivity(20);
 
   return (
     <>

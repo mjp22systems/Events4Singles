@@ -1,9 +1,14 @@
-name = "events4singles"
+name = "events4singles-v2"
+main = ".open-next/worker.js"
 compatibility_date = "2025-01-01"
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+account_id = "77513f974459dd7d8a1183712e0f41fd"
 
-# Run `npx wrangler d1 create events4singles` and paste the database_id below
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "events4singles"
-database_id = "dbf297b7-b762-4126-ac83-8014f18dcb1d"
+database_id = "0359c4e2-60ac-4037-8e56-f661971bd31a"

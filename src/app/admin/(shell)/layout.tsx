@@ -1,6 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
 import SideNav from "@/components/admin/side-nav";
 
-export default function AdminShellLayout({ children }: { children: React.ReactNode }) {
+export const dynamic = "force-dynamic";
+
+export default async function AdminShellLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!token || !(await verifyAdminToken(token))) {
+    redirect("/admin/login");
+  }
+
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">

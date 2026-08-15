@@ -9,7 +9,7 @@ import { articles } from "@/content/articles";
 import { toUrlSlug } from "@/lib/constants";
 import { SITE_URL } from "@/lib/seo";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const STATIC_PATHS = [
   "/",

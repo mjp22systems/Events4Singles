@@ -487,11 +487,22 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   };
 }
 
-export async function getRecentActivity(limit = 20) {
+export interface ActivityRow {
+  id: number;
+  actor_type: string;
+  actor_id: string | null;
+  action: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  meta: string | null;
+  created_at: number;
+}
+
+export async function getRecentActivity(limit = 20): Promise<ActivityRow[]> {
   const db = await getD1();
   const { results } = await db
     .prepare(`SELECT * FROM admin_activity_log ORDER BY created_at DESC LIMIT ?`)
     .bind(limit)
-    .all();
+    .all<ActivityRow>();
   return results;
 }

@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   let password: string;
   try {
-    const body = await req.json();
-    password = body.password ?? "";
+    const body = await req.json() as Record<string, unknown>;
+    password = String(body.password ?? "");
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }

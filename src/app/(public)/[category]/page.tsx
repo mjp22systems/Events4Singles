@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import {
-  getAllCategoryParams,
+  getAllCategories,
   getAllCities,
   getCategoriesForCity,
   getCategoryMeta,
@@ -16,6 +16,7 @@ import AdvertiseCard from "@/components/advertise-card";
 import BodyClass from "@/components/body-class";
 import HeroImage from "@/components/hero-image";
 import LocationPager from "@/components/location-pager";
+import CategoryPager from "@/components/category-pager";
 import CategoryCitySelect from "@/components/category-city-select";
 import PromoBanners from "@/components/promo-banners";
 import PageSidebar from "@/components/page-sidebar";
@@ -33,16 +34,7 @@ interface Props {
   params: Promise<{ category: string }>;
 }
 
-export async function generateStaticParams() {
-  const catParams = await getAllCategoryParams();
-  const cityParams = (await getAllCities()).map((c) => ({ category: toUrlSlug(c.slug) }));
-  const seen = new Set<string>();
-  return [...catParams, ...cityParams].filter((p) => {
-    if (seen.has(p.category)) return false;
-    seen.add(p.category);
-    return true;
-  });
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category: param } = await params;
@@ -144,13 +136,18 @@ export default async function CategoryOrCityPage({ params }: Props) {
   const catMeta = await getCategoryMeta(dbSlug);
   if (!catMeta) notFound();
 
-  const cities = await getCitiesForCategory(dbSlug);
-  const listings = await getListingsForCategory(dbSlug);
+  const [cities, listings, allCats] = await Promise.all([
+    getCitiesForCategory(dbSlug),
+    getListingsForCategory(dbSlug),
+    getAllCategories(),
+  ]);
+  const parentCats = allCats.filter((c) => !c.parent_slug);
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
 
   return (
     <>
       <BodyClass add="e4s-page-category" />
+      <CategoryPager categories={parentCats} currentDbSlug={dbSlug} />
 
       <section aria-label={catMeta.label} className="e4s-page-hero">
         <div className="e4s-page-hero__image">

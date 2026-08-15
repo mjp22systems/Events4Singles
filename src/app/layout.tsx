@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { DEFAULT_DESCRIPTION, DEFAULT_KEYWORDS, SITE_NAME, SITE_URL } from "@/lib/seo";
+import HeaderHeight from "@/components/header-height";
 
 export const metadata: Metadata = {
   title: {
@@ -47,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-AU">
       <head>
-        <link rel="stylesheet" href="/site-card-title-pink-20260813b.css?v=20260814-reverted" />
+        <link rel="stylesheet" href="/site.css" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="e4s-fixed-header">
+        <HeaderHeight />
         {children}
       </body>
     </html>

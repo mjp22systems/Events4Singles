@@ -8,7 +8,7 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function POST(req: NextRequest, { params }: Ctx) {
   const { id } = await params;
   const sourceId = Number(id);
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const targetId = Number(body.targetId);
 
   if (!targetId || targetId === sourceId) {

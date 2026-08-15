@@ -1,13 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Finance & Mortgage">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Finance &amp; Mortgage">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#064e4d"/>
       <stop offset=".54" stop-color="#539592"/>
-      <stop offset="1" stop-color="#c4145e"/>
+      <stop offset="1" stop-color="#8b2f43"/>
     </linearGradient>
   </defs>
   <rect width="1280" height="320" fill="url(#bg)"/>
-  <path d="M0 222 C170 180 330 242 520 202 C720 160 880 236 1280 182 L1280 320 L0 320 Z" fill="#ffffff" opacity=".22"/>
-  <path d="M120 106 H1160 M180 166 H1080 M250 226 H1010" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".18"/>
-  <circle cx="1050" cy="86" r="58" fill="#ffffff" opacity=".18"/>
+  <path d="M0 235 C160 200 340 248 560 212 C780 175 1000 240 1280 198 L1280 320 L0 320 Z" fill="#ffffff" opacity=".16"/>
+  <!-- House/home icon -->
+  <g transform="translate(200,160)" opacity=".24">
+    <polygon points="0,-70 70,10 56,10 56,60 14,60 14,30 -14,30 -14,60 -56,60 -56,10 -70,10" fill="#ffffff"/>
+    <line x1="0" y1="-82" x2="0" y2="-70" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- Bar chart (growth) -->
+  <g transform="translate(640,175)" opacity=".26">
+    <rect x="-90" y="-20" width="30" height="20" fill="#ffffff"/>
+    <rect x="-50" y="-50" width="30" height="50" fill="#ffffff"/>
+    <rect x="-10" y="-80" width="30" height="80" fill="#ffffff"/>
+    <rect x="30" y="-110" width="30" height="110" fill="#ffffff"/>
+    <rect x="70" y="-90" width="30" height="90" fill="#ffffff"/>
+    <line x1="-100" y1="0" x2="110" y2="0" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <!-- Trend arrow -->
+    <polyline points="-80,-10 -40,-44 0,-74 40,-104" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="50,-110 30,-104 36,-86" fill="#ffffff"/>
+  </g>
+  <!-- Dollar sign -->
+  <g transform="translate(1060,155)" opacity=".22">
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#ffffff" stroke-width="6"/>
+    <line x1="0" y1="-40" x2="0" y2="40" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M-22,-16 Q-22,-30 0,-30 Q22,-30 22,-16 Q22,0 0,0 Q22,0 22,16 Q22,30 0,30 Q-22,30 -22,16" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+  </g>
 </svg>
