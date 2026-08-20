@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Listing } from "@/lib/types";
 
 interface Props {
@@ -31,6 +31,20 @@ export default function AdminEditDrawer({ listing, onSaved }: Props) {
     status: (listing as unknown as Record<string, string>).status ?? "active",
     confidence_score: String(listing.confidence_score ?? ""),
   });
+
+  useEffect(() => {
+    document.body.classList.add("has-admin-bar");
+    return () => document.body.classList.remove("has-admin-bar");
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("drawer-open");
+    } else {
+      document.body.classList.remove("drawer-open");
+    }
+    return () => document.body.classList.remove("drawer-open");
+  }, [open]);
 
   function set(key: keyof typeof fields) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -76,45 +90,43 @@ export default function AdminEditDrawer({ listing, onSaved }: Props) {
       </div>
 
       {open && (
-        <div className="e4s-edit-overlay" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
-          <aside className="e4s-edit-drawer" role="dialog" aria-label="Edit listing">
-            <div className="e4s-edit-drawer__head">
-              <h2 className="e4s-edit-drawer__title">Edit listing #{listing.id}</h2>
-              <button className="e4s-edit-drawer__close" onClick={() => setOpen(false)} type="button" aria-label="Close">×</button>
-            </div>
-            <div className="e4s-edit-drawer__body">
-              {error && <p className="e4s-edit-drawer__error">{error}</p>}
-              <Field label="Title"><input type="text" value={fields.title} onChange={set("title")} /></Field>
-              <Field label="Tagline"><input type="text" value={fields.tagline} onChange={set("tagline")} /></Field>
-              <Field label="Description"><textarea rows={4} value={fields.description} onChange={set("description")} /></Field>
-              <Field label="Phone"><input type="text" value={fields.phone} onChange={set("phone")} /></Field>
-              <Field label="Mobile"><input type="text" value={fields.mobile} onChange={set("mobile")} /></Field>
-              <Field label="Email"><input type="text" value={fields.email} onChange={set("email")} /></Field>
-              <Field label="Website"><input type="text" value={fields.web} onChange={set("web")} /></Field>
-              <Field label="Image URL"><input type="text" value={fields.image_url} onChange={set("image_url")} /></Field>
-              <Field label="Location"><input type="text" value={fields.location} onChange={set("location")} /></Field>
-              <Field label="City"><input type="text" value={fields.location_city} onChange={set("location_city")} /></Field>
-              <Field label="State"><input type="text" value={fields.location_state} onChange={set("location_state")} /></Field>
-              <Field label="Listing type">
-                <select value={fields.listing_type} onChange={set("listing_type")}>
-                  {LISTING_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </Field>
-              <Field label="Status">
-                <select value={fields.status} onChange={set("status")}>
-                  {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </Field>
-              <Field label="Confidence score"><input type="number" min="0" max="100" value={fields.confidence_score} onChange={set("confidence_score")} /></Field>
-            </div>
-            <div className="e4s-edit-drawer__footer">
-              <button className="e4s-edit-drawer__cancel" onClick={() => setOpen(false)} type="button">Cancel</button>
-              <button className="e4s-edit-drawer__save" onClick={save} disabled={saving} type="button">
-                {saving ? "Saving…" : "Save changes"}
-              </button>
-            </div>
-          </aside>
-        </div>
+        <aside className="e4s-edit-drawer" role="dialog" aria-label="Edit listing">
+          <div className="e4s-edit-drawer__head">
+            <h2 className="e4s-edit-drawer__title">Edit listing #{listing.id}</h2>
+            <button className="e4s-edit-drawer__close" onClick={() => setOpen(false)} type="button" aria-label="Close">×</button>
+          </div>
+          <div className="e4s-edit-drawer__body">
+            {error && <p className="e4s-edit-drawer__error">{error}</p>}
+            <Field label="Title"><input type="text" value={fields.title} onChange={set("title")} /></Field>
+            <Field label="Tagline"><input type="text" value={fields.tagline} onChange={set("tagline")} /></Field>
+            <Field label="Description"><textarea rows={4} value={fields.description} onChange={set("description")} /></Field>
+            <Field label="Phone"><input type="text" value={fields.phone} onChange={set("phone")} /></Field>
+            <Field label="Mobile"><input type="text" value={fields.mobile} onChange={set("mobile")} /></Field>
+            <Field label="Email"><input type="text" value={fields.email} onChange={set("email")} /></Field>
+            <Field label="Website"><input type="text" value={fields.web} onChange={set("web")} /></Field>
+            <Field label="Image URL"><input type="text" value={fields.image_url} onChange={set("image_url")} /></Field>
+            <Field label="Location"><input type="text" value={fields.location} onChange={set("location")} /></Field>
+            <Field label="City"><input type="text" value={fields.location_city} onChange={set("location_city")} /></Field>
+            <Field label="State"><input type="text" value={fields.location_state} onChange={set("location_state")} /></Field>
+            <Field label="Listing type">
+              <select value={fields.listing_type} onChange={set("listing_type")}>
+                {LISTING_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </Field>
+            <Field label="Status">
+              <select value={fields.status} onChange={set("status")}>
+                {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </Field>
+            <Field label="Confidence score"><input type="number" min="0" max="100" value={fields.confidence_score} onChange={set("confidence_score")} /></Field>
+          </div>
+          <div className="e4s-edit-drawer__footer">
+            <button className="e4s-edit-drawer__cancel" onClick={() => setOpen(false)} type="button">Cancel</button>
+            <button className="e4s-edit-drawer__save" onClick={save} disabled={saving} type="button">
+              {saving ? "Saving…" : "Save changes"}
+            </button>
+          </div>
+        </aside>
       )}
     </>
   );

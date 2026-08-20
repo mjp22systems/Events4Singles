@@ -129,6 +129,7 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <main id="site-content">
+      {isAdmin && <link rel="stylesheet" href="/admin.css" precedence="high" />}
       {isAdmin && primary && (
         <AdminEditDrawer listing={primary} />
       )}

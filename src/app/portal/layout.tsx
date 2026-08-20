@@ -1,3 +1,8 @@
 export default function PortalRootLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <link rel="stylesheet" href="/portal.css" precedence="default" />
+      {children}
+    </>
+  );
 }

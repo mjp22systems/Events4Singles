@@ -1,20 +1,14 @@
-import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-const isPortalProtected = createRouteMatcher(["/portal(.*)"]);
-const isPortalAuth = createRouteMatcher([
-  "/portal/sign-in(.*)",
-  "/portal/sign-up(.*)",
-  "/portal/sign-out",
-]);
-
-export default clerkMiddleware(async (auth, req) => {
+export default async function middleware(req: NextRequest): Promise<NextResponse> {
   const { pathname } = new URL(req.url);
 
-  // D1 redirect check — skip admin, api, and asset paths
-  const isInternal = pathname.startsWith("/admin") || pathname.startsWith("/portal") ||
-    pathname.startsWith("/api") || pathname.startsWith("/_next") ||
+  const isInternal =
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/portal") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/_next") ||
     /\.(css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|eot|otf|map|txt|xml|json)$/i.test(pathname);
 
   if (!isInternal) {
@@ -34,10 +28,8 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  if (isPortalProtected(req) && !isPortalAuth(req)) {
-    await auth.protect();
-  }
-});
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
