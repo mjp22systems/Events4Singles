@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { getListingById, getListingPlacements, getBusinessListings } from "@/lib/data";
 import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
 import { cleanDescription, pageMetadata } from "@/lib/seo";
+import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
+import AdminEditDrawer from "@/components/admin-edit-drawer";
 import type { Listing } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -65,6 +68,10 @@ export default async function ListingPage({ params }: Props) {
   const listing = await getListingById(id);
   if (!listing) notFound();
 
+  const cookieStore = await cookies();
+  const adminToken = cookieStore.get(SESSION_COOKIE)?.value;
+  const isAdmin = adminToken ? await verifyAdminToken(adminToken) : false;
+
   const title = listing.business_name || listing.title;
   const phone = listing.phone;
   const mobile = listing.mobile;
@@ -107,6 +114,8 @@ export default async function ListingPage({ params }: Props) {
 
   return (
     <main id="site-content">
+      {isAdmin && <link rel="stylesheet" href="/admin.css" precedence="high" />}
+      {isAdmin && <AdminEditDrawer listing={listing} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
