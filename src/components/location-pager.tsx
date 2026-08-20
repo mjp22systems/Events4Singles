@@ -8,11 +8,12 @@ interface Props {
 }
 
 export default function LocationPager({ cities, currentDbSlug }: Props) {
-  const idx = cities.findIndex((c) => c.slug === currentDbSlug);
-  if (idx === -1 || cities.length < 2) return null;
+  const sorted = [...cities].sort((a, b) => a.label.localeCompare(b.label));
+  const idx = sorted.findIndex((c) => c.slug === currentDbSlug);
+  if (idx === -1 || sorted.length < 2) return null;
 
-  const prev = cities[(idx - 1 + cities.length) % cities.length];
-  const next = cities[(idx + 1) % cities.length];
+  const prev = sorted[(idx - 1 + sorted.length) % sorted.length];
+  const next = sorted[(idx + 1) % sorted.length];
 
   return (
     <>

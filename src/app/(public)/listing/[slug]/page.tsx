@@ -1,15 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getListingById, getAllListingParams, getListingPlacements, getBusinessListings } from "@/lib/data";
-import { toUrlSlug, idFromListingSlug, slugToLabel } from "@/lib/constants";
+import { getListingById, getListingPlacements, getBusinessListings } from "@/lib/data";
+import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
 import { cleanDescription, pageMetadata } from "@/lib/seo";
+import type { Listing } from "@/lib/types";
 
-export function generateStaticParams() {
-  return getAllListingParams();
-}
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -48,7 +47,7 @@ function splitList(value?: string | null) {
     .filter(Boolean);
 }
 
-function listingLocationBadges(listing: NonNullable<ReturnType<typeof getListingById>>) {
+function listingLocationBadges(listing: Listing) {
   const labels = splitList(listing.city_labels);
   if (labels.length > 0) return labels.slice(0, 3);
 
@@ -86,10 +85,32 @@ export default async function ListingPage({ params }: Props) {
     ).values(),
   ];
 
-  const siblings = await getBusinessListings(listing.business_id ?? -1, id, title);
+  const siblings = await getBusinessListings(listing.business_id ?? -1, id);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: title,
+    ...(listing.description && { description: cleanDescription(listing.description) }),
+    ...(listing.tagline && { slogan: listing.tagline }),
+    ...((phone || mobile) && { telephone: phone || mobile }),
+    ...(listing.email && { email: listing.email }),
+    ...(webHref && { url: webHref }),
+    ...(listing.image_url && { image: listing.image_url }),
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "AU",
+      ...(listing.location_city && { addressLocality: listing.location_city }),
+      ...(listing.location_state && { addressRegion: listing.location_state }),
+    },
+  };
 
   return (
     <main id="site-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="e4s-shell e4s-listing-detail">
 
         <div className="e4s-listing-detail__layout">
@@ -124,7 +145,7 @@ export default async function ListingPage({ params }: Props) {
                 </div>
                 <span className="e4s-listing-detail__id-group" aria-label="Listing identifiers">
                   {listing.business_id && (
-                    <span className="e4s-listing-detail__id-badge">Business ID {listing.business_id}</span>
+                    <Link href={`/profile/${toProfileSlug(listing.business_id!, listing.business_name || listing.title)}`} className="e4s-listing-detail__id-badge e4s-listing-detail__id-badge--link">Profile ID {listing.business_id}</Link>
                   )}
                   <span className="e4s-listing-detail__id-badge">Listing ID {id}</span>
                 </span>
@@ -312,9 +333,9 @@ export default async function ListingPage({ params }: Props) {
               <div className="e4s-listing-detail__card-shell">
                 <div className="e4s-listing-detail__card-ids" aria-label="Listing identifiers">
                   {listing.business_id && (
-                    <span className="e4s-listing-detail__card-id e4s-listing-detail__card-id--business">
-                      Business ID {listing.business_id}
-                    </span>
+                    <Link href={`/profile/${toProfileSlug(listing.business_id!, listing.business_name || listing.title)}`} className="e4s-listing-detail__card-id e4s-listing-detail__card-id--business e4s-listing-detail__card-id--link">
+                      Profile ID {listing.business_id}
+                    </Link>
                   )}
                   <span className="e4s-listing-detail__card-id e4s-listing-detail__card-id--listing">
                     Listing ID {listing.id}
@@ -329,9 +350,9 @@ export default async function ListingPage({ params }: Props) {
                 <div className="e4s-listing-detail__card-shell" key={r.id}>
                   <div className="e4s-listing-detail__card-ids" aria-label="Listing identifiers">
                     {r.business_id && (
-                      <span className="e4s-listing-detail__card-id e4s-listing-detail__card-id--business">
-                        Business ID {r.business_id}
-                      </span>
+                      <Link href={`/profile/${toProfileSlug(r.business_id!, r.business_name || r.title)}`} className="e4s-listing-detail__card-id e4s-listing-detail__card-id--business e4s-listing-detail__card-id--link">
+                        Profile ID {r.business_id}
+                      </Link>
                     )}
                     <span className="e4s-listing-detail__card-id e4s-listing-detail__card-id--listing">
                       Listing ID {r.id}

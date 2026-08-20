@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBusinessById, mergeBusiness, logActivity } from "@/lib/admin-db";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { id } = await params;
   const sourceId = Number(id);
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const targetId = Number(body.targetId);
 
   if (!targetId || targetId === sourceId) {

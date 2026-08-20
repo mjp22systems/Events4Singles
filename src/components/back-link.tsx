@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { slugToLabel } from "@/lib/constants";
 
-const SKIP_ROOTS = new Set(["listing", "advice", "dating-resources", "about", "contact", "advertise", "portal", "terms", "privacy", "events"]);
+const SKIP_ROOTS = new Set(["listing", "profile", "advice", "dating-resources", "about", "contact", "advertise", "portal", "terms", "privacy", "events"]);
 
 function parseStoredPath(path: string): { href: string; label: string } | null {
   try {

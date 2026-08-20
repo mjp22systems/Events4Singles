@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import type { Category, City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
@@ -13,8 +12,6 @@ interface Props {
 export default function NavDropdowns({ cities, categories }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-  const [citySort, setCitySort] = useState<"default" | "alpha">("default");
-  const [catSort, setCatSort] = useState<"default" | "alpha">("default");
 
   const citySet = new Set(cities.map((c) => toUrlSlug(c.slug)));
   const segs = pathname.split("/").filter(Boolean);
@@ -26,12 +23,10 @@ export default function NavDropdowns({ cities, categories }: Props) {
   const INFO_ROUTES: Record<string, string> = {
     about: "About",
     contact: "Contact",
-    advice: "Dating Resources",
-    "dating-resources": "Dating Resources",
     advertise: "Advertise with Us",
     portal: "Advertiser Portal",
-    terms: "Terms of Use",
-    privacy: "Privacy Policy",
+    "terms-and-conditions": "Terms & Conditions",
+    "privacy-policy": "Privacy Policy",
   };
 
   const infoSlugs = new Set(Object.keys(INFO_ROUTES));
@@ -43,46 +38,28 @@ export default function NavDropdowns({ cities, categories }: Props) {
 
   const filteredCats = categories.filter((c) => c.slug !== "events");
 
-  const sortedCities =
-    citySort === "alpha"
-      ? [...cities].sort((a, b) => a.label.localeCompare(b.label))
-      : cities;
-
-  const sortedCats =
-    catSort === "alpha"
-      ? [...filteredCats].sort((a, b) => a.label.localeCompare(b.label))
-      : filteredCats;
+  const sortedCities = [...cities].sort((a, b) => a.label.localeCompare(b.label));
+  const sortedCats = [...filteredCats].sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <nav aria-label="Site navigation" className="e4s-shell e4s-nav">
       <label>
-        <span className="e4s-nav__label-row">
-          Location
-          <button
-            type="button"
-            className={`e4s-nav__sort-btn${citySort === "alpha" ? " e4s-nav__sort-btn--active" : ""}`}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setCitySort((s) => (s === "alpha" ? "default" : "alpha"));
-            }}
-            title={citySort === "alpha" ? "Currently A-Z. Click for default order." : "Click to sort A-Z"}
-            aria-label={citySort === "alpha" ? "Sort by default" : "Sort alphabetically"}
-          >
-            A-Z
-          </button>
-        </span>
+        <span>Cities</span>
         <select
           value=""
           onChange={(e) => {
-            if (e.target.value) router.push(`/${toUrlSlug(e.target.value)}`);
+            const val = e.target.value;
+            if (val === "__all__") router.push("/cities");
+            else if (val) router.push(`/${toUrlSlug(val)}`);
           }}
         >
           <option value="" disabled>
             {selectedCity
-              ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? "Select Location")
-              : "Select Location"}
+              ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? "Select City")
+              : "Select City"}
           </option>
+          <option value="__all__">All Cities →</option>
+          <option value="__sep__" disabled>─────────────</option>
           {sortedCities.map((city) => (
             <option key={city.slug} value={toUrlSlug(city.slug)}>
               {city.label}
@@ -92,26 +69,13 @@ export default function NavDropdowns({ cities, categories }: Props) {
       </label>
 
       <label>
-        <span className="e4s-nav__label-row">
-          Category
-          <button
-            type="button"
-            className={`e4s-nav__sort-btn${catSort === "alpha" ? " e4s-nav__sort-btn--active" : ""}`}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setCatSort((s) => (s === "alpha" ? "default" : "alpha"));
-            }}
-            title={catSort === "alpha" ? "Currently A-Z. Click for default order." : "Click to sort A-Z"}
-            aria-label={catSort === "alpha" ? "Sort by default" : "Sort alphabetically"}
-          >
-            A-Z
-          </button>
-        </span>
+        <span>Categories</span>
         <select
           value=""
           onChange={(e) => {
-            if (e.target.value) router.push(`/${e.target.value}`);
+            const val = e.target.value;
+            if (val === "__all__") router.push("/categories");
+            else if (val) router.push(`/${val}`);
           }}
         >
           <option value="" disabled>
@@ -119,6 +83,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
               ? (filteredCats.find((c) => toUrlSlug(c.slug) === selectedCat)?.label ?? "Select Category")
               : "Select Category"}
           </option>
+          <option value="__all__">All Categories →</option>
+          <option value="__sep__" disabled>─────────────</option>
           {sortedCats.map((cat) => (
             <option key={cat.slug} value={toUrlSlug(cat.slug)}>
               {cat.label}
@@ -137,17 +103,17 @@ export default function NavDropdowns({ cities, categories }: Props) {
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>
           <option value="/about">About</option>
-          <option value="/contact">Contact</option>
-          <option value="/dating-resources">Dating Resources</option>
           <option value="/advertise">Advertise with Us</option>
           <option value="/portal">Advertiser Portal</option>
-          <option value="/terms">Terms of Use</option>
-          <option value="/privacy">Privacy Policy</option>
+          <option value="/contact">Contact</option>
+          <option value="/privacy-policy">Privacy Policy</option>
+          <option value="/terms-and-conditions">Terms &amp; Conditions</option>
         </select>
       </label>
 
       <div className="e4s-nav__events-cell">
-        <Link href="/events" className="e4s-nav__events-btn">Events Calendar</Link>
+        <Link href="/dating-resources" className="e4s-nav__dating-btn">Dating Resources</Link>
+        <Link href="/events" className="e4s-nav__events-btn">What's On</Link>
       </div>
     </nav>
   );

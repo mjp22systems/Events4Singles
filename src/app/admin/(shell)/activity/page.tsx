@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import { getRecentActivity } from "@/lib/admin-db";
+import { getRecentActivity, type ActivityRow } from "@/lib/admin-db";
 
 export const metadata: Metadata = { title: "Activity" };
 export const dynamic = "force-dynamic";
 
-interface ActivityRow {
-  id: number;
-  actor_type: string;
-  actor_id: string | null;
-  action: string;
-  entity_type: string | null;
-  entity_id: string | null;
-  meta: string | null;
-  created_at: number;
-}
-
 export default async function AdminActivity() {
-  const rows = (await getRecentActivity(200)) as ActivityRow[];
+  const rows: ActivityRow[] = await getRecentActivity(200);
 
   return (
     <>

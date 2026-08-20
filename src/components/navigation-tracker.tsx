@@ -27,7 +27,7 @@ export default function NavigationTracker() {
 
   // Restore scroll position when navigating back to a non-listing page
   useEffect(() => {
-    if (pathname.startsWith("/listing/")) return;
+    if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
 
     sessionStorage.setItem("e4s_prev_path", pathname);
 
@@ -64,7 +64,7 @@ export default function NavigationTracker() {
 
   // Save scroll position continuously for non-listing pages
   useEffect(() => {
-    if (pathname.startsWith("/listing/")) return;
+    if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
     const key = `e4s_scroll_${pathname}`;
     let ticking = false;
     const onScroll = () => {

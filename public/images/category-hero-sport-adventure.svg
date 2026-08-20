@@ -1,13 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Sport & Adventure">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Sport &amp; Adventure">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#064e4d"/>
       <stop offset=".54" stop-color="#539592"/>
-      <stop offset="1" stop-color="#c4145e"/>
+      <stop offset="1" stop-color="#8b2f43"/>
     </linearGradient>
   </defs>
   <rect width="1280" height="320" fill="url(#bg)"/>
-  <path d="M0 222 C170 180 330 242 520 202 C720 160 880 236 1280 182 L1280 320 L0 320 Z" fill="#ffffff" opacity=".22"/>
-  <path d="M120 106 H1160 M180 166 H1080 M250 226 H1010" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".18"/>
-  <circle cx="1050" cy="86" r="58" fill="#ffffff" opacity=".18"/>
+  <!-- Mountain silhouette -->
+  <polygon points="0,280 180,100 340,200 520,60 700,200 860,90 1040,200 1180,110 1280,200 1280,280" fill="#ffffff" opacity=".14"/>
+  <!-- Smaller snow peak highlight -->
+  <polygon points="420,100 520,60 620,100" fill="#ffffff" opacity=".22"/>
+  <polygon points="770,130 860,90 950,130" fill="#ffffff" opacity=".22"/>
+  <!-- Running figure -->
+  <g transform="translate(640,148)" opacity=".28">
+    <!-- Head -->
+    <circle cx="0" cy="-70" r="16" fill="#ffffff"/>
+    <!-- Body -->
+    <line x1="0" y1="-54" x2="0" y2="-10" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <!-- Left arm back -->
+    <line x1="0" y1="-44" x2="-30" y2="-24" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <!-- Right arm forward -->
+    <line x1="0" y1="-44" x2="28" y2="-18" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <!-- Left leg forward -->
+    <line x1="0" y1="-10" x2="30" y2="20" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="30" y1="20" x2="20" y2="50" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <!-- Right leg back -->
+    <line x1="0" y1="-10" x2="-26" y2="14" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="-26" y1="14" x2="-10" y2="50" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- Sun -->
+  <circle cx="1060" cy="80" r="30" fill="#ffffff" opacity=".20"/>
+  <!-- Speed lines -->
+  <g opacity=".12">
+    <line x1="100" y1="200" x2="200" y2="200" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+    <line x1="80" y1="216" x2="170" y2="216" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <line x1="100" y1="232" x2="180" y2="232" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  </g>
 </svg>

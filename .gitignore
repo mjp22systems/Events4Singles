@@ -56,3 +56,5 @@ next-env.d.ts
 
 # Wrangler build output (CF Pages)
 /.wrangler/
+
+.open-next/

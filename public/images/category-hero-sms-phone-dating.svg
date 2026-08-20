@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="SMS &amp; Phone Dating">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#064e4d"/>
+      <stop offset=".54" stop-color="#539592"/>
+      <stop offset="1" stop-color="#8b2f43"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="320" fill="url(#bg)"/>
+  <path d="M0 230 C180 195 360 242 560 208 C760 172 980 235 1280 200 L1280 320 L0 320 Z" fill="#ffffff" opacity=".16"/>
+  <!-- Phone -->
+  <g transform="translate(580,158)" opacity=".26">
+    <rect x="-32" y="-72" width="64" height="110" rx="10" fill="#ffffff"/>
+    <rect x="-24" y="-62" width="48" height="82" rx="6" fill="#539592"/>
+    <circle cx="0" cy="52" r="8" fill="#539592"/>
+    <line x1="-12" y1="-68" x2="12" y2="-68" stroke="#539592" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- Chat bubble right -->
+  <g transform="translate(700,120)" opacity=".24">
+    <path d="M-10,-30 Q-10,-50 10,-50 L60,-50 Q80,-50 80,-30 Q80,-10 60,-10 L14,-10 L6,10 L4,-10 L-10,-10 Q-10,-10 -10,-30 Z" fill="#ffffff"/>
+  </g>
+  <!-- Chat bubble left (with heart) -->
+  <g transform="translate(460,190)" opacity=".22">
+    <path d="M-70,-30 Q-70,-50 -50,-50 L2,-50 L6,-70 L10,-50 L40,-50 Q60,-50 60,-30 Q60,-10 40,-10 L-50,-10 Q-70,-10 -70,-30 Z" fill="#ffffff"/>
+    <!-- Heart inside bubble -->
+    <path d="M-16,-32 C-16,-38 -24,-42 -24,-36 C-24,-30 -16,-24 -16,-24 C-16,-24 -8,-30 -8,-36 C-8,-42 -16,-38 -16,-32 Z" fill="#8b2f43"/>
+  </g>
+  <!-- Signal waves -->
+  <g transform="translate(1060,130)" opacity=".20">
+    <path d="M-50,30 Q-50,-10 0,-10 Q50,-10 50,30" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M-32,30 Q-32,6 0,6 Q32,6 32,30" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="0" cy="30" r="8" fill="#ffffff"/>
+  </g>
+  <!-- Stars/hearts scattered -->
+  <g opacity=".18">
+    <text x="200" y="120" font-size="28" fill="#ffffff">♥</text>
+    <text x="900" y="100" font-size="22" fill="#ffffff">♥</text>
+    <text x="350" y="90" font-size="16" fill="#ffffff">★</text>
+    <text x="820" y="240" font-size="18" fill="#ffffff">★</text>
+  </g>
+</svg>

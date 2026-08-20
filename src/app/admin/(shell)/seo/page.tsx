@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
-import ComingSoon from "@/components/admin/coming-soon";
-export const metadata: Metadata = { title: "SEO" };
-export default function AdminSEOPage() { return <ComingSoon title="SEO" />; }
+import { listRedirects } from "@/lib/admin-db";
+import RedirectsClient from "./redirects-client";
+
+export const metadata: Metadata = { title: "SEO Redirects" };
+export const dynamic = "force-dynamic";
+
+export default async function AdminSEOPage() {
+  const redirects = await listRedirects();
+  return <RedirectsClient initial={redirects} />;
+}

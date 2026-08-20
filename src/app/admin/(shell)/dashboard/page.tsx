@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
-import { getDashboardStats, getRecentActivity } from "@/lib/admin-db";
+import { getDashboardStats, getRecentActivity, type ActivityRow } from "@/lib/admin-db";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Dashboard" };
 export const dynamic = "force-dynamic";
 
-interface ActivityRow {
-  id: number;
-  action: string;
-  entity_type: string | null;
-  entity_id: string | null;
-  created_at: number;
-}
-
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
-  const activity = (await getRecentActivity(20)) as ActivityRow[];
+  const activity: ActivityRow[] = await getRecentActivity(20);
 
   return (
     <>
@@ -64,6 +56,22 @@ export default async function AdminDashboard() {
               View all →
             </Link>
           </div>
+        </div>
+        <div className="a-stat">
+          <div className="a-stat__label">Events Pending</div>
+          <div
+            className="a-stat__value"
+            style={{ color: stats.pendingEvents > 0 ? "var(--a-warning)" : undefined }}
+          >
+            {stats.pendingEvents.toLocaleString()}
+          </div>
+          {stats.pendingEvents > 0 && (
+            <div className="a-stat__sub">
+              <Link href="/admin/events?status=pending" style={{ color: "var(--a-warning)" }}>
+                Review now →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 

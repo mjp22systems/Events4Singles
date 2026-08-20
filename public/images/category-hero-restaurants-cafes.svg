@@ -1,13 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Restaurants & Cafes">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" role="img" aria-label="Restaurants &amp; Cafes">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#064e4d"/>
       <stop offset=".54" stop-color="#539592"/>
-      <stop offset="1" stop-color="#c4145e"/>
+      <stop offset="1" stop-color="#8b2f43"/>
     </linearGradient>
   </defs>
   <rect width="1280" height="320" fill="url(#bg)"/>
-  <path d="M0 222 C170 180 330 242 520 202 C720 160 880 236 1280 182 L1280 320 L0 320 Z" fill="#ffffff" opacity=".22"/>
-  <path d="M120 106 H1160 M180 166 H1080 M250 226 H1010" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".18"/>
-  <circle cx="1050" cy="86" r="58" fill="#ffffff" opacity=".18"/>
+  <path d="M0 230 C180 190 380 245 580 208 C780 170 980 238 1280 195 L1280 320 L0 320 Z" fill="#ffffff" opacity=".16"/>
+  <!-- Fork -->
+  <g transform="translate(560,155)" opacity=".26">
+    <line x1="0" y1="-70" x2="0" y2="70" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <line x1="-14" y1="-70" x2="-14" y2="-28" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <line x1="-14" y1="-28" x2="0" y2="-18" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <line x1="14" y1="-70" x2="14" y2="-28" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <line x1="14" y1="-28" x2="0" y2="-18" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- Knife -->
+  <g transform="translate(620,155)" opacity=".26">
+    <line x1="0" y1="-70" x2="0" y2="70" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M0,-70 C12,-60 14,-40 0,-20" fill="#ffffff"/>
+  </g>
+  <!-- Coffee cup -->
+  <g transform="translate(200,160)" opacity=".24">
+    <path d="M-40,-30 L-34,40 Q-34,50 0,50 Q34,50 34,40 L40,-30 Z" fill="#ffffff"/>
+    <path d="M36,-10 Q62,-10 62,15 Q62,40 36,40" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M-18,-40 Q-10,-56 -2,-44" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+    <path d="M6,-44 Q14,-60 22,-48" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- Wine glass -->
+  <g transform="translate(1060,150)" opacity=".22">
+    <path d="M-30,-60 Q-38,-20 0,10 Q38,-20 30,-60 Z" fill="#ffffff"/>
+    <line x1="0" y1="10" x2="0" y2="60" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <line x1="-28" y1="60" x2="28" y2="60" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <!-- Plate ring at center -->
+  <g transform="translate(640,160)" opacity=".14">
+    <circle cx="0" cy="0" r="68" fill="none" stroke="#ffffff" stroke-width="5"/>
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#ffffff" stroke-width="3"/>
+  </g>
 </svg>

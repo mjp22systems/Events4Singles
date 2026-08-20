@@ -23,7 +23,7 @@ export default function CategoryCitySelect({ cities, categoryUrlSlug, currentCit
           else router.push(`/${categoryUrlSlug}`);
         }}
       >
-        <option value="">All cities</option>
+        <option value="">All Cities</option>
         {cities.map((c) => (
           <option key={c.slug} value={toUrlSlug(c.slug)}>
             {c.label} ({c.listing_count})

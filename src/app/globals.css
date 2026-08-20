@@ -1,1 +1,2 @@
-/* Additional overrides on top of /site.css (linked via layout.tsx head) */
+/* All site CSS is in /site.css (loaded via <link> in layout.tsx).
+   This file is kept for Next.js compatibility (it requires a globals import). */

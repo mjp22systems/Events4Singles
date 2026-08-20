@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  getAllCategoryCityParams,
   getCategoryMeta,
   getCitiesForCategory,
   getListingsForPage,
@@ -24,9 +23,7 @@ interface Props {
   params: Promise<{ category: string; city: string }>;
 }
 
-export async function generateStaticParams() {
-  return getAllCategoryCityParams();
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category, city } = await params;
@@ -100,9 +97,9 @@ export default async function CategoryCityPage({ params }: Props) {
       <div className="e4s-page-with-sidebar">
         <main className="e4s-category-template" id="site-content">
           {listings.length === 0 && (
-            <div style={{ padding: "40px 0", textAlign: "center", width: "100%" }}>
+            <div className="e4s-empty-state">
               <p>No listings found for {catMeta.label} in {cityMeta.label}.</p>
-              <Link href={`/${category}`} style={{ color: "var(--e4s-pink)" }}>
+              <Link href={`/${category}`}>
                 Browse other cities
               </Link>
             </div>

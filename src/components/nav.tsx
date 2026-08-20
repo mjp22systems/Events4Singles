@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllCategories, getAllCities } from "@/lib/data";
 import NavDropdowns from "./nav-dropdowns";
+import MobileMenuToggle from "./mobile-menu-toggle";
 
 export default async function Nav() {
   const cities = await getAllCities();
@@ -11,13 +12,12 @@ export default async function Nav() {
       <div className="e4s-shell e4s-header__bar">
         <Link aria-label="Events4Singles home" className="e4s-brand" href="/">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Events4Singles Australian singles events directory" src="/images/E4S_Logo3_375x50.gif" title="Events4Singles" />
-          <em>Australian Singles Events Directory</em>
+          <img alt="Events4Singles — Australia's Singles Events Directory" src="/images/e4s-logo_new.png" title="Events4Singles" />
         </Link>
-        <div aria-label="Advertising and listing options" className="e4s-header-cta">
-          <strong>Advertise Here</strong>
-          <span>Reach Australian Singles Looking for Local Events</span>
-          <Link href="/advertise">Create Listing</Link>
+        <div className="e4s-header__actions">
+          <Link href="/portal" className="e4s-header-login">Login</Link>
+          <Link href="/advertise" className="e4s-header-cta-btn">Advertise</Link>
+          <MobileMenuToggle />
         </div>
       </div>
       <NavDropdowns cities={cities} categories={categories} />

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Advertise with Events4Singles",
   description:
-    "Reach Australian singles looking for events, activities and services. List your singles event business on Events4Singles.",
+    "Reach Australian singles looking for events, activities and services. List your business in Australia's singles directory.",
 };
 
 const PACKAGES = [
@@ -53,7 +53,7 @@ export default function AdvertisePage() {
       <section className="e4s-advertise-pro-hero">
         <div>
           <p className="e4s-kicker">Advertise with Events4Singles</p>
-          <h1>Show your singles event business where Australian singles are already looking.</h1>
+          <h1>Show your business where Australian singles are already looking.</h1>
           <p className="e4s-lead">
             Events4Singles is a directory for speed dating, dinner parties, dance
             classes, social clubs, travel, cruises, introduction agencies and related services.

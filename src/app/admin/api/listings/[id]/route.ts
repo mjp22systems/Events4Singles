@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getListingById, updateListing, softDeleteListing, logActivity } from "@/lib/admin-db";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { id } = await params;
   const listing = await getListingById(Number(id));
   if (!listing) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -13,12 +16,14 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
 }
 
 export async function PUT(req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { id } = await params;
   const numId = Number(id);
   const listing = await getListingById(numId);
   if (!listing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const allowed = [
     "title", "tagline", "description", "promo",
     "contact_name", "phone", "mobile", "email", "web", "image_url",
@@ -41,6 +46,8 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
 }
 
 export async function DELETE(req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { id } = await params;
   const numId = Number(id);
   const body = await req.json().catch(() => ({})) as { reason?: string };

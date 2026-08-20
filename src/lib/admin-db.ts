@@ -469,29 +469,208 @@ export interface DashboardStats {
   pendingReview: number;
   unclaimedListings: number;
   totalBusinesses: number;
+  pendingEvents: number;
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
   const db = await getD1();
-  const [active, pending, unclaimed, businesses] = await db.batch([
+  const [active, pending, unclaimed, businesses, pendingEvents] = await db.batch([
     db.prepare(`SELECT COUNT(*) AS n FROM listings WHERE status = 'active' AND deleted_at IS NULL`),
     db.prepare(`SELECT COUNT(*) AS n FROM listings WHERE ai_moderation_status = 'fail' AND deleted_at IS NULL`),
     db.prepare(`SELECT COUNT(*) AS n FROM listings WHERE unclaimed_flag = 1 AND deleted_at IS NULL`),
     db.prepare(`SELECT COUNT(*) AS n FROM businesses WHERE merged_into_business_id IS NULL`),
+    db.prepare(`SELECT COUNT(*) AS n FROM events WHERE status = 'pending'`),
   ]);
   return {
     activeListings: (active.results[0] as { n: number }).n,
     pendingReview: (pending.results[0] as { n: number }).n,
     unclaimedListings: (unclaimed.results[0] as { n: number }).n,
     totalBusinesses: (businesses.results[0] as { n: number }).n,
+    pendingEvents: (pendingEvents.results[0] as { n: number }).n,
   };
 }
 
-export async function getRecentActivity(limit = 20) {
+export interface ActivityRow {
+  id: number;
+  actor_type: string;
+  actor_id: string | null;
+  action: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  meta: string | null;
+  created_at: number;
+}
+
+export async function getRecentActivity(limit = 20): Promise<ActivityRow[]> {
   const db = await getD1();
   const { results } = await db
     .prepare(`SELECT * FROM admin_activity_log ORDER BY created_at DESC LIMIT ?`)
     .bind(limit)
-    .all();
+    .all<ActivityRow>();
   return results;
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+
+export interface AdminEvent {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  timezone: string;
+  venue_name: string | null;
+  address: string | null;
+  suburb: string | null;
+  city: string;
+  state: string | null;
+  price_min: number | null;
+  price_max: number | null;
+  ticket_url: string | null;
+  image_url: string | null;
+  source: string;
+  source_id: string | null;
+  source_url: string | null;
+  category: string | null;
+  status: string;
+  submitted_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+const EVENT_UPDATE_ALLOWLIST = new Set([
+  "title", "slug", "description", "starts_at", "ends_at", "timezone",
+  "venue_name", "address", "suburb", "city", "state",
+  "price_min", "price_max", "ticket_url", "image_url",
+  "source_url", "category", "status", "submitted_by",
+]);
+
+export async function listEvents(opts: {
+  status?: string;
+  city?: string;
+  page?: number;
+  limit?: number;
+} = {}): Promise<AdminEvent[]> {
+  const db = await getD1();
+  const limit = opts.limit ?? 50;
+  const offset = ((opts.page ?? 1) - 1) * limit;
+  const conditions: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (opts.status) { conditions.push("status = ?"); params.push(opts.status); }
+  if (opts.city) { conditions.push("city = ?"); params.push(opts.city); }
+
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const { results } = await db
+    .prepare(`SELECT * FROM events ${where} ORDER BY starts_at ASC LIMIT ? OFFSET ?`)
+    .bind(...params, limit, offset)
+    .all<AdminEvent>();
+  return results;
+}
+
+export async function countEvents(opts: { status?: string; city?: string } = {}): Promise<number> {
+  const db = await getD1();
+  const conditions: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (opts.status) { conditions.push("status = ?"); params.push(opts.status); }
+  if (opts.city) { conditions.push("city = ?"); params.push(opts.city); }
+
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const row = await db
+    .prepare(`SELECT COUNT(*) AS n FROM events ${where}`)
+    .bind(...params)
+    .first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
+export async function getEventById(id: string): Promise<AdminEvent | null> {
+  const db = await getD1();
+  return db.prepare(`SELECT * FROM events WHERE id = ?`).bind(id).first<AdminEvent>();
+}
+
+export async function createEvent(fields: Partial<AdminEvent>): Promise<{ id: string }> {
+  const db = await getD1();
+  const id = crypto.randomUUID().replace(/-/g, "");
+  const slug = fields.slug ?? `${(fields.title ?? "event").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${id.slice(0, 6)}`;
+  await db
+    .prepare(`INSERT INTO events (id, title, slug, description, starts_at, ends_at, timezone, venue_name, address, suburb, city, state, price_min, price_max, ticket_url, image_url, source, source_id, source_url, category, status, submitted_by)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(
+      id,
+      fields.title ?? "",
+      slug,
+      fields.description ?? null,
+      fields.starts_at ?? new Date().toISOString(),
+      fields.ends_at ?? null,
+      fields.timezone ?? "Australia/Sydney",
+      fields.venue_name ?? null,
+      fields.address ?? null,
+      fields.suburb ?? null,
+      fields.city ?? "",
+      fields.state ?? null,
+      fields.price_min ?? null,
+      fields.price_max ?? null,
+      fields.ticket_url ?? null,
+      fields.image_url ?? null,
+      fields.source ?? "admin",
+      fields.source_id ?? null,
+      fields.source_url ?? null,
+      fields.category ?? null,
+      fields.status ?? "pending",
+      fields.submitted_by ?? null,
+    )
+    .run();
+  return { id };
+}
+
+export async function updateEvent(id: string, fields: Record<string, unknown>): Promise<void> {
+  const db = await getD1();
+  const allowed = Object.fromEntries(
+    Object.entries(fields).filter(([k]) => EVENT_UPDATE_ALLOWLIST.has(k))
+  );
+  if (!Object.keys(allowed).length) return;
+  const sets = Object.keys(allowed).map((k) => `${k} = ?`).join(", ");
+  await db
+    .prepare(`UPDATE events SET ${sets}, updated_at = datetime('now') WHERE id = ?`)
+    .bind(...Object.values(allowed), id)
+    .run();
+}
+
+export async function deleteEvent(id: string): Promise<void> {
+  const db = await getD1();
+  await db.prepare(`DELETE FROM events WHERE id = ?`).bind(id).run();
+}
+
+// ── Redirects ────────────────────────────────────────────────────────────────
+
+export interface AdminRedirect {
+  id: number;
+  from_path: string;
+  to_path: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  created_at: number;
+}
+
+export async function listRedirects(): Promise<AdminRedirect[]> {
+  const db = await getD1();
+  const { results } = await db
+    .prepare("SELECT * FROM redirects ORDER BY created_at DESC")
+    .all<AdminRedirect>();
+  return results;
+}
+
+export async function createRedirect(from_path: string, to_path: string): Promise<void> {
+  const db = await getD1();
+  await db
+    .prepare("INSERT OR REPLACE INTO redirects (from_path, to_path) VALUES (?, ?)")
+    .bind(from_path, to_path)
+    .run();
+}
+
+export async function deleteRedirect(id: number): Promise<void> {
+  const db = await getD1();
+  await db.prepare("DELETE FROM redirects WHERE id = ?").bind(id).run();
 }

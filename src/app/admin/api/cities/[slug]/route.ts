@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCityBySlug, updateCity, logActivity } from "@/lib/admin-db";
+import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 type Ctx = { params: Promise<{ slug: string }> };
 
 export async function GET(_req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { slug } = await params;
   const city = await getCityBySlug(slug);
   if (!city) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -13,11 +16,13 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
 }
 
 export async function PUT(req: NextRequest, { params }: Ctx) {
+  const unauth = await requireAdmin();
+  if (unauth) return unauth;
   const { slug } = await params;
   const city = await getCityBySlug(slug);
   if (!city) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const body = await req.json();
+  const body = await req.json() as Record<string, unknown>;
   const allowed = ["label", "state", "region", "seo_title", "seo_description"];
   const fields: Record<string, unknown> = {};
   for (const key of allowed) {
