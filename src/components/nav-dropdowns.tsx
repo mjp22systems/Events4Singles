@@ -25,8 +25,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
     contact: "Contact",
     advertise: "Advertise with Us",
     portal: "Advertiser Portal",
-    terms: "Terms of Use",
-    privacy: "Privacy Policy",
+    "terms-and-conditions": "Terms & Conditions",
+    "privacy-policy": "Privacy Policy",
   };
 
   const infoSlugs = new Set(Object.keys(INFO_ROUTES));
@@ -44,18 +44,22 @@ export default function NavDropdowns({ cities, categories }: Props) {
   return (
     <nav aria-label="Site navigation" className="e4s-shell e4s-nav">
       <label>
-        <span>Location</span>
+        <span>Cities</span>
         <select
           value=""
           onChange={(e) => {
-            if (e.target.value) router.push(`/${toUrlSlug(e.target.value)}`);
+            const val = e.target.value;
+            if (val === "__all__") router.push("/cities");
+            else if (val) router.push(`/${toUrlSlug(val)}`);
           }}
         >
           <option value="" disabled>
             {selectedCity
-              ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? "Select Location")
-              : "Select Location"}
+              ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? "Select City")
+              : "Select City"}
           </option>
+          <option value="__all__">All Cities →</option>
+          <option value="__sep__" disabled>─────────────</option>
           {sortedCities.map((city) => (
             <option key={city.slug} value={toUrlSlug(city.slug)}>
               {city.label}
@@ -65,11 +69,13 @@ export default function NavDropdowns({ cities, categories }: Props) {
       </label>
 
       <label>
-        <span>Category</span>
+        <span>Categories</span>
         <select
           value=""
           onChange={(e) => {
-            if (e.target.value) router.push(`/${e.target.value}`);
+            const val = e.target.value;
+            if (val === "__all__") router.push("/categories");
+            else if (val) router.push(`/${val}`);
           }}
         >
           <option value="" disabled>
@@ -77,6 +83,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
               ? (filteredCats.find((c) => toUrlSlug(c.slug) === selectedCat)?.label ?? "Select Category")
               : "Select Category"}
           </option>
+          <option value="__all__">All Categories →</option>
+          <option value="__sep__" disabled>─────────────</option>
           {sortedCats.map((cat) => (
             <option key={cat.slug} value={toUrlSlug(cat.slug)}>
               {cat.label}
@@ -98,14 +106,14 @@ export default function NavDropdowns({ cities, categories }: Props) {
           <option value="/advertise">Advertise with Us</option>
           <option value="/portal">Advertiser Portal</option>
           <option value="/contact">Contact</option>
-          <option value="/privacy">Privacy Policy</option>
-          <option value="/terms">Terms of Use</option>
+          <option value="/privacy-policy">Privacy Policy</option>
+          <option value="/terms-and-conditions">Terms &amp; Conditions</option>
         </select>
       </label>
 
       <div className="e4s-nav__events-cell">
         <Link href="/dating-resources" className="e4s-nav__dating-btn">Dating Resources</Link>
-        <Link href="/events" className="e4s-nav__events-btn">Events Calendar</Link>
+        <Link href="/events" className="e4s-nav__events-btn">What's On</Link>
       </div>
     </nav>
   );

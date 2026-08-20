@@ -21,6 +21,23 @@ export function idFromListingSlug(slug: string): number | null {
   return isNaN(id) ? null : id;
 }
 
+// Profile URL slug: {name-slug}-{id}  (same pattern as listing slug)
+// Paid upgrade sets businesses.profile_slug for a clean slug without the ID suffix.
+export function toProfileSlug(id: number, name: string): string {
+  const nameSlug = (name || "profile")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+  return `${nameSlug}-${id}`;
+}
+
+export function idFromProfileSlug(slug: string): number | null {
+  const last = slug.split("-").pop();
+  const id = parseInt(last ?? "", 10);
+  return isNaN(id) ? null : id;
+}
+
 // Static tier config (Phase 2: move to DB)
 export const TIERS = {
   starter:      { name: "Starter",      price: 39 },

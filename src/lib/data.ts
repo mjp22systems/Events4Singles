@@ -1,22 +1,10 @@
 import { getD1 } from "./db";
-import { slugToLabel, toUrlSlug, toListingSlug } from "./constants";
-import type { Listing, Category, City, Banner } from "./types";
+import { slugToLabel, toUrlSlug, toListingSlug, idFromProfileSlug } from "./constants";
+import type { Listing, Category, City, Banner, Business } from "./types";
 
 const SUPPRESSED_CATEGORIES = new Set(["events"]);
 const SUPPRESSED_BANNER_CATEGORIES = new Set(["nightclubs"]);
 
-function companyMatchKey(name: string | null | undefined) {
-  return (name || "")
-    .toLowerCase()
-    .replace(/\bfirends\b/g, "friends")
-    .replace(/&/g, " and ")
-    .replace(/[.…]+.*$/g, "")
-    .replace(/\b(sydney|melbourne|brisbane|perth|adelaide|canberra|hobart|darwin|gold coast|sunshine coast|central coast|newcastle|wollongong|geelong|cairns|toowoomba|byron bay)\b/g, "")
-    .replace(/\b(north|south|east|west|metro|metropolitan|cbd|city)\b/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 // ── Listings ─────────────────────────────────────────────────────────────────
 
@@ -30,6 +18,7 @@ export async function getListingsForCategory(categoryDbSlug: string): Promise<Li
            l.business_id,
            b.name    AS business_name,
            b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            (
              SELECT GROUP_CONCAT(DISTINCT p2.city_slug)
              FROM listing_placements p2
@@ -77,6 +66,7 @@ export async function getListingsForPage(
            l.business_id,
            b.name    AS business_name,
            b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            ? AS category_slug,
            ? AS city_slug,
            (
@@ -123,13 +113,33 @@ export async function getFeaturedListings(limit = 6): Promise<Listing[]> {
            l.phone, l.mobile, l.email, l.web, l.image_url,
            l.location, l.location_city, l.location_state,
            l.listing_type, l.confidence_score,
-           b.name AS business_name, b.website AS business_website
+           b.name AS business_name, b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
+           MAX(p.city_slug) AS city_slug,
+           MAX(p.category_slug) AS category_slug,
+           GROUP_CONCAT(DISTINCT p.city_slug) AS city_slugs,
+           GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
+    LEFT JOIN listing_placements p ON p.listing_id = l.id
     WHERE l.confidence_score >= 80 AND l.email != '' AND l.status = 'active'
+    GROUP BY l.id
     ORDER BY l.confidence_score DESC
     LIMIT ?
   `).bind(limit).all<Listing>();
+  return results;
+}
+
+export async function getAllBusinessesForDirectory(): Promise<{ id: number; name: string; profile_slug: string | null }[]> {
+  const db = await getD1();
+  const { results } = await db.prepare(`
+    SELECT b.id, b.name, b.profile_slug
+    FROM businesses b
+    INNER JOIN listings l ON l.business_id = b.id AND l.status = 'active'
+    WHERE b.name IS NOT NULL AND b.name != ''
+    GROUP BY b.id
+    ORDER BY b.name ASC
+  `).all<{ id: number; name: string; profile_slug: string | null }>();
   return results;
 }
 
@@ -143,6 +153,7 @@ export async function getAllCategories(): Promise<Category[]> {
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.category_slug IS NOT NULL
     GROUP BY p.category_slug
     ORDER BY listing_count DESC
@@ -163,6 +174,7 @@ export async function getCategoryMeta(dbSlug: string): Promise<Category | null> 
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.category_slug = ?
     GROUP BY p.category_slug
   `).bind(dbSlug).first<{
@@ -182,6 +194,7 @@ export async function getAllCities(): Promise<City[]> {
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN cities ci ON ci.slug = p.city_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active' AND l.listing_type != 'online'
     WHERE p.city_slug IS NOT NULL
     GROUP BY p.city_slug
     ORDER BY listing_count DESC
@@ -196,6 +209,7 @@ export async function getCitiesForCategory(categoryDbSlug: string): Promise<City
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN cities ci ON ci.slug = p.city_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.category_slug = ? AND p.city_slug IS NOT NULL
     GROUP BY p.city_slug
     ORDER BY listing_count DESC
@@ -213,6 +227,7 @@ export async function getListingsForCity(cityDbSlug: string): Promise<Listing[]>
            l.business_id,
            b.name    AS business_name,
            b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            ? AS city_slug,
            (
              SELECT GROUP_CONCAT(DISTINCT p2.category_slug)
@@ -227,13 +242,22 @@ export async function getListingsForCity(cityDbSlug: string): Promise<Listing[]>
       WHERE city_slug = ?
     ) p ON p.listing_id = l.id
     LEFT JOIN businesses b ON b.id = l.business_id
-    WHERE l.status = 'active'
+    WHERE l.status = 'active' AND l.listing_type != 'online'
     ORDER BY
       CASE l.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END,
       l.confidence_score DESC
     LIMIT 200
   `).bind(cityDbSlug, cityDbSlug, cityDbSlug).all<Listing>();
-  return results;
+
+  // Deduplicate by business_id — same business can appear in multiple categories for this city.
+  // Query is ordered by confidence_score DESC so first occurrence per business wins.
+  const seenBusiness = new Set<number>();
+  return results.filter((l) => {
+    if (!l.business_id) return true;
+    if (seenBusiness.has(l.business_id)) return false;
+    seenBusiness.add(l.business_id);
+    return true;
+  });
 }
 
 export async function getListingById(id: number): Promise<Listing | null> {
@@ -252,6 +276,7 @@ export async function getListingById(id: number): Promise<Listing | null> {
            l.trading_hours, l.contact_hours,
            b.name    AS business_name,
            b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            p.category_slug,
            p.city_slug,
            c.label   AS category_label,
@@ -311,7 +336,7 @@ export async function getListingPlacements(listingId: number): Promise<ListingPl
   return results;
 }
 
-export async function getBusinessListings(businessId: number, excludeId: number, businessName?: string | null): Promise<Listing[]> {
+export async function getBusinessListings(businessId: number, excludeId: number): Promise<Listing[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT DISTINCT l.id, l.title, l.tagline, l.description, l.promo,
@@ -320,6 +345,7 @@ export async function getBusinessListings(businessId: number, excludeId: number,
            l.listing_type, l.confidence_score,
            l.business_id,
            b.name AS business_name, b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            NULL AS category_slug, NULL AS city_slug,
            NULL AS category_label, NULL AS city_label,
            (
@@ -343,22 +369,11 @@ export async function getBusinessListings(businessId: number, excludeId: number,
            ) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
-    WHERE l.id != ? AND l.status = 'active'
+    WHERE l.business_id = ? AND l.id != ? AND l.status = 'active'
     ORDER BY l.confidence_score DESC
-  `).bind(excludeId).all<Listing>();
+  `).bind(businessId, excludeId).all<Listing>();
 
-  const parentKey = companyMatchKey(businessName);
-  const seen = new Set<number>();
-  return results.filter((row) => {
-    const isSameBusiness = row.business_id === businessId;
-    const isSameParentName = parentKey
-      ? companyMatchKey(row.business_name || row.title) === parentKey
-      : false;
-    if (!isSameBusiness && !isSameParentName) return false;
-    if (seen.has(row.id)) return false;
-    seen.add(row.id);
-    return true;
-  });
+  return results;
 }
 
 export async function getAllListingParams(): Promise<{ slug: string }[]> {
@@ -383,6 +398,7 @@ export async function getRelatedListings(categorySlug: string, citySlug: string 
            l.location, l.location_city, l.location_state,
            l.listing_type, l.confidence_score,
            b.name AS business_name, b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
            NULL AS category_slug, NULL AS city_slug,
            NULL AS category_label, NULL AS city_label
     FROM listings l
@@ -404,6 +420,7 @@ export async function getCityMeta(cityDbSlug: string): Promise<City | null> {
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN cities ci ON ci.slug = p.city_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active' AND l.listing_type != 'online'
     WHERE p.city_slug = ?
     GROUP BY p.city_slug
   `).bind(cityDbSlug).first<{ slug: string; label: string | null; state: string | null; listing_count: number }>();
@@ -419,6 +436,7 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.city_slug = ? AND p.category_slug IS NOT NULL
     GROUP BY p.category_slug
     ORDER BY listing_count DESC
@@ -514,4 +532,110 @@ export async function getAllCategoryCityParams(): Promise<{ category: string; ci
       category: toUrlSlug(r.category_slug),
       city: toUrlSlug(r.city_slug),
     }));
+}
+
+// ── Profile ───────────────────────────────────────────────────────────────────
+
+export interface ProfileData {
+  business: Business | null;
+  listings: Listing[];
+}
+
+export async function getProfileData(slugOrId: string): Promise<ProfileData> {
+  const db = await getD1();
+
+  // Resolution order:
+  // 1. custom profile_slug (paid upgrade, exact match)
+  // 2. numeric ID suffix extracted from name-slug-{id} format
+  let businessId: number | null = null;
+  const customSlugRow = await db.prepare(
+    "SELECT id FROM businesses WHERE profile_slug = ?"
+  ).bind(slugOrId).first<{ id: number }>() ?? null;
+
+  if (customSlugRow) {
+    businessId = customSlugRow.id;
+  } else {
+    businessId = idFromProfileSlug(slugOrId);
+  }
+
+  if (businessId === null) return { business: null, listings: [] };
+
+  const business = await db.prepare(`
+    SELECT id, name, description, logo_url, website, advertiser_id, profile_slug
+    FROM businesses WHERE id = ?
+  `).bind(businessId).first<Business>() ?? null;
+
+  const { results: listings } = await db.prepare(`
+    SELECT DISTINCT l.id, l.title, l.tagline, l.description, l.promo,
+           l.contact_name, l.phone, l.mobile, l.email, l.web, l.image_url,
+           l.location, l.location_city, l.location_state,
+           l.listing_type, l.confidence_score,
+           l.business_id,
+           l.licence_no, l.abn,
+           l.facebook_url, l.instagram_url, l.tiktok_url,
+           l.youtube_url, l.linkedin_url,
+           l.trading_hours, l.contact_hours,
+           b.name AS business_name, b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
+           NULL AS category_slug, NULL AS city_slug,
+           NULL AS category_label, NULL AS city_label,
+           (
+             SELECT GROUP_CONCAT(DISTINCT p2.category_slug)
+             FROM listing_placements p2
+             WHERE p2.listing_id = l.id AND p2.category_slug IS NOT NULL
+           ) AS category_slugs,
+           (
+             SELECT GROUP_CONCAT(DISTINCT p2.city_slug)
+             FROM listing_placements p2
+             WHERE p2.listing_id = l.id AND p2.city_slug IS NOT NULL
+           ) AS city_slugs,
+           (
+             SELECT GROUP_CONCAT(DISTINCT COALESCE(ci2.label, p2.city_slug))
+             FROM listing_placements p2
+             LEFT JOIN cities ci2 ON ci2.slug = p2.city_slug
+             WHERE p2.listing_id = l.id AND p2.city_slug IS NOT NULL
+           ) AS city_labels
+    FROM listings l
+    LEFT JOIN businesses b ON b.id = l.business_id
+    WHERE l.business_id = ? AND l.status = 'active'
+    ORDER BY l.confidence_score DESC
+    LIMIT 50
+  `).bind(businessId).all<Listing>();
+
+  return { business, listings };
+}
+
+// ── Events ────────────────────────────────────────────────────────────────────
+
+export interface PublicEvent {
+  id: string;
+  title: string;
+  description: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  venue_name: string | null;
+  suburb: string | null;
+  city: string;
+  price_min: number | null;
+  price_max: number | null;
+  ticket_url: string | null;
+  image_url: string | null;
+  source: string;
+  category: string | null;
+}
+
+export async function getUpcomingEvents(limit = 8, city?: string, category?: string, paid?: "free" | "paid"): Promise<PublicEvent[]> {
+  const db = await getD1();
+  const now = new Date().toISOString();
+  const conditions = ["status = 'approved'", "starts_at >= ?"];
+  const params: (string | number)[] = [now];
+  if (city) { conditions.push("city = ?"); params.push(city); }
+  if (category) { conditions.push("category = ?"); params.push(category); }
+  if (paid === "free") { conditions.push("(price_min = 0 OR price_min IS NULL)"); }
+  if (paid === "paid") { conditions.push("price_min > 0"); }
+  const { results } = await db
+    .prepare(`SELECT id, title, description, starts_at, ends_at, venue_name, suburb, city, price_min, price_max, ticket_url, image_url, source, category FROM events WHERE ${conditions.join(" AND ")} ORDER BY starts_at ASC LIMIT ?`)
+    .bind(...params, limit)
+    .all<PublicEvent>();
+  return results;
 }

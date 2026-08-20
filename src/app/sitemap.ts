@@ -18,8 +18,10 @@ const STATIC_PATHS = [
   "/contact",
   "/dating-resources",
   "/events",
-  "/privacy",
-  "/terms",
+  "/cities",
+  "/categories",
+  "/privacy-policy",
+  "/terms-and-conditions",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import type { Category, City, Listing } from "@/lib/types";
 import ListingCard from "./listing-card";
+import OnlineCard from "./online-card";
 import FeatureSlotCard from "./feature-slot-card";
 
 type SortKey = "az" | "za";
@@ -134,9 +135,13 @@ export default function ListingsSection({
         <div className="e4s-listing-stack">
           <FeatureSlotCard />
           {sorted.length > 0 ? (
-            sorted.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
-            ))
+            sorted.map((listing) =>
+              listing.listing_type === "online" ? (
+                <OnlineCard key={listing.id} listing={listing} />
+              ) : (
+                <ListingCard key={listing.id} listing={listing} />
+              )
+            )
           ) : (
             <div className="e4s-listings-empty">
               No listings match the selected filters.

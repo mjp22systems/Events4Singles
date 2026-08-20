@@ -1,50 +1,69 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ContactForm from "@/components/contact-form";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with Events4Singles for advertising enquiries, listing corrections, or general questions.",
+  title: "Contact Us — Events4Singles",
+  description: "Get in touch with Events4Singles for advertising enquiries, listing corrections, event submissions, or general questions.",
 };
 
 export default function ContactPage() {
   return (
     <main className="e4s-info-page e4s-shell" id="site-content">
-      <h1>Contact Us</h1>
-      <p className="e4s-lead">
-        We&rsquo;re here to help with advertising enquiries, listing corrections, and general questions.
-        A contact form is coming shortly — in the meantime, reach us by email below.
-      </p>
+      <div className="e4s-contact-header">
+        <h1>Contact Us</h1>
+        <p className="e4s-lead">
+          Questions, listing corrections, advertising enquiries, or anything else —
+          fill in the form and we&rsquo;ll be back in touch within 1 business day.
+        </p>
+      </div>
 
-      <section>
-        <h2>Advertising &amp; Listings</h2>
-        <p>
-          To list your singles event, service or business, or to update an existing listing —
-          see our <Link href="/advertise">advertising page</Link> for package details, then
-          visit the <Link href="/portal">advertiser portal</Link> to enquire.
-        </p>
-      </section>
+      <div className="e4s-contact-layout">
+        <div className="e4s-contact-layout__form">
+          <ContactForm />
+        </div>
 
-      <section>
-        <h2>General Enquiries</h2>
-        <p>
-          For listing corrections, feedback, or anything else — use the button below.
-          We aim to respond within 1 business day.
-        </p>
-        <p>
-          <a href="mailto:info@events4singles.com" className="e4s-contact-btn">
-            Send us a message
-          </a>
-        </p>
-      </section>
+        <aside className="e4s-contact-layout__sidebar">
+          <div className="e4s-contact-card">
+            <h3>Enquiry types</h3>
+            <ul>
+              <li>
+                <strong>Advertising / New Listing</strong>
+                <span>List your event, service, or singles business.</span>
+              </li>
+              <li>
+                <strong>Listing Correction</strong>
+                <span>Wrong phone, closed business, outdated info.</span>
+              </li>
+              <li>
+                <strong>Event Submission</strong>
+                <span>Submit a one-off event for the calendar.</span>
+              </li>
+              <li>
+                <strong>Partnership or Media</strong>
+                <span>Press, affiliates, or commercial partnerships.</span>
+              </li>
+              <li>
+                <strong>General Enquiry</strong>
+                <span>Anything else — we&rsquo;re happy to help.</span>
+              </li>
+            </ul>
+          </div>
 
-      <section>
-        <h2>Note on Listed Businesses</h2>
-        <p>
-          Events4Singles is a directory only. If you have a specific enquiry about an event,
-          speed dating night, or introduction agency, please contact that business directly
-          via their listing page.
-        </p>
-      </section>
+          <div className="e4s-contact-card e4s-contact-card--muted">
+            <h3>About listed businesses</h3>
+            <p>
+              Events4Singles is a directory only. For questions about a specific
+              event or business, please contact them directly via their
+              listing page.
+            </p>
+            <p>
+              To advertise with us, see our{" "}
+              <Link href="/advertise">advertising packages</Link>.
+            </p>
+          </div>
+        </aside>
+      </div>
     </main>
   );
 }

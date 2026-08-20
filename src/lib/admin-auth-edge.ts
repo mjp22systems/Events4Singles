@@ -10,8 +10,8 @@ function secret(): Uint8Array {
 
 export async function verifyAdminToken(token: string): Promise<boolean> {
   try {
-    await jwtVerify(token, secret());
-    return true;
+    const { payload } = await jwtVerify(token, secret());
+    return payload.role === "admin";
   } catch {
     return false;
   }

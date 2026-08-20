@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Activity, List, Building2, Users,
+  LayoutDashboard, Activity, List, Building2, Users, Calendar,
   Tag, MapPin, Image, CreditCard, Search, BarChart2,
   Wrench, Settings, LogOut,
 } from "lucide-react";
@@ -16,6 +16,7 @@ const SECTIONS = [
   [
     { href: "/admin/listings", label: "Listings", Icon: List },
     { href: "/admin/businesses", label: "Businesses", Icon: Building2 },
+    { href: "/admin/events", label: "Events", Icon: Calendar },
     { href: "/admin/customers", label: "Customers", Icon: Users },
   ],
   [

@@ -114,7 +114,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
           <PageSidebar mode="city" categories={categories} cityUrlSlug={param} />
         </div>
 
-        <section className="e4s-location-followup" style={{ marginBottom: "32px" }}>
+        <section className="e4s-location-followup">
           <a className="e4s-calendar-cta" href="/events">
             <span>Events Calendar</span>
             <strong>View {cityMeta.label} Singles Events</strong>

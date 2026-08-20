@@ -97,9 +97,9 @@ export default async function CategoryCityPage({ params }: Props) {
       <div className="e4s-page-with-sidebar">
         <main className="e4s-category-template" id="site-content">
           {listings.length === 0 && (
-            <div style={{ padding: "40px 0", textAlign: "center", width: "100%" }}>
+            <div className="e4s-empty-state">
               <p>No listings found for {catMeta.label} in {cityMeta.label}.</p>
-              <Link href={`/${category}`} style={{ color: "var(--e4s-pink)" }}>
+              <Link href={`/${category}`}>
                 Browse other cities
               </Link>
             </div>

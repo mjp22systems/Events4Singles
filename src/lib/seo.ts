@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const SITE_NAME = "Events4Singles";
-export const SITE_URL = "https://www.events4singles.com.au";
+export const SITE_URL = "https://events4singles.com";
 export const DEFAULT_DESCRIPTION =
   "Find speed dating, dinner parties, dance classes, social clubs and events for singles across Sydney, Melbourne, Brisbane, Perth, Adelaide and more.";
 export const DEFAULT_KEYWORDS = [
@@ -62,7 +62,7 @@ export function pageMetadata({
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description: clean,
       images: [image],

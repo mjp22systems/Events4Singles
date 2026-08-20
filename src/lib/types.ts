@@ -14,8 +14,10 @@ export interface Listing {
   location_city: string | null;
   location_state: string | null;
   listing_type: string | null;
+  status: string | null;
   confidence_score: number;
   business_id: number | null;
+  business_advertiser_id: number | null;
   business_name: string | null;
   business_website: string | null;
   category_slug: string | null;
@@ -57,6 +59,16 @@ export interface Banner {
   image_url: string;
   click_url: string;
   alt_text: string;
+}
+
+export interface Business {
+  id: number;
+  name: string | null;
+  description: string | null;
+  logo_url: string | null;
+  website: string | null;
+  advertiser_id: number | null;
+  profile_slug: string | null;
 }
 
 export interface PlacementCombo {

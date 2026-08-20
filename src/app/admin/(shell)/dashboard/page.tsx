@@ -57,6 +57,22 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         </div>
+        <div className="a-stat">
+          <div className="a-stat__label">Events Pending</div>
+          <div
+            className="a-stat__value"
+            style={{ color: stats.pendingEvents > 0 ? "var(--a-warning)" : undefined }}
+          >
+            {stats.pendingEvents.toLocaleString()}
+          </div>
+          {stats.pendingEvents > 0 && (
+            <div className="a-stat__sub">
+              <Link href="/admin/events?status=pending" style={{ color: "var(--a-warning)" }}>
+                Review now →
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="a-card">
