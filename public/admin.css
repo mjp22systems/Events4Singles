@@ -562,8 +562,19 @@ body {
   height: 34px;
   z-index: 10000;
 }
-body.has-admin-bar {
-  padding-top: 34px;
+/* Push public header below admin bar (no-op on admin console — no .e4s-header there) */
+.e4s-header {
+  top: 34px !important;
+}
+/* Extra body padding only when public header is present (:has avoids breaking admin console) */
+body:has(.e4s-header).e4s-fixed-header {
+  padding-top: calc(34px + var(--e4s-header-height, 101px)) !important;
+}
+/* Shift main content left when edit drawer opens */
+body.drawer-open #site-content,
+body.drawer-open .e4s-shell {
+  margin-right: 360px;
+  transition: margin-right 0.22s ease;
 }
 .e4s-admin-bar span { opacity: 0.75; font-size: 11px; }
 .e4s-admin-bar__btn {

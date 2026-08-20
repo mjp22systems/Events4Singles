@@ -33,11 +33,6 @@ export default function AdminEditDrawer({ listing, onSaved }: Props) {
   });
 
   useEffect(() => {
-    document.body.classList.add("has-admin-bar");
-    return () => document.body.classList.remove("has-admin-bar");
-  }, []);
-
-  useEffect(() => {
     if (open) {
       document.body.classList.add("drawer-open");
     } else {
