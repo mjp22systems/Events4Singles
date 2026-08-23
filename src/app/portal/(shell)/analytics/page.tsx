@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { getAccount, getListingsForAccount, getAnalyticsSummary, getAnalyticsDaily } from "@/lib/portal-db";
+import { redirect } from "next/navigation";
+import { getOrCreateAccount, getBusinessIdsForAccount, getListingsForBusinessIds, getAnalyticsSummary, getAnalyticsDaily } from "@/lib/portal-db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +11,10 @@ export default async function PortalAnalytics({
 }) {
   const params = await searchParams;
   const user = await currentUser();
-  const account = await getAccount(user!.id);
-  const allListings = account?.business_id ? await getListingsForAccount(account.business_id) : [];
+  if (!user) redirect("/portal/sign-in");
+  const account = await getOrCreateAccount(user.id, user.emailAddresses[0]?.emailAddress);
+  const businessIds = await getBusinessIdsForAccount(account);
+  const allListings = businessIds.length ? await getListingsForBusinessIds(businessIds) : [];
   const typed = allListings as { id: string; title: string; status: string }[];
 
   const days = Number(params.days ?? 30);

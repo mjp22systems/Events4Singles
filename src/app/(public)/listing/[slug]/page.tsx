@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { getListingById, getListingPlacements, getBusinessListings } from "@/lib/data";
+import { getListingById, getListingBySlug, getListingPlacements, getBusinessListings } from "@/lib/data";
 import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
@@ -17,10 +17,17 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+async function resolveListing(slug: string) {
+  // Prefer slug-based lookup (stable, canonical). Fall back to ID for legacy URLs.
+  const bySlug = await getListingBySlug(slug);
+  if (bySlug) return bySlug;
+  const id = idFromListingSlug(slug);
+  return id !== null ? await getListingById(id) : null;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const id = idFromListingSlug(slug);
-  const listing = id !== null ? await getListingById(id) : null;
+  const listing = await resolveListing(slug);
   if (!listing) return {};
   const title = listing.business_name || listing.title;
   const location = [listing.location_city, listing.location_state].filter(Boolean).join(", ");
@@ -62,10 +69,7 @@ function listingLocationBadges(listing: Listing) {
 
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
-  const id = idFromListingSlug(slug);
-  if (id === null) notFound();
-
-  const listing = await getListingById(id);
+  const listing = await resolveListing(slug);
   if (!listing) notFound();
 
   const cookieStore = await cookies();
@@ -81,7 +85,7 @@ export default async function ListingPage({ params }: Props) {
   const locationBadges = listingLocationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locationBadges.length);
 
-  const placements = await getListingPlacements(id);
+  const placements = await getListingPlacements(listing.id);
 
   // Unique cities this listing appears in — for city hub page pills
   const cityPills = [
@@ -92,7 +96,7 @@ export default async function ListingPage({ params }: Props) {
     ).values(),
   ];
 
-  const siblings = await getBusinessListings(listing.business_id ?? -1, id);
+  const siblings = await getBusinessListings(listing.business_id ?? -1, listing.id);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -156,7 +160,7 @@ export default async function ListingPage({ params }: Props) {
                   {listing.business_id && (
                     <Link href={`/profile/${toProfileSlug(listing.business_id!, listing.business_name || listing.title)}`} className="e4s-listing-detail__id-badge e4s-listing-detail__id-badge--link">Profile ID {listing.business_id}</Link>
                   )}
-                  <span className="e4s-listing-detail__id-badge">Listing ID {id}</span>
+                  <span className="e4s-listing-detail__id-badge">Listing ID {listing.id}</span>
                 </span>
               </div>
               {listing.tagline && <p className="e4s-listing-detail__tagline">{listing.tagline}</p>}

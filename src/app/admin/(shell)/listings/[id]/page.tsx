@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { getListingById } from "@/lib/admin-db";
+import { getListingById, getPlacementsForListing, listCategories, listCities, listListingImageOptions } from "@/lib/admin-db";
+import AdminEditShell from "@/components/admin/edit-shell";
 import ListingEditForm from "./listing-edit-form";
 
 export const dynamic = "force-dynamic";
@@ -11,25 +11,25 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function EditListingPage({ params }: Props) {
   const { id } = await params;
-  const listing = await getListingById(Number(id));
+  const listingId = Number(id);
+  const [listing, placements, categories, cities, imageOptions] = await Promise.all([
+    getListingById(listingId),
+    getPlacementsForListing(listingId),
+    listCategories(),
+    listCities(),
+    listListingImageOptions(),
+  ]);
   if (!listing) notFound();
 
   return (
-    <>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-        <Link
-          href="/admin/listings"
-          className="a-btn a-btn-ghost"
-          style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
-        >
-          ← Listings
-        </Link>
-        <h1 className="a-page-title" style={{ margin: 0 }}>
-          Edit Listing{" "}
-          <span style={{ color: "var(--a-ink-muted)", fontWeight: 400 }}>#{listing.id}</span>
-        </h1>
-      </div>
-      <ListingEditForm listing={listing} />
-    </>
+    <AdminEditShell backHref="/admin/listings" backLabel="← Listings" title={listing.title} eyebrow={`Listing ID ${listing.id}`}>
+      <ListingEditForm
+        listing={listing}
+        placements={placements}
+        categories={categories}
+        cities={cities}
+        imageOptions={imageOptions}
+      />
+    </AdminEditShell>
   );
 }

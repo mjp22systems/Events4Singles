@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { AdminListing } from "@/lib/admin-db";
+import type { AdminCategory, AdminCity, AdminListing, AdminListingPlacement } from "@/lib/admin-db";
 
 const STATUSES = ["active", "pending", "unclaimed", "paused", "expired", "archived", "deleted"];
 const TYPES = ["standard", "featured", "premium"];
@@ -109,7 +109,33 @@ function fmtDate(v: string | number | null): string {
   return isNaN(d.getTime()) ? "—" : d.toLocaleDateString("en-AU");
 }
 
-export default function ListingEditForm({ listing }: { listing: AdminListing }) {
+type PlacementDraft = {
+  category_slug: string;
+  city_slug: string;
+};
+
+function placementDrafts(placements: AdminListingPlacement[]): PlacementDraft[] {
+  return placements.length
+    ? placements.map((placement) => ({
+        category_slug: placement.category_slug ?? "",
+        city_slug: placement.city_slug ?? "",
+      }))
+    : [{ category_slug: "", city_slug: "" }];
+}
+
+export default function ListingEditForm({
+  listing,
+  placements: initialPlacements,
+  categories,
+  cities,
+  imageOptions,
+}: {
+  listing: AdminListing;
+  placements: AdminListingPlacement[];
+  categories: AdminCategory[];
+  cities: AdminCity[];
+  imageOptions: string[];
+}) {
   const router = useRouter();
   const id = listing.id;
 
@@ -127,6 +153,7 @@ export default function ListingEditForm({ listing }: { listing: AdminListing }) 
   const [location, setLocation] = useState(s(listing.location));
   const [locationCity, setLocationCity] = useState(s(listing.location_city));
   const [locationState, setLocationState] = useState(s(listing.location_state));
+  const [placements, setPlacements] = useState<PlacementDraft[]>(() => placementDrafts(initialPlacements));
 
   const [imageUrl, setImageUrl] = useState(s(listing.image_url));
 
@@ -151,6 +178,18 @@ export default function ListingEditForm({ listing }: { listing: AdminListing }) 
   const [deleteReason, setDeleteReason] = useState("");
   const [deleting, setDeleting] = useState(false);
 
+  function updatePlacement(index: number, key: keyof PlacementDraft, value: string) {
+    setPlacements((items) => items.map((item, i) => i === index ? { ...item, [key]: value } : item));
+  }
+
+  function addPlacement() {
+    setPlacements((items) => [...items, { category_slug: "", city_slug: "" }]);
+  }
+
+  function removePlacement(index: number) {
+    setPlacements((items) => items.length === 1 ? [{ category_slug: "", city_slug: "" }] : items.filter((_, i) => i !== index));
+  }
+
   function showToast(type: "ok" | "err", msg: string) {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 4000);
@@ -168,6 +207,12 @@ export default function ListingEditForm({ listing }: { listing: AdminListing }) 
           contact_name: contactName, phone, mobile, email, web,
           location, location_city: locationCity, location_state: locationState,
           image_url: imageUrl,
+          placements: placements
+            .map((placement) => ({
+              category_slug: placement.category_slug || null,
+              city_slug: placement.city_slug || null,
+            }))
+            .filter((placement) => placement.category_slug || placement.city_slug),
           facebook_url: facebookUrl, instagram_url: instagramUrl,
           tiktok_url: tiktokUrl, youtube_url: youtubeUrl, linkedin_url: linkedinUrl,
           status, listing_type: listingType, unclaimed_flag: unclaimed ? 1 : 0,
@@ -296,6 +341,67 @@ export default function ListingEditForm({ listing }: { listing: AdminListing }) 
                   <TextInput name="location_state" value={locationState} onChange={setLocationState} placeholder="NSW" />
                 </Field>
               </div>
+            </div>
+          </div>
+
+          {/* Placements */}
+          <div className="a-card">
+            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <SectionHeader title="Categories & Cities" />
+              <p style={{ margin: "-6px 0 0", fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                These placements control which category and city pages this listing appears on.
+              </p>
+              {placements.map((placement, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr auto",
+                    gap: "10px",
+                    alignItems: "end",
+                  }}
+                >
+                  <Field label={index === 0 ? "Category" : "Category"}>
+                    <select
+                      value={placement.category_slug}
+                      onChange={(e) => updatePlacement(index, "category_slug", e.target.value)}
+                      style={selectStyle}
+                    >
+                      <option value="">No category</option>
+                      {categories.map((category) => (
+                        <option key={category.slug} value={category.slug}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label={index === 0 ? "City" : "City"}>
+                    <select
+                      value={placement.city_slug}
+                      onChange={(e) => updatePlacement(index, "city_slug", e.target.value)}
+                      style={selectStyle}
+                    >
+                      <option value="">All / no city</option>
+                      {cities.map((city) => (
+                        <option key={city.slug} value={city.slug}>
+                          {city.label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <button
+                    type="button"
+                    className="a-btn a-btn-ghost"
+                    onClick={() => removePlacement(index)}
+                    style={{ minHeight: "37px", padding: "6px 10px" }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" className="a-btn a-btn-ghost" onClick={addPlacement} style={{ width: "fit-content" }}>
+                + Add category / city
+              </button>
             </div>
           </div>
 
@@ -428,6 +534,24 @@ export default function ListingEditForm({ listing }: { listing: AdminListing }) 
               <Field label="Image URL">
                 <TextInput name="image_url" value={imageUrl} onChange={setImageUrl} placeholder="https://…" />
               </Field>
+              {imageOptions.length > 0 && (
+                <Field label="Choose from image library">
+                  <select
+                    value={imageOptions.includes(imageUrl) ? imageUrl : ""}
+                    onChange={(e) => {
+                      if (e.target.value) setImageUrl(e.target.value);
+                    }}
+                    style={selectStyle}
+                  >
+                    <option value="">Select existing image...</option>
+                    {imageOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )}
             </div>
           </div>
 

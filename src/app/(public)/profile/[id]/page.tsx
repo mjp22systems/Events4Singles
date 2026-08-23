@@ -27,7 +27,7 @@ const SOCIAL_PLATFORMS = [
 ];
 
 const TYPE_CONFIG: Record<string, { label: string; cls: string; icon: string }> = {
-  event_org:    { label: "Activities & Events", cls: "e4s-type-badge--eo",     icon: "⚡" },
+  event_organizer:    { label: "Activities & Events", cls: "e4s-type-badge--eo",     icon: "⚡" },
   venue:        { label: "Venue",           cls: "e4s-type-badge--venue",  icon: "🏛" },
   service:      { label: "Service",         cls: "e4s-type-badge--svc",    icon: "🛠" },
   practitioner: { label: "Practitioner",    cls: "e4s-type-badge--prac",   icon: "👤" },
@@ -351,7 +351,7 @@ export default async function ProfilePage({ params }: Props) {
                   </div>
                 )}
 
-                {/* Address — all types show if available; venue/event_org show placeholder if not */}
+                {/* Address — all types show if available; venue/event_organizer show placeholder if not */}
                 {address ? (
                   mapsUrl ? (
                     <a href={mapsUrl} rel="noopener" target="_blank" className="e4s-profile-contact-row">
@@ -365,11 +365,11 @@ export default async function ProfilePage({ params }: Props) {
                       <span className="e4s-profile-contact-row__text">{address}</span>
                     </div>
                   )
-                ) : (isVenue || ltype === "event_org") ? (
+                ) : (isVenue || ltype === "event_organizer") ? (
                   <div className="e4s-profile-contact-row e4s-profile-contact-row--off">
                     <span className="e4s-profile-contact-row__icon" aria-hidden="true">📍</span>
                     <span className="e4s-profile-contact-row__text">
-                      {ltype === "event_org" ? "No fixed address" : "Not listed"}
+                      {ltype === "event_organizer" ? "No fixed address" : "Not listed"}
                     </span>
                   </div>
                 ) : null}

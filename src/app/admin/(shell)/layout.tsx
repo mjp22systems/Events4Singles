@@ -1,16 +1,31 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
+import { getAdminSession, SESSION_COOKIE } from "@/lib/admin-auth";
+import { findAdminAccountForLogin, getAdminAccountById } from "@/lib/admin-db";
 import SideNav from "@/components/admin/side-nav";
+import Link from "next/link";
+import AdminThemeToggle from "@/components/admin/theme-toggle";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminShellLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token || !(await verifyAdminToken(token))) {
+  const session = token ? await getAdminSession(token) : null;
+  if (!session) {
     redirect("/admin/login");
   }
+  const account = session.accountId
+    ? await getAdminAccountById(session.accountId)
+    : await findAdminAccountForLogin();
+  const displayName = account?.display_name ?? session.displayName ?? "Admin";
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase() || "A";
 
   return (
     <div className="admin-shell">
@@ -19,30 +34,24 @@ export default async function AdminShellLayout({ children }: { children: React.R
           <div className="admin-sidebar__logo-mark">e4s</div>
           <div className="admin-sidebar__logo-text">
             <span className="admin-sidebar__logo-name">Events4Singles</span>
-            <span className="admin-sidebar__logo-sub">Admin</span>
+            <span className="admin-sidebar__logo-sub">Admin Console</span>
           </div>
         </div>
         <SideNav />
       </aside>
       <div className="admin-right">
         <header className="admin-topbar">
-          <span className="admin-topbar__title">Admin Console</span>
           <div className="admin-topbar__actions">
-            <div className="admin-user-chip">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-              Matt
-            </div>
+            <AdminThemeToggle />
+            <Link href="/admin/profile" className="admin-user-chip">
+              <span className="admin-user-avatar">{initials}</span>
+              <span className="admin-user-chip__text">
+                <span>{displayName}</span>
+              </span>
+            </Link>
+            <form action="/admin/api/logout" method="POST">
+              <button type="submit" className="admin-topbar__sign-out">Sign out</button>
+            </form>
           </div>
         </header>
         <main className="admin-main">

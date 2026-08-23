@@ -3,13 +3,35 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import type { Article } from "@/content/articles";
 import { articles, getArticle } from "@/content/articles";
+import { articleCategory, groupArticles, topicId } from "@/content/article-categories";
+import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function articleCategory(article: Article) {
-  return article.category || "Featured Guides";
+function articlePath(article: Article) {
+  return `/dating-resources/${article.slug}`;
+}
+
+function stripHtml(value: string) {
+  return value
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function articleKeywords(article: Article) {
+  const category = articleCategory(article);
+  return [
+    "dating resources",
+    "dating advice Australia",
+    "singles advice",
+    "relationship resources",
+    category.toLowerCase(),
+  ];
 }
 
 export function generateStaticParams() {
@@ -20,10 +42,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticle(slug);
   if (!article) return {};
-  return {
+  return pageMetadata({
     title: article.title,
     description: article.description,
-  };
+    path: articlePath(article),
+    keywords: articleKeywords(article),
+  });
 }
 
 export default async function DatingResourceArticlePage({ params }: Props) {
@@ -31,19 +55,75 @@ export default async function DatingResourceArticlePage({ params }: Props) {
   const article = getArticle(slug);
   if (!article) notFound();
 
-  const articleIndex = articles.findIndex((item) => item.slug === article.slug);
-  const previousArticle = articleIndex > 0 ? articles[articleIndex - 1] : null;
-  const nextArticle = articleIndex >= 0 && articleIndex < articles.length - 1 ? articles[articleIndex + 1] : null;
   const category = articleCategory(article);
-  const relatedArticles = articles
-    .filter((item) => item.slug !== article.slug && articleCategory(item) === category)
-    .slice(0, 3);
+  const topicGroups = groupArticles(articles);
+  const categoryArticles = articles.filter((item) => articleCategory(item) === category);
+  const categoryIndex = categoryArticles.findIndex((item) => item.slug === article.slug);
+  const previousArticle = categoryIndex > 0 ? categoryArticles[categoryIndex - 1] : null;
+  const nextArticle = categoryIndex >= 0 && categoryIndex < categoryArticles.length - 1
+    ? categoryArticles[categoryIndex + 1]
+    : null;
+  const relatedArticles = categoryArticles.filter((item) => item.slug !== article.slug).slice(0, 4);
   const fallbackArticles = relatedArticles.length
     ? relatedArticles
     : articles.filter((item) => item.slug !== article.slug).slice(0, 3);
+  const articleUrl = `${SITE_URL}${articlePath(article)}`;
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      description: article.description,
+      datePublished: article.publishedAt,
+      dateModified: article.publishedAt,
+      articleSection: category,
+      author: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      publisher: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/icon.png`,
+        },
+      },
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": articleUrl,
+      },
+      url: articleUrl,
+      wordCount: stripHtml(article.content).split(/\s+/).filter(Boolean).length,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Dating Resources",
+          item: `${SITE_URL}/dating-resources`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: article.title,
+          item: articleUrl,
+        },
+      ],
+    },
+  ];
 
   return (
     <main className="e4s-info-page e4s-shell e4s-blog-article" id="site-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {previousArticle ? (
         <Link
           aria-label={`Previous article: ${previousArticle.title}`}
@@ -65,19 +145,11 @@ export default async function DatingResourceArticlePage({ params }: Props) {
         </Link>
       ) : null}
 
-      <nav className="e4s-blog-breadcrumb" aria-label="Breadcrumb">
-        <Link href="/dating-resources">Dating Resources</Link>
-        <span>/</span>
-        <span>{category}</span>
-        <span>/</span>
-        <span>{article.title}</span>
-      </nav>
-
       <div className="e4s-blog-article-layout">
         <article>
           <header className="e4s-blog-article-hero">
-            <p className="e4s-blog-eyebrow">{category}</p>
             <h1>{article.title}</h1>
+            <p className="e4s-blog-eyebrow">{category}</p>
             <p className="e4s-lead">{article.description}</p>
           </header>
 
@@ -92,8 +164,24 @@ export default async function DatingResourceArticlePage({ params }: Props) {
             Back to Dating Resources
           </Link>
 
+          <section className="e4s-blog-topic-menu">
+            <h2>Browse topics</h2>
+            <nav aria-label="Dating resources topic menu">
+              {topicGroups.map((group) => (
+                <Link
+                  key={group.category}
+                  href={`/dating-resources#${topicId(group.category)}`}
+                  aria-current={group.category === category ? "true" : undefined}
+                >
+                  <span>{group.category}</span>
+                  <small>{group.articles.length}</small>
+                </Link>
+              ))}
+            </nav>
+          </section>
+
           <section>
-            <h2>Related reads</h2>
+            <h2>More in this topic</h2>
             <div className="e4s-blog-related-list">
               {fallbackArticles.map((item) => (
                 <Link key={item.slug} href={`/dating-resources/${item.slug}`}>
@@ -115,15 +203,21 @@ export default async function DatingResourceArticlePage({ params }: Props) {
 
       <nav className="e4s-blog-post-nav" aria-label="Article navigation">
         {previousArticle ? (
-          <Link href={`/dating-resources/${previousArticle.slug}`}>
-            <span>Previous article</span>
-            <strong>{previousArticle.title}</strong>
+          <Link className="e4s-blog-post-nav__link e4s-blog-post-nav__link--prev" href={`/dating-resources/${previousArticle.slug}`}>
+            <span className="e4s-blog-post-nav__meta">Previous in topic</span>
+            <span className="e4s-blog-post-nav__row">
+              <span className="e4s-blog-post-nav__arrow" aria-hidden="true">←</span>
+              <strong>{previousArticle.title}</strong>
+            </span>
           </Link>
         ) : <span />}
         {nextArticle ? (
-          <Link href={`/dating-resources/${nextArticle.slug}`}>
-            <span>Next article</span>
-            <strong>{nextArticle.title}</strong>
+          <Link className="e4s-blog-post-nav__link e4s-blog-post-nav__link--next" href={`/dating-resources/${nextArticle.slug}`}>
+            <span className="e4s-blog-post-nav__meta">Next in topic</span>
+            <span className="e4s-blog-post-nav__row">
+              <strong>{nextArticle.title}</strong>
+              <span className="e4s-blog-post-nav__arrow" aria-hidden="true">→</span>
+            </span>
           </Link>
         ) : <span />}
       </nav>

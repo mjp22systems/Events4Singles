@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { permanentRedirect } from "next/navigation";
+import { CityDirectoryGrid } from "@/components/directory-sort";
 import { getAllCities } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
 
@@ -29,36 +31,32 @@ const CITY_IMAGES: Record<string, string> = {
   toowoomba: "/images/home-city-toowoomba.jpg",
 };
 
-export default async function CitiesPage() {
+type CitiesPageProps = {
+  searchParams?: Promise<{ sort?: string | string[] }>;
+};
+
+export default async function CitiesPage({ searchParams }: CitiesPageProps) {
+  if ((await searchParams)?.sort) permanentRedirect("/cities");
+
   const cities = await getAllCities();
+  const cityTiles = cities.map((city) => {
+    const slug = toUrlSlug(city.slug);
+    return {
+      href: `/${slug}`,
+      imageUrl: CITY_IMAGES[slug] ?? null,
+      label: city.label,
+      listingCount: city.listing_count,
+      slug: city.slug,
+    };
+  });
 
   return (
-    <main id="site-content">
-      <div className="e4s-shell e4s-page-head">
-        <h1>Browse by City</h1>
-        <p className="e4s-lead">
-          Browse all Australian cities and regions in the Events4Singles directory.
-          Select your city to explore speed dating, dinner parties, social clubs and more.
-        </p>
-      </div>
-
-      <div className="e4s-shell e4s-home-city-grid">
-        {cities.map((city) => {
-          const slug = toUrlSlug(city.slug);
-          const img = CITY_IMAGES[slug];
-          return (
-            <Link key={city.slug} className="e4s-home-city-tile" href={`/${slug}`}>
-              {img ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img alt={city.label} loading="lazy" src={img} />
-              ) : (
-                <div className="e4s-home-city-tile__placeholder" aria-hidden="true" />
-              )}
-              <span>{city.label}</span>
-            </Link>
-          );
-        })}
-      </div>
+    <main className="e4s-index-page" id="site-content">
+      <CityDirectoryGrid
+        cities={cityTiles}
+        title="Browse by City"
+        lead="Browse all Australian cities and regions in the Events4Singles directory. Select your city to explore speed dating, dinner parties, social clubs and more."
+      />
 
       <div className="e4s-shell e4s-page-foot">
         <h2>List Your Event</h2>

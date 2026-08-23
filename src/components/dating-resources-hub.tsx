@@ -1,45 +1,7 @@
 import Link from "next/link";
 import { articles } from "@/content/articles";
+import { CATEGORY_COPY, articleCategory, groupArticles, topicId } from "@/content/article-categories";
 import FeaturedArticlesCarousel, { type FeaturedArticleCard } from "@/components/featured-articles-carousel";
-
-const CATEGORY_ORDER = [
-  "Featured Guides",
-  "Dating Advice",
-  "Flirting & Romance",
-  "Relationships",
-  "Personal Growth",
-  "Resources",
-];
-
-const CATEGORY_COPY: Record<string, string> = {
-  "Featured Guides": "Start here for practical, modern guides to singles events, dating confidence and meeting people offline.",
-  "Dating Advice": "Preparation, safety, first impressions and everyday dating confidence.",
-  "Flirting & Romance": "Conversation, chemistry, romance and small signals that help connection feel natural.",
-  Relationships: "Compatibility, commitment and what happens after a promising first meeting.",
-  "Personal Growth": "Wellbeing, confidence and inner work for singles building a happier social life.",
-  Resources: "Books, websites, links and deeper reading for singles who want to keep exploring.",
-};
-
-function topicId(category: string) {
-  return category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
-function articleCategory(article: (typeof articles)[number]) {
-  return article.category || "Featured Guides";
-}
-
-function groupArticles() {
-  const groups = articles.reduce<Record<string, typeof articles>>((acc, article) => {
-    const category = articleCategory(article);
-    acc[category] ??= [];
-    acc[category].push(article);
-    return acc;
-  }, {});
-
-  return CATEGORY_ORDER
-    .filter((category) => groups[category]?.length)
-    .map((category) => ({ category, articles: groups[category] }));
-}
 
 function featuredArticles(groups: ReturnType<typeof groupArticles>): FeaturedArticleCard[] {
   const dayOffset = Math.floor(Date.now() / 86_400_000);
@@ -73,17 +35,16 @@ function featuredArticles(groups: ReturnType<typeof groupArticles>): FeaturedArt
 }
 
 export default function DatingResourcesHub() {
-  const groups = groupArticles();
+  const groups = groupArticles(articles);
   const featured = featuredArticles(groups);
 
   return (
     <main className="e4s-info-page e4s-shell e4s-blog" id="site-content">
       <header className="e4s-blog-hero">
-        <p className="e4s-blog-eyebrow">Dating Resources</p>
-        <h1>Dating advice, singles guides and relationship resources</h1>
+        <h1>Dating Resources</h1>
         <p className="e4s-lead">
-          Practical articles for meeting people, preparing for dates, flirting,
-          relationship confidence, online dating, and making the most of singles events.
+          Practical dating advice, singles guides and relationship resources for meeting people,
+          preparing for dates, flirting, online dating and making the most of singles events.
         </p>
       </header>
 

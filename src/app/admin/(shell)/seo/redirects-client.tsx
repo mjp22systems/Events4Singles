@@ -46,7 +46,7 @@ export default function RedirectsClient({ initial }: { initial: AdminRedirect[] 
 
   return (
     <>
-      <h1 className="a-page-title">SEO Redirects</h1>
+      <h1 className="a-page-title">Redirects</h1>
 
       <div className="a-card" style={{ marginBottom: "20px" }}>
         <div className="a-card-header">
@@ -87,7 +87,7 @@ export default function RedirectsClient({ initial }: { initial: AdminRedirect[] 
           </div>
         ) : (
           <div className="a-table-wrap">
-            <table className="a-table">
+            <table className="a-table a-table--single-line">
               <thead>
                 <tr>
                   <th>From</th>
@@ -131,7 +131,7 @@ export default function RedirectsClient({ initial }: { initial: AdminRedirect[] 
           </p>
         </div>
         <div className="a-table-wrap">
-          <table className="a-table">
+          <table className="a-table a-table--single-line">
             <thead>
               <tr><th>From</th><th>To</th><th>Type</th></tr>
             </thead>

@@ -1,6 +1,6 @@
 # Events4Singles Source Of Truth
 
-Last updated: 2026-08-13
+Last updated: 2026-08-21
 
 This document is the working project bible for the rebuilt Events4Singles website, staging database, legacy migration, and planned backend/admin console. It captures decisions made during the rebuild so they are not trapped in chat history.
 
@@ -24,14 +24,35 @@ Treat this file as the human-readable decision source. Treat the render/data doc
 
 ## Current Build
 
-- New app lives in `D:\Projects\Clients\Dad\Events4singles\new`.
-- Current public dev target is `dev.events4singles.com`, deployed through Cloudflare Pages project `events4singles-v2`.
-- The app is a static Next.js build backed at build time by SQLite.
-- The active staging source is `listings.staging.db` when present. `src/lib/db.ts` prefers `E4S_DB_PATH`, then `listings.staging.db`, then `listings.db`.
+- Active app lives in `D:\Projects\Clients\Dad\Events4singles\website`.
+- Current public target is `events4singles.com`, deployed through Cloudflare Worker `events4singles-v2` on the Dad account.
+- The app is a Next.js 16 App Router build deployed with `@opennextjs/cloudflare`, backed by Cloudflare D1.
 - Public listing/category/city pages are template-driven from database queries in `src/lib/data.ts`.
-- Current stylesheet source is `public/site.css`; `src/app/layout.tsx` links it with a cache-busting query string, currently `/site.css?v=20260813-restore`.
-- Local development port convention is `10400` for the original new app and `10402` for the richer staging variant.
-- Earlier Claude memory named the stack as Next.js 16, TypeScript, `better-sqlite3`, `site.css`, static generation, and Cloudflare Pages.
+- Current stylesheet source is one canonical file: `public/site.css`. Do not create extra versioned CSS files for routine edits.
+- `next.config.ts` sets `/site.css` to `Cache-Control: no-cache, max-age=0, must-revalidate` so CSS revalidates while the site is actively being worked on.
+- Local development port convention is `10400`.
+- Earlier Claude memory named the stack as static Next/SQLite/Cloudflare Pages. That is outdated for the active `website` app.
+
+## Deploy And Cache Access
+
+Cloudflare access is through API-token environment variables, not browser login:
+
+- `CLOUDFLARE_API_TOKEN_DAD`
+- `CLOUDFLARE_ACCOUNT_ID_DAD`
+- Zone ID for `events4singles.com`: `c5fe90c1608ef88a0dca1e1cb96bcf2c`
+
+Do not treat `wrangler whoami` failure as proof deploy/cache access is unavailable. This machine may not be browser-authenticated, but token-backed Cloudflare API access exists.
+
+Preferred commands:
+
+```powershell
+npm run deploy:dad
+npm run cache:purge
+```
+
+`npm run deploy:dad` maps the Dad env vars to Wrangler's expected `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, runs `npm run build:cf`, and deploys. It also sets `NODE_TLS_REJECT_UNAUTHORIZED=0` for this local Windows environment because Wrangler's Node fetch can fail here with a local certificate-chain/proxy mismatch.
+
+`npm run cache:purge` purges Cloudflare cache directly through the Cloudflare API. Use it after deploys or when live pages appear stale. Do not solve cache visibility by multiplying stylesheet filenames.
 
 ## Platform Direction
 

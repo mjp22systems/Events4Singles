@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
-import ComingSoon from "@/components/admin/coming-soon";
+import { redirect } from "next/navigation";
+
 export const metadata: Metadata = { title: "Customers" };
-export default function AdminCustomersPage() { return <ComingSoon title="Customers" />; }
+export default function AdminCustomersPage() {
+  redirect("/admin/users");
+}

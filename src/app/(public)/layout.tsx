@@ -2,12 +2,15 @@ import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 import NavigationTracker from "@/components/navigation-tracker";
 import BackToTop from "@/components/back-to-top";
+import HeaderHeight from "@/components/header-height";
 
 export const dynamic = "force-dynamic";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <link rel="stylesheet" href="/site.css" />
+      <HeaderHeight />
       <NavigationTracker />
       <Nav />
       {children}

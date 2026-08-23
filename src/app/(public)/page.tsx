@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getFeaturedListings, getUpcomingEvents, type PublicEvent } from "@/lib/data";
+import { getFeaturedListings, getUpcomingEvents } from "@/lib/data";
 import NewsletterForm from "@/components/newsletter-form";
 import HomeFeatured from "@/components/home-featured";
+import EventCardGrid from "@/components/event-card-grid";
+import { PATHWAYS } from "@/lib/pathways";
 
 export const metadata: Metadata = {
   title: "Events4Singles — Australian Singles Events Directory",
@@ -25,62 +27,6 @@ const FEATURED_CATS = [
 ];
 
 
-const PLACEHOLDER_EVENTS = [
-  { id: "p1", title: "Speed Dating Sydney — 30s & 40s", starts_at: "2026-09-06T19:00:00+10:00", venue_name: "The Establishment Bar", suburb: "Sydney CBD", city: "sydney", price_min: 3500, image_url: "/images/home-cat-speed-dating.jpg", source: "admin", ticket_url: null, description: "Fast-paced fun for Sydney singles in their 30s and 40s. Seven-minute dates, great drinks." },
-  { id: "p2", title: "Singles Dinner Party Melbourne", starts_at: "2026-09-13T19:30:00+10:00", venue_name: "Cumulus Inc.", suburb: "Flinders Lane", city: "melbourne", price_min: 9500, image_url: "/images/home-cat-dinner-parties.jpg", source: "admin", ticket_url: null, description: "Long-table dinner for 20 Melbourne professionals. Matched seating, three courses, no awkward silences." },
-  { id: "p3", title: "Salsa Social — Singles Night Brisbane", starts_at: "2026-09-20T18:00:00+10:00", venue_name: "Cloudland", suburb: "Fortitude Valley", city: "brisbane", price_min: 2500, image_url: "/images/home-cat-activities.jpg", source: "admin", ticket_url: null, description: "Beginner salsa lesson followed by a social dance floor open to all singles." },
-  { id: "p4", title: "Speed Dating Perth — 20s & 30s", starts_at: "2026-09-27T19:00:00+08:00", venue_name: "The Rooftop Bar", suburb: "Northbridge", city: "perth", price_min: 3000, image_url: "/images/home-cat-speed-dating.jpg", source: "admin", ticket_url: null, description: "Perth's most popular speed dating night for singles in their 20s and 30s." },
-  { id: "p5", title: "Mixer Night Adelaide", starts_at: "2026-10-04T18:30:00+09:30", venue_name: "Press Food & Wine", suburb: "Adelaide CBD", city: "adelaide", price_min: 2000, image_url: "/images/home-cat-mixers.jpg", source: "admin", ticket_url: null, description: "Relaxed after-work mixer in Adelaide's best wine bar. No awkward games, just great people." },
-  { id: "p6", title: "Premium Dinner Party Sydney", starts_at: "2026-10-11T19:00:00+10:00", venue_name: "Quay Restaurant", suburb: "The Rocks", city: "sydney", price_min: 14500, image_url: "/images/home-cat-dinner-parties.jpg", source: "admin", ticket_url: null, description: "Sydney's most exclusive singles dinner — waterfront views, matched seating, five courses." },
-  { id: "p7", title: "Speed Dating Melbourne CBD", starts_at: "2026-10-18T19:00:00+10:00", venue_name: "Taxi Kitchen", suburb: "Federation Square", city: "melbourne", price_min: 3500, image_url: "/images/home-cat-speed-dating.jpg", source: "admin", ticket_url: null, description: "Melbourne's iconic speed dating night returns with a fresh format and great venue." },
-  { id: "p8", title: "Dance & Social Night — Gold Coast", starts_at: "2026-10-25T18:00:00+10:00", venue_name: "HOTA", suburb: "Surfers Paradise", city: "gold_coast", price_min: 2500, image_url: "/images/home-cat-activities.jpg", source: "admin", ticket_url: null, description: "Fun social dancing for Gold Coast singles — no experience needed." },
-] as PublicEvent[];
-
-const INTENT_GROUPS = [
-  {
-    id: "partner",
-    icon: "💕",
-    heading: "Find a Partner",
-    desc: "Explicit matching services for singles actively looking to meet someone.",
-    cats: [
-      { slug: "speed-dating", label: "Speed Dating" },
-      { slug: "dinner-parties", label: "Dinner Parties" },
-      { slug: "intro-agencies", label: "Introduction Agencies" },
-      { slug: "online-dating", label: "Online Dating" },
-      { slug: "mature-dating-events", label: "Mature Dating" },
-    ],
-    browse: "/speed-dating",
-  },
-  {
-    id: "social",
-    icon: "🎉",
-    heading: "Get Out There",
-    desc: "Activities and venues where singles connect naturally through shared experiences.",
-    cats: [
-      { slug: "social-clubs", label: "Social Clubs" },
-      { slug: "dance-classes", label: "Dance Classes" },
-      { slug: "dance-party-clubs", label: "Dance Party Clubs" },
-      { slug: "nightclubs", label: "Nightclubs" },
-      { slug: "adventure-for-singles", label: "Adventure" },
-    ],
-    browse: "/social-clubs",
-  },
-  {
-    id: "growth",
-    icon: "✨",
-    heading: "Invest in Yourself",
-    desc: "Services and programs that help you grow, heal, and feel your best.",
-    cats: [
-      { slug: "life-coaches", label: "Life Coaches" },
-      { slug: "psychology", label: "Psychology" },
-      { slug: "healing-and-happiness", label: "Healing & Happiness" },
-      { slug: "seminars", label: "Seminars" },
-      { slug: "fitness4singles", label: "Fitness for Singles" },
-    ],
-    browse: "/life-coaches",
-  },
-];
-
 const EXPERIENCES = [
   { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/home-exp-dinner-parties.jpg", href: "/dinner-parties", badge: "PREMIUM" },
   { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/home-exp-dance-classes.jpg", href: "/dance-classes", badge: null },
@@ -92,55 +38,6 @@ const RESOURCES = [
   { badge: "SUCCESS STORIES", img: "/images/home-blog-success.jpg", title: "How Sarah and Mark Met at a Melbourne Mixer", desc: "How a casual Thursday night mixer led to a lasting connection.", href: "/dating-resources" },
   { badge: "CALENDAR", img: "/images/home-blog-calendar.jpg", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
 ];
-
-function formatEventDate(iso: string) {
-  try {
-    return new Date(iso).toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-  } catch {
-    return iso;
-  }
-}
-
-function formatEventPrice(min: number | null) {
-  if (min === null) return null;
-  if (min === 0) return "Free";
-  return `From $${(min / 100).toFixed(0)}`;
-}
-
-function EventsSection({ events }: { events: PublicEvent[] }) {
-  const display = events.length > 0 ? events : PLACEHOLDER_EVENTS;
-
-  return (
-    <div className="e4s-shell e4s-home-events-grid">
-      {display.map((ev) => {
-        const price = formatEventPrice(ev.price_min);
-        const location = [ev.venue_name, ev.suburb, ev.city].filter(Boolean).join(", ");
-        const href = ev.ticket_url || "/events";
-        return (
-          <article className="e4s-home-event-card" key={ev.id}>
-            {ev.image_url && (
-              <div className="e4s-home-event-card__img">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt={ev.title} loading="lazy" src={ev.image_url} />
-                {ev.source !== "admin" && (
-                  <span className="e4s-home-event-card__badge">{ev.source.toUpperCase()}</span>
-                )}
-              </div>
-            )}
-            <div className="e4s-home-event-card__body">
-              <p className="e4s-home-event-card__date">{formatEventDate(ev.starts_at)}</p>
-              <h3>{ev.title}</h3>
-              {location && <p className="e4s-home-event-card__location">{location}</p>}
-              {ev.description && <p className="e4s-home-event-card__desc">{ev.description.slice(0, 120)}{ev.description.length > 120 ? "…" : ""}</p>}
-              {price && <p className="e4s-home-event-card__meta">{price}</p>}
-              <Link className="e4s-home-event-card__link" href={href}>View Details</Link>
-            </div>
-          </article>
-        );
-      })}
-    </div>
-  );
-}
 
 export default async function HomePage() {
   const [featured, upcomingEvents] = await Promise.all([
@@ -177,25 +74,38 @@ export default async function HomePage() {
       <section className="e4s-home-section e4s-home-section--tinted" id="browse-by-intent">
         <div className="e4s-shell e4s-home-section__head">
           <div>
+            <p className="e4s-home-section__eyebrow">Start Here</p>
             <h2>What are you looking for?</h2>
-            <p>Find the right service for where you are in your singles journey.</p>
+            <p>Three ways in, depending on where you are right now — from quietly working on yourself, to getting out more, to actively looking to meet someone.</p>
           </div>
         </div>
         <div className="e4s-shell e4s-home-intent-grid">
-          {INTENT_GROUPS.map((group) => (
+          {PATHWAYS.map((group) => (
             <div key={group.id} className={`e4s-home-intent-tile e4s-home-intent-tile--${group.id}`}>
-              <span className="e4s-home-intent-tile__icon" aria-hidden="true">{group.icon}</span>
-              <h3 className="e4s-home-intent-tile__heading">{group.heading}</h3>
-              <p className="e4s-home-intent-tile__desc">{group.desc}</p>
-              <div className="e4s-home-intent-tile__cats">
-                {group.cats.map((cat) => (
-                  <Link key={cat.slug} href={`/${cat.slug}`} className="e4s-home-intent-tile__cat">
-                    {cat.label}
-                  </Link>
-                ))}
+              <div className="e4s-home-intent-tile__media">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt={group.title} loading="lazy" src={group.image} />
+                <span className="e4s-home-intent-tile__number">{group.number}</span>
+                <div className="e4s-home-intent-tile__media-copy">
+                  <p>{group.eyebrow}</p>
+                  <h3>{group.title}</h3>
+                </div>
               </div>
-              <Link href={group.browse} className="e4s-home-intent-tile__browse">
-                Browse {group.heading} →
+              <div className="e4s-home-intent-tile__body">
+                <p className="e4s-home-intent-tile__desc">{group.shortIntro}</p>
+                <ul className="e4s-home-intent-tile__cats">
+                  {group.categories.slice(0, 5).map((cat) => (
+                    <li key={cat.slug}>
+                      <Link href={`/${cat.slug}`} className="e4s-home-intent-tile__cat">
+                        <span>{cat.label}</span>
+                        <span aria-hidden="true">›</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link href={`/${group.slug}`} className="e4s-home-intent-tile__browse">
+                Browse {group.title} <span aria-hidden="true">→</span>
               </Link>
             </div>
           ))}
@@ -236,8 +146,10 @@ export default async function HomePage() {
             <Link key={cat.slug} className="e4s-home-cat-tile" href={`/${cat.slug}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img alt={cat.label} loading="lazy" src={cat.img} />
-              <span className="e4s-home-cat-tile__label">{cat.label}</span>
-              <span className="e4s-home-cat-tile__sub">{cat.sub}</span>
+              <span className="e4s-home-cat-tile__copy">
+                <span className="e4s-home-cat-tile__label">{cat.label}</span>
+                <span className="e4s-home-cat-tile__sub">{cat.sub}</span>
+              </span>
             </Link>
           ))}
         </div>
@@ -250,9 +162,15 @@ export default async function HomePage() {
             <h2>What&apos;s On</h2>
             <p>Upcoming events across Australia.</p>
           </div>
-          <Link className="e4s-home-section__more e4s-home-section__more--calendar" href="/events">View What's On</Link>
+          <Link className="e4s-home-section__more e4s-home-section__more--calendar" href="/events">View What&apos;s On</Link>
         </div>
-        <EventsSection events={upcomingEvents} />
+        {upcomingEvents.length > 0 ? (
+          <EventCardGrid events={upcomingEvents} />
+        ) : (
+          <div className="e4s-shell e4s-empty-state">
+            <p>No upcoming events are published yet. Check back soon.</p>
+          </div>
+        )}
       </section>
 
       {/* 5. FEATURED BUSINESSES */}

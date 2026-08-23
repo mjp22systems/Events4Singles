@@ -1,8 +1,13 @@
 import { SignIn } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function PortalSignIn() {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafb" }}>
+    <div className="p-auth-page">
+      <Link className="p-auth-back-link" href="/">
+        <span aria-hidden="true">←</span>
+        Back to site
+      </Link>
       <SignIn fallbackRedirectUrl="/portal/dashboard" />
     </div>
   );

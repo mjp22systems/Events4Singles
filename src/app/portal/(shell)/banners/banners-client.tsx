@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Banner } from "@/lib/portal-db";
+import type { Banner } from "@/lib/portal-db";
 import Modal from "@/components/portal/modal";
 import BannerSubmitForm from "./banner-submit-form";
 
@@ -28,36 +28,34 @@ export default function BannersClient({
           {banners.length === 0 ? (
             <div className="p-empty"><p>No banners yet. Click <strong>Add banner</strong> to submit one.</p></div>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <div className="p-table-wrap">
+            <table className="p-table p-banners-table">
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--p-border)" }}>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Preview</th>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Title</th>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Link</th>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Status</th>
+                <tr>
+                  <th className="p-banners-table__preview-col">Preview</th>
+                  <th>Title</th>
+                  <th>Link</th>
+                  <th className="p-banners-table__status-col">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {banners.map((b) => (
-                  <tr key={b.id} style={{ borderBottom: "1px solid var(--p-border)" }}>
-                    <td style={{ padding: "10px 0" }}>
-                      <img src={b.image_url} alt={b.title ?? "Banner"} style={{ width: 90, height: 60, objectFit: "cover", borderRadius: 4, border: "1px solid var(--p-border)" }} />
+                  <tr key={b.id}>
+                    <td>
+                      <img className="p-banner-thumb" src={b.image_url} alt={b.title ?? "Banner"} />
                     </td>
-                    <td style={{ padding: "10px 0 10px 12px", fontSize: "14px", color: "var(--p-ink)" }}>{b.title ?? "—"}</td>
-                    <td style={{ padding: "10px 0", fontSize: "13px", color: "var(--p-muted)", maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      <a href={b.link_url} target="_blank" rel="noopener noreferrer">{b.link_url}</a>
+                    <td className="p-banners-table__title">{b.title ?? "-"}</td>
+                    <td className="p-banners-table__link">
+                      <a href={b.link_url} target="_blank" rel="noopener noreferrer" title={b.link_url}>{b.link_url}</a>
                     </td>
-                    <td style={{ padding: "10px 0" }}>
-                      <span style={{
-                        fontSize: "12px", padding: "2px 8px", borderRadius: "12px",
-                        background: b.status === "active" ? "#d1fae5" : b.status === "rejected" ? "#fee2e2" : "#fef3c7",
-                        color: b.status === "active" ? "#065f46" : b.status === "rejected" ? "#991b1b" : "#92400e",
-                      }}>{b.status}</span>
+                    <td>
+                      <span className={`p-status-chip p-status-chip--${b.status}`}>{b.status}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>

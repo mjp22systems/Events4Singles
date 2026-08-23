@@ -1,2 +1,2 @@
-/* All site CSS is in /site.css (loaded via <link> in layout.tsx).
+/* Route CSS is loaded by each route layout.
    This file is kept for Next.js compatibility (it requires a globals import). */

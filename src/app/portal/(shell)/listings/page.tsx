@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { getAccount, getListingsForAccount } from "@/lib/portal-db";
+import { redirect } from "next/navigation";
+import { getOrCreateAccount, getBusinessesForAccount, getBusinessIdsForAccount, getListingsForBusinessIds } from "@/lib/portal-db";
 import ListingsClient from "./listings-client";
 
 export const dynamic = "force-dynamic";
@@ -33,14 +34,26 @@ async function requestListing(fd: FormData) {
   });
 }
 
-export default async function PortalListings() {
+export default async function PortalListings({
+  searchParams,
+}: {
+  searchParams: Promise<{ business_id?: string }>;
+}) {
+  const params = await searchParams;
   const user = await currentUser();
-  const account = await getAccount(user!.id);
-  const listings = account?.business_id ? await getListingsForAccount(account.business_id) : [];
+  if (!user) redirect("/portal/sign-in");
+  const account = await getOrCreateAccount(user.id, user.emailAddresses[0]?.emailAddress);
+  const businesses = await getBusinessesForAccount(account);
+  const businessIds = await getBusinessIdsForAccount(account);
+  const selectedBusinessId = Number(params.business_id ?? "");
+  const filterBusinessId = Number.isFinite(selectedBusinessId) && selectedBusinessId > 0 ? selectedBusinessId : undefined;
+  const listings = businessIds.length ? await getListingsForBusinessIds(businessIds, filterBusinessId) : [];
 
   return (
     <ListingsClient
-      listings={listings as { id: string; title: string; status: string; location_city: string }[]}
+      listings={listings as { id: string; title: string; status: string; location_city: string; business_id: number; business_name: string }[]}
+      businesses={businesses}
+      selectedBusinessId={filterBusinessId}
       requestListing={requestListing}
     />
   );

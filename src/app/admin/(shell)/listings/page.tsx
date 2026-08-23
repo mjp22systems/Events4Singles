@@ -1,13 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listListings, countListings, listCategories, listCities } from "@/lib/admin-db";
+import { redirect } from "next/navigation";
+import AdminActionsMenu from "@/components/admin/actions-menu";
+import AdminAddModal from "@/components/admin/add-modal";
+import AdminBulkSelectAll from "@/components/admin/bulk-select-all";
+import { createListing, listListings, countListings, listCategories, listCities, listBusinesses } from "@/lib/admin-db";
 
 export const metadata: Metadata = { title: "Listings" };
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 50;
 
-const STATUSES = ["all", "active", "pending", "unclaimed", "paused", "expired", "archived", "deleted"];
+const STATUSES = [
+  { value: "all", label: "All Statuses" },
+  { value: "active", label: "Active" },
+  { value: "pending", label: "Pending" },
+  { value: "unclaimed", label: "Unclaimed" },
+  { value: "paused", label: "Paused" },
+  { value: "expired", label: "Expired" },
+  { value: "archived", label: "Archived" },
+  { value: "deleted", label: "Deleted" },
+];
+
+const SORTS = [
+  { value: "id_desc", label: "Newest First" },
+  { value: "id_asc", label: "Oldest First" },
+  { value: "title_asc", label: "Title A-Z" },
+  { value: "title_desc", label: "Title Z-A" },
+  { value: "status", label: "Status" },
+  { value: "score_desc", label: "Score (High)" },
+  { value: "city_asc", label: "City A-Z" },
+];
 
 const BADGE: Record<string, string> = {
   active: "a-badge-active",
@@ -47,12 +70,31 @@ function PlacementPill({ slug }: { slug: string }) {
 
 type PageProps = { searchParams: Promise<Record<string, string>> };
 
+async function addListing(formData: FormData) {
+  "use server";
+  const title = String(formData.get("title") ?? "").trim();
+  const businessId = Number(formData.get("business_id"));
+  const status = String(formData.get("status") ?? "pending");
+  const locationCity = String(formData.get("location_city") ?? "").trim();
+  if (!title) return;
+  const id = await createListing({
+    title,
+    businessId: Number.isFinite(businessId) && businessId > 0 ? businessId : null,
+    status,
+    locationCity: locationCity || null,
+  });
+  if (id) redirect(`/admin/listings/${id}`);
+}
+
 export default async function AdminListings({ searchParams }: PageProps) {
   const params = await searchParams;
   const status = params.status ?? "all";
+  const showAdd = params.add === "1";
   const q = params.q ?? "";
   const city = params.city ?? "";
   const category = params.category ?? "";
+  const sort = params.sort ?? "id_desc";
+  const businessId = Number(params.business_id ?? "");
   const page = Math.max(1, Number(params.page ?? 1));
   const offset = (page - 1) * PAGE_SIZE;
 
@@ -60,12 +102,14 @@ export default async function AdminListings({ searchParams }: PageProps) {
   const filterSearch = q || undefined;
   const filterCity = city || undefined;
   const filterCategory = category || undefined;
+  const filterBusinessId = Number.isFinite(businessId) && businessId > 0 ? businessId : undefined;
 
-  const [listings, total, categories, cities] = await Promise.all([
-    listListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, limit: PAGE_SIZE, offset }),
-    countListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory }),
+  const [listings, total, categories, cities, businesses] = await Promise.all([
+    listListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId, sort, limit: PAGE_SIZE, offset }),
+    countListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId }),
     listCategories(),
     listCities(),
+    listBusinesses(),
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -75,86 +119,134 @@ export default async function AdminListings({ searchParams }: PageProps) {
     if (q) base.q = q;
     if (city) base.city = city;
     if (category) base.category = category;
+    if (filterBusinessId) base.business_id = String(filterBusinessId);
+    if (sort !== "id_desc") base.sort = sort;
     const next = new URLSearchParams({ ...base, ...overrides });
     return `/admin/listings?${next}`;
   }
 
-  const hasActiveFilters = q || city || category || status !== "all";
+  const currentPath = `/admin/listings?${new URLSearchParams(Object.fromEntries(Object.entries({ status, q, city, category, sort: sort !== "id_desc" ? sort : "", business_id: filterBusinessId ? String(filterBusinessId) : "", page: String(page) }).filter(([, value]) => value)))}`;
+  const hasActiveFilters = q || city || category || filterBusinessId || status !== "all" || sort !== "id_desc";
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+      <div className="admin-page-header">
         <h1 className="a-page-title" style={{ margin: 0 }}>
           Listings
           <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
             {total.toLocaleString()}
           </span>
         </h1>
+        <Link href="/admin/listings?add=1" className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+          + Add Listing
+        </Link>
       </div>
 
+      {showAdd && (
+        <AdminAddModal title="Add listing" closeHref="/admin/listings">
+          <form action={addListing} className="admin-form-grid admin-form-grid--2">
+            <div className="a-field admin-field--wide">
+              <label className="a-label">Title</label>
+              <input className="a-input" name="title" required placeholder="Listing title" />
+            </div>
+            <div className="a-field">
+              <label className="a-label">Business</label>
+              <input className="a-input" name="business_id" inputMode="numeric" placeholder="Business ID, optional" />
+            </div>
+            <div className="a-field">
+              <label className="a-label">Status</label>
+              <select name="status" className="a-input" defaultValue="pending">
+                {STATUSES.filter((s) => s.value !== "all").map((s) => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="a-field">
+              <label className="a-label">City</label>
+              <input className="a-input" name="location_city" placeholder="Sydney" />
+            </div>
+            <div className="admin-form-actions">
+              <Link href="/admin/listings" className="a-btn a-btn-ghost">Cancel</Link>
+              <button type="submit" className="a-btn a-btn-primary">Add listing</button>
+            </div>
+          </form>
+        </AdminAddModal>
+      )}
+
       {/* Filters */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "12px", flexWrap: "wrap", alignItems: "flex-end" }}>
-        <form method="GET" action="/admin/listings" style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-          {status !== "all" && <input type="hidden" name="status" value={status} />}
-          <input
-            name="q"
-            type="search"
-            defaultValue={q}
-            placeholder="Search title or business…"
-            className="a-input"
-            style={{ width: "240px" }}
-          />
-          <select name="city" defaultValue={city} className="a-input" style={{ width: "160px" }}>
-            <option value="">All cities</option>
+      <div>
+        <form method="GET" action="/admin/listings" className="admin-filter-bar">
+          <input name="q" type="search" defaultValue={q} placeholder="Search title or business…" className="a-input" style={{ flex: 1, minWidth: "160px" }} />
+          <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+            {STATUSES.map((s) => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
+          <select name="city" defaultValue={city} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+            <option value="">All Cities</option>
             {cities.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.label}
-              </option>
+              <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <select name="category" defaultValue={category} className="a-input" style={{ width: "190px" }}>
-            <option value="">All categories</option>
+          <select name="category" defaultValue={category} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+            <option value="">All Categories</option>
             {categories.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.label}
-              </option>
+              <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <button type="submit" className="a-btn a-btn-ghost">Filter</button>
+          <select name="business_id" defaultValue={filterBusinessId ? String(filterBusinessId) : ""} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+            <option value="">All Businesses</option>
+            {businesses.map((b) => (
+              <option key={b.id} value={b.id}>#{b.id} {b.name}</option>
+            ))}
+          </select>
+          <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+            {SORTS.map((s) => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
+          <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
           {hasActiveFilters && (
-            <Link href="/admin/listings" className="a-btn a-btn-ghost" style={{ color: "var(--a-ink-muted)" }}>
-              Clear
-            </Link>
+            <Link href="/admin/listings" className="a-btn a-btn-ghost" style={{ color: "var(--a-ink-muted)", flexShrink: 0 }}>Clear</Link>
           )}
         </form>
       </div>
 
-      {/* Status tabs */}
-      <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", marginBottom: "16px" }}>
-        {STATUSES.map((s) => (
-          <Link
-            key={s}
-            href={filterUrl({ status: s, page: "1" })}
-            className="a-btn a-btn-ghost"
-            style={{
-              fontSize: "12px",
-              padding: "4px 10px",
-              minHeight: "auto",
-              ...(status === s
-                ? { background: "var(--a-teal-glow)", color: "var(--a-teal)", borderColor: "var(--a-teal)" }
-                : {}),
-            }}
-          >
-            {s}
-          </Link>
-        ))}
-      </div>
-
-      <div className="a-card">
+      <form method="POST" action="/admin/api/listings/bulk">
+        <input type="hidden" name="redirect" value={currentPath} />
+        <div className="a-card">
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+              <input type="checkbox" id="bulk-select-all" />
+              All
+            </label>
+            <select name="action" className="a-input" style={{ width: "160px" }}>
+              <option value="">Bulk Action…</option>
+              <option value="activate">Activate</option>
+              <option value="pause">Pause (hide)</option>
+              <option value="archive">Archive</option>
+              <option value="delete">Delete</option>
+            </select>
+            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+          </div>
         <div className="a-table-wrap">
-          <table className="a-table">
+          <table className="a-table a-table--single-line a-table--listings">
+            <colgroup>
+              <col className="a-listings-col-check" />
+              <col className="a-listings-col-row" />
+              <col className="a-listings-col-id" />
+              <col className="a-listings-col-title" />
+              <col className="a-listings-col-business" />
+              <col className="a-listings-col-location" />
+              <col className="a-listings-col-placements" />
+              <col className="a-listings-col-status" />
+              <col className="a-listings-col-score" />
+              <col className="a-listings-col-actions" />
+            </colgroup>
             <thead>
               <tr>
+                <th></th>
+                <th>#</th>
                 <th>ID</th>
                 <th>Title</th>
                 <th>Business</th>
@@ -162,32 +254,29 @@ export default async function AdminListings({ searchParams }: PageProps) {
                 <th>Placements</th>
                 <th>Status</th>
                 <th>Score</th>
-                <th style={{ textAlign: "right" }}>Actions</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {listings.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={10} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
                     No listings found
                   </td>
                 </tr>
               ) : (
-                listings.map((l) => {
+                listings.map((l, index) => {
                   const cats = l.placement_categories ? l.placement_categories.split(",") : [];
                   const citySlugs = l.placement_cities ? l.placement_cities.split(",") : [];
                   return (
                     <tr key={l.id}>
+                      <td><input type="checkbox" name="ids" value={l.id} className="bulk-check" /></td>
+                      <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{offset + index + 1}</td>
                       <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{l.id}</td>
-                      <td>
+                      <td title={[l.title, l.tagline].filter(Boolean).join(" · ")}>
                         <span style={{ fontWeight: 500 }}>{l.title}</span>
-                        {l.tagline && (
-                          <div style={{ fontSize: "12px", color: "var(--a-ink-muted)", marginTop: "2px" }}>
-                            {l.tagline}
-                          </div>
-                        )}
                       </td>
-                      <td style={{ color: "var(--a-ink-muted)", fontSize: "13px" }}>
+                      <td style={{ color: "var(--a-ink-muted)", fontSize: "13px" }} title={l.business_name ?? (l.business_id ? `#${l.business_id}` : undefined)}>
                         {l.business_name ?? `#${l.business_id}`}
                       </td>
                       <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
@@ -197,33 +286,14 @@ export default async function AdminListings({ searchParams }: PageProps) {
                           ? citySlugs[0]
                           : "—"}
                       </td>
-                      <td style={{ maxWidth: "200px" }}>
+                      <td style={{ maxWidth: "160px" }}>
                         {cats.length === 0 && citySlugs.length === 0 ? (
                           <span style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>—</span>
                         ) : (
-                          <div style={{ lineHeight: 1.6 }}>
-                            {cats.map((c) => <PlacementPill key={c} slug={c} />)}
-                            {citySlugs.length > 0 && (
-                              <div style={{ marginTop: "2px" }}>
-                                {citySlugs.map((c) => (
-                                  <span
-                                    key={c}
-                                    style={{
-                                      display: "inline-block",
-                                      fontSize: "11px",
-                                      padding: "1px 6px",
-                                      borderRadius: "4px",
-                                      background: "color-mix(in oklch, var(--a-teal) 12%, transparent)",
-                                      color: "var(--a-teal)",
-                                      marginRight: "3px",
-                                      marginBottom: "2px",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {c}
-                                  </span>
-                                ))}
-                              </div>
+                          <div style={{ display: "flex", flexWrap: "nowrap", overflow: "hidden", gap: "2px", alignItems: "center" }} title={[...cats, ...citySlugs].join(", ")}>
+                            {cats.slice(0, 2).map((c) => <PlacementPill key={c} slug={c} />)}
+                            {cats.length + citySlugs.length > 2 && (
+                              <span style={{ fontSize: "11px", color: "var(--a-ink-muted)", whiteSpace: "nowrap" }}>+{cats.length + citySlugs.length - 2}</span>
                             )}
                           </div>
                         )}
@@ -232,23 +302,17 @@ export default async function AdminListings({ searchParams }: PageProps) {
                       <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>
                         {l.confidence_score != null ? `${l.confidence_score}%` : "—"}
                       </td>
-                      <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                        <Link
-                          href={`/admin/listings/${l.id}`}
-                          className="a-btn a-btn-ghost"
-                          style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
-                        >
-                          Edit
-                        </Link>
-                        <Link
-                          href={`/listing/${l.title.toLowerCase().replace(/\s+/g, "-")}-${l.id}`}
-                          target="_blank"
-                          rel="noopener"
-                          className="a-btn a-btn-ghost"
-                          style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto", marginLeft: "4px" }}
-                        >
-                          View ↗
-                        </Link>
+                      <td className="a-table__actions-cell">
+                        <AdminActionsMenu>
+                          <Link href={`/admin/listings/${l.id}`}>Edit</Link>
+                          <Link
+                            href={`/listing/${l.title.toLowerCase().replace(/\s+/g, "-")}-${l.id}`}
+                            target="_blank"
+                            rel="noopener"
+                          >
+                            View public
+                          </Link>
+                        </AdminActionsMenu>
                       </td>
                     </tr>
                   );
@@ -288,7 +352,9 @@ export default async function AdminListings({ searchParams }: PageProps) {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </form>
+      <AdminBulkSelectAll />
     </>
   );
 }

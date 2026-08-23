@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminEvent } from "@/lib/admin-db";
+import EventImagePicker from "@/components/admin/event-image-picker";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -49,24 +50,71 @@ function TextArea({ value, onChange, rows = 4 }: { value: string; onChange: (v: 
 const AU_CITIES = ["sydney", "melbourne", "brisbane", "perth", "adelaide", "gold_coast", "canberra", "hobart", "newcastle", "sunshine_coast"];
 const AU_TIMEZONES = ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth", "Australia/Adelaide", "Australia/Darwin", "Australia/Hobart"];
 const CATEGORIES = ["speed_dating", "dinner_parties", "dance_classes", "social_clubs", "adventure", "life_coaches", "online_dating", "travel_for_singles"];
+const REGISTRATION_MODES = [
+  { value: "auto", label: "Auto - paid uses Eventbrite" },
+  { value: "eventbrite", label: "Eventbrite" },
+  { value: "ticket", label: "External RSVP / ticket URL" },
+  { value: "source", label: "Original source page" },
+  { value: "contact", label: "Contact organiser" },
+];
+
+function splitDateTime(value: string | null | undefined) {
+  const local = value?.slice(0, 16) ?? "";
+  return {
+    date: local.slice(0, 10),
+    time: local.slice(11, 16),
+  };
+}
+
+function combineDateTime(date: string, time: string) {
+  if (!date) return "";
+  return `${date}T${time || "00:00"}`;
+}
+
+function humanLabel(value: string) {
+  return value
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function plainDescriptionForEdit(value: string | null | undefined) {
+  return (value ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\\([\\`*_{}\[\]()#+\-.!?,>])/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*\n]+)\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/_([^_\n]+)_/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
 
 export default function EventEditForm({ event }: { event: AdminEvent }) {
   const router = useRouter();
+  const initialStart = splitDateTime(event.starts_at);
+  const initialEnd = splitDateTime(event.ends_at);
+  const cityOptions = Array.from(new Set([event.city, ...AU_CITIES].filter(Boolean)));
   const [title, setTitle] = useState(event.title);
-  const [description, setDescription] = useState(event.description ?? "");
-  const [startsAt, setStartsAt] = useState(event.starts_at ? event.starts_at.slice(0, 16) : "");
-  const [endsAt, setEndsAt] = useState(event.ends_at ? event.ends_at.slice(0, 16) : "");
+  const [description, setDescription] = useState(plainDescriptionForEdit(event.description));
+  const [startDate, setStartDate] = useState(initialStart.date);
+  const [startTime, setStartTime] = useState(initialStart.time);
+  const [endDate, setEndDate] = useState(initialEnd.date);
+  const [endTime, setEndTime] = useState(initialEnd.time);
   const [timezone, setTimezone] = useState(event.timezone);
   const [venueName, setVenueName] = useState(event.venue_name ?? "");
   const [address, setAddress] = useState(event.address ?? "");
   const [suburb, setSuburb] = useState(event.suburb ?? "");
   const [city, setCity] = useState(event.city);
-  const [state, setState] = useState(event.state ?? "");
   const [priceMin, setPriceMin] = useState(event.price_min != null ? String(event.price_min / 100) : "");
   const [priceMax, setPriceMax] = useState(event.price_max != null ? String(event.price_max / 100) : "");
   const [ticketUrl, setTicketUrl] = useState(event.ticket_url ?? "");
   const [imageUrl, setImageUrl] = useState(event.image_url ?? "");
   const [sourceUrl, setSourceUrl] = useState(event.source_url ?? "");
+  const [registrationMode, setRegistrationMode] = useState(event.registration_mode ?? "auto");
   const [category, setCategory] = useState(event.category ?? "");
   const [status, setStatus] = useState(event.status);
   const [toast, setToast] = useState<{ type: "ok" | "err"; msg: string } | null>(null);
@@ -82,13 +130,16 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
     setSaving(true);
     try {
       const body = {
-        title, description: description || null, starts_at: startsAt, ends_at: endsAt || null,
+        title, description: plainDescriptionForEdit(description) || null,
+        starts_at: combineDateTime(startDate, startTime),
+        ends_at: endDate ? combineDateTime(endDate, endTime) : null,
         timezone, venue_name: venueName || null, address: address || null, suburb: suburb || null,
-        city, state: state || null,
+        city,
         price_min: priceMin ? Math.round(parseFloat(priceMin) * 100) : null,
         price_max: priceMax ? Math.round(parseFloat(priceMax) * 100) : null,
         ticket_url: ticketUrl || null, image_url: imageUrl || null,
-        source_url: sourceUrl || null, category: category || null, status,
+        source_url: sourceUrl || null, registration_mode: registrationMode || "auto",
+        category: category || null, status,
       };
       const res = await fetch(`/admin/api/events/${event.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       if (!res.ok) throw new Error(await res.text());
@@ -161,12 +212,18 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
 
         <div className="a-card" style={{ padding: "20px" }}>
           <SectionHeader>Date & Time</SectionHeader>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-            <Field label="Starts At">
-              <TextInput type="datetime-local" value={startsAt} onChange={setStartsAt} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "12px" }}>
+            <Field label="Start Date">
+              <TextInput type="date" value={startDate} onChange={setStartDate} />
             </Field>
-            <Field label="Ends At">
-              <TextInput type="datetime-local" value={endsAt} onChange={setEndsAt} />
+            <Field label="Start Time">
+              <TextInput type="time" value={startTime} onChange={setStartTime} />
+            </Field>
+            <Field label="End Date">
+              <TextInput type="date" value={endDate} onChange={setEndDate} />
+            </Field>
+            <Field label="End Time">
+              <TextInput type="time" value={endTime} onChange={setEndTime} />
             </Field>
           </div>
           <Field label="Timezone">
@@ -178,15 +235,12 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
 
         <div className="a-card" style={{ padding: "20px" }}>
           <SectionHeader>Location</SectionHeader>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
             <Field label="City">
               <select className="a-input" style={{ width: "100%" }} value={city} onChange={(e) => setCity(e.target.value)}>
                 <option value="">— select city —</option>
-                {AU_CITIES.map((c) => <option key={c} value={c}>{c.replace(/_/g, " ")}</option>)}
+                {cityOptions.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
               </select>
-            </Field>
-            <Field label="State">
-              <TextInput value={state} onChange={setState} placeholder="NSW" />
             </Field>
           </div>
           <Field label="Venue Name">
@@ -201,7 +255,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
         </div>
 
         <div className="a-card" style={{ padding: "20px" }}>
-          <SectionHeader>Pricing & Links</SectionHeader>
+          <SectionHeader>Pricing & Registration</SectionHeader>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <Field label="Price From (AUD)">
               <TextInput type="number" value={priceMin} onChange={setPriceMin} placeholder="0 = free" />
@@ -210,14 +264,16 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
               <TextInput type="number" value={priceMax} onChange={setPriceMax} placeholder="leave blank if fixed" />
             </Field>
           </div>
-          <Field label="Ticket / RSVP URL">
+          <Field label="Registration destination">
+            <select className="a-input" style={{ width: "100%" }} value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
+              {REGISTRATION_MODES.map((mode) => <option key={mode.value} value={mode.value}>{mode.label}</option>)}
+            </select>
+          </Field>
+          <Field label="External RSVP / ticket URL">
             <TextInput value={ticketUrl} onChange={setTicketUrl} placeholder="https://..." />
           </Field>
-          <Field label="Source URL">
+          <Field label="Original source URL">
             <TextInput value={sourceUrl} onChange={setSourceUrl} placeholder="Original listing URL" />
-          </Field>
-          <Field label="Image URL">
-            <TextInput value={imageUrl} onChange={setImageUrl} placeholder="https://..." />
           </Field>
         </div>
       </div>
@@ -250,8 +306,13 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           <SectionHeader>Category</SectionHeader>
           <select className="a-input" style={{ width: "100%" }} value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">— uncategorised —</option>
-            {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace(/_/g, " ")}</option>)}
+            {CATEGORIES.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
           </select>
+        </div>
+
+        <div className="a-card" style={{ padding: "16px" }}>
+          <SectionHeader>Image</SectionHeader>
+          <EventImagePicker value={imageUrl} onChange={setImageUrl} />
         </div>
 
         <div className="a-card" style={{ padding: "16px" }}>

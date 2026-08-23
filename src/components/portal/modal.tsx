@@ -6,10 +6,12 @@ export default function Modal({
   title,
   onClose,
   children,
+  size = "default",
 }: {
   title: string;
   onClose: () => void;
   children: React.ReactNode;
+  size?: "default" | "wide";
 }) {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -19,7 +21,7 @@ export default function Modal({
 
   return (
     <div className="p-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="p-modal" role="dialog" aria-modal="true">
+      <div className={`p-modal${size === "wide" ? " p-modal--wide" : ""}`} role="dialog" aria-modal="true">
         <div className="p-modal__header">
           <h2 className="p-modal__title">{title}</h2>
           <button className="p-modal__close" onClick={onClose} aria-label="Close">×</button>

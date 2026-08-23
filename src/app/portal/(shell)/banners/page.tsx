@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { getAccount, getBannersForAccount, createBanner } from "@/lib/portal-db";
+import { redirect } from "next/navigation";
+import { getOrCreateAccount, getBannersForAccount, createBanner } from "@/lib/portal-db";
 import BannersClient from "./banners-client";
 
 export const dynamic = "force-dynamic";
@@ -21,8 +22,9 @@ async function submitBanner(fd: FormData) {
 
 export default async function PortalBanners() {
   const user = await currentUser();
-  const account = await getAccount(user!.id);
-  const banners = account ? await getBannersForAccount(account.id) : [];
+  if (!user) redirect("/portal/sign-in");
+  const account = await getOrCreateAccount(user.id, user.emailAddresses[0]?.emailAddress);
+  const banners = await getBannersForAccount(account.id);
 
   return <BannersClient banners={banners} submitBanner={submitBanner} />;
 }

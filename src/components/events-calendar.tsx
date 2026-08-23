@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { eventPath } from "@/lib/event-slugs";
 import type { PublicEvent } from "@/lib/data";
 
 interface Props {
@@ -24,15 +26,20 @@ function eventDateKey(iso: string): string {
   return iso.slice(0, 10);
 }
 
-function formatTime(iso: string): string {
+function formatTime(iso: string, timezone: string): string {
   try {
-    return new Date(iso).toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", hour12: true });
+    return new Date(iso).toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: timezone });
   } catch { return ""; }
+}
+
+function eventHref(ev: PublicEvent): string {
+  return eventPath(ev);
 }
 
 export default function EventsCalendar({ events, month }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   const { year, month: monthIdx } = parseMonth(month);
   const firstDay = new Date(year, monthIdx, 1).getDay();
@@ -94,15 +101,32 @@ export default function EventsCalendar({ events, month }: Props) {
                 <a
                   key={ev.id}
                   className="e4s-cal__event-pill"
-                  href={ev.ticket_url || "/advertise"}
+                  href={eventHref(ev)}
                   title={ev.title}
                 >
-                  <span className="e4s-cal__event-time">{formatTime(ev.starts_at)}</span>
+                  <span className="e4s-cal__event-time">{formatTime(ev.starts_at, ev.timezone)}</span>
                   {" "}{ev.title}
                 </a>
               ))}
               {dayEvents.length > 3 && (
-                <span className="e4s-cal__event-more">+{dayEvents.length - 3} more</span>
+                <button
+                  className="e4s-cal__event-more"
+                  type="button"
+                  onClick={() => setExpandedDay(expandedDay === key ? null : key)}
+                  aria-expanded={expandedDay === key}
+                >
+                  +{dayEvents.length - 3} more
+                </button>
+              )}
+              {expandedDay === key && (
+                <div className="e4s-cal__day-expanded">
+                  {dayEvents.map((ev) => (
+                    <a key={ev.id} href={eventHref(ev)}>
+                      <span>{formatTime(ev.starts_at, ev.timezone)}</span>
+                      {ev.title}
+                    </a>
+                  ))}
+                </div>
               )}
             </div>
           );

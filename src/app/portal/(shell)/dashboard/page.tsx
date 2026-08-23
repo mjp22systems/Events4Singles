@@ -1,13 +1,31 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { getAccount, getListingsForAccount, getAnalyticsSummary } from "@/lib/portal-db";
+import { redirect } from "next/navigation";
+import {
+  getOrCreateAccount,
+  getBusinessesForAccount,
+  getListingsForBusinessIds,
+  getBannersForAccount,
+  getPortalEvents,
+  listPortalIntegrations,
+  getAnalyticsSummary,
+} from "@/lib/portal-db";
 
 export const dynamic = "force-dynamic";
 
 export default async function PortalDashboard() {
   const user = await currentUser();
-  const account = await getAccount(user!.id);
+  if (!user) redirect("/portal/sign-in");
+  const account = await getOrCreateAccount(user.id, user.emailAddresses[0]?.emailAddress);
 
-  const listings = account?.business_id ? await getListingsForAccount(account.business_id) : [];
+  const [businesses, banners, events, integrations] = await Promise.all([
+    getBusinessesForAccount(account),
+    getBannersForAccount(account.id),
+    getPortalEvents(account.id),
+    listPortalIntegrations(account.id),
+  ]);
+  const businessIds = businesses.map((business) => business.id);
+  if (account.business_id && !businessIds.includes(account.business_id)) businessIds.push(account.business_id);
+  const listings = businessIds.length ? await getListingsForBusinessIds(businessIds) : [];
   const listingIds = (listings as { id: string }[]).map((l) => l.id);
   const stats = listingIds.length ? await getAnalyticsSummary(listingIds, 30) : [];
 
@@ -16,6 +34,31 @@ export default async function PortalDashboard() {
   return (
     <>
       <h1 className="p-page-title">Dashboard</h1>
+      <h2 className="p-section-title p-dashboard-section-title">Portal items</h2>
+      <div className="p-stat-row">
+        <div className="p-stat-card">
+          <span className="p-stat-card__value">{businessIds.length}</span>
+          <span className="p-stat-card__label">Businesses</span>
+        </div>
+        <div className="p-stat-card">
+          <span className="p-stat-card__value">{listings.length}</span>
+          <span className="p-stat-card__label">Listings</span>
+        </div>
+        <div className="p-stat-card">
+          <span className="p-stat-card__value">{banners.length}</span>
+          <span className="p-stat-card__label">Banners</span>
+        </div>
+        <div className="p-stat-card">
+          <span className="p-stat-card__value">{events.length}</span>
+          <span className="p-stat-card__label">Events</span>
+        </div>
+        <div className="p-stat-card">
+          <span className="p-stat-card__value">{integrations.length}</span>
+          <span className="p-stat-card__label">Integrations</span>
+        </div>
+      </div>
+
+      <h2 className="p-section-title p-dashboard-section-title">Analytics summary</h2>
       <div className="p-stat-row">
         <div className="p-stat-card">
           <span className="p-stat-card__value">{sum("impression")}</span>
