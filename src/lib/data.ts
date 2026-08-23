@@ -1,5 +1,6 @@
 import { getD1 } from "./db";
 import { slugToLabel, toUrlSlug, toListingSlug, idFromProfileSlug } from "./constants";
+import { canonicalEventSlug } from "./event-slugs";
 import type { Listing, Category, City, Banner, Business } from "./types";
 
 const SUPPRESSED_CATEGORIES = new Set(["events"]);
@@ -311,6 +312,58 @@ export async function getListingById(id: number): Promise<Listing | null> {
   `).bind(...suppressed, id).first<Listing>() ?? null;
 }
 
+export async function getListingBySlug(slug: string): Promise<Listing | null> {
+  const db = await getD1();
+  const suppressed = [...SUPPRESSED_CATEGORIES];
+  const placeholders = suppressed.map(() => "?").join(",");
+  return db.prepare(`
+    SELECT l.id, l.slug, l.title, l.tagline, l.description, l.promo,
+           l.contact_name, l.phone, l.mobile, l.email, l.web, l.image_url,
+           l.location, l.location_city, l.location_state,
+           l.listing_type, l.status, l.confidence_score,
+           l.unclaimed_flag, l.hide_contact,
+           l.business_id,
+           l.licence_no, l.abn,
+           l.facebook_url, l.instagram_url, l.tiktok_url,
+           l.youtube_url, l.linkedin_url,
+           l.trading_hours, l.contact_hours,
+           b.name    AS business_name,
+           b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
+           p.category_slug,
+           p.city_slug,
+           c.label   AS category_label,
+           ci.label  AS city_label,
+           (
+             SELECT GROUP_CONCAT(DISTINCT p2.category_slug)
+             FROM listing_placements p2
+             WHERE p2.listing_id = l.id
+               AND p2.category_slug IS NOT NULL
+               AND p2.category_slug NOT IN (${placeholders})
+           ) AS category_slugs,
+           (
+             SELECT GROUP_CONCAT(DISTINCT p3.city_slug)
+             FROM listing_placements p3
+             WHERE p3.listing_id = l.id
+               AND p3.city_slug IS NOT NULL
+           ) AS city_slugs,
+           (
+             SELECT GROUP_CONCAT(DISTINCT COALESCE(ci3.label, p4.city_slug))
+             FROM listing_placements p4
+             LEFT JOIN cities ci3 ON ci3.slug = p4.city_slug
+             WHERE p4.listing_id = l.id
+               AND p4.city_slug IS NOT NULL
+           ) AS city_labels
+    FROM listings l
+    LEFT JOIN businesses b ON b.id = l.business_id
+    LEFT JOIN listing_placements p ON p.listing_id = l.id
+    LEFT JOIN categories c ON c.slug = p.category_slug
+    LEFT JOIN cities ci ON ci.slug = p.city_slug
+    WHERE l.slug = ? AND l.status = 'active'
+    LIMIT 1
+  `).bind(...suppressed, slug).first<Listing>() ?? null;
+}
+
 export interface ListingPlacement {
   category_slug: string;
   city_slug: string | null;
@@ -609,22 +662,105 @@ export async function getProfileData(slugOrId: string): Promise<ProfileData> {
 
 export interface PublicEvent {
   id: string;
+  slug: string | null;
   title: string;
   description: string | null;
   starts_at: string;
   ends_at: string | null;
+  timezone: string;
   venue_name: string | null;
+  address: string | null;
   suburb: string | null;
   city: string;
+  state: string | null;
   price_min: number | null;
   price_max: number | null;
   ticket_url: string | null;
+  push_platform: string | null;
+  push_url: string | null;
+  registration_mode: string | null;
   image_url: string | null;
   source: string;
+  source_url: string | null;
   category: string | null;
+  account_id: string | null;
+  host_business_id: number | null;
+  host_business_name: string | null;
+  host_business_logo_url: string | null;
+  host_business_website: string | null;
+  host_business_profile_slug: string | null;
+  host_account_name: string | null;
 }
 
-export async function getUpcomingEvents(limit = 8, city?: string, category?: string, paid?: "free" | "paid"): Promise<PublicEvent[]> {
+export interface PublicEventOrganiser {
+  id: string;
+  name: string;
+}
+
+const PUBLIC_EVENT_FIELDS = `
+  id, slug, title, description, starts_at, ends_at, timezone, venue_name, address, suburb, city, state,
+  price_min, price_max, ticket_url, push_platform, push_url, registration_mode, image_url, source,
+  source_url, category, account_id,
+  (
+    SELECT b.id
+    FROM advertiser_accounts aa
+    LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+    LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+    WHERE aa.id = events.account_id
+    ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+    LIMIT 1
+  ) AS host_business_id,
+  (
+    SELECT b.name
+    FROM advertiser_accounts aa
+    LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+    LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+    WHERE aa.id = events.account_id
+    ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+    LIMIT 1
+  ) AS host_business_name,
+  (
+    SELECT b.logo_url
+    FROM advertiser_accounts aa
+    LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+    LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+    WHERE aa.id = events.account_id
+    ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+    LIMIT 1
+  ) AS host_business_logo_url,
+  (
+    SELECT b.website
+    FROM advertiser_accounts aa
+    LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+    LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+    WHERE aa.id = events.account_id
+    ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+    LIMIT 1
+  ) AS host_business_website,
+  (
+    SELECT b.profile_slug
+    FROM advertiser_accounts aa
+    LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+    LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+    WHERE aa.id = events.account_id
+    ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+    LIMIT 1
+  ) AS host_business_profile_slug,
+  (
+    SELECT aa.display_name
+    FROM advertiser_accounts aa
+    WHERE aa.id = events.account_id
+    LIMIT 1
+  ) AS host_account_name
+`;
+
+export async function getUpcomingEvents(
+  limit = 8,
+  city?: string,
+  category?: string,
+  paid?: "free" | "paid",
+  organiserId?: string,
+): Promise<PublicEvent[]> {
   const db = await getD1();
   const now = new Date().toISOString();
   const conditions = ["status = 'approved'", "starts_at >= ?"];
@@ -633,9 +769,135 @@ export async function getUpcomingEvents(limit = 8, city?: string, category?: str
   if (category) { conditions.push("category = ?"); params.push(category); }
   if (paid === "free") { conditions.push("(price_min = 0 OR price_min IS NULL)"); }
   if (paid === "paid") { conditions.push("price_min > 0"); }
+  if (organiserId) { conditions.push("account_id = ?"); params.push(organiserId); }
   const { results } = await db
-    .prepare(`SELECT id, title, description, starts_at, ends_at, venue_name, suburb, city, price_min, price_max, ticket_url, image_url, source, category FROM events WHERE ${conditions.join(" AND ")} ORDER BY starts_at ASC LIMIT ?`)
+    .prepare(`SELECT ${PUBLIC_EVENT_FIELDS} FROM events WHERE ${conditions.join(" AND ")} ORDER BY starts_at ASC LIMIT ?`)
     .bind(...params, limit)
     .all<PublicEvent>();
   return results;
+}
+
+export async function getPublicEventOrganisers(): Promise<PublicEventOrganiser[]> {
+  const db = await getD1();
+  const now = new Date().toISOString();
+  const { results } = await db
+    .prepare(`
+      SELECT
+        events.account_id AS id,
+        COALESCE(
+          (
+            SELECT b.name
+            FROM advertiser_accounts aa
+            LEFT JOIN advertiser_account_businesses aab ON aab.account_id = aa.id AND aab.status = 'active'
+            LEFT JOIN businesses b ON b.id = COALESCE(aab.business_id, aa.business_id)
+            WHERE aa.id = events.account_id
+            ORDER BY COALESCE(aab.is_primary, 0) DESC, b.id ASC
+            LIMIT 1
+          ),
+          (
+            SELECT aa.display_name
+            FROM advertiser_accounts aa
+            WHERE aa.id = events.account_id
+            LIMIT 1
+          ),
+          events.account_id
+        ) AS name
+      FROM events
+      WHERE events.status = 'approved'
+        AND events.starts_at >= ?
+        AND events.account_id IS NOT NULL
+      GROUP BY events.account_id
+      ORDER BY name COLLATE NOCASE ASC
+    `)
+    .bind(now)
+    .all<PublicEventOrganiser>();
+  return results;
+}
+
+export async function getPublicEventById(id: string): Promise<PublicEvent | null> {
+  const db = await getD1();
+  return db
+    .prepare(`SELECT ${PUBLIC_EVENT_FIELDS} FROM events WHERE id = ? AND status = 'approved'`)
+    .bind(id)
+    .first<PublicEvent>() ?? null;
+}
+
+export async function getPublicEventBySlugOrId(slugOrId: string): Promise<PublicEvent | null> {
+  const db = await getD1();
+  return db
+    .prepare(`SELECT ${PUBLIC_EVENT_FIELDS} FROM events WHERE (slug = ? OR id = ?) AND status = 'approved' LIMIT 1`)
+    .bind(slugOrId, slugOrId)
+    .first<PublicEvent>() ?? null;
+}
+
+export async function getRelatedUpcomingEvents(event: PublicEvent, limit = 3): Promise<PublicEvent[]> {
+  const db = await getD1();
+  const now = new Date().toISOString();
+  const { results } = await db
+    .prepare(`
+      SELECT ${PUBLIC_EVENT_FIELDS}
+      FROM events
+      WHERE status = 'approved'
+        AND starts_at >= ?
+        AND id != ?
+        AND (city = ? OR (category IS NOT NULL AND category = ?))
+      ORDER BY
+        CASE WHEN city = ? THEN 0 ELSE 1 END,
+        starts_at ASC
+      LIMIT ?
+    `)
+    .bind(now, event.id, event.city, event.category ?? "", event.city, limit)
+    .all<PublicEvent>();
+  return results;
+}
+
+export async function getNextUpcomingEvents(excludeEventId: string, limit = 4): Promise<PublicEvent[]> {
+  const db = await getD1();
+  const now = new Date().toISOString();
+  const { results } = await db
+    .prepare(`
+      SELECT ${PUBLIC_EVENT_FIELDS}
+      FROM events
+      WHERE status = 'approved'
+        AND starts_at >= ?
+        AND id != ?
+      ORDER BY starts_at ASC
+      LIMIT ?
+    `)
+    .bind(now, excludeEventId, limit)
+    .all<PublicEvent>();
+  return results;
+}
+
+export async function getEventDatePager(event: PublicEvent): Promise<{ previous: PublicEvent | null; next: PublicEvent | null }> {
+  const db = await getD1();
+  const [previous, next] = await Promise.all([
+    db
+      .prepare(`
+        SELECT ${PUBLIC_EVENT_FIELDS}
+        FROM events
+        WHERE status = 'approved'
+          AND (starts_at < ? OR (starts_at = ? AND id < ?))
+        ORDER BY starts_at DESC, id DESC
+        LIMIT 1
+      `)
+      .bind(event.starts_at, event.starts_at, event.id)
+      .first<PublicEvent>(),
+    db
+      .prepare(`
+        SELECT ${PUBLIC_EVENT_FIELDS}
+        FROM events
+        WHERE status = 'approved'
+          AND (starts_at > ? OR (starts_at = ? AND id > ?))
+        ORDER BY starts_at ASC, id ASC
+        LIMIT 1
+      `)
+      .bind(event.starts_at, event.starts_at, event.id)
+      .first<PublicEvent>(),
+  ]);
+  return { previous: previous ?? null, next: next ?? null };
+}
+
+export function canonicalPublicEventSlug(event: PublicEvent) {
+  return event.slug ?? canonicalEventSlug(event);
 }

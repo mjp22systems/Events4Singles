@@ -4,14 +4,14 @@ import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth-edge";
 import { getD1 } from "@/lib/db";
 
 const ALLOWED_FIELDS = [
-  "title", "tagline", "description", "phone", "mobile", "email",
+  "business_name", "title", "tagline", "description", "phone", "mobile", "email",
   "web", "image_url", "location", "location_city", "location_state",
   "listing_type", "status", "confidence_score",
 ] as const;
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number];
 
-const VALID_LISTING_TYPES = new Set(["standard", "event_org", "venue", "service", "practitioner", "online"]);
+const VALID_LISTING_TYPES = new Set(["standard", "event_organizer", "venue", "service", "practitioner", "online"]);
 const VALID_STATUSES = new Set(["active", "inactive", "pending"]);
 
 function isValidUrl(val: unknown): boolean {

@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-export default async function middleware(req: NextRequest): Promise<NextResponse> {
+async function handleRedirects(req: NextRequest): Promise<NextResponse> {
   const { pathname } = new URL(req.url);
 
   const isInternal =
@@ -29,6 +30,16 @@ export default async function middleware(req: NextRequest): Promise<NextResponse
   }
 
   return NextResponse.next();
+}
+
+const clerkProtectedMiddleware = clerkMiddleware(async (_auth, req) => handleRedirects(req));
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  const { pathname } = new URL(req.url);
+  if (pathname.startsWith("/portal") || pathname.startsWith("/api/portal")) {
+    return clerkProtectedMiddleware(req, event);
+  }
+  return handleRedirects(req);
 }
 
 export const config = {

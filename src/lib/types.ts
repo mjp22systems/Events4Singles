@@ -1,5 +1,8 @@
 export interface Listing {
+  // Real columns on listings table
   id: number;
+  business_id: number | null;
+  advertiser_id: number | null;
   title: string;
   tagline: string | null;
   description: string | null;
@@ -16,19 +19,11 @@ export interface Listing {
   listing_type: string | null;
   status: string | null;
   confidence_score: number;
-  business_id: number | null;
-  business_advertiser_id: number | null;
-  business_name: string | null;
-  business_website: string | null;
-  category_slug: string | null;
-  city_slug: string | null;
-  category_label: string | null;
-  city_label: string | null;
-  category_slugs?: string | null;
-  city_slugs?: string | null;
-  city_labels?: string | null;
-  licence_no: string | null;
+  source_file: string | null;
+  unclaimed_flag: number | null;
+  hide_contact: number | null;
   abn: string | null;
+  licence_no: string | null;
   facebook_url: string | null;
   instagram_url: string | null;
   tiktok_url: string | null;
@@ -36,6 +31,19 @@ export interface Listing {
   linkedin_url: string | null;
   trading_hours: string | null;
   contact_hours: string | null;
+  ai_moderation_status: string | null;
+  ai_moderation_reason: string | null;
+  // JOIN-derived (read-only — from businesses, categories, cities via query)
+  business_name: string | null;
+  business_website: string | null;
+  business_advertiser_id: number | null;
+  category_slug: string | null;
+  city_slug: string | null;
+  category_label: string | null;
+  city_label: string | null;
+  category_slugs?: string | null;
+  city_slugs?: string | null;
+  city_labels?: string | null;
 }
 
 export interface Category {

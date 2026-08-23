@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getListingById, updateListing, softDeleteListing, logActivity } from "@/lib/admin-db";
+import { getListingById, updateListing, softDeleteListing, logActivity, replaceListingPlacements } from "@/lib/admin-db";
 import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,8 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
     "title", "tagline", "description", "promo",
     "contact_name", "phone", "mobile", "email", "web", "image_url",
     "location", "location_city", "location_state",
-    "status", "listing_type", "business_id", "unclaimed_flag",
+    "status", "listing_type", "business_id", "unclaimed_flag", "hide_contact",
+    "confidence_score",
     "abn", "licence_no", "facebook_url", "instagram_url",
     "tiktok_url", "youtube_url", "linkedin_url",
     "trading_hours", "contact_hours",
@@ -40,7 +41,21 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   }
 
   await updateListing(numId, fields as Parameters<typeof updateListing>[1]);
-  await logActivity("listing.update", "listing", numId, { fields: Object.keys(fields) });
+  if (Array.isArray(body.placements)) {
+    await replaceListingPlacements(
+      numId,
+      body.placements
+        .filter((placement): placement is Record<string, unknown> => typeof placement === "object" && placement !== null)
+        .map((placement) => ({
+          category_slug: typeof placement.category_slug === "string" && placement.category_slug ? placement.category_slug : null,
+          city_slug: typeof placement.city_slug === "string" && placement.city_slug ? placement.city_slug : null,
+        })),
+    );
+  }
+  await logActivity("listing.update", "listing", numId, {
+    fields: Object.keys(fields),
+    placements: Array.isArray(body.placements) ? body.placements.length : undefined,
+  });
 
   return NextResponse.json({ ok: true });
 }

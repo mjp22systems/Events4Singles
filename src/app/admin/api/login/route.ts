@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminPassword, signAdminToken, SESSION_COOKIE, SESSION_TTL_S } from "@/lib/admin-auth";
+import { findAdminAccountForLogin } from "@/lib/admin-db";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
-  const token = await signAdminToken();
+  const account = await findAdminAccountForLogin();
+  const token = await signAdminToken(account ? {
+    accountId: account.id,
+    displayName: account.display_name,
+    email: account.portal_email ?? account.billing_email,
+  } : {
+    displayName: "Admin",
+  });
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
