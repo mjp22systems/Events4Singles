@@ -31,7 +31,7 @@ export default async function BusinessesPage() {
   }
 
   return (
-    <div className="e4s-shell e4s-businesses">
+    <main className="e4s-shell e4s-businesses" id="site-content">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -117,6 +117,6 @@ export default async function BusinessesPage() {
 `,
         }}
       />
-    </div>
+    </main>
   );
 }

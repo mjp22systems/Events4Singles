@@ -26,6 +26,7 @@ test.describe("responsive CSS", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
     const menuButton = page.locator(".e4s-header__menu-btn");
+    await page.waitForLoadState("load");
     await expect(menuButton).toBeVisible();
     await menuButton.click();
     await expect(page.locator(".e4s-nav")).toBeVisible();

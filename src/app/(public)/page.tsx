@@ -62,6 +62,7 @@ export default async function HomePage() {
           })),
         }}
       />
+      <main className="e4s-home-page" id="site-content">
       {/* 1. HERO */}
       <section className="e4s-home-hero">
         <div className="e4s-home-hero__bg" />
@@ -255,7 +256,7 @@ export default async function HomePage() {
       </section>
 
       {/* 9. DATING RESOURCES */}
-      <section className="e4s-home-section e4s-home-section--tinted" id="site-content">
+      <section className="e4s-home-section e4s-home-section--tinted" id="dating-resources">
         <div className="e4s-shell e4s-home-section__head">
           <div>
             <h2>Dating Resources</h2>
@@ -279,6 +280,7 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+      </main>
     </>
   );
 }
