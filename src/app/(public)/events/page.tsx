@@ -5,14 +5,17 @@ import { toDbSlug } from "@/lib/constants";
 import EventsFilter from "@/components/events-filter";
 import EventsCalendarLoader from "@/components/events-calendar-loader";
 import EventCardGrid from "@/components/event-card-grid";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "What's On — Upcoming Singles Events Australia",
   description: "Browse upcoming singles events across Australia — speed dating, dinner parties, social nights, dance classes and more. List view and calendar.",
-};
+  path: "/events",
+  keywords: ["upcoming singles events", "what's on singles Australia", "singles event calendar"],
+});
 
 function defaultMonth() {
   const d = new Date();
@@ -43,6 +46,16 @@ export default async function EventsPage({
 
   return (
     <main className="e4s-events-page" id="site-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd({
+            name: "Upcoming Singles Events Australia",
+            description: "Upcoming singles events, social activities, speed dating nights, dinners and organiser-run events across Australia.",
+            path: "/events",
+          })),
+        }}
+      />
       <div className="e4s-shell e4s-events-page-header">
         <div>
           <h1>Upcoming Singles Events &amp; What&apos;s On</h1>

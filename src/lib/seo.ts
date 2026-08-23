@@ -19,8 +19,18 @@ export function cleanDescription(value: string | null | undefined, fallback = DE
   return text.length > 158 ? `${text.slice(0, 155).trim()}...` : text;
 }
 
+export function cleanTitle(value: string, fallback = SITE_NAME): string {
+  const text = (value || fallback).replace(/\s+/g, " ").trim();
+  return text.length > 62 ? `${text.slice(0, 59).trim()}...` : text;
+}
+
 export function canonicalPath(path: string): string {
   return path.startsWith("/") ? path : `/${path}`;
+}
+
+export function absoluteUrl(path = "/"): string {
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${SITE_URL}${canonicalPath(path)}`;
 }
 
 export function pageMetadata({
@@ -36,17 +46,18 @@ export function pageMetadata({
   keywords?: string[];
   image?: string;
 }): Metadata {
+  const pageTitle = cleanTitle(title);
   const clean = cleanDescription(description);
   const url = path ? canonicalPath(path) : "/";
   return {
-    title,
+    title: pageTitle,
     description: clean,
     keywords: [...DEFAULT_KEYWORDS, ...keywords],
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title,
+      title: pageTitle,
       description: clean,
       url,
       siteName: SITE_NAME,
@@ -63,9 +74,45 @@ export function pageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: pageTitle,
       description: clean,
       images: [image],
+    },
+  };
+}
+
+export function breadcrumbJsonLd(items: Array<{ name: string; path: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+export function collectionPageJsonLd({
+  name,
+  description,
+  path,
+}: {
+  name: string;
+  description: string;
+  path: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    description: cleanDescription(description),
+    url: absoluteUrl(path),
+    isPartOf: {
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
     },
   };
 }

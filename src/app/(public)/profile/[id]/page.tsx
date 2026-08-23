@@ -7,7 +7,7 @@ import ListingCard from "@/components/listing-card";
 import OnlineCard from "@/components/online-card";
 import AdminEditDrawer from "@/components/admin-edit-drawer";
 import BackLink from "@/components/back-link";
-import { pageMetadata, cleanDescription } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { toUrlSlug, toProfileSlug, slugToLabel } from "@/lib/constants";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
 import type { Listing } from "@/lib/types";
@@ -74,11 +74,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = business?.name || listings[0]?.business_name || listings[0]?.title || "Profile";
   const canonicalSlug = business?.profile_slug ?? (business ? toProfileSlug(business.id, name) : slug);
   return pageMetadata({
-    title: name,
+    title: `${name} - Singles Events Profile`,
     description:
-      cleanDescription(business?.description || null) ||
+      business?.description ||
       listings[0]?.tagline ||
-      `${name} on Events4Singles`,
+      `${name} profile, listings and contact details on Events4Singles.`,
     path: `/profile/${canonicalSlug}`,
     keywords: [name].filter(Boolean),
     image: business?.logo_url || listings[0]?.image_url || "/icon.png",

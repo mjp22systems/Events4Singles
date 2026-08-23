@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllBusinessesForDirectory } from "@/lib/data";
 import { toProfileSlug } from "@/lib/constants";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Business Directory — Events4Singles",
   description:
     "Browse all singles businesses, services and event organisers listed on Events4Singles. Find speed dating, social clubs, intro agencies, life coaches and more.",
-};
+  path: "/businesses",
+  keywords: ["singles business directory", "singles event organisers", "dating services Australia"],
+});
 
 export default async function BusinessesPage() {
   const businesses = await getAllBusinessesForDirectory();
@@ -29,6 +32,16 @@ export default async function BusinessesPage() {
 
   return (
     <div className="e4s-shell e4s-businesses">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd({
+            name: "Events4Singles Business Directory",
+            description: "Singles businesses, services and event organisers listed on Events4Singles.",
+            path: "/businesses",
+          })),
+        }}
+      />
       <div className="e4s-businesses__head">
         <h1>Business Directory</h1>
         <p>

@@ -6,22 +6,11 @@ import { canonicalPublicEventSlug, getEventDatePager, getNextUpcomingEvents, get
 import { slugToLabel, toProfileSlug } from "@/lib/constants";
 import { eventPath } from "@/lib/event-slugs";
 import { cleanEventDescription } from "@/lib/event-text";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ id: string }> };
-
-function formatDate(iso: string, timezone: string) {
-  return new Date(iso).toLocaleString("en-AU", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: timezone,
-  });
-}
 
 function formatDateParts(iso: string, timezone: string) {
   const date = new Date(iso);
@@ -143,10 +132,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await getPublicEventBySlugOrId(id);
   if (!event) return { title: "Event not found" };
   const eventDescription = cleanEventDescription(event.description);
-  return {
-    title: `${event.title} - ${formatDate(event.starts_at, event.timezone)} - ${slugToLabel(event.city)}`,
+  const canonicalSlug = canonicalPublicEventSlug(event);
+  return pageMetadata({
+    title: `${event.title} - ${slugToLabel(event.city)}`,
     description: eventDescription?.replace(/\*\*/g, "").slice(0, 155) ?? `Details for ${event.title} in ${slugToLabel(event.city)}.`,
-  };
+    path: `/events/${canonicalSlug}`,
+    keywords: [
+      event.title,
+      `${slugToLabel(event.city)} singles events`,
+      event.category ? slugToLabel(event.category) : "",
+    ].filter(Boolean),
+    image: event.image_url || "/icon.png",
+  });
 }
 
 export default async function EventDetailPage({ params }: Props) {
@@ -183,6 +180,7 @@ export default async function EventDetailPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
+    url: absoluteUrl(`/events/${canonicalSlug}`),
     description: eventDescription,
     startDate: event.starts_at,
     endDate: event.ends_at ?? undefined,
@@ -199,6 +197,12 @@ export default async function EventDetailPage({ params }: Props) {
       price: event.price_min ? event.price_min / 100 : 0,
       priceCurrency: "AUD",
       url: primaryCta?.href,
+      availability: "https://schema.org/InStock",
+    } : undefined,
+    organizer: hostName ? {
+      "@type": "Organization",
+      name: hostName,
+      url: hostHref ? absoluteUrl(hostHref) : undefined,
     } : undefined,
   };
 

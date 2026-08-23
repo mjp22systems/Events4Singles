@@ -3,10 +3,39 @@ import BodyClass from "@/components/body-class";
 import PathwayPager from "@/components/pathway-pager";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
 import type { PathwayContent } from "@/lib/pathways";
+import { breadcrumbJsonLd, collectionPageJsonLd } from "@/lib/seo";
 
 export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
+  const jsonLd = [
+    collectionPageJsonLd({
+      name: pathway.seoTitle,
+      description: pathway.seoDescription,
+      path: `/${pathway.slug}`,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: pathway.title, path: `/${pathway.slug}` },
+    ]),
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: pathway.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    },
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <BodyClass add="e4s-page-info" />
       <PathwayPager currentSlug={pathway.slug} />
       <main className={`e4s-pathway-page e4s-pathway-page--${pathway.id}`} id="site-content">

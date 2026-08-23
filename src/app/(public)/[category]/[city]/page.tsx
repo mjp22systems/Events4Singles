@@ -6,8 +6,7 @@ import {
   getCitiesForCategory,
   getListingsForPage,
 } from "@/lib/data";
-import { toDbSlug, toUrlSlug } from "@/lib/constants";
-import ListingCard from "@/components/listing-card";
+import { toDbSlug } from "@/lib/constants";
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
@@ -16,8 +15,9 @@ import HeroImage from "@/components/hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
-import { categoryCityHeroSubtext, categoryCityIntroCopy } from "@/lib/page-copy";
-import { pageMetadata } from "@/lib/seo";
+import SeoSupportSection from "@/components/seo-support-section";
+import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCopy } from "@/lib/page-copy";
+import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ category: string; city: string }>;
@@ -32,9 +32,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityLabel = city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
   return pageMetadata({
     title: `${catMeta.label} in ${cityLabel}`,
-    description: `Find ${catMeta.label.toLowerCase()} events for singles in ${cityLabel}, Australia.`,
+    description: `Find ${catMeta.label.toLowerCase()} events, organisers and services for singles in ${cityLabel}, Australia.`,
     path: `/${category}/${city}`,
-    keywords: [`${catMeta.label} ${cityLabel}`, `${catMeta.label} for singles ${cityLabel}`],
+    keywords: [
+      `${catMeta.label} ${cityLabel}`,
+      `${catMeta.label} for singles ${cityLabel}`,
+      `singles events ${cityLabel}`,
+    ],
   });
 }
 
@@ -52,9 +56,26 @@ export default async function CategoryCityPage({ params }: Props) {
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
+  const footerCopy = categoryCitySeoFooterCopy(catMeta, cityMeta, listings.length);
+  const jsonLd = [
+    collectionPageJsonLd({
+      name: `${catMeta.label} in ${cityMeta.label}`,
+      description: intro.lead,
+      path: `/${category}/${city}`,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: catMeta.label, path: `/${category}` },
+      { name: cityMeta.label, path: `/${category}/${city}` },
+    ]),
+  ];
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <BodyClass add="e4s-page-category" />
       <BodyClass add="e4s-page-child" />
       <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={category} />
@@ -117,6 +138,7 @@ export default async function CategoryCityPage({ params }: Props) {
           backLabel={catMeta.label}
         />
       </div>
+      <SeoSupportSection {...footerCopy} />
     </>
   );
 }

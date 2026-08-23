@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ContactForm from "@/components/contact-form";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact Us — Events4Singles",
   description: "Get in touch with Events4Singles for advertising enquiries, listing corrections, event submissions, or general questions.",
-};
+  path: "/contact",
+  keywords: ["contact Events4Singles", "submit singles event", "listing correction"],
+});
 
 export default function ContactPage() {
   return (

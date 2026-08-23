@@ -5,10 +5,15 @@ import NewsletterForm from "@/components/newsletter-form";
 import HomeFeatured from "@/components/home-featured";
 import EventCardGrid from "@/components/event-card-grid";
 import { PATHWAYS } from "@/lib/pathways";
+import { pageMetadata, collectionPageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Events4Singles — Australian Singles Events Directory",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Events4Singles - Australian Singles Events Directory",
+  description:
+    "Find singles events, speed dating, dinner parties, social clubs, dance classes and dating services across Australia.",
+  path: "/",
+  keywords: ["singles events Australia", "speed dating Australia", "dating events Australia"],
+});
 
 const FEATURED_CITIES = [
   { slug: "sydney", label: "Sydney", img: "/images/home-city-sydney.jpg" },
@@ -47,6 +52,16 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd({
+            name: "Events4Singles",
+            description: "Australian singles events directory for events, activities and dating services.",
+            path: "/",
+          })),
+        }}
+      />
       {/* 1. HERO */}
       <section className="e4s-home-hero">
         <div className="e4s-home-hero__bg" />

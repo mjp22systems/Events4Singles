@@ -1,6 +1,7 @@
 export interface Listing {
   // Real columns on listings table
   id: number;
+  slug?: string | null;
   business_id: number | null;
   advertiser_id: number | null;
   title: string;
@@ -51,6 +52,8 @@ export interface Category {
   label: string;
   parent_slug: string | null;
   description: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
   seo_intro: string | null;
   listing_count: number;
 }
@@ -59,6 +62,8 @@ export interface City {
   slug: string;
   label: string;
   state: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
   listing_count: number;
 }
 

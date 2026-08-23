@@ -4,12 +4,15 @@ import { permanentRedirect } from "next/navigation";
 import { CityDirectoryGrid } from "@/components/directory-sort";
 import { getAllCities } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Find Singles by City — Australia",
   description:
     "Find Australian singles events, businesses and services in your city. Browse speed dating, dinner parties, social clubs, life coaches and more by location.",
-};
+  path: "/cities",
+  keywords: ["singles events by city", "Australian singles by city", "speed dating by city"],
+});
 
 const CITY_IMAGES: Record<string, string> = {
   sydney: "/images/optimized/home-city-sydney.webp",
@@ -52,6 +55,16 @@ export default async function CitiesPage({ searchParams }: CitiesPageProps) {
 
   return (
     <main className="e4s-index-page" id="site-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd({
+            name: "Browse Singles Events by City",
+            description: "Browse Australian cities and regions in the Events4Singles directory.",
+            path: "/cities",
+          })),
+        }}
+      />
       <CityDirectoryGrid
         cities={cityTiles}
         title="Browse by City"

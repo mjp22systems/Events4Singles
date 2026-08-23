@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { getListingById, getListingBySlug, getListingPlacements, getBusinessListings } from "@/lib/data";
-import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug } from "@/lib/constants";
+import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug, toListingSlug } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
 import { cleanDescription, pageMetadata } from "@/lib/seo";
@@ -30,13 +30,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const listing = await resolveListing(slug);
   if (!listing) return {};
   const title = listing.business_name || listing.title;
+  const canonicalSlug = canonicalListingSlug(listing);
   const location = [listing.location_city, listing.location_state].filter(Boolean).join(", ");
   return pageMetadata({
     title,
     description:
       listing.tagline ||
       cleanDescription(listing.description, `${title} is listed in the Events4Singles Australian singles events directory.`),
-    path: `/listing/${slug}`,
+    path: `/listing/${canonicalSlug}`,
     keywords: [title, listing.category_label || "", location].filter(Boolean),
     image: listing.image_url || "/icon.png",
   });
@@ -67,10 +68,16 @@ function listingLocationBadges(listing: Listing) {
   return [];
 }
 
+function canonicalListingSlug(listing: Listing) {
+  return listing.slug || toListingSlug(listing.id, listing.business_name || listing.title);
+}
+
 export default async function ListingPage({ params }: Props) {
   const { slug } = await params;
   const listing = await resolveListing(slug);
   if (!listing) notFound();
+  const canonicalSlug = canonicalListingSlug(listing);
+  if (slug !== canonicalSlug) redirect(`/listing/${canonicalSlug}`);
 
   const cookieStore = await cookies();
   const adminToken = cookieStore.get(SESSION_COOKIE)?.value;
@@ -81,7 +88,6 @@ export default async function ListingPage({ params }: Props) {
   const mobile = listing.mobile;
   const web = listing.web || listing.business_website;
   const webHref = web ? (web.startsWith("http") ? web : `https://${web}`) : null;
-  const webLabel = web ? web.replace(/^https?:\/\//, "").replace(/\/$/, "") : null;
   const locationBadges = listingLocationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locationBadges.length);
 
@@ -102,12 +108,20 @@ export default async function ListingPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: title,
+    mainEntityOfPage: `https://events4singles.com/listing/${canonicalSlug}`,
     ...(listing.description && { description: cleanDescription(listing.description) }),
     ...(listing.tagline && { slogan: listing.tagline }),
     ...((phone || mobile) && { telephone: phone || mobile }),
     ...(listing.email && { email: listing.email }),
     ...(webHref && { url: webHref }),
     ...(listing.image_url && { image: listing.image_url }),
+    sameAs: [
+      listing.facebook_url,
+      listing.instagram_url,
+      listing.tiktok_url,
+      listing.youtube_url,
+      listing.linkedin_url,
+    ].filter(Boolean),
     address: {
       "@type": "PostalAddress",
       addressCountry: "AU",

@@ -5,12 +5,15 @@ import { CategoryDirectoryGrid } from "@/components/directory-sort";
 import { getAllCategories } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Singles Categories — Australia",
   description:
     "Browse all categories in Australia's singles directory — speed dating, dinner parties, dance classes, social clubs, life coaches, travel and more.",
-};
+  path: "/categories",
+  keywords: ["singles event categories", "dating categories Australia", "singles activities Australia"],
+});
 
 type CategoriesPageProps = {
   searchParams?: Promise<{ sort?: string | string[] }>;
@@ -34,6 +37,16 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
 
   return (
     <main className="e4s-index-page" id="site-content">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd({
+            name: "Browse Singles Event Categories",
+            description: "Browse Events4Singles categories from speed dating and dinner parties to dance classes, travel and social clubs.",
+            path: "/categories",
+          })),
+        }}
+      />
       <CategoryDirectoryGrid
         categories={categoryTiles}
         title="Browse Categories"

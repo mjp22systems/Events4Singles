@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getAllCategories,
@@ -10,8 +11,7 @@ import {
   getListingsForCategory,
   getListingsForCity,
 } from "@/lib/data";
-import { toDbSlug, toUrlSlug } from "@/lib/constants";
-import ListingCard from "@/components/listing-card";
+import { toDbSlug } from "@/lib/constants";
 import AdvertiseCard from "@/components/advertise-card";
 import BodyClass from "@/components/body-class";
 import HeroImage from "@/components/hero-image";
@@ -25,10 +25,13 @@ import ListingsSection from "@/components/listings-section";
 import {
   categoryHeroSubtext,
   categoryIntroCopy,
+  categorySeoFooterCopy,
   cityHeroSubtext,
   cityIntroCopy,
+  citySeoFooterCopy,
 } from "@/lib/page-copy";
-import { pageMetadata } from "@/lib/seo";
+import SeoSupportSection from "@/components/seo-support-section";
+import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -43,20 +46,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityMeta = await getCityMeta(dbSlug);
   if (cityMeta) {
     return pageMetadata({
-      title: `Singles Events in ${cityMeta.label}`,
-      description: `Find speed dating, dinner parties, dance classes and social clubs for singles in ${cityMeta.label}, Australia.`,
+      title: cityMeta.seo_title || `Singles Events in ${cityMeta.label}`,
+      description:
+        cityMeta.seo_description ||
+        `Find singles events, speed dating, dinner parties, dance classes, social clubs and dating services in ${cityMeta.label}, Australia.`,
       path: `/${param}`,
-      keywords: [`singles events ${cityMeta.label}`, `events for singles ${cityMeta.label}`],
+      keywords: [
+        `singles events ${cityMeta.label}`,
+        `events for singles ${cityMeta.label}`,
+        `speed dating ${cityMeta.label}`,
+      ],
     });
   }
 
   const catMeta = await getCategoryMeta(dbSlug);
   if (!catMeta) return {};
   return pageMetadata({
-    title: `${catMeta.label} - Australian Singles Events`,
+    title: catMeta.seo_title || `${catMeta.label} for Singles Australia`,
     description:
+      catMeta.seo_description ||
       catMeta.description ||
-      `Find ${catMeta.label.toLowerCase()} events for singles across Australia.`,
+      `Find ${catMeta.label.toLowerCase()} events, organisers and services for singles across Australia.`,
     path: `/${param}`,
     keywords: [catMeta.label, `${catMeta.label} for singles`],
   });
@@ -73,9 +83,25 @@ export default async function CategoryOrCityPage({ params }: Props) {
     const listings = await getListingsForCity(dbSlug);
     const categories = await getCategoriesForCity(dbSlug);
     const intro = cityIntroCopy(cityMeta, listings.length, categories.length);
+    const footerCopy = citySeoFooterCopy(cityMeta, categories.length);
+    const jsonLd = [
+      collectionPageJsonLd({
+        name: `Singles Events in ${cityMeta.label}`,
+        description: intro.lead,
+        path: `/${param}`,
+      }),
+      breadcrumbJsonLd([
+        { name: "Home", path: "/" },
+        { name: cityMeta.label, path: `/${param}` },
+      ]),
+    ];
 
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <BodyClass add="e4s-page-location" />
         <BodyClass add={`e4s-city-${param}`} />
         <LocationPager cities={allCities} currentDbSlug={dbSlug} />
@@ -115,11 +141,11 @@ export default async function CategoryOrCityPage({ params }: Props) {
         </div>
 
         <section className="e4s-location-followup">
-          <a className="e4s-calendar-cta" href="/events">
+          <Link className="e4s-calendar-cta" href="/events">
             <span>Events Calendar</span>
             <strong>View {cityMeta.label} Singles Events</strong>
             <em>See upcoming dates, activities and special events</em>
-          </a>
+          </Link>
           {categories.length > 0 && (
             <CityCategorySelect
               categories={categories}
@@ -128,6 +154,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
             />
           )}
         </section>
+        <SeoSupportSection {...footerCopy} />
       </>
     );
   }
@@ -143,9 +170,25 @@ export default async function CategoryOrCityPage({ params }: Props) {
   ]);
   const parentCats = allCats.filter((c) => !c.parent_slug);
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
+  const footerCopy = categorySeoFooterCopy(catMeta, cities.length);
+  const jsonLd = [
+    collectionPageJsonLd({
+      name: `${catMeta.label} for Singles`,
+      description: intro.lead,
+      path: `/${param}`,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: catMeta.label, path: `/${param}` },
+    ]),
+  ];
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <BodyClass add="e4s-page-category" />
       <CategoryPager categories={parentCats} currentDbSlug={dbSlug} />
 
@@ -185,6 +228,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
           categoryUrlSlug={param}
         />
       </div>
+      <SeoSupportSection {...footerCopy} />
     </>
   );
 }

@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllCities } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Singles Events by Location — Australia",
   description:
     "Find Australian singles events in your city. Browse speed dating, dinner parties, social clubs and more by location.",
-};
+  path: "/locations",
+  keywords: ["singles events by location", "Australian singles locations", "dating events by city"],
+});
 
 export default async function LocationsPage() {
   const cities = await getAllCities();

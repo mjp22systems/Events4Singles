@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Advertise with Events4Singles",
   description:
     "Reach Australian singles looking for events, activities and services. List your business in Australia's singles directory.",
-};
+  path: "/advertise",
+  keywords: ["advertise singles events", "list singles event", "promote dating services Australia"],
+});
 
 const PACKAGES = [
   {
