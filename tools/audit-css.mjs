@@ -20,6 +20,46 @@ function stripCssComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//g, "");
 }
 
+function lineNumberForIndex(text, index) {
+  return text.slice(0, index).split(/\r?\n/).length;
+}
+
+function getNonAsciiLineSamples(css, limit = 12) {
+  return css
+    .split(/\r?\n/)
+    .map((line, index) => ({ line: index + 1, text: line }))
+    .filter(({ text }) => [...text].some((char) => char.charCodeAt(0) > 127))
+    .slice(0, limit);
+}
+
+function getNonAsciiCommentSamples(css, limit = 12) {
+  const samples = [];
+  const pattern = /\/\*[\s\S]*?\*\//g;
+  let match;
+  while ((match = pattern.exec(css)) && samples.length < limit) {
+    const comment = match[0];
+    if ([...comment].some((char) => char.charCodeAt(0) > 127)) {
+      samples.push({
+        line: lineNumberForIndex(css, match.index),
+        text: comment.split(/\r?\n/)[0].slice(0, 160),
+      });
+    }
+  }
+  return samples;
+}
+
+function countNonAsciiCommentBlocks(css) {
+  let count = 0;
+  const pattern = /\/\*[\s\S]*?\*\//g;
+  let match;
+  while ((match = pattern.exec(css))) {
+    if ([...match[0]].some((char) => char.charCodeAt(0) > 127)) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
 function getSelectorBlocks(css) {
   const stripped = stripCssComments(css);
   const blocks = [];
@@ -71,6 +111,8 @@ const report = cssFiles
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const classNames = getClassNames(css);
     const unusedCandidates = classNames.filter((name) => !sourceText.includes(name));
+    const nonAsciiLineSamples = getNonAsciiLineSamples(css);
+    const nonAsciiCommentSamples = getNonAsciiCommentSamples(css);
 
     return {
       file,
@@ -79,10 +121,17 @@ const report = cssFiles
       uniqueSelectors: selectorCounts.size,
       duplicateSelectors: duplicates.length,
       importantCount: (css.match(/!important/g) ?? []).length,
+      nonAsciiLines: css
+        .split(/\r?\n/)
+        .filter((line) => [...line].some((char) => char.charCodeAt(0) > 127)).length,
+      nonAsciiCommentBlocks: countNonAsciiCommentBlocks(css),
       unusedClassCandidates: unusedCandidates.length,
       topDuplicateSelectors: duplicates.slice(0, 12).map(([selector, count]) => ({ selector, count })),
+      sampleNonAsciiLines: nonAsciiLineSamples,
+      sampleNonAsciiComments: nonAsciiCommentSamples,
       sampleUnusedClassCandidates: unusedCandidates.slice(0, 24),
     };
   });
 
-console.log(JSON.stringify({ generatedAt: new Date().toISOString(), report }, null, 2));
+const json = JSON.stringify({ generatedAt: new Date().toISOString(), report }, null, 2);
+console.log(process.argv.includes("--json-only") ? JSON.stringify({ report }) : json);
