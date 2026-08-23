@@ -144,6 +144,7 @@ test.describe("Admin console smoke", () => {
 
     for (const path of bulkPages) {
       await page.goto(path, { waitUntil: "domcontentloaded", timeout: 30_000 });
+      await page.waitForLoadState("networkidle", { timeout: 10_000 }).catch(() => undefined);
       await expect(page.locator("script").filter({ hasText: "bulk-check" })).toHaveCount(0);
 
       const selectAll = page.locator("#bulk-select-all");
@@ -152,7 +153,8 @@ test.describe("Admin console smoke", () => {
       await expect(selectAll).toBeVisible();
 
       if (await rowChecks.count()) {
-        await selectAll.check();
+        await selectAll.click();
+        await expect(selectAll).toBeChecked();
         await expect(rowChecks.first()).toBeChecked();
       }
     }
