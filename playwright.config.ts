@@ -6,6 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  * - CI:        https://events4singles.com  (set E2E_BASE_URL env var)
  */
 const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:10400";
+const shouldStartLocalServer = !process.env.E2E_BASE_URL;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -24,6 +25,14 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
+  webServer: shouldStartLocalServer
+    ? {
+        command: "npm run dev",
+        url: BASE_URL,
+        reuseExistingServer: true,
+        timeout: 120_000,
+      }
+    : undefined,
   projects: [
     {
       name: "chromium",

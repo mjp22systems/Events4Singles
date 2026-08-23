@@ -49,6 +49,8 @@ next-env.d.ts
 # Temp/QA dirs
 /homepage-qa/
 /scripts/
+/playwright-report/
+/test-results/
 
 # D1 migration SQL files — contain business data, generated locally
 /tools/data-d1.sql
@@ -58,3 +60,8 @@ next-env.d.ts
 /.wrangler/
 
 .open-next/
+/.open-next-stale-*/
+
+# Local build/deploy logs and superseded stylesheet snapshots
+/opennext-build.log
+/public/portal-*.css

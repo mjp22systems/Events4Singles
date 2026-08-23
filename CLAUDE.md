@@ -45,12 +45,32 @@ Events4Singles platform rebuild. Australian singles directory (not just events).
 - docs/ — project brief, decisions, terminology rules
 
 ## Deploy sequence
-Always all three steps — skipping build:cf leaves .open-next stale:
+GitHub `main` is the source of truth. Cloudflare production must only be deployed from a clean local `main` that exactly matches `origin/main`.
+
+Use the Dad Cloudflare API-token env vars. Do not stop at `wrangler whoami`; this machine is not browser-authenticated, but API deploy access exists through:
+- `CLOUDFLARE_API_TOKEN_DAD`
+- `CLOUDFLARE_ACCOUNT_ID_DAD`
+
+Preferred commands:
+```powershell
+npm run deploy:dad
+npm run cache:purge
+```
+
+`npm run deploy:dad` is intentionally guarded. It refuses to deploy unless the working tree is clean, the branch is `main`, local `main` equals `origin/main`, and build/smoke checks pass. Do not bypass it with raw `wrangler deploy` except for an explicitly approved emergency rollback.
+
+Manual equivalent if needed:
 ```powershell
 npm run build
 npm run build:cf
-$env:CLOUDFLARE_API_TOKEN = $env:CLOUDFLARE_API_TOKEN_DAD; npx wrangler deploy
+$env:CLOUDFLARE_API_TOKEN = $env:CLOUDFLARE_API_TOKEN_DAD
+$env:CLOUDFLARE_ACCOUNT_ID = $env:CLOUDFLARE_ACCOUNT_ID_DAD
+$env:NODE_TLS_REJECT_UNAUTHORIZED = "0"
+npx wrangler deploy
+node tools/purge-cloudflare-cache.mjs
 ```
+
+Skipping `build:cf` leaves `.open-next` stale. If CSS changes are not visible, purge Cloudflare via `npm run cache:purge`; do not create extra stylesheet files.
 
 ## Phase tracking (summary — detail in project-brief.md)
 - Phase 1: Foundation — ✅ COMPLETE
@@ -58,8 +78,8 @@ $env:CLOUDFLARE_API_TOKEN = $env:CLOUDFLARE_API_TOKEN_DAD; npx wrangler deploy
 - Phase A: DB foundation + terminology rename + legacy redirects — ✅ COMPLETE 2026-08-19
 - Phase B: Content migration for empty categories — ✅ COMPLETE 2026-08-19
 - Phase C: DB cleanup (listing_type, dance collapse, unplaced listings) — ✅ COMPLETE 2026-08-19
-- Phase D: Listing template variants — ⏳ pending
-- Phase E: Homepage intent-group tiles — ⏳ pending (blocked on B+C)
+- Phase D: Listing template variants — ✅ COMPLETE 2026-08-20
+- Phase E: Homepage intent-group tiles — ✅ COMPLETE 2026-08-20
 - Phase 2: Portal + Payments — ⏳ pending
 - Phase 3: Events + Features — ⏳ pending
 - Phase 4: Launch — ⏳ pending

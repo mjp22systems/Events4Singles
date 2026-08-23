@@ -1,8 +1,11 @@
 name = "events4singles-v2"
-main = ".open-next/worker.js"
+main = "worker.js"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 account_id = "77513f974459dd7d8a1183712e0f41fd"
+
+[triggers]
+crons = ["0 */4 * * *"]
 
 [assets]
 directory = ".open-next/assets"

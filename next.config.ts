@@ -12,6 +12,27 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
     ],
   },
+  async headers() {
+    // Pages that show different content based on admin cookie must never be cached.
+    return [
+      {
+        source: "/site.css",
+        headers: [{ key: "Cache-Control", value: "no-cache, max-age=0, must-revalidate" }],
+      },
+      {
+        source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],
+      },
+      {
+        source: "/listing/:slug*",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+      {
+        source: "/profile/:id*",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // ── Internal renames ──────────────────────────────────────────────────

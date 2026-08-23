@@ -9,7 +9,12 @@
     "preview": "opennextjs-cloudflare preview",
     "start": "next start",
     "lint": "eslint",
-    "cf:types": "wrangler types"
+    "cf:types": "wrangler types",
+    "test:e2e": "playwright test",
+    "smoke:admin": "playwright test tests/e2e/admin-console-smoke.spec.ts --workers=1",
+    "deploy:checked": "npm run deploy:dad",
+    "deploy:dad": "node tools/deploy-cloudflare.mjs",
+    "cache:purge": "node tools/purge-cloudflare-cache.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.7.6",
@@ -26,6 +31,7 @@
     "stripe": "^22.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
