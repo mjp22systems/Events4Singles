@@ -6,6 +6,7 @@ import { test } from "node:test";
 const projectRoot = process.cwd();
 const migrationFile = path.join(projectRoot, "migrations", "0020_dating_resource_redirects.sql");
 const articlesFile = path.join(projectRoot, "src", "content", "articles.ts");
+const nextConfigFile = path.join(projectRoot, "next.config.ts");
 
 const expectedRedirects = new Map([
   ["/Dating.htm", "/dating-resources/dating-advice"],
@@ -67,6 +68,20 @@ const expectedRedirects = new Map([
   ["/advice/dating-tips-and-links", "/dating-resources"],
 ]);
 
+const expectedStaticRedirects = new Map([
+  ["/dating_resources_books.htm", "/dating-resources/dating-resource-books"],
+  ["/dating_resources_websites.htm", "/dating-resources/dating-resource-websites"],
+  ["/dating_tips.htm", "/dating-resources/dating-advice"],
+  ["/dating_tips_men.htm", "/dating-resources/dating-tips-for-men"],
+  ["/date_safe.htm", "/dating-resources/dating-safety-checklist"],
+  ["/body_language.htm", "/dating-resources/body-language"],
+  ["/flirting.htm", "/dating-resources/flirting"],
+  ["/flirting_2.htm", "/dating-resources/flirting"],
+  ["/romance.htm", "/dating-resources/finding-romance-after-40"],
+  ["/psychology.htm", "/dating-resources/wellbeing-and-the-single-life"],
+  ["/healing_and_happiness.htm", "/dating-resources/wellbeing-and-the-single-life"],
+]);
+
 function parseRedirectRows(sql) {
   return new Map(
     [...sql.matchAll(/\('([^']+)',\s*'([^']+)',\s*'article',\s*'dating-resources'\)/g)].map((match) => [
@@ -91,5 +106,22 @@ test("dating resources redirect targets exist", () => {
     if (target === "/dating-resources") continue;
     const slug = target.replace("/dating-resources/", "");
     assert.ok(slugs.has(slug), `${target} should point to an existing dating resource article`);
+  }
+});
+
+test("static dating resource redirects point to the rebuilt article pages", () => {
+  const nextConfig = readFileSync(nextConfigFile, "utf8");
+
+  for (const [source, destination] of expectedStaticRedirects) {
+    const sourcePattern = new RegExp(`source:\\s*"${source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`);
+    const destinationPattern = new RegExp(`destination:\\s*"${destination.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`);
+    const sourceIndex = nextConfig.search(sourcePattern);
+
+    assert.notEqual(sourceIndex, -1, `Missing static redirect source ${source}`);
+    assert.match(
+      nextConfig.slice(sourceIndex, sourceIndex + 180),
+      destinationPattern,
+      `${source} should redirect directly to ${destination}`,
+    );
   }
 });
