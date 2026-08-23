@@ -22,14 +22,14 @@ export default function NavDropdowns({ cities, categories }: Props) {
 
   const INFO_ROUTES: Record<string, string> = {
     about: "About",
-    businesses: "Business Directory",
-    "dating-resources": "Dating Resources",
-    events: "What's On",
-    contact: "Contact",
     advertise: "Advertise with Us",
     portal: "Advertiser Portal",
-    "terms-and-conditions": "Terms & Conditions",
+    businesses: "Business Directory",
+    contact: "Contact",
+    "dating-resources": "Dating Resources",
     "privacy-policy": "Privacy Policy",
+    "terms-and-conditions": "Terms & Conditions",
+    events: "What's On",
   };
 
   const infoSlugs = new Set(Object.keys(INFO_ROUTES));
@@ -106,14 +106,14 @@ export default function NavDropdowns({ cities, categories }: Props) {
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>
           <option value="/about">About</option>
-          <option value="/businesses">Business Directory</option>
-          <option value="/dating-resources">Dating Resources</option>
-          <option value="/events">What&apos;s On</option>
           <option value="/advertise">Advertise with Us</option>
           <option value="/portal">Advertiser Portal</option>
+          <option value="/businesses">Business Directory</option>
           <option value="/contact">Contact</option>
+          <option value="/dating-resources">Dating Resources</option>
           <option value="/privacy-policy">Privacy Policy</option>
           <option value="/terms-and-conditions">Terms &amp; Conditions</option>
+          <option value="/events">What&apos;s On</option>
         </select>
       </label>
 
