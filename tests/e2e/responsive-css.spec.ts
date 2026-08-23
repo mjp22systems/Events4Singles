@@ -52,6 +52,44 @@ test.describe("responsive CSS", () => {
     });
   }
 
+  test("homepage hero image fills the mobile viewport", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const bounds = await page.evaluate(() => {
+      const pageEl = document.querySelector("#site-content.e4s-home-page");
+      const hero = document.querySelector(".e4s-home-hero");
+      const bg = document.querySelector(".e4s-home-hero__bg");
+
+      const rect = (element: Element | null) => {
+        const box = element?.getBoundingClientRect();
+        return box ? { left: box.left, right: box.right, width: box.width } : null;
+      };
+
+      return {
+        viewport: document.body.clientWidth,
+        backgroundImage: getComputedStyle(bg as Element).backgroundImage,
+        page: rect(pageEl),
+        hero: rect(hero),
+        bg: rect(bg),
+      };
+    });
+
+    expect(bounds.backgroundImage).toContain("/images/optimized/home-cat-mixers.webp");
+
+    for (const box of [bounds.page, bounds.hero, bounds.bg]) {
+      expect(box?.left, JSON.stringify(bounds)).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs((box?.right ?? 0) - bounds.viewport),
+        JSON.stringify(bounds),
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs((box?.width ?? 0) - bounds.viewport),
+        JSON.stringify(bounds),
+      ).toBeLessThanOrEqual(1);
+    }
+  });
+
   for (const width of [768, 1280]) {
     test(`business directory does not overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
