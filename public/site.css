@@ -892,6 +892,11 @@ body.e4s-fixed-header {
   padding-top: var(--e4s-header-height, 0px);
 }
 
+body.e4s-fixed-header.e4s-nav-open {
+  --e4s-header-height: 165px;
+  --e4s-sticky-top: 164px;
+}
+
 body > table,
 body > div > table {
   max-width: min(var(--e4s-shell), calc(100vw - 32px));
@@ -1124,6 +1129,11 @@ body.e4s-city-sydney .e4s-page-hero__image img {
 
 /* 08. Shell — responsive adjustments ─────────────────────── */
 @media (max-width: 760px) {
+  body.e4s-fixed-header.e4s-nav-open {
+    --e4s-header-height: 192px;
+    --e4s-sticky-top: 191px;
+  }
+
   .e4s-header,
   .e4s-header * {
     max-width: 100vw;
@@ -1267,6 +1277,11 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   :root {
     --e4s-header-height: 67px;
     --e4s-sticky-top: 66px;
+  }
+
+  body.e4s-fixed-header.e4s-nav-open {
+    --e4s-header-height: 287px;
+    --e4s-sticky-top: 286px;
   }
 
   .e4s-header__bar {

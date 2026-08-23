@@ -39,6 +39,24 @@ test.describe("Homepage", () => {
     await expect(page.getByRole("navigation", { name: "Site navigation" })).toBeVisible();
   });
 
+  test("keeps open header menu layout stable through hydration", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript(() => {
+      window.localStorage.setItem("e4s-nav-open", "1");
+    });
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(page.locator("body")).toHaveClass(/e4s-nav-open/);
+    await expect(page.getByRole("navigation", { name: "Site navigation" })).toBeVisible();
+
+    const initialPadding = await page.evaluate(() => parseFloat(getComputedStyle(document.body).paddingTop));
+    await page.waitForLoadState("load");
+    await page.waitForTimeout(500);
+    const hydratedPadding = await page.evaluate(() => parseFloat(getComputedStyle(document.body).paddingTop));
+
+    expect(Math.abs(hydratedPadding - initialPadding)).toBeLessThanOrEqual(2);
+  });
+
   test("footer is present", async ({ page }) => {
     await expect(page.locator("footer")).toBeVisible();
   });
