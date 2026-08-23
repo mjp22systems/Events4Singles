@@ -6658,7 +6658,8 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 .e4s-love-sidebar-ad,
 .e4s-love-whatson,
 .e4s-love-promoted-row,
-.e4s-love-home-tile {
+.e4s-love-home-tile,
+.e4s-love-home-listing {
   border: 1px solid var(--love-border);
   border-radius: 14px;
   background: #fff;
@@ -6766,9 +6767,14 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   background: linear-gradient(90deg, var(--love-border), transparent 58%);
 }
 
-.e4s-love-home-tile {
+.e4s-love-home-tile,
+.e4s-love-home-listing {
   display: grid;
   gap: 10px;
+}
+
+.e4s-love-home-listing {
+  background: linear-gradient(180deg, #fff, rgba(232, 247, 242, 0.55));
 }
 
 .e4s-love-home-tile > div:last-child {
@@ -7007,6 +7013,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 .e4s-love-addons h3,
 .e4s-love-bundles h3,
 .e4s-love-creative-grid h3,
+.e4s-love-workflow h3,
 .e4s-love-trust h3 {
   margin: 0;
   color: var(--love-teal-deep);
@@ -7097,6 +7104,40 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   font-size: 13px;
 }
 
+.e4s-love-workflow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.e4s-love-workflow article {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  border: 1px solid var(--love-border);
+  border-radius: 16px;
+  background: #fff;
+  padding: 18px;
+}
+
+.e4s-love-workflow article > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--love-mint);
+  color: var(--love-teal-deep);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.e4s-love-workflow p {
+  margin: 0;
+  color: var(--love-muted);
+  font-size: 14px;
+}
+
 .e4s-love-bundles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -7175,7 +7216,8 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-love-packages,
-  .e4s-love-creative-grid {
+  .e4s-love-creative-grid,
+  .e4s-love-workflow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -7204,6 +7246,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   .e4s-love-inventory,
   .e4s-love-bundles,
   .e4s-love-creative-grid,
+  .e4s-love-workflow,
   .e4s-love-addons > div,
   .e4s-love-site-preview__grid,
   .e4s-love-two-col {

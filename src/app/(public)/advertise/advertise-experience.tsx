@@ -8,12 +8,12 @@ type PlacementId = "standard" | "featured" | "banners" | "whatson" | "homepage";
 
 const ZONE_COPY: Record<ZoneId, { title: string; body: string; price: string }> = {
   banner: { title: "Page-top banner strip", body: "A sponsored strip above results on city, category or city/category pages.", price: "from $79/mo" },
-  priority: { title: "Priority top position", body: "Pinned position one above the normal listing order.", price: "from $49/mo" },
+  priority: { title: "Sticky/priority listing position", body: "Pinned position one above the normal listing order on selected city or category pages.", price: "from $49/mo" },
   featured: { title: "Featured listing", body: "Bigger card, badge, richer content and lift above standard results.", price: "from $39/mo" },
   standard: { title: "Standard listing", body: "The free profile every organiser, venue or singles service can start with.", price: "$0" },
   sidebar: { title: "Right column advert", body: "A labelled ad beside city and category browsing on desktop, inline on mobile.", price: "from $69/mo" },
   whatson: { title: "What's On calendar", body: "Dated event exposure for people browsing by city, date and category.", price: "from $29/event" },
-  tile: { title: "Homepage featured tile", body: "A high-visibility homepage tile for broader discovery and multi-city brands.", price: "from $99/mo" },
+  tile: { title: "Homepage featured listing or tile", body: "Homepage discovery slots for broader awareness, including featured listing cards and sponsored tiles.", price: "from $99/mo" },
 };
 
 const PLACEMENTS: Array<{
@@ -44,7 +44,7 @@ const PLACEMENTS: Array<{
     scope: "Selected city/category pages",
     reach: "Lifted above standard results with a Featured badge.",
     bestFor: "Regular operators in competitive categories who need more attention.",
-    bullets: ["Larger card", "Featured badge", "Priority add-on available"],
+    bullets: ["Larger card", "Featured badge", "Sticky position add-on"],
   },
   {
     id: "banners",
@@ -64,7 +64,7 @@ const PLACEMENTS: Array<{
     scope: "What's On calendar, list and event pages",
     reach: "High-intent browsers filtering by date, city and event type.",
     bestFor: "Ticketed nights, recurring meetups, walks, dinners and speed dating events.",
-    bullets: ["Calendar/list visibility", "Booking link", "Promoted row add-on"],
+    bullets: ["Calendar/list visibility", "Booking link", "Second-row event pages"],
   },
   {
     id: "homepage",
@@ -74,24 +74,24 @@ const PLACEMENTS: Array<{
     scope: "Homepage discovery sections",
     reach: "Broader site discovery outside a single city/category page.",
     bestFor: "Multi-city organisers, premium services and brands buying awareness.",
-    bullets: ["Featured tile", "Homepage listing", "Limited rotation"],
+    bullets: ["Featured listing", "Sponsored tile", "Limited rotation"],
   },
 ];
 
 const PACKAGES = [
   { title: "Launch Listing", price: "$0", cadence: "free", note: "Be findable today.", items: ["One listing", "One city/category", "Contact details", "Approval before live"], cta: "Start free listing", href: "/portal" },
   { title: "Growth Listing", price: "$39", cadence: "from / month", note: "Stand out where it matters.", items: ["Featured card", "Extra placements", "Promo field", "Basic analytics"], cta: "Choose Growth", href: "/contact", featured: true },
-  { title: "Event Promoter", price: "$29", cadence: "from / event", note: "Sell a specific night out.", items: ["What's On listing", "Calendar visibility", "Booking link", "Promoted row option"], cta: "Promote event", href: "/portal/events" },
+  { title: "Event Promoter", price: "$29", cadence: "from / event", note: "Sell a specific night out.", items: ["What's On listing", "Calendar visibility", "Booking link", "Second-row paid option"], cta: "Promote event", href: "/portal/events" },
   { title: "Campaign", price: "$149", cadence: "from / month", note: "Own attention across the network.", items: ["Banner/sidebar option", "Homepage eligibility", "Multi-page scope", "Creative setup"], cta: "Plan campaign", href: "/contact" },
 ];
 
 const ADDONS = [
   ["Extra city/category", "from $15/mo", "Add reach one page at a time."],
-  ["Priority position", "from $49/mo", "Pinned above standard results."],
+  ["Sticky/priority position", "from $49/mo", "Pinned above standard results."],
   ["Page-top banner", "from $79/mo", "Sponsored strip above the listing area."],
   ["Sidebar advert", "from $69/mo", "Right column or mobile inline display unit."],
   ["Homepage tile", "from $99/mo", "National discovery surface."],
-  ["Promoted event row", "from $149/mo", "Second row placement on event pages."],
+  ["Promoted event row", "from $149/mo", "Second row placement across event pages."],
 ];
 
 function cx(...classes: Array<string | false | undefined>) {
@@ -188,10 +188,20 @@ function WhatsOnList() {
 function PromotedEventRow() {
   return (
     <div className="e4s-love-promoted-row">
-      <p>Event page · results</p>
+      <p>Every event page · second row</p>
       <span className="e4s-love-fake-row" />
-      <div><span>E4S</span><div><strong>Masquerade Singles Ball - Brisbane</strong><p>Promoted · second row</p></div><Tag tone="berry">Ad</Tag></div>
+      <div><span>E4S</span><div><strong>Masquerade Singles Ball - Brisbane</strong><p>Promoted placement · row two</p></div><Tag tone="berry">Ad</Tag></div>
       <span className="e4s-love-fake-row" />
+    </div>
+  );
+}
+
+function HomepageFeaturedListing() {
+  return (
+    <div className="e4s-love-home-listing">
+      <div className="e4s-love-row"><strong>Homepage featured listings</strong><Tag tone="berry">Featured</Tag></div>
+      <FeaturedListing />
+      <StandardListing compact />
     </div>
   );
 }
@@ -231,7 +241,7 @@ function SitePreview({ active, onSelect }: { active: ZoneId; onSelect: (zone: Zo
         <Zone id="banner" active={active} label="Page-top banner" onSelect={onSelect}><BannerStrip small /></Zone>
         <div className="e4s-love-site-preview__grid">
           <div>
-            <Zone id="priority" active={active} label="Priority position" onSelect={onSelect}><div className="e4s-love-priority-single"><Thumb /><div><strong>Two Left Feet Dating</strong><p>Pinned position 1 · Sydney</p></div><Tag tone="teal">Priority</Tag></div></Zone>
+            <Zone id="priority" active={active} label="Sticky listing" onSelect={onSelect}><div className="e4s-love-priority-single"><Thumb /><div><strong>Two Left Feet Dating</strong><p>Sticky position 1 · Sydney</p></div><Tag tone="teal">Priority</Tag></div></Zone>
             <Zone id="featured" active={active} label="Featured listing" onSelect={onSelect}><FeaturedListing /></Zone>
             <Zone id="standard" active={active} label="Standard listing" onSelect={onSelect}><StandardListing compact /></Zone>
             <Zone id="whatson" active={active} label="What's On" onSelect={onSelect}><WhatsOnList /></Zone>
@@ -251,7 +261,7 @@ function PlacementMockup({ active }: { active: PlacementId }) {
   if (active === "featured") return <div className="e4s-love-stack"><FeaturedListing /><PriorityListing /></div>;
   if (active === "banners") return <div className="e4s-love-stack"><BannerStrip /><div className="e4s-love-two-col"><div><StandardListing compact /><StandardListing compact /></div><SidebarAd /></div></div>;
   if (active === "whatson") return <div className="e4s-love-stack"><WhatsOnList /><PromotedEventRow /></div>;
-  return <div className="e4s-love-stack"><HomepageTile /><BannerStrip small /></div>;
+  return <div className="e4s-love-stack"><HomepageFeaturedListing /><HomepageTile /></div>;
 }
 
 function Section({ id, eyebrow, title, intro, tone, children }: { id: string; eyebrow: string; title: string; intro?: string; tone?: "mint" | "deep"; children: ReactNode }) {
@@ -307,11 +317,12 @@ export default function AdvertiseExperience() {
           {[
             ["Standard listing card", "Free · city + category", <StandardListing key="standard" />],
             ["Featured listing", "from $39/mo", <FeaturedListing key="featured" />],
-            ["Priority top position", "from $49/mo", <PriorityListing key="priority" />],
+            ["Sticky listing position", "from $49/mo", <PriorityListing key="priority" />],
             ["Page-top banner strip", "from $79/mo", <BannerStrip key="banner" />],
             ["City/category sidebar", "from $69/mo", <SidebarAd key="sidebar" />],
             ["What's On calendar", "from $29/event", <WhatsOnList key="whatson" />],
-            ["Promoted second row", "from $149/mo", <PromotedEventRow key="promoted" />],
+            ["Promoted second row on event pages", "from $149/mo", <PromotedEventRow key="promoted" />],
+            ["Homepage featured listing", "from $99/mo", <HomepageFeaturedListing key="home-listing" />],
             ["Homepage featured tile", "from $99/mo", <HomepageTile key="tile" />],
           ].map(([title, price, mockup]) => (
             <figure key={title as string} className="e4s-love-inventory-card"><figcaption><strong>{title}</strong><span>{price}</span></figcaption>{mockup}</figure>
@@ -333,11 +344,28 @@ export default function AdvertiseExperience() {
         <div className="e4s-love-addons"><h3>Add-ons</h3><p>Bolt any of these onto a listing or package.</p><div>{ADDONS.map(([label, price, note]) => <article key={label}><div><strong>{label}</strong><p>{note}</p></div><span>{price}</span></article>)}</div></div>
       </Section>
 
+      <Section id="portal-workflow" eyebrow="Portal workflow" title="Free listings stay easy. Paid placements stay controlled." intro="The advertising portal should let organisers start quickly, then upsell paid positions once their listing, event or campaign is ready.">
+        <div className="e4s-love-workflow">
+          {[
+            ["Create or claim", "Start with a free organiser, venue, service or event profile."],
+            ["Choose placement", "Select city, category, homepage, banner, sidebar or event-page inventory."],
+            ["Upload creative", "Add logo, image, banner artwork, poster, copy and booking links."],
+            ["Review and publish", "Approve labels, dates, pricing, destinations and live schedule before it runs."],
+          ].map(([title, text], index) => (
+            <article key={title}>
+              <span>{index + 1}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </Section>
+
       <Section id="bundles" eyebrow="Bundles" title="Three combinations that consistently work." intro="Bundled placements are easier to sell, easier to approve and easier for smaller advertisers to understand." tone="mint">
         <div className="e4s-love-bundles">
           <article><h3>Event organiser</h3><div className="e4s-love-chip-row"><Tag>Listing</Tag><Tag>What&apos;s On</Tag><Tag>Promoted row</Tag></div><p>For operators running a recurring calendar in one or two cities.</p><FeaturedListing /><PromotedEventRow /></article>
           <article><h3>Venue</h3><div className="e4s-love-chip-row"><Tag>Listing</Tag><Tag>City page banner</Tag><Tag>Sidebar</Tag></div><p>For bars, rooftops and function spaces that want the whole city page.</p><BannerStrip small /><SidebarAd /></article>
-          <article><h3>National service</h3><div className="e4s-love-chip-row"><Tag>Category pages</Tag><Tag>Homepage tile</Tag></div><p>For matchmakers and dating services operating across Australia.</p><HomepageTile /><StandardListing compact /></article>
+          <article><h3>National service</h3><div className="e4s-love-chip-row"><Tag>Category pages</Tag><Tag>Homepage listing</Tag><Tag>Homepage tile</Tag></div><p>For matchmakers and dating services operating across Australia.</p><HomepageFeaturedListing /><HomepageTile /></article>
         </div>
       </Section>
 
