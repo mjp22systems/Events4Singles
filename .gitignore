@@ -48,6 +48,7 @@ next-env.d.ts
 
 # Temp/QA dirs
 /homepage-qa/
+/backups/
 /scripts/
 /playwright-report/
 /test-results/
