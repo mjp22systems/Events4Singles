@@ -1,4 +1,4 @@
-/* Events4Singles — single source of truth for all site CSS.
+/* Events4Singles - single source of truth for all site CSS.
    Modern components use e4s-* BEM classes. Portal uses p-* prefix.
    Section headers match the canonical 19-section plan below.
 
@@ -11,7 +11,7 @@
    05. Header and navigation
    06. Footer
    07. Page hero and intro sections
-   08. Shell — responsive adjustments
+   08. Shell - responsive adjustments
    09. Listing cards
    10. Page intro, banners and listing toolbar
    11. Category navigation and page layouts
@@ -22,10 +22,10 @@
    16. Home page
    17. Blog and dating-resources pages
    18. Dark-mode overrides
-   19. Portal (p-* prefix — advertiser portal)
+   19. Portal (p-* prefix - advertiser portal)
    --------------------------------------------------------- */
 
-/* 01. Reset and base elements ────────────────────────────── */
+/* 01. Reset and base elements */
 *, *::before, *::after { box-sizing: border-box; }
 body {
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -172,7 +172,7 @@ td.text-center > table         { margin-left: auto; margin-right: auto; }
 }
 
 
-/* 03. Tokens and CSS variables ───────────────────────────── */
+/* 03. Tokens and CSS variables */
 :root {
   --e4s-teal-900: #064e4d;
   --e4s-teal-800: #075f5e;
@@ -296,7 +296,7 @@ img {
   margin-inline: auto;
 }
 
-/* ── Layout utility classes ──────────────────────────────────── */
+/* Layout utility classes */
 
 .e4s-page-head {
   padding: 40px 16px 1rem;
@@ -405,7 +405,7 @@ img {
   display: none;
 }
 
-/* 05. Header and navigation ──────────────────────────────── */
+/* 05. Header and navigation */
 .e4s-header {
   position: fixed;
   top: 0;
@@ -509,7 +509,7 @@ img {
   gap: 10px;
 }
 
-/* Login: outlined teal → fills teal on hover */
+/* Login: outlined teal to fills teal on hover */
 .e4s-header-login {
   display: inline-flex;
   align-items: center;
@@ -533,7 +533,7 @@ img {
   outline: none;
 }
 
-/* Advertise: outlined teal + pink text → fills teal on hover */
+/* Advertise: outlined teal + pink text to fills teal on hover */
 .e4s-header-cta-btn {
   display: inline-flex;
   align-items: center;
@@ -659,7 +659,7 @@ img {
   min-width: 0;
 }
 
-/* Events Calendar: light pink bg, teal text → deep pink on hover */
+/* Events Calendar: light pink bg, teal text to deep pink on hover */
 .e4s-nav__events-btn {
   display: flex;
   align-items: center;
@@ -684,7 +684,7 @@ img {
   outline: none;
 }
 
-/* Dating Resources: light teal bg, rich pink text → full teal fill on hover */
+/* Dating Resources: light teal bg, rich pink text to full teal fill on hover */
 .e4s-nav__dating-btn {
   display: flex;
   align-items: center;
@@ -710,7 +710,7 @@ img {
 }
 
 
-/* Businesses directory ────────────────────────────────────── */
+/* Businesses directory */
 .e4s-businesses { padding: 2rem 0 4rem; }
 .e4s-businesses__head { margin-bottom: 2rem; }
 .e4s-businesses__head h1 { font-size: 1.75rem; margin-bottom: 0.4rem; }
@@ -776,7 +776,7 @@ img {
 @media (max-width: 900px) { .e4s-businesses__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .e4s-businesses__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-/* 06. Footer ─────────────────────────────────────────────── */
+/* 06. Footer */
 .e4s-footer {
   margin-top: 24px;
   padding: 40px 0 22px;
@@ -877,7 +877,7 @@ img {
   gap: 6px;
 }
 
-/* 02b. Legacy content containers ─────────────────────────── */
+/* 02b. Legacy content containers */
 #site-header-inject,
 #site-footer-inject {
   display: block;
@@ -926,7 +926,7 @@ body > div > table {
   margin-top: 0;
 }
 
-/* 07. Page hero and intro sections ───────────────────────── */
+/* 07. Page hero and intro sections */
 .e4s-location-template {
   display: block;
 }
@@ -1133,7 +1133,7 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   background: #ffffff;
 }
 
-/* 08. Shell — responsive adjustments ─────────────────────── */
+/* 08. Shell - responsive adjustments */
 @media (max-width: 760px) {
   body.e4s-fixed-header.e4s-nav-open {
     --e4s-header-height: 192px;
@@ -1407,7 +1407,7 @@ body.e4s-city-sydney .e4s-page-hero__image img {
 }
 
 
-/* 09. Listing cards ──────────────────────────────────────── */
+/* 09. Listing cards */
 .e4s-listing-card {
   position: relative;
   width: min(100%, var(--e4s-shell));
@@ -2076,7 +2076,7 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   text-align: center;
 }
 
-/* 10. Page intro, banners and listing toolbar ────────────── */
+/* 10. Page intro, banners and listing toolbar */
 .e4s-page-intro {
   display: grid;
   grid-template-columns: minmax(180px, 0.38fr) minmax(0, 1fr);
@@ -2541,7 +2541,7 @@ body.e4s-page-location .e4s-page-intro--editorial .e4s-page-intro__lead,
   font-style: normal;
 }
 
-/* 11. Category navigation and page layouts ───────────────── */
+/* 11. Category navigation and page layouts */
 .e4s-category-links {
   display: grid;
   min-height: 136px;
@@ -2909,7 +2909,7 @@ body.e4s-page-location .e4s-page-intro--editorial .e4s-page-intro__lead,
   margin-bottom: 18px;
 }
 
-/* 16. Home page ──────────────────────────────────────────── */
+/* 16. Home page */
 body.e4s-page-home {
   background:
     linear-gradient(180deg, #164d58 0%, #2f7474 42%, #f5faf9 42%, #f5faf9 100%);
@@ -3458,7 +3458,7 @@ body.e4s-page-home {
   }
 }
 
-/* 12. Sidebar layout ─────────────────────────────────────── */
+/* 12. Sidebar layout */
 
 .e4s-page-with-sidebar {
   display: grid;
@@ -3647,7 +3647,7 @@ body.e4s-page-home {
 }
 
 /* Child pages only: toolbar must clear the sticky child nav bar (~54px).
-   Applies 701–1100px — child nav is hidden ≥1101px, toolbar is static ≤700px. */
+   Applies 701-1100px - child nav is hidden at 1101px and up, toolbar is static at 700px and down. */
 @media (max-width: 1100px) and (min-width: 701px) {
   body.e4s-page-child .e4s-toolbar-shield {
     top: calc(var(--e4s-sticky-top) + 54px);
@@ -3660,7 +3660,7 @@ body.e4s-page-home {
   }
 }
 
-/* 13. Info and listing detail pages ──────────────────────── */
+/* 13. Info and listing detail pages */
 .e4s-info-page {
   padding: 40px 16px 64px;
 }
@@ -4291,7 +4291,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
-/* 14. Advertise page ─────────────────────────────────────── */
+/* 14. Advertise page */
 .e4s-advertise-page { padding: 40px 16px 64px; }
 .e4s-advertise-hero { margin-bottom: 40px; }
 .e4s-advertise-hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); color: var(--e4s-teal-900); margin: 0 0 16px; }
@@ -5146,7 +5146,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
-/* 15. Articles and events pages ──────────────────────────── */
+/* 15. Articles and events pages */
 /* Article list */
 .e4s-article-list {
   display: grid;
@@ -5218,7 +5218,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 .e4s-events-coming-soon h2 { margin: 0 0 8px; color: var(--e4s-teal-900); font-size: 1rem; }
 .e4s-events-coming-soon p { margin: 0; color: var(--e4s-muted); font-size: 0.9rem; line-height: 1.6; }
 
-/* 18. Dark-mode overrides ────────────────────────────────── */
+/* 18. Dark-mode overrides */
 @media (prefers-color-scheme: dark) {
   .e4s-article-card { background: #0f1e1e; }
   .e4s-events-coming-soon { background: #0a1a1a; }
@@ -5710,7 +5710,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
-/* 17. Blog and dating-resources pages ────────────────────── */
+/* 17. Blog and dating-resources pages */
 
 /* Dating Resources blog hub */
 #site-content.e4s-blog {
@@ -6564,7 +6564,7 @@ body:not(.e4s-nav-open) .e4s-nav {
 }
 
 /* =========================================================
-   HOMEPAGE — shared section layout
+   HOMEPAGE - shared section layout
    ========================================================= */
 .e4s-home-section {
   padding: 56px 0;
@@ -6912,7 +6912,7 @@ body:not(.e4s-nav-open) .e4s-nav {
 }
 
 /* =========================================================
-   EVENTS PAGE — filter bar + header
+   EVENTS PAGE - filter bar + header
    ========================================================= */
 #site-content.e4s-events-page > .e4s-shell {
   width: 100%;
@@ -7240,7 +7240,7 @@ body:not(.e4s-nav-open) .e4s-nav {
 }
 
 /* =========================================================
-   WHAT'S ON — event cards
+   WHAT'S ON - event cards
    ========================================================= */
 .e4s-home-events-grid {
   margin-bottom: 3rem;
@@ -7805,7 +7805,7 @@ body:not(.e4s-nav-open) .e4s-nav {
 }
 
 /* =========================================================
-   FEATURED SIDEBAR — refine filter + sponsored tiles
+   FEATURED SIDEBAR - refine filter + sponsored tiles
    ========================================================= */
 .e4s-home-featured__refine {
   border: 1px solid var(--e4s-border);
@@ -7916,7 +7916,7 @@ body:not(.e4s-nav-open) .e4s-nav {
 }
 
 /* =========================================================
-   SITE FONTS — Source Serif 4 (headings) + Hanken Grotesk (body)
+   SITE FONTS - Source Serif 4 (headings) + Hanken Grotesk (body)
    Applied at end of file so they cascade over legacy rules.
    ========================================================= */
 body,
@@ -7948,7 +7948,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   HEADER — fix asymmetric right padding so actions align
+   HEADER - fix asymmetric right padding so actions align
    with content right edge (logo stays left as-is)
    ========================================================= */
 .e4s-header__bar {
@@ -7956,7 +7956,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   HERO — viewport height, top-aligned content with padding
+   HERO - viewport height, top-aligned content with padding
    ========================================================= */
 .e4s-home-hero {
   display: flex !important;
@@ -7974,7 +7974,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   HOME SECTIONS — kill legacy border/shadow that makes
+   HOME SECTIONS - kill legacy border/shadow that makes
    every section look like a floating card
    ========================================================= */
 .e4s-home-section,
@@ -8502,7 +8502,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   CAT TILES — ensure text is white + readable
+   CAT TILES - ensure text is white + readable
    ========================================================= */
 .e4s-home-cat-tile__label,
 .e4s-home-cat-tile__sub {
@@ -8511,7 +8511,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   FEATURED SIDEBAR — not sticky on home page, just static
+   FEATURED SIDEBAR - not sticky on home page, just static
    ========================================================= */
 .e4s-home-featured__sidebar {
   position: static !important;
@@ -8519,7 +8519,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   ADVERTISE CTA — pill button, white text
+   ADVERTISE CTA - pill button, white text
    ========================================================= */
 .e4s-home-advertise-cta__btn {
   border-radius: 999px !important;
@@ -8527,7 +8527,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   FOOTER — span chevrons, master toggle in legal bar
+   FOOTER - span chevrons, master toggle in legal bar
    ========================================================= */
 .e4s-footer__accordion-btn::after {
   display: none !important;
@@ -8575,7 +8575,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   HERO H1 — cap size so "Find singles events near you"
+   HERO H1 - cap size so "Find singles events near you"
    fits on one line at desktop widths
    ========================================================= */
 .e4s-home-hero h1 {
@@ -8583,21 +8583,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   WHAT'S ON — tinted green-teal background (distinct from featured)
+   WHAT'S ON - tinted green-teal background (distinct from featured)
    ========================================================= */
 #events-calendar {
   background: #f0faf8 !important;
 }
 
 /* =========================================================
-   FEATURED BUSINESSES — neutral gray (distinct from what's on)
+   FEATURED BUSINESSES - neutral gray (distinct from what's on)
    ========================================================= */
 #featured-organizers {
   background: #f4f4f6 !important;
 }
 
 /* =========================================================
-   EVENT CARD DATE — maroon color, correct size
+   EVENT CARD DATE - maroon color, correct size
    Overrides higher-specificity selector on .e4s-home-event-card p
    ========================================================= */
 .e4s-home-event-card__date {
@@ -8608,7 +8608,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =========================================================
-   FEATURED LISTINGS — spacing consistent with listing pages
+   FEATURED LISTINGS - spacing consistent with listing pages
    Top-align card identity so title sits at top of header.
    ========================================================= */
 .e4s-home-featured__listings {
@@ -8627,7 +8627,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* ── Listing card: verified + claim ──────────────────────── */
+/* Listing card: verified + claim */
 .e4s-listing-card__verified {
   display: inline-flex; align-items: center; gap: 3px;
   font-size: 11px; font-weight: 600; letter-spacing: .02em;
@@ -9361,7 +9361,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 2px 8px; white-space: nowrap;
 }
 
-/* ── Profile page (v5) ───────────────────────────────────────── */
+/* Profile page (v5) */
 .e4s-profile-nav { display: flex; align-items: center; gap: 12px; padding: 0 0 16px; }
 .e4s-profile-card { background: #fff; border: 1px solid var(--e4s-border); border-radius: 10px; overflow: hidden; margin-bottom: 32px; }
 

@@ -34,7 +34,7 @@ async function handleRedirects(req: NextRequest): Promise<NextResponse> {
 
 const clerkProtectedMiddleware = clerkMiddleware(async (_auth, req) => handleRedirects(req));
 
-export default function middleware(req: NextRequest, event: NextFetchEvent) {
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = new URL(req.url);
   if (pathname.startsWith("/portal") || pathname.startsWith("/api/portal")) {
     return clerkProtectedMiddleware(req, event);

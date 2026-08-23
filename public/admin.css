@@ -1,4 +1,4 @@
-/* Admin design system — no Tailwind utilities needed, custom classes only */
+/* Admin design system - no Tailwind utilities needed, custom classes only */
 
 :root {
   --a-bg: oklch(0.13 0.01 240);
@@ -56,7 +56,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Admin shell — full viewport, two-column flex */
+/* Admin shell - full viewport, two-column flex */
 .admin-shell {
   display: flex;
   height: 100dvh;
@@ -1592,9 +1592,9 @@ select.a-input {
 }
 
 
-/* ─── Public-site admin bar + edit drawer ─────────────────── */
+/* Public-site admin bar + edit drawer */
 
-/* Admin bar + edit drawer ─────────────────────────────────── */
+/* Admin bar + edit drawer */
 .e4s-admin-bar {
   background: #0f766e;
   color: #fff;
@@ -1611,7 +1611,7 @@ select.a-input {
   height: 34px;
   z-index: 10000;
 }
-/* Push public header below admin bar (no-op on admin console — no .e4s-header there) */
+/* Push public header below admin bar (no-op on admin console - no .e4s-header there) */
 .e4s-header {
   top: 34px !important;
 }
