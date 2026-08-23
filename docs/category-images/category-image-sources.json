@@ -1,0 +1,72 @@
+{
+  "assetSet": "events4singles-category-card-images",
+  "createdAt": "2026-08-24",
+  "sourceType": "ai_generated",
+  "generator": "Codex built-in image generation",
+  "licenseNotes": [
+    "Generated as website-owned category artwork.",
+    "Do not replace with client-uploaded media, business logos, listing images, or legacy advertising banners.",
+    "Images are intended for public category cards only and are stored separately from /media uploads."
+  ],
+  "output": {
+    "directory": "/images/categories/optimized/",
+    "format": "webp",
+    "width": 720,
+    "height": 800
+  },
+  "sourceDirectory": "docs/category-images/source/",
+  "sourceSheets": {
+    "sheet-social-dining.png": [
+      "speed-dating",
+      "intro-agencies",
+      "dinner-parties",
+      "dinner-for-six",
+      "social-clubs",
+      "nightclubs"
+    ],
+    "sheet-dance.png": [
+      "dance-classes",
+      "dance-party-clubs",
+      "dance-salsa",
+      "dance-tango",
+      "dance-ceroc",
+      "dance-teachers"
+    ],
+    "sheet-active-outdoors.png": [
+      "yoga-classes",
+      "fitness4singles",
+      "sport-adventure",
+      "adventure-for-singles",
+      "walks4singles",
+      "golf"
+    ],
+    "sheet-travel-venues.png": [
+      "cruises4singles",
+      "tours4singles",
+      "travel-for-singles",
+      "restaurants-cafes",
+      "function-centres",
+      "houseparties"
+    ],
+    "sheet-wellbeing-learning.png": [
+      "life-coaches",
+      "psychology",
+      "seminars",
+      "singles-health",
+      "healing-and-happiness",
+      "image-and-photography"
+    ],
+    "sheet-niche-services.png": [
+      "beauty-for-singles",
+      "mature-dating-events",
+      "psychics4singles",
+      "jazz",
+      "comedians",
+      "finance-mortgage"
+    ],
+    "sheet-products-lotto.png": [
+      "singles-products",
+      "lotto4singles"
+    ]
+  }
+}
