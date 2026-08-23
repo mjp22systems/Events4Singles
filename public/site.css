@@ -1263,7 +1263,7 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   }
 }
 
-@media (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 960px) and (orientation: landscape) {
   .e4s-nav {
     grid-template-columns: repeat(3, minmax(128px, 1fr)) minmax(250px, auto);
     gap: 10px;
@@ -5658,7 +5658,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
-@media (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 960px) and (orientation: landscape) {
   .e4s-promo-banners {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 6px;

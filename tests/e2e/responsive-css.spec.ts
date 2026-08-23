@@ -46,37 +46,43 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
-  test("landscape header menu quick links do not overlap selects", async ({ page }) => {
-    await page.setViewportSize({ width: 844, height: 390 });
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.locator(".e4s-header__menu-btn").click();
+  for (const viewport of [
+    { width: 844, height: 390 },
+    { width: 932, height: 430 },
+  ]) {
+    test(`landscape header menu quick links do not overlap selects at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto("/", { waitUntil: "domcontentloaded" });
+      await page.locator(".e4s-header__menu-btn").click();
 
-    const bounds = await page.evaluate(() => {
-      const box = (selector: string) => {
-        const element = document.querySelector(selector);
-        const rect = element?.getBoundingClientRect();
-        return rect
-          ? { left: rect.left, right: rect.right, width: rect.width }
-          : null;
-      };
+      const bounds = await page.evaluate(() => {
+        const box = (selector: string) => {
+          const element = document.querySelector(selector);
+          const rect = element?.getBoundingClientRect();
+          return rect
+            ? { left: rect.left, right: rect.right, width: rect.width }
+            : null;
+        };
 
-      return {
-        information: box(".e4s-nav label:nth-of-type(3)"),
-        eventsCell: box(".e4s-nav__events-cell"),
-        dating: box(".e4s-nav__dating-btn"),
-        events: box(".e4s-nav__events-btn"),
-      };
+        return {
+          information: box(".e4s-nav label:nth-of-type(3)"),
+          eventsCell: box(".e4s-nav__events-cell"),
+          dating: box(".e4s-nav__dating-btn"),
+          events: box(".e4s-nav__events-btn"),
+        };
+      });
+
+      expect(bounds.information).not.toBeNull();
+      expect(bounds.eventsCell).not.toBeNull();
+      expect(bounds.dating).not.toBeNull();
+      expect(bounds.events).not.toBeNull();
+      expect((bounds.eventsCell?.left ?? 0) - (bounds.information?.right ?? 0)).toBeGreaterThanOrEqual(8);
+      expect(bounds.dating?.left).toBeGreaterThanOrEqual((bounds.information?.right ?? 0) + 8);
+      expect(bounds.dating?.left).toBeGreaterThanOrEqual(bounds.eventsCell?.left ?? 0);
+      expect(bounds.events?.right).toBeLessThanOrEqual(bounds.eventsCell?.right ?? 0);
+      await expectNoHorizontalOverflow(page);
     });
-
-    expect(bounds.information).not.toBeNull();
-    expect(bounds.eventsCell).not.toBeNull();
-    expect(bounds.dating).not.toBeNull();
-    expect(bounds.events).not.toBeNull();
-    expect((bounds.eventsCell?.left ?? 0) - (bounds.information?.right ?? 0)).toBeGreaterThanOrEqual(8);
-    expect(bounds.dating?.left).toBeGreaterThanOrEqual(bounds.eventsCell?.left ?? 0);
-    expect(bounds.events?.right).toBeLessThanOrEqual(bounds.eventsCell?.right ?? 0);
-    await expectNoHorizontalOverflow(page);
-  });
+  }
 
   for (const route of publicRoutes) {
     test(`${route} does not overflow mobile width`, async ({ page }) => {
@@ -139,36 +145,41 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
-  test("category promo banners fit six wide on landscape phones", async ({ page }) => {
-    await page.setViewportSize({ width: 844, height: 390 });
-    await page.setContent(`
-      <!doctype html>
-      <html>
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <link rel="stylesheet" href="${stylesheetHref}">
-        </head>
-        <body class="e4s-page-category">
-          <section class="e4s-promo-banners e4s-promo-banners--one-row">
-            ${Array.from({ length: 6 }, (_, index) => `
-              <a href="/advertise"><img alt="Ad ${index + 1}" src="/images/advertise-here-180x120.svg"></a>
-            `).join("")}
-          </section>
-        </body>
-      </html>
-    `);
+  for (const viewport of [
+    { width: 844, height: 390 },
+    { width: 932, height: 430 },
+  ]) {
+    test(`category promo banners fit six wide on landscape phones at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.setContent(`
+        <!doctype html>
+        <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="${stylesheetHref}">
+          </head>
+          <body class="e4s-page-category">
+            <section class="e4s-promo-banners e4s-promo-banners--one-row">
+              ${Array.from({ length: 6 }, (_, index) => `
+                <a href="/advertise"><img alt="Ad ${index + 1}" src="/images/advertise-here-180x120.svg"></a>
+              `).join("")}
+            </section>
+          </body>
+        </html>
+      `);
 
-    const boxes = await page.locator(".e4s-promo-banners > *").evaluateAll((items) =>
-      items.map((item) => {
-        const rect = item.getBoundingClientRect();
-        return { top: Math.round(rect.top), width: rect.width };
-      }),
-    );
+      const boxes = await page.locator(".e4s-promo-banners > *").evaluateAll((items) =>
+        items.map((item) => {
+          const rect = item.getBoundingClientRect();
+          return { top: Math.round(rect.top), width: rect.width };
+        }),
+      );
 
-    expect(new Set(boxes.map((box) => box.top)).size, JSON.stringify(boxes)).toBe(1);
-    expect(Math.max(...boxes.map((box) => box.width)), JSON.stringify(boxes)).toBeLessThanOrEqual(132);
-    await expectNoHorizontalOverflow(page);
-  });
+      expect(new Set(boxes.map((box) => box.top)).size, JSON.stringify(boxes)).toBe(1);
+      expect(Math.max(...boxes.map((box) => box.width)), JSON.stringify(boxes)).toBeLessThanOrEqual(150);
+      await expectNoHorizontalOverflow(page);
+    });
+  }
 
   test("portrait listing toolbar stacks controls cleanly", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
