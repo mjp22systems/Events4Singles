@@ -1,4 +1,29 @@
+PRAGMA foreign_keys=OFF;
 PRAGMA defer_foreign_keys=TRUE;
+
+DROP TABLE IF EXISTS admin_activity_log;
+DROP TABLE IF EXISTS admin_sessions;
+DROP TABLE IF EXISTS listing_images;
+DROP TABLE IF EXISTS listing_placements;
+DROP TABLE IF EXISTS banners;
+DROP TABLE IF EXISTS redirects;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS subscribers;
+DROP TABLE IF EXISTS site_settings;
+DROP TABLE IF EXISTS analytics_daily;
+DROP TABLE IF EXISTS analytics_events;
+DROP TABLE IF EXISTS advertiser_account_businesses;
+DROP TABLE IF EXISTS business_claim_requests;
+DROP TABLE IF EXISTS listing_transfer_requests;
+DROP TABLE IF EXISTS event_external_refs;
+DROP TABLE IF EXISTS media_assets;
+DROP TABLE IF EXISTS integrations;
+DROP TABLE IF EXISTS advertiser_accounts;
+DROP TABLE IF EXISTS listings;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS cities;
+DROP TABLE IF EXISTS businesses;
+DROP TABLE IF EXISTS advertisers;
 
 CREATE TABLE IF NOT EXISTS admin_activity_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
