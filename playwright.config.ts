@@ -3,9 +3,11 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * Base URL:
  * - Local dev: http://localhost:10400 (npm run dev)
+ * - Local alternate port: set E2E_LOCAL_PORT, e.g. 10401
  * - CI:        https://events4singles.com  (set E2E_BASE_URL env var)
  */
-const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:10400";
+const LOCAL_PORT = process.env.E2E_LOCAL_PORT ?? "10400";
+const BASE_URL = process.env.E2E_BASE_URL ?? `http://localhost:${LOCAL_PORT}`;
 const shouldStartLocalServer = !process.env.E2E_BASE_URL;
 
 export default defineConfig({
@@ -27,7 +29,7 @@ export default defineConfig({
   },
   webServer: shouldStartLocalServer
     ? {
-        command: "npm run dev",
+        command: `npx next dev --port ${LOCAL_PORT}`,
         url: BASE_URL,
         reuseExistingServer: true,
         timeout: 120_000,

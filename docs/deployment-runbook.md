@@ -34,6 +34,15 @@ npm run d1:prepare:local-smoke
 
 This schema mirrors the production D1 table structure and inserts only synthetic smoke-test rows. Do not use production data for local smoke setup.
 
+If another session is already using the default local smoke port `10400`, choose another port without setting `E2E_BASE_URL`:
+
+```powershell
+$env:E2E_LOCAL_PORT = "10401"
+npm run deploy:dad
+```
+
+Leaving `E2E_BASE_URL` unset lets Playwright start and stop the local server itself, and still keeps the local D1 preparation inside the deploy script.
+
 ## Cloudflare
 
 Use only the Dad account environment variables:
