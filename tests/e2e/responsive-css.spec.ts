@@ -21,6 +21,16 @@ async function expectNoHorizontalOverflow(page: Page) {
 }
 
 test.describe("responsive CSS", () => {
+  const publicRoutes = [
+    "/",
+    "/advertise",
+    "/businesses",
+    "/categories",
+    "/cities",
+    "/dating-resources",
+    "/events",
+  ];
+
   test("mobile header exposes the menu and opens navigation", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -32,6 +42,15 @@ test.describe("responsive CSS", () => {
     await expect(page.locator(".e4s-nav")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
+
+  for (const route of publicRoutes) {
+    test(`${route} does not overflow mobile width`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 900 });
+      await page.goto(route, { waitUntil: "domcontentloaded" });
+      await expect(page.locator("main#site-content")).toHaveCount(1);
+      await expectNoHorizontalOverflow(page);
+    });
+  }
 
   for (const width of [768, 1280]) {
     test(`business directory does not overflow at ${width}px`, async ({ page }) => {
