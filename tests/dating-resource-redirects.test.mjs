@@ -7,6 +7,7 @@ const projectRoot = process.cwd();
 const migrationFile = path.join(projectRoot, "migrations", "0020_dating_resource_redirects.sql");
 const articlesFile = path.join(projectRoot, "src", "content", "articles.ts");
 const nextConfigFile = path.join(projectRoot, "next.config.ts");
+const publicRedirectsFile = path.join(projectRoot, "public", "_redirects");
 
 const expectedRedirects = new Map([
   ["/Dating.htm", "/dating-resources/dating-advice"],
@@ -111,6 +112,7 @@ test("dating resources redirect targets exist", () => {
 
 test("static dating resource redirects point to the rebuilt article pages", () => {
   const nextConfig = readFileSync(nextConfigFile, "utf8");
+  const publicRedirects = readFileSync(publicRedirectsFile, "utf8");
 
   for (const [source, destination] of expectedStaticRedirects) {
     const sourcePattern = new RegExp(`source:\\s*"${source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`);
@@ -123,5 +125,11 @@ test("static dating resource redirects point to the rebuilt article pages", () =
       destinationPattern,
       `${source} should redirect directly to ${destination}`,
     );
+
+    const publicRedirectPattern = new RegExp(
+      `^${source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+${destination.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+301$`,
+      "m",
+    );
+    assert.match(publicRedirects, publicRedirectPattern, `public/_redirects should send ${source} to ${destination}`);
   }
 });

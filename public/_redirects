@@ -23,6 +23,18 @@
 /links.html / 301
 /resources.htm / 301
 
+# ── Dating resource article redirects ──────────────────────────
+/Dating.htm /dating-resources/dating-advice 301
+/dating_tips.htm /dating-resources/dating-advice 301
+/dating_tips_men.htm /dating-resources/dating-tips-for-men 301
+/date_safe.htm /dating-resources/dating-safety-checklist 301
+/body_language.htm /dating-resources/body-language 301
+/flirting.htm /dating-resources/flirting 301
+/flirting_2.htm /dating-resources/flirting 301
+/romance.htm /dating-resources/finding-romance-after-40 301
+/dating_resources_books.htm /dating-resources/dating-resource-books 301
+/dating_resources_websites.htm /dating-resources/dating-resource-websites 301
+
 # ── Category/listing page redirects ───────────────────────────
 /Copy%20of%20dinner_parties_sydney.htm /dinner-parties/sydney 301
 /accomonline.htm /travel-for-singles 301
@@ -113,7 +125,7 @@
 /fitness4singles.htm /fitness4singles 301
 /function_centres.htm /function-centres 301
 /golf.htm /golf 301
-/healing_and_happiness.htm /healing-and-happiness 301
+/healing_and_happiness.htm /dating-resources/wellbeing-and-the-single-life 301
 /hirisedance.htm /dance-classes 301
 /houseparties.htm /houseparties 301
 /image_and_photography.htm /image-and-photography 301
@@ -132,7 +144,7 @@
 /nosmo.htm /sport-adventure 301
 /perfectmatch.htm /intro-agencies 301
 /psychics4singles.htm /psychics4singles 301
-/psychology.htm /psychology 301
+/psychology.htm /dating-resources/wellbeing-and-the-single-life 301
 /restaurants_cafes.htm /restaurants-cafes 301
 /seminars.htm /seminars 301
 /singles_health.htm /singles-health 301
