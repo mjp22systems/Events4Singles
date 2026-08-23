@@ -46,6 +46,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const navStateScript = `
+    (function () {
+      try {
+        if (window.localStorage.getItem("e4s-nav-open") === "1") {
+          document.body.classList.add("e4s-nav-open");
+        }
+      } catch (error) {}
+    })();
+  `;
+
   return (
     <ClerkProvider>
       <html lang="en-AU" suppressHydrationWarning>
@@ -73,7 +83,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           />
         </head>
-        <body className="e4s-fixed-header">
+        <body className="e4s-fixed-header" suppressHydrationWarning>
+          <script id="e4s-nav-state-init" dangerouslySetInnerHTML={{ __html: navStateScript }} />
           {children}
           <Script src="https://www.googletagmanager.com/gtag/js?id=G-N9P8LGTB68" strategy="afterInteractive" />
           <Script id="gtag-init" strategy="afterInteractive">{`

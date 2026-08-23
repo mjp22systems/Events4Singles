@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
   });
 
   test("has correct page title", async ({ page }) => {
@@ -24,6 +24,19 @@ test.describe("Homepage", () => {
 
   test("header is present", async ({ page }) => {
     await expect(page.locator('[role="banner"]')).toBeVisible();
+  });
+
+  test("restores open header menu before React hydration", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript(() => {
+      window.localStorage.setItem("e4s-nav-open", "1");
+    });
+    await page.route("**/_next/static/**/*.js", (route) => route.abort());
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator("body")).toHaveClass(/e4s-nav-open/);
+    await expect(page.getByRole("navigation", { name: "Site navigation" })).toBeVisible();
   });
 
   test("footer is present", async ({ page }) => {
