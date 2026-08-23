@@ -1,7 +1,7 @@
 (function () {
   function syncRows(controller) {
-    var root = controller.form || document;
-    root.querySelectorAll(".bulk-check").forEach(function (check) {
+    document.querySelectorAll(".bulk-check").forEach(function (check) {
+      if (controller.form && check.form !== controller.form) return;
       check.checked = controller.checked;
     });
   }
@@ -14,7 +14,9 @@
   }
 
   document.addEventListener("DOMContentLoaded", resetControllers);
-  window.addEventListener("pageshow", resetControllers);
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) resetControllers();
+  });
 
   document.addEventListener("change", function (event) {
     if (event.target && event.target.id === "bulk-select-all") {

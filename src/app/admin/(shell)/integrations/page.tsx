@@ -24,6 +24,8 @@ const SORTS = [
   { value: "events_desc", label: "Most events" },
 ];
 
+const BULK_FORM_ID = "integrations-bulk-form";
+
 function accountLabel(row: Awaited<ReturnType<typeof listAdminIntegrations>>[number]) {
   return row.business_name || row.billing_email || row.account_id;
 }
@@ -87,15 +89,16 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
         {hasActiveFilters && <Link href="/admin/integrations" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
       </form>
 
-      <form method="POST" action="/admin/api/integrations/bulk">
+      <form id={BULK_FORM_ID} method="POST" action="/admin/api/integrations/bulk">
         <input type="hidden" name="redirect" value={currentPath} />
+      </form>
       <div className="a-card">
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
           <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
-            <AdminBulkSelectAll />
+            <AdminBulkSelectAll form={BULK_FORM_ID} />
             All
           </label>
-          <select name="action" className="a-input" style={{ width: "190px" }}>
+          <select form={BULK_FORM_ID} name="action" className="a-input" style={{ width: "190px" }}>
             <option value="">Bulk action...</option>
             <option value="sync">Force sync</option>
             <option value="auto_approve_on">Auto-approve on</option>
@@ -104,7 +107,7 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
             <option value="push_off">Push enabled off</option>
             <option value="disconnect">Disconnect</option>
           </select>
-          <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+          <button form={BULK_FORM_ID} type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
         </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line a-table--integrations">
@@ -145,7 +148,7 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
                 </tr>
               ) : integrations.map((row, index) => (
                 <tr key={row.id}>
-                  <td><input type="checkbox" name="ids" value={row.id} className="bulk-check" /></td>
+                  <td><input form={BULK_FORM_ID} type="checkbox" name="ids" value={row.id} className="bulk-check" /></td>
                   <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
                   <td title={`${accountLabel(row)} (${row.account_id})`}>
                     <span style={{ fontWeight: 600 }}>{accountLabel(row)}</span>
@@ -213,7 +216,6 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
           </table>
         </div>
       </div>
-      </form>
     </>
   );
 }

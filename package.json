@@ -12,6 +12,7 @@
     "cf:types": "wrangler types",
     "test:e2e": "playwright test",
     "smoke:admin": "playwright test tests/e2e/admin-console-smoke.spec.ts --workers=1",
+    "d1:prepare:local-smoke": "node tools/prepare-local-d1-smoke.mjs",
     "images:optimize-site": "node tools/optimize-site-images.mjs",
     "audit:css": "node tools/audit-css.mjs",
     "deploy:checked": "npm run deploy:dad",

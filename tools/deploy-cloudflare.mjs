@@ -72,5 +72,8 @@ function run(command, args) {
 assertCleanReleaseState();
 run("npm", ["run", "build"]);
 run("npm", ["run", "build:cf"]);
+if (!process.env.E2E_BASE_URL) {
+  run("node", ["tools/prepare-local-d1-smoke.mjs"]);
+}
 run("npm", ["run", "smoke:admin"]);
 run("npx", ["wrangler", "deploy"]);

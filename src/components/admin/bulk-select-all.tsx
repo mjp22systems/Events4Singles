@@ -1,9 +1,24 @@
 "use client";
 
-export default function AdminBulkSelectAll() {
+import { useEffect, useRef } from "react";
+
+type AdminBulkSelectAllProps = {
+  form?: string;
+};
+
+export default function AdminBulkSelectAll({ form }: AdminBulkSelectAllProps) {
+  const readyRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    readyRef.current?.setAttribute("data-admin-bulk-select-ready", "true");
+  }, []);
+
   function syncChecks(controller: HTMLInputElement) {
-    const root = controller.form ?? document;
-    root.querySelectorAll<HTMLInputElement>(".bulk-check").forEach((check) => {
+    const checks = controller.form
+      ? Array.from(document.querySelectorAll<HTMLInputElement>(".bulk-check")).filter((check) => check.form === controller.form)
+      : Array.from(document.querySelectorAll<HTMLInputElement>(".bulk-check"));
+
+    checks.forEach((check) => {
       check.checked = controller.checked;
     });
   }
@@ -18,10 +33,11 @@ export default function AdminBulkSelectAll() {
         autoComplete="off"
         type="checkbox"
         id="bulk-select-all"
+        form={form}
         aria-label="Select all rows"
         onChange={handleChange}
       />
-      <span data-admin-bulk-select-ready="true" hidden />
+      <span ref={readyRef} hidden />
     </>
   );
 }

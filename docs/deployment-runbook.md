@@ -26,6 +26,14 @@ The deploy script refuses to run unless:
 - local `main` exactly matches `origin/main`
 - build and admin smoke checks pass
 
+When `E2E_BASE_URL` is not set, admin smoke runs against a local dev server. The deploy script prepares a synthetic local D1 smoke database first:
+
+```powershell
+npm run d1:prepare:local-smoke
+```
+
+This schema mirrors the production D1 table structure and inserts only synthetic smoke-test rows. Do not use production data for local smoke setup.
+
 ## Cloudflare
 
 Use only the Dad account environment variables:
