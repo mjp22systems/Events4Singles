@@ -47,6 +47,8 @@ Events4Singles platform rebuild. Australian singles directory (not just events).
 ## Deploy sequence
 GitHub `main` is the source of truth. Cloudflare production must only be deployed from a clean local `main` that exactly matches `origin/main`.
 
+Project keyword: **Release** means save the intended work in Git, push it to GitHub, then make it live using the locked deploy process. If Matt says "release this", "make this live", or "ship it", follow the full sequence: review `git status`, commit only the intended changes, push, switch/update to clean `main`, then run `npm run deploy:dad`.
+
 Use the Dad Cloudflare API-token env vars. Do not stop at `wrangler whoami`; this machine is not browser-authenticated, but API deploy access exists through:
 - `CLOUDFLARE_API_TOKEN_DAD`
 - `CLOUDFLARE_ACCOUNT_ID_DAD`

@@ -6,6 +6,8 @@ GitHub `main` is the source of truth. Cloudflare production must only be deploye
 
 ## Standard Release
 
+Project keyword: **Release** means save the intended work, push it to GitHub, then deploy through the locked process. If Matt says "release this", "make this live", or "ship it", do the full sequence instead of asking him to name every command.
+
 1. Work on a branch.
 2. Run local checks.
 3. Commit the source changes.
