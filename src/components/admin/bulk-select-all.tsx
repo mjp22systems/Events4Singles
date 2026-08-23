@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-
 export default function AdminBulkSelectAll() {
-  useEffect(() => {
-    function syncChecks(controller: HTMLInputElement) {
-      document.querySelectorAll<HTMLInputElement>(".bulk-check").forEach((check) => {
-        check.checked = controller.checked;
-      });
-    }
+  function syncChecks(checked: boolean) {
+    document.querySelectorAll<HTMLInputElement>(".bulk-check").forEach((check) => {
+      check.checked = checked;
+    });
+  }
 
-    function handleChange(event: Event) {
-      const target = event.target;
-      if (!(target instanceof HTMLInputElement) || target.id !== "bulk-select-all") return;
-      syncChecks(target);
-    }
-
-    document.addEventListener("change", handleChange);
-    return () => document.removeEventListener("change", handleChange);
-  }, []);
-
-  return <span data-admin-bulk-select-ready="true" hidden />;
+  return (
+    <>
+      <input
+        type="checkbox"
+        id="bulk-select-all"
+        aria-label="Select all rows"
+        onChange={(event) => syncChecks(event.currentTarget.checked)}
+      />
+      <span data-admin-bulk-select-ready="true" hidden />
+    </>
+  );
 }

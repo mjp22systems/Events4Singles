@@ -65,7 +65,7 @@ export default async function AdminTools({ searchParams }: PageProps) {
             <>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
                 <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
-                  <input type="checkbox" id="bulk-select-all" />
+                  <AdminBulkSelectAll />
                   All
                 </label>
                 <select name="action" className="a-input" style={{ width: "160px" }}>
@@ -139,7 +139,6 @@ export default async function AdminTools({ searchParams }: PageProps) {
           )}
         </div>
       </form>
-      <AdminBulkSelectAll />
     </>
   );
 }

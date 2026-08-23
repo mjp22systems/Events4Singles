@@ -21,6 +21,7 @@ export default function AdminRootLayout({ children }: { children: React.ReactNod
   return (
     <>
       <Script id="admin-theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
+      <Script src="/admin-bulk-select.js" strategy="beforeInteractive" />
       <link rel="stylesheet" href="/admin.css" />
       {children}
     </>
