@@ -317,10 +317,10 @@ img {
 
 .e4s-index-page-head {
   display: grid;
-  grid-template-columns: minmax(0, 760px) auto;
+  grid-template-columns: minmax(0, 680px) auto;
   grid-template-areas:
-    "title ."
-    "lead sort";
+    "title sort"
+    "lead .";
   align-items: start;
   justify-content: space-between;
   column-gap: 20px;
@@ -334,11 +334,12 @@ img {
 
 .e4s-index-page-head .e4s-lead {
   grid-area: lead;
-  max-width: 760px;
+  max-width: 680px;
 }
 
 .e4s-index-sort {
   grid-area: sort;
+  align-self: center;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -7699,8 +7700,8 @@ body:not(.e4s-nav-open) .e4s-nav {
     grid-template-columns: 1fr;
     grid-template-areas:
       "title"
-      "lead"
-      "sort";
+      "sort"
+      "lead";
     row-gap: 12px;
   }
 
