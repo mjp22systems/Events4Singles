@@ -22,6 +22,9 @@ export default function NavDropdowns({ cities, categories }: Props) {
 
   const INFO_ROUTES: Record<string, string> = {
     about: "About",
+    businesses: "Business Directory",
+    "dating-resources": "Dating Resources",
+    events: "What's On",
     contact: "Contact",
     advertise: "Advertise with Us",
     portal: "Advertiser Portal",
@@ -103,6 +106,9 @@ export default function NavDropdowns({ cities, categories }: Props) {
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>
           <option value="/about">About</option>
+          <option value="/businesses">Business Directory</option>
+          <option value="/dating-resources">Dating Resources</option>
+          <option value="/events">What&apos;s On</option>
           <option value="/advertise">Advertise with Us</option>
           <option value="/portal">Advertiser Portal</option>
           <option value="/contact">Contact</option>
@@ -113,7 +119,7 @@ export default function NavDropdowns({ cities, categories }: Props) {
 
       <div className="e4s-nav__events-cell">
         <Link href="/dating-resources" className="e4s-nav__dating-btn">Dating Resources</Link>
-        <Link href="/events" className="e4s-nav__events-btn">What's On</Link>
+        <Link href="/events" className="e4s-nav__events-btn">What&apos;s On</Link>
       </div>
     </nav>
   );

@@ -711,9 +711,17 @@ img {
 
 
 /* Businesses directory */
-.e4s-businesses { padding: 2rem 0 4rem; }
+.e4s-businesses { padding: 40px 16px 4rem; }
 .e4s-businesses__head { margin-bottom: 2rem; }
-.e4s-businesses__head h1 { font-size: 1.75rem; margin-bottom: 0.4rem; }
+.e4s-businesses__head h1 {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--e4s-pink);
+  color: var(--e4s-teal-900);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.2;
+}
 .e4s-businesses__head p { color: var(--e4s-text-muted); margin-bottom: 1rem; }
 .e4s-businesses__search {
   width: 100%;
