@@ -3,13 +3,29 @@ import { slugToLabel, toUrlSlug, toListingSlug, idFromProfileSlug } from "./cons
 import { canonicalEventSlug } from "./event-slugs";
 import type { Listing, Category, City, Banner, Business } from "./types";
 
-const SUPPRESSED_CATEGORIES = new Set(["events"]);
+const SUPPRESSED_CATEGORIES = new Set([
+  "events",
+  "art_galleries",
+  "finance_mortgage",
+  "golf",
+  "lotto4singles",
+  "singles_news",
+  "singles_products",
+  "sms-phone-dating",
+  "special_offers",
+  "spiritual_path",
+  "toastmasters",
+  "travel_for_singles",
+  "walks4singles",
+]);
 const SUPPRESSED_BANNER_CATEGORIES = new Set(["nightclubs"]);
 
 
 // ── Listings ─────────────────────────────────────────────────────────────────
 
 export async function getListingsForCategory(categoryDbSlug: string): Promise<Listing[]> {
+  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug)) return [];
+
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT l.id, l.title, l.tagline, l.description, l.promo,
@@ -54,6 +70,8 @@ export async function getListingsForPage(
   categoryDbSlug: string,
   cityDbSlug: string | null
 ): Promise<Listing[]> {
+  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug)) return [];
+
   const db = await getD1();
   const cityClause = cityDbSlug ? "AND city_slug = ?" : "AND city_slug IS NULL";
   const baseArgs: (string | null)[] = [categoryDbSlug, cityDbSlug, cityDbSlug, categoryDbSlug, categoryDbSlug, categoryDbSlug];
@@ -168,6 +186,8 @@ export async function getAllCategories(): Promise<Category[]> {
 }
 
 export async function getCategoryMeta(dbSlug: string): Promise<Category | null> {
+  if (SUPPRESSED_CATEGORIES.has(dbSlug)) return null;
+
   const db = await getD1();
   const row = await db.prepare(`
     SELECT p.category_slug AS slug, c.label, c.parent_slug,
@@ -204,6 +224,8 @@ export async function getAllCities(): Promise<City[]> {
 }
 
 export async function getCitiesForCategory(categoryDbSlug: string): Promise<City[]> {
+  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug)) return [];
+
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT p.city_slug AS slug, ci.label, ci.state, ci.seo_title, ci.seo_description,
@@ -442,6 +464,8 @@ export async function getAllListingParams(): Promise<{ slug: string }[]> {
 }
 
 export async function getRelatedListings(categorySlug: string, citySlug: string | null, excludeId: number, limit = 4): Promise<Listing[]> {
+  if (SUPPRESSED_CATEGORIES.has(categorySlug)) return [];
+
   const db = await getD1();
   const cityClause = citySlug ? "AND p.city_slug = ?" : "AND p.city_slug IS NULL";
   const args = citySlug ? [categorySlug, citySlug, excludeId, limit] : [categorySlug, excludeId, limit];
@@ -497,7 +521,9 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; listing_count: number;
   }>();
-  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+  return results
+    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug))
+    .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 // ── Banners ───────────────────────────────────────────────────────────────────
@@ -506,6 +532,7 @@ export async function getBannersForPage(
   categoryDbSlug: string,
   cityDbSlug?: string | null
 ): Promise<Banner[]> {
+  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug)) return [];
   if (SUPPRESSED_BANNER_CATEGORIES.has(categoryDbSlug)) return [];
 
   const db = await getD1();

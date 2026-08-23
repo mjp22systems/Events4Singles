@@ -49,7 +49,7 @@ function TextArea({ value, onChange, rows = 4 }: { value: string; onChange: (v: 
 
 const AU_CITIES = ["sydney", "melbourne", "brisbane", "perth", "adelaide", "gold_coast", "canberra", "hobart", "newcastle", "sunshine_coast"];
 const AU_TIMEZONES = ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth", "Australia/Adelaide", "Australia/Darwin", "Australia/Hobart"];
-const CATEGORIES = ["speed_dating", "dinner_parties", "dance_classes", "social_clubs", "adventure", "life_coaches", "online_dating", "travel_for_singles"];
+const CATEGORIES = ["speed_dating", "singles_mixers", "dinner_parties", "christian_singles", "lgbtqia_singles_events", "dance_classes", "social_clubs", "social_walks", "adventure", "life_coaches", "dating_coaches", "online_dating", "solo_travel"];
 const REGISTRATION_MODES = [
   { value: "auto", label: "Auto - paid uses Eventbrite" },
   { value: "eventbrite", label: "Eventbrite" },

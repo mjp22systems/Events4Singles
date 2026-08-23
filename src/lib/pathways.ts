@@ -63,9 +63,12 @@ export const PATHWAYS: PathwayContent[] = [
     ],
     categories: [
       { slug: "speed-dating", label: "Speed Dating", note: "Short, hosted introductions with a clear dating purpose." },
+      { slug: "singles-mixers", label: "Singles Mixers", note: "Relaxed hosted socials where meeting new people is the point." },
       { slug: "dinner-parties", label: "Dinner Parties", note: "Longer conversations over a shared meal." },
       { slug: "intro-agencies", label: "Introduction Agencies", note: "Personalised matching and more guided support." },
       { slug: "online-dating", label: "Online Dating", note: "Digital dating options to support your wider search." },
+      { slug: "christian-singles", label: "Christian Singles", note: "Faith-aligned events, groups and services for Christian singles." },
+      { slug: "lgbtqia-singles-events", label: "LGBTQIA+ Singles Events", note: "Inclusive singles events and social spaces for LGBTQIA+ communities." },
       { slug: "mature-dating-events", label: "Mature Dating Events", note: "Dating experiences for singles later in life." }
     ],
     sections: [
@@ -137,8 +140,8 @@ export const PATHWAYS: PathwayContent[] = [
       { slug: "nightclubs", label: "Nightclubs", note: "Late-night venues and social dance floors." },
       { slug: "adventure-for-singles", label: "Adventure for Singles", note: "Active days out and shared outdoor experiences." },
       { slug: "cruises4singles", label: "Cruises for Singles", note: "Social outings on the water with room to mingle." },
-      { slug: "walks4singles", label: "Walks for Singles", note: "Easy conversation while exploring local places." },
-      { slug: "travel-for-singles", label: "Travel for Singles", note: "Trips and getaways with other singles." }
+      { slug: "social-walks", label: "Social Walks", note: "Low-pressure walks and outdoor catch-ups with easy conversation." },
+      { slug: "solo-travel", label: "Solo Travel", note: "Travel experiences built for independent singles and solo guests." }
     ],
     sections: [
       {
@@ -204,12 +207,15 @@ export const PATHWAYS: PathwayContent[] = [
     ],
     categories: [
       { slug: "life-coaches", label: "Life Coaches", note: "Guidance for goals, confidence and personal direction." },
+      { slug: "dating-coaches", label: "Dating Coaches", note: "Dating-specific support for confidence, profiles and relationship readiness." },
       { slug: "psychology", label: "Psychology", note: "Professional support for emotional wellbeing and patterns." },
       { slug: "healing-and-happiness", label: "Healing & Happiness", note: "Wellbeing services for renewal and balance." },
+      { slug: "retreats-for-singles", label: "Retreats for Singles", note: "Retreats, reset weekends and reflective escapes for singles." },
       { slug: "seminars", label: "Seminars & Workshops", note: "Learning experiences for personal and social growth." },
       { slug: "fitness4singles", label: "Fitness for Singles", note: "Movement, health and energy with social possibility." },
       { slug: "yoga-classes", label: "Yoga Classes", note: "Calm, strength and self-connection through practice." },
       { slug: "image-and-photography", label: "Image & Photography", note: "Presentation, confidence and profile-ready imagery." },
+      { slug: "dating-profile-photography", label: "Dating Profile Photography", note: "Profile-focused portraits that help singles show up naturally." },
       { slug: "singles-health", label: "Singles Health", note: "Health-focused support for a stronger everyday life." }
     ],
     sections: [
