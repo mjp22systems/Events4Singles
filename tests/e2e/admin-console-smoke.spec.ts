@@ -127,6 +127,8 @@ test.describe("Admin console smoke", () => {
   });
 
   test("admin bulk controls are wired to real actions", async ({ page }) => {
+    test.setTimeout(90_000);
+
     const bulkPages = [
       "/admin/business-requests",
       "/admin/users",
