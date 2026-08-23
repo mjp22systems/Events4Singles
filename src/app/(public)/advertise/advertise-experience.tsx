@@ -165,13 +165,15 @@ function PlacementPreview({ active }: { active: string }) {
     <div className={`e4s-adx-preview e4s-adx-preview--listing${featured ? " is-featured" : ""}`}>
       <div className="e4s-adx-list-rank">{featured ? "1" : "Live"}</div>
       <div className="e4s-adx-listing-card">
-        <Image
-          src={featured ? "/images/home-cat-dinner-parties.jpg" : "/images/home-cat-dance-classes.jpg"}
-          alt=""
-          width={132}
-          height={118}
-          loading="eager"
-        />
+        <span className="e4s-adx-listing-image">
+          <Image
+            src={featured ? "/images/home-cat-dinner-parties.jpg" : "/images/home-cat-dance-classes.jpg"}
+            alt=""
+            fill
+            sizes="132px"
+            loading="eager"
+          />
+        </span>
         <div>
           <span>{featured ? "Featured listing" : "Standard listing"}</span>
           <strong>{featured ? "Harbour Social Singles" : "Brisbane Salsa Nights"}</strong>
@@ -317,7 +319,9 @@ export default function AdvertiseExperience() {
       </section>
 
       <section className="e4s-adx-creative">
-        <Image src="/images/home-cat-speed-dating.jpg" alt="" width={520} height={360} loading="eager" />
+        <div className="e4s-adx-creative-media">
+          <Image src="/images/home-cat-speed-dating.jpg" alt="" fill sizes="(max-width: 1080px) 100vw, 520px" loading="eager" />
+        </div>
         <div>
           <p className="e4s-kicker">Creative Help</p>
           <h2>Small advertisers need help looking credible.</h2>

@@ -5534,17 +5534,20 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   box-shadow: 0 12px 22px rgba(6, 78, 77, 0.09);
 }
 
-.e4s-adx-listing-card img,
+.e4s-adx-listing-image img,
 .e4s-adx-home-tile img,
 .e4s-adx-home-sponsor img,
-.e4s-adx-creative img {
+.e4s-adx-creative-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.e4s-adx-listing-card img {
+.e4s-adx-listing-image {
+  position: relative;
+  display: block;
   min-height: 118px;
+  overflow: hidden;
   border-radius: 8px;
 }
 
@@ -5975,7 +5978,13 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   overflow: hidden;
 }
 
-.e4s-adx-creative > img {
+.e4s-adx-creative-media {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+}
+
+.e4s-adx-creative-media img {
   min-height: 360px;
 }
 
@@ -6082,7 +6091,8 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .e4s-adx-creative > img {
+  .e4s-adx-creative-media,
+  .e4s-adx-creative-media img {
     min-height: 220px;
   }
 
