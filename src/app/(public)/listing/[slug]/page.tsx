@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = listing.business_name || listing.title;
   const canonicalSlug = canonicalListingSlug(listing);
   const location = [listing.location_city, listing.location_state].filter(Boolean).join(", ");
-  return pageMetadata({
+  return {
+    ...pageMetadata({
     title,
     description:
       listing.tagline ||
@@ -40,7 +41,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/listing/${canonicalSlug}`,
     keywords: [title, listing.category_label || "", location].filter(Boolean),
     image: listing.image_url || "/icon.png",
-  });
+    }),
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
 }
 
 const SOCIAL_PLATFORMS = [

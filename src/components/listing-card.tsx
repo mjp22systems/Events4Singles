@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Listing } from "@/lib/types";
-import { slugToLabel, toListingSlug } from "@/lib/constants";
+import { slugToLabel, toListingSlug, toProfileSlug } from "@/lib/constants";
 import ListingCardMedia from "./listing-card-media";
 
 interface Props {
@@ -41,7 +41,10 @@ export default function ListingCard({ listing }: Props) {
   const isCircle = ltype === "practitioner";
   const locations = locationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locations.length);
-  const cardHref = `/listing/${toListingSlug(listing.id, listing.business_name || listing.title)}`;
+  const listingHref = `/listing/${toListingSlug(listing.id, listing.business_name || listing.title)}`;
+  const cardHref = listing.business_id
+    ? `/profile/${toProfileSlug(listing.business_id, listing.business_name || listing.title)}`
+    : listingHref;
 
   return (
     <article
@@ -149,7 +152,7 @@ export default function ListingCard({ listing }: Props) {
               <span className="e4s-listing-card__promo">{listing.promo}</span>
             )}
             <Link href={cardHref} className="e4s-listing-card__more">
-              More info ›
+              View profile ›
             </Link>
           </div>
         </div>
