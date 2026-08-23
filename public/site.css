@@ -49,14 +49,12 @@ a:active { color: #008080; }
 .text-grey-warm { color: #e2dcdc; }
 .text-pink-vivid { color: #e60073; }
 .text-orange-deep { color: #e63900; }
-.text-pink-mid2 { color: #8b2f43; }
 .text-pink-mid2 { color: #e7368d; }
 .text-teal-pale { color: #eaf2f2; }
 .text-teal-pale2 { color: #eaf4f3; }
 .text-orange { color: #ef6d00; }
 .text-teal-frost { color: #f0f7f7; }
 .text-pink-frost { color: #fde1ef; }
-.text-red { color: #ff0000; }
 .text-grey-dark { color: #666666; }
 .text-grey-light { color: #cccccc; }
 .text-grey-mid { color: #999999; }
@@ -80,7 +78,6 @@ a:active { color: #008080; }
 .bg-teal-xxlight { background-color: #dfeeed; }
 .bg-grey-warm { background-color: #e2dcdc; }
 .bg-pink-vivid { background-color: #e60073; }
-.bg-pink-mid2 { background-color: #8b2f43; }
 .bg-pink-mid2 { background-color: #e7368d; }
 .bg-teal-pale { background-color: #eaf2f2; }
 .bg-teal-pale2 { background-color: #eaf4f3; }
@@ -112,7 +109,7 @@ a:active { color: #008080; }
 .text-left    { text-align: left; }
 .text-right   { text-align: right; }
 .text-justify { text-align: justify; }
-/* Legacy compatibility: centered tables ----------------------------------- */
+/* Legacy compatibility: centered tables -------------------------------------
    HTML4 align="center" on <table> centers the table itself (margin: auto).
    HTML4 align="center" on <div> centers inline content AND block children.
    text-align: center in CSS only centres inline content, so we add explicit
@@ -392,11 +389,16 @@ img {
 }
 
 .e4s-honeypot {
-  position: absolute;
+  position: absolute !important;
+  top: auto !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
   opacity: 0;
   pointer-events: none;
-  height: 0;
-  width: 0;
 }
 
 .cf-turnstile[data-size="invisible"] {
@@ -752,9 +754,14 @@ img {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px 12px;
 }
+
+.e4s-businesses__item {
+  min-width: 0;
+}
+
 .e4s-businesses__link {
   font-size: 0.9rem;
   color: var(--e4s-teal-700);
@@ -766,8 +773,8 @@ img {
   text-overflow: ellipsis;
 }
 .e4s-businesses__link:hover { color: var(--e4s-teal-600); text-decoration: underline; }
-@media (max-width: 900px) { .e4s-businesses__grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 600px) { .e4s-businesses__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .e4s-businesses__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .e4s-businesses__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* 06. Footer ─────────────────────────────────────────────── */
 .e4s-footer {
@@ -2441,7 +2448,7 @@ body.e4s-page-location .e4s-page-intro--editorial .e4s-page-intro__lead,
 
 .e4s-promo-banners {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, var(--e4s-image-width)));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--e4s-image-width)), var(--e4s-image-width)));
   justify-content: center;
   gap: 8px;
   width: min(100%, var(--e4s-shell));
@@ -5654,7 +5661,21 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-header__actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex: 0 0 auto !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+  }
+
+  .e4s-header-login,
+  .e4s-header-cta-btn {
     display: none !important;
+  }
+
+  .e4s-header__menu-btn {
+    display: inline-flex !important;
   }
 
   .e4s-header .e4s-header-cta strong,

@@ -13,6 +13,7 @@
     "test:e2e": "playwright test",
     "smoke:admin": "playwright test tests/e2e/admin-console-smoke.spec.ts --workers=1",
     "images:optimize-site": "node tools/optimize-site-images.mjs",
+    "audit:css": "node tools/audit-css.mjs",
     "deploy:checked": "npm run deploy:dad",
     "deploy:dad": "node tools/deploy-cloudflare.mjs",
     "cache:purge": "node tools/purge-cloudflare-cache.mjs"
