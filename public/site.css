@@ -316,21 +316,32 @@ img {
 }
 
 .e4s-index-page-head {
-  display: flex;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 760px) auto;
+  grid-template-areas:
+    "title ."
+    "lead sort";
+  align-items: start;
   justify-content: space-between;
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 0;
 }
 
-.e4s-index-page-head__copy {
+.e4s-index-page-head h1 {
+  grid-area: title;
+  justify-self: start;
+}
+
+.e4s-index-page-head .e4s-lead {
+  grid-area: lead;
   max-width: 760px;
 }
 
 .e4s-index-sort {
+  grid-area: sort;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 6px;
   flex-shrink: 0;
 }
 
@@ -7685,8 +7696,12 @@ body:not(.e4s-nav-open) .e4s-nav {
   }
 
   .e4s-index-page-head {
-    flex-direction: column;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "lead"
+      "sort";
+    row-gap: 12px;
   }
 
   .e4s-index-sort {

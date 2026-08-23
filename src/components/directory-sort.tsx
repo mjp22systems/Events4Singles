@@ -62,10 +62,8 @@ export function CityDirectoryGrid({ cities, lead, title }: { cities: CityTile[] 
   return (
     <>
       <div className="e4s-shell e4s-page-head e4s-index-page-head">
-        <div className="e4s-index-page-head__copy">
-          <h1>{title}</h1>
-          <p className="e4s-lead">{lead}</p>
-        </div>
+        <h1>{title}</h1>
+        <p className="e4s-lead">{lead}</p>
         <SortControl id="cities-sort" value={sort} onChange={setSort} />
       </div>
       <div className="e4s-shell e4s-home-city-grid">
@@ -92,10 +90,8 @@ export function CategoryDirectoryGrid({ categories, lead, title }: { categories:
   return (
     <>
       <div className="e4s-shell e4s-page-head e4s-index-page-head">
-        <div className="e4s-index-page-head__copy">
-          <h1>{title}</h1>
-          <p className="e4s-lead">{lead}</p>
-        </div>
+        <h1>{title}</h1>
+        <p className="e4s-lead">{lead}</p>
         <SortControl id="categories-sort" value={sort} onChange={setSort} />
       </div>
       <div className="e4s-shell e4s-home-cat-grid">
