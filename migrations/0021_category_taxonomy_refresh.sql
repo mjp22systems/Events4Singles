@@ -1,5 +1,3 @@
-BEGIN TRANSACTION;
-
 INSERT INTO categories (
   slug,
   label,
@@ -221,4 +219,3 @@ ON CONFLICT(from_path) DO UPDATE SET
   entity_type = excluded.entity_type,
   entity_id = excluded.entity_id;
 
-COMMIT;
