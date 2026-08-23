@@ -1263,6 +1263,27 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   }
 }
 
+@media (max-width: 900px) and (orientation: landscape) {
+  .e4s-nav {
+    grid-template-columns: repeat(3, minmax(128px, 1fr)) minmax(250px, auto);
+    gap: 10px;
+    padding: 0 16px 10px;
+  }
+
+  .e4s-nav__events-cell {
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .e4s-nav__dating-btn,
+  .e4s-nav__events-btn {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+}
+
 @media (max-width: 520px) {
   :root {
     --e4s-header-height: 67px;
@@ -4707,7 +4728,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 /* Mobile directory page fixes --------------------------------------------
    Keep advertising tiles compact and prevent the sticky toolbar from
    visually cutting through the first feature listing on phones. */
-@media (max-width: 700px) {
+@media (max-width: 700px) and (orientation: portrait) {
   .e4s-page-with-sidebar {
     width: 100% !important;
     max-width: 100% !important;
@@ -4942,6 +4963,31 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
+@media (max-width: 900px) and (orientation: landscape) {
+  .e4s-promo-banners {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+    width: min(calc(100% - 32px), var(--e4s-shell));
+    overflow: visible;
+  }
+
+  .e4s-promo-banners a,
+  .e4s-promo-banners span {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    animation: none;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .e4s-promo-banners img {
+    object-fit: contain;
+  }
+}
+
 @keyframes e4s-mobile-promo-rotate {
   0%,
   30% {
@@ -4961,22 +5007,50 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 }
 
-@media (max-width: 430px) {
+@media (max-width: 430px) and (orientation: portrait) {
   .e4s-listings-toolbar {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .e4s-listings-toolbar__title,
+  .e4s-listings-sort,
+  .e4s-listings-filter-group {
+    grid-column: 1;
+    width: 100%;
   }
 
   .e4s-listings-toolbar__title {
-    grid-column: 1;
+    white-space: normal;
   }
 
   .e4s-listings-sort {
-    grid-column: 2;
-    justify-self: end;
+    justify-content: space-between;
+  }
+
+  .e4s-listings-sort select {
+    width: min(100%, 120px);
+    max-width: none;
   }
 
   .e4s-listings-filter-group {
-    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .e4s-listings-filter summary {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .e4s-listings-filter summary span {
+    min-width: 0;
+  }
+
+  .e4s-listings-filter__panel {
+    right: auto;
+    left: 0;
+    width: min(330px, calc(100vw - 44px));
   }
 }
 
@@ -8917,5 +8991,25 @@ h1, h2, h3, h4, h5, h6 {
   }
   .e4s-seo-support h2 {
     font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .e4s-page-category .e4s-seo-support {
+    width: min(calc(100% - 20px), var(--e4s-shell));
+    margin: 32px auto 44px;
+    padding: 22px 18px;
+    border: 1px solid rgba(6, 78, 77, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 8px 18px rgba(6, 78, 77, 0.08);
+  }
+
+  .e4s-page-category .e4s-seo-support h2 {
+    color: var(--e4s-teal-900);
+  }
+
+  .e4s-page-category .e4s-seo-support p {
+    color: #41515f;
   }
 }
