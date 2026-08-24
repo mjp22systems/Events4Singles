@@ -1621,11 +1621,8 @@ html:has(.e4s-admin-bar) {
 }
 
 body:has(.e4s-admin-bar) {
-  background: #ffffff;
-  color: #000066;
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 /* Keep public pages usable if this stylesheet survives a client-side
@@ -1636,12 +1633,11 @@ html:has(.e4s-header) {
 }
 
 body:has(.e4s-header).e4s-fixed-header {
-  background: #ffffff;
-  color: #000066;
+  background: var(--e4s-page-bg, #f5faf9);
+  color: var(--e4s-ink, #14313f);
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: var(--e4s-header-height, 0px) !important;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 /* Admin bar + edit drawer */

@@ -8,10 +8,12 @@ const listingCardFile = path.join(projectRoot, "src", "components", "listing-car
 const homePageFile = path.join(projectRoot, "src", "app", "(public)", "page.tsx");
 const listingPageFile = path.join(projectRoot, "src", "app", "(public)", "listing", "[slug]", "page.tsx");
 const listingsPageFile = path.join(projectRoot, "src", "app", "(public)", "listings", "page.tsx");
+const featuredListingsPageFile = path.join(projectRoot, "src", "app", "(public)", "featured-listings", "page.tsx");
 const dataFile = path.join(projectRoot, "src", "lib", "data.ts");
 const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
+const homeFeaturedFile = path.join(projectRoot, "src", "components", "home-featured.tsx");
 
 test("listing cards route claimed business records to the profile page", () => {
   const source = readFileSync(listingCardFile, "utf8");
@@ -39,18 +41,22 @@ test("homepage featured listings include business ids and only use paid tiers", 
 test("featured listings directory is wired as the homepage view-all target", () => {
   const homeSource = readFileSync(homePageFile, "utf8");
   const listingsSource = readFileSync(listingsPageFile, "utf8");
+  const featuredListingsSource = readFileSync(featuredListingsPageFile, "utf8");
+  const homeFeaturedSource = readFileSync(homeFeaturedFile, "utf8");
   const dataSource = readFileSync(dataFile, "utf8");
 
-  assert.match(homeSource, /href="\/listings"/);
+  assert.match(homeSource, /href="\/featured-listings"/);
+  assert.match(listingsSource, /redirect\(query\.toString\(\) \? `\/featured-listings/);
   assert.match(dataSource, /export async function getAllFeaturedListings/);
-  assert.match(dataSource, /export async function getFeaturedListingCategories/);
-  assert.match(dataSource, /export async function getFeaturedListingCities/);
-  assert.match(listingsSource, /getAllFeaturedListings/);
-  assert.match(listingsSource, /e4s-page-hero/);
-  assert.match(listingsSource, /PageSidebar/);
-  assert.match(listingsSource, /mode="featured"/);
-  assert.match(listingsSource, /AdvertiseCard/);
-  assert.doesNotMatch(listingsSource, /showFeatureSlot=\{false\}/);
+  assert.match(featuredListingsSource, /getAllFeaturedListings/);
+  assert.match(featuredListingsSource, /e4s-page-hero/);
+  assert.match(featuredListingsSource, /PageSidebar/);
+  assert.match(featuredListingsSource, /mode="featured"/);
+  assert.match(featuredListingsSource, /categoryFacets/);
+  assert.match(featuredListingsSource, /cityFacets/);
+  assert.match(featuredListingsSource, /AdvertiseCard/);
+  assert.doesNotMatch(featuredListingsSource, /showFeatureSlot=\{false\}/);
+  assert.doesNotMatch(homeFeaturedSource, /Refine Listings/);
 });
 
 test("listing detail pages stay accessible but are not indexed", () => {
@@ -68,6 +74,8 @@ test("public admin edit styles do not leak after route changes", () => {
 
   assert.match(adminCss, /body:has\(\.e4s-header\)\.e4s-fixed-header/);
   assert.match(adminCss, /body:has\(\.e4s-admin-bar\) \.e4s-header/);
+  assert.match(adminCss, /background: var\(--e4s-page-bg/);
+  assert.doesNotMatch(adminCss, /body:has\(\.e4s-header\)\.e4s-fixed-header\s*\{[^}]*background:\s*#ffffff/s);
   assert.doesNotMatch(adminCss, /^\.e4s-header\s*\{/m);
   assert.match(publicLayout, /<PublicRouteStateReset \/>/);
   assert.match(routeReset, /usePathname/);

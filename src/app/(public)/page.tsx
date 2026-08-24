@@ -6,6 +6,7 @@ import HomeFeatured from "@/components/home-featured";
 import EventCardGrid from "@/components/event-card-grid";
 import { PATHWAYS } from "@/lib/pathways";
 import { pageMetadata, collectionPageJsonLd } from "@/lib/seo";
+import BodyClass from "@/components/body-class";
 
 export const metadata: Metadata = pageMetadata({
   title: "Events4Singles - Australian Singles Events Directory",
@@ -64,6 +65,7 @@ export default async function HomePage() {
           })),
         }}
       />
+      <BodyClass add="e4s-page-home" />
       <main className="e4s-home-page" id="site-content">
       {/* 1. HERO */}
       <section className="e4s-home-hero">
@@ -197,9 +199,9 @@ export default async function HomePage() {
           <div className="e4s-shell e4s-home-section__head">
             <div>
               <h2>Featured Businesses</h2>
-              <p>Hand-picked event organisers, venues and services for singles across Australia. Filter by location or category to find what suits you.</p>
+              <p>Hand-picked event organisers, venues and services for singles across Australia.</p>
             </div>
-            <Link className="e4s-home-section__more" href="/listings">View All Listings</Link>
+            <Link className="e4s-home-section__more" href="/featured-listings">View Featured Listings</Link>
           </div>
           <div className="e4s-shell">
             <HomeFeatured listings={featured} />

@@ -31,7 +31,7 @@ export default function PageSidebar(props: Props) {
       if (next.category) params.set("category", toUrlSlug(next.category));
       if (next.city) params.set("city", toUrlSlug(next.city));
       const query = params.toString();
-      return query ? `/listings?${query}` : "/listings";
+      return query ? `/featured-listings?${query}` : "/featured-listings";
     };
 
     const categoryItems = props.categories.map((cat) => ({
@@ -63,7 +63,7 @@ export default function PageSidebar(props: Props) {
         <SidebarNav
           heading="Refine by category"
           items={categoryItems}
-          topItem={hasActiveFilter ? { label: "All featured", href: "/listings" } : undefined}
+          topItem={hasActiveFilter ? { label: "All featured", href: "/featured-listings" } : undefined}
         />
         <SidebarNav heading="Refine by city" items={cityItems} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">

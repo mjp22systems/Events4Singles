@@ -1,26 +1,6 @@
 "use client";
-import { useState, useMemo } from "react";
 import ListingCard from "./listing-card";
 import type { Listing } from "@/lib/types";
-
-const CITIES = [
-  { value: "", label: "All Cities" },
-  { value: "sydney", label: "Sydney" },
-  { value: "melbourne", label: "Melbourne" },
-  { value: "brisbane", label: "Brisbane" },
-  { value: "perth", label: "Perth" },
-  { value: "adelaide", label: "Adelaide" },
-  { value: "hobart", label: "Hobart" },
-];
-
-const CATS = [
-  { value: "", label: "All Categories" },
-  { value: "speed-dating", label: "Speed Dating" },
-  { value: "dinner-parties", label: "Dinner Parties" },
-  { value: "dance-classes", label: "Dance Classes" },
-  { value: "social-clubs", label: "Social Clubs" },
-  { value: "intro-agencies", label: "Introduction Agencies" },
-];
 
 const SPONSORED = [
   { title: "Speed Dating Sydney", sub: "View events", href: "/speed-dating/sydney", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=300&q=70" },
@@ -37,48 +17,16 @@ interface Props {
 }
 
 export default function HomeFeatured({ listings }: Props) {
-  const [city, setCity] = useState("");
-  const [cat, setCat] = useState("");
-
-  const filtered = useMemo(() => {
-    return listings.filter((l) => {
-      if (city) {
-        const slugs = `${l.city_slugs || ""},${l.city_slug || ""}`.toLowerCase();
-        if (!slugs.includes(city)) return false;
-      }
-      if (cat) {
-        const catSlugs = `${l.category_slugs || ""},${l.category_slug || ""}`.toLowerCase();
-        if (!catSlugs.includes(cat)) return false;
-      }
-      return true;
-    });
-  }, [listings, city, cat]);
-
   return (
     <div className="e4s-home-featured-layout">
       <div className="e4s-home-featured__listings">
-        {filtered.length === 0 ? (
-          <p className="e4s-home-featured__empty">No featured listings match your filters.</p>
+        {listings.length === 0 ? (
+          <p className="e4s-home-featured__empty">No featured listings are available yet.</p>
         ) : (
-          filtered.map((listing) => <ListingCard key={listing.id} listing={listing} />)
+          listings.map((listing) => <ListingCard key={listing.id} listing={listing} />)
         )}
       </div>
       <aside className="e4s-home-featured__sidebar">
-        <div className="e4s-home-featured__refine">
-          <p className="e4s-home-featured__refine-label">Refine Listings</p>
-          <div className="e4s-home-featured__refine-row">
-            <label className="e4s-home-featured__refine-field-label">Cities</label>
-            <select value={city} onChange={(e) => setCity(e.target.value)}>
-              {CITIES.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
-          <div className="e4s-home-featured__refine-row">
-            <label className="e4s-home-featured__refine-field-label">Category</label>
-            <select value={cat} onChange={(e) => setCat(e.target.value)}>
-              {CATS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
-        </div>
         {SPONSORED.map((sp) => (
           <a key={sp.title} className="e4s-home-featured__sponsored" href={sp.href}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
