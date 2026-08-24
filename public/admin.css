@@ -1594,6 +1594,21 @@ select.a-input {
 
 /* Public-site admin bar + edit drawer */
 
+/* Public pages load this stylesheet only for the admin edit bar. Undo the
+   admin-console viewport lock so normal public pages can still scroll. */
+html:has(.e4s-admin-bar) {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body:has(.e4s-admin-bar) {
+  background: #ffffff;
+  color: #000066;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 /* Admin bar + edit drawer */
 .e4s-admin-bar {
   background: #0f766e;

@@ -168,7 +168,7 @@ export async function getAllCategories(): Promise<Category[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT p.category_slug AS slug, c.label, c.parent_slug,
-           c.description, c.seo_title, c.seo_description, c.seo_intro,
+           c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
@@ -178,7 +178,7 @@ export async function getAllCategories(): Promise<Category[]> {
     ORDER BY listing_count DESC
   `).bind().all<{
     slug: string; label: string | null; parent_slug: string | null;
-    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; listing_count: number;
+    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
   return results
     .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug))
@@ -191,7 +191,7 @@ export async function getCategoryMeta(dbSlug: string): Promise<Category | null> 
   const db = await getD1();
   const row = await db.prepare(`
     SELECT p.category_slug AS slug, c.label, c.parent_slug,
-           c.description, c.seo_title, c.seo_description, c.seo_intro,
+           c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
@@ -200,7 +200,7 @@ export async function getCategoryMeta(dbSlug: string): Promise<Category | null> 
     GROUP BY p.category_slug
   `).bind(dbSlug).first<{
     slug: string; label: string | null; parent_slug: string | null;
-    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; listing_count: number;
+    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
   if (!row) return null;
   return { ...row, label: row.label || slugToLabel(row.slug) };
@@ -509,7 +509,7 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT p.category_slug AS slug, c.label, c.parent_slug,
-           c.description, c.seo_title, c.seo_description, c.seo_intro,
+           c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
            COUNT(DISTINCT p.listing_id) AS listing_count
     FROM listing_placements p
     LEFT JOIN categories c ON c.slug = p.category_slug
@@ -519,7 +519,7 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
     ORDER BY listing_count DESC
   `).bind(cityDbSlug).all<{
     slug: string; label: string | null; parent_slug: string | null;
-    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; listing_count: number;
+    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
   return results
     .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug))

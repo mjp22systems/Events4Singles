@@ -1,4 +1,4 @@
-export type MediaAssetPurpose = "event_image" | "banner" | "profile";
+export type MediaAssetPurpose = "event_image" | "category_image" | "banner" | "profile";
 
 export type MediaAsset = {
   id: string;

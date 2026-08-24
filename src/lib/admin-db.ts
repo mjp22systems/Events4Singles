@@ -7,6 +7,7 @@ import {
   getMediaAsset as getSharedMediaAsset,
   listMediaAssets as listSharedMediaAssets,
   type MediaAsset,
+  type MediaAssetPurpose,
   type MediaAssetWithData,
 } from "./media-assets";
 
@@ -269,6 +270,7 @@ export async function createMediaAsset(fields: {
   byteSize: number;
   data: ArrayBuffer;
   source?: string;
+  purpose?: MediaAssetPurpose;
 }): Promise<MediaAsset> {
   const db = await getD1();
   return createSharedMediaAsset(db, {
@@ -278,7 +280,7 @@ export async function createMediaAsset(fields: {
     byteSize: fields.byteSize,
     data: fields.data,
     source: fields.source ?? "admin",
-    purpose: "event_image",
+    purpose: fields.purpose ?? "event_image",
   });
 }
 
@@ -295,15 +297,15 @@ export async function getMediaAssetBlob(id: string): Promise<MediaAssetBlob | nu
   return getSharedMediaAsset(db, id);
 }
 
-export async function listMediaAssets(limit = 120): Promise<MediaAsset[]> {
+export async function listMediaAssets(limit = 120, purpose: MediaAssetPurpose = "event_image"): Promise<MediaAsset[]> {
   const db = await getD1();
-  return listSharedMediaAssets(db, "event_image", limit);
+  return listSharedMediaAssets(db, purpose, limit);
 }
 
 export async function listEventImageOptions(limit = 200): Promise<MediaAsset[]> {
   await ensureMediaAssetsTable();
   const db = await getD1();
-  const media = await listMediaAssets(Math.ceil(limit / 2));
+  const media = await listMediaAssets(Math.ceil(limit / 2), "event_image");
   const { results } = await db
     .prepare(
       `SELECT DISTINCT image_url
@@ -326,6 +328,38 @@ export async function listEventImageOptions(limit = 200): Promise<MediaAsset[]> 
       public_url: row.image_url,
       source: "event",
       purpose: "event_image" as const,
+      alt_text: null,
+      created_at: "",
+    }));
+  return [...media, ...existing].slice(0, limit);
+}
+
+export async function listCategoryImageOptions(limit = 200): Promise<MediaAsset[]> {
+  await ensureMediaAssetsTable();
+  const db = await getD1();
+  const media = await listMediaAssets(Math.ceil(limit / 2), "category_image");
+  const { results } = await db
+    .prepare(
+      `SELECT DISTINCT hero_image_url
+       FROM categories
+       WHERE hero_image_url IS NOT NULL AND hero_image_url != ''
+       ORDER BY hero_image_url ASC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all<{ hero_image_url: string }>();
+  const seen = new Set(media.map((item) => item.public_url));
+  const existing = results
+    .filter((row) => !seen.has(row.hero_image_url))
+    .map((row, index) => ({
+      id: `category-url-${index}`,
+      account_id: null,
+      filename: row.hero_image_url.split("/").pop() || row.hero_image_url,
+      content_type: "external/url",
+      byte_size: 0,
+      public_url: row.hero_image_url,
+      source: "category",
+      purpose: "category_image" as const,
       alt_text: null,
       created_at: "",
     }));
@@ -499,6 +533,7 @@ export interface AdminCategory {
   banner_row_count: number;
   seo_title: string | null;
   seo_description: string | null;
+  seo_intro: string | null;
   hero_image_url: string | null;
   listing_count: number;
 }
@@ -522,7 +557,7 @@ export async function listCategories(): Promise<AdminCategory[]> {
 
 export async function updateCategory(slug: string, fields: Partial<AdminCategory>): Promise<void> {
   const db = await getD1();
-  const allowed = ["label", "description", "banner_row_count", "seo_title", "seo_description", "hero_image_url", "sort_order"];
+  const allowed = ["label", "description", "banner_row_count", "seo_title", "seo_description", "seo_intro", "hero_image_url", "sort_order"];
   const updates = Object.keys(fields).filter((k) => allowed.includes(k));
   if (!updates.length) return;
 

@@ -32,6 +32,7 @@ import {
 } from "@/lib/page-copy";
 import SeoSupportSection from "@/components/seo-support-section";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
+import { getCategoryCardImage } from "@/lib/category-card-assets";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -162,6 +163,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
   // ── Category overview page ──────────────────────────────────────────────────
   const catMeta = await getCategoryMeta(dbSlug);
   if (!catMeta) notFound();
+  const categoryImage = catMeta.hero_image_url ?? getCategoryCardImage(param);
 
   const [cities, listings, allCats] = await Promise.all([
     getCitiesForCategory(dbSlug),
@@ -194,7 +196,11 @@ export default async function CategoryOrCityPage({ params }: Props) {
 
       <section aria-label={catMeta.label} className="e4s-page-hero">
         <div className="e4s-page-hero__image">
-          <HeroImage alt={catMeta.label} src={`/images/category-hero-${param}.svg`} />
+          <HeroImage
+            alt={catMeta.label}
+            src={categoryImage ?? `/images/category-hero-${param}.svg`}
+            fallbacks={categoryImage ? [`/images/category-hero-${param}.svg`] : []}
+          />
         </div>
         <div className="e4s-page-hero__caption">
           <h1>{catMeta.label}</h1>

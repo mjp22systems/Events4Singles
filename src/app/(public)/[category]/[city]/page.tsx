@@ -11,13 +11,14 @@ import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
 import BodyClass from "@/components/body-class";
-import HeroImage from "@/components/hero-image";
+import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
 import SeoSupportSection from "@/components/seo-support-section";
 import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCopy } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
+import { getCategoryCardImage } from "@/lib/category-card-assets";
 
 interface Props {
   params: Promise<{ category: string; city: string }>;
@@ -57,6 +58,8 @@ export default async function CategoryCityPage({ params }: Props) {
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
   const footerCopy = categoryCitySeoFooterCopy(catMeta, cityMeta, listings.length);
+  const categoryImage = catMeta.hero_image_url ?? getCategoryCardImage(category) ?? `/images/category-hero-${category}.svg`;
+  const cityImage = `/images/location-photo-${city}-photo.jpg`;
   const jsonLd = [
     collectionPageJsonLd({
       name: `${catMeta.label} in ${cityMeta.label}`,
@@ -95,12 +98,11 @@ export default async function CategoryCityPage({ params }: Props) {
       </nav>
 
       <section aria-label={`${catMeta.label} ${cityMeta.label}`} className="e4s-page-hero">
-        <div className="e4s-page-hero__image">
-          <HeroImage
-            alt={`${catMeta.label} ${cityMeta.label}`}
-            src={`/images/category-hero-${category}-${city.replace(/-/g, "")}.svg`}
-          />
-        </div>
+        <CategoryCityHeroImage
+          alt={`${catMeta.label} ${cityMeta.label}`}
+          categoryImage={categoryImage}
+          cityImage={cityImage}
+        />
         <div className="e4s-page-hero__caption">
           <h1>{catMeta.label} {cityMeta.label}</h1>
           <p>{categoryCityHeroSubtext(catMeta, cityMeta)}</p>

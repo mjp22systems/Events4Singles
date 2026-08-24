@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
   if (!cat) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const body = await req.json() as Record<string, unknown>;
-  const allowed = ["label", "description", "banner_row_count", "seo_title", "seo_description", "hero_image_url", "sort_order"];
+  const allowed = ["label", "description", "banner_row_count", "seo_title", "seo_description", "seo_intro", "hero_image_url", "sort_order"];
   const fields: Record<string, unknown> = {};
   for (const key of allowed) {
     if (key in body) fields[key] = body[key] === "" ? null : body[key];

@@ -483,6 +483,7 @@ img {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-right: 10px;
 }
 
 /* Login: outlined teal to fills teal on hover */
@@ -930,6 +931,7 @@ body > div > table {
 }
 
 .e4s-page-hero__image {
+  position: relative;
   display: block;
   min-height: 168px;
   background-position: center;
@@ -943,6 +945,47 @@ body > div > table {
   height: 168px;
   object-fit: cover;
   object-position: center center;
+}
+
+.e4s-page-hero__image--blend {
+  height: 168px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(0, 102, 102, 0.82), rgba(139, 47, 67, 0.74)),
+    linear-gradient(45deg, #d7ecea, #f8ddea);
+}
+
+.e4s-page-hero__blend-image,
+.e4s-page-hero__blend-softener {
+  position: absolute;
+  inset: 0;
+}
+
+.e4s-page-hero__blend-image {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+}
+
+.e4s-page-hero__blend-image--category {
+  background-image: var(--e4s-category-hero-image);
+  clip-path: polygon(0 0, 60% 0, 43% 100%, 0 100%);
+}
+
+.e4s-page-hero__blend-image--city {
+  background-image: var(--e4s-city-hero-image);
+  clip-path: polygon(57% 0, 100% 0, 100% 100%, 40% 100%);
+}
+
+.e4s-page-hero__blend-softener {
+  left: 38%;
+  width: 24%;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2) 48%, rgba(255, 255, 255, 0));
+  backdrop-filter: blur(8px);
+  transform: skewX(-13deg);
+  transform-origin: center;
+  z-index: 1;
 }
 
 body.e4s-city-sydney .e4s-page-hero__image img {
@@ -1050,11 +1093,14 @@ body.e4s-city-sydney .e4s-page-hero__image img {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, rgba(6, 78, 77, 0.74), rgba(6, 78, 77, 0.16) 56%, rgba(139, 47, 67, 0.28));
+  pointer-events: none;
+  z-index: 2;
 }
 
 .e4s-page-hero__caption {
   position: absolute;
   inset: 0;
+  z-index: 3;
   display: grid;
   align-content: center;
   justify-items: start;
@@ -1213,7 +1259,8 @@ body.e4s-city-sydney .e4s-page-hero__image img {
     min-height: 138px;
   }
 
-  .e4s-page-hero__image img {
+  .e4s-page-hero__image img,
+  .e4s-page-hero__image--blend {
     height: 138px;
   }
 

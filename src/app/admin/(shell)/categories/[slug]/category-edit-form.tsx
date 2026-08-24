@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import EventImagePicker from "@/components/admin/event-image-picker";
 
 type Category = {
   slug: string;
@@ -8,6 +9,7 @@ type Category = {
   banner_row_count: number;
   seo_title: string | null;
   seo_description: string | null;
+  seo_intro: string | null;
   hero_image_url: string | null;
   sort_order: number | null;
   listing_count: number;
@@ -19,6 +21,7 @@ export default function CategoryEditForm({ category }: { category: Category }) {
   const [bannerRows, setBannerRows] = useState(String(category.banner_row_count ?? 1));
   const [seoTitle, setSeoTitle] = useState(category.seo_title ?? "");
   const [seoDesc, setSeoDesc] = useState(category.seo_description ?? "");
+  const [seoIntro, setSeoIntro] = useState(category.seo_intro ?? "");
   const [heroUrl, setHeroUrl] = useState(category.hero_image_url ?? "");
   const [sortOrder, setSortOrder] = useState(String(category.sort_order ?? 0));
 
@@ -43,6 +46,7 @@ export default function CategoryEditForm({ category }: { category: Category }) {
           banner_row_count: Number(bannerRows),
           seo_title: seoTitle,
           seo_description: seoDesc,
+          seo_intro: seoIntro,
           hero_image_url: heroUrl,
           sort_order: Number(sortOrder),
         }),
@@ -80,13 +84,13 @@ export default function CategoryEditForm({ category }: { category: Category }) {
                 />
               </div>
               <div>
-                <label className="a-label">Hero image URL</label>
-                <input className="a-input" value={heroUrl} onChange={(e) => setHeroUrl(e.target.value)} placeholder="https://" style={{ width: "100%" }} />
-                {heroUrl && (
-                  <div style={{ marginTop: "8px" }}>
-                    <img src={heroUrl} alt="Hero preview" style={{ maxWidth: "100%", maxHeight: "120px", borderRadius: "6px", objectFit: "cover" }} />
-                  </div>
-                )}
+                <EventImagePicker
+                  value={heroUrl}
+                  onChange={setHeroUrl}
+                  label="Category image"
+                  purpose="category_image"
+                  source="admin-category"
+                />
               </div>
             </div>
           </div>
@@ -109,6 +113,17 @@ export default function CategoryEditForm({ category }: { category: Category }) {
                 <div style={{ fontSize: "11px", color: seoDesc.length > 160 ? "var(--a-warning)" : "var(--a-ink-muted)", marginTop: "4px" }}>
                   {seoDesc.length}/160
                 </div>
+              </div>
+              <div>
+                <label className="a-label">Page intro</label>
+                <textarea
+                  className="a-input"
+                  value={seoIntro}
+                  onChange={(e) => setSeoIntro(e.target.value)}
+                  rows={5}
+                  style={{ width: "100%", resize: "vertical" }}
+                  placeholder="Shown as the lead text block on this category page"
+                />
               </div>
             </div>
           </div>

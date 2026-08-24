@@ -55,6 +55,7 @@ export interface Category {
   seo_title: string | null;
   seo_description: string | null;
   seo_intro: string | null;
+  hero_image_url: string | null;
   listing_count: number;
 }
 

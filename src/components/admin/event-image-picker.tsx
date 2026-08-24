@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import type { MediaAssetPurpose } from "@/lib/media-assets";
 
 type MediaOption = {
   id: string;
@@ -15,6 +17,8 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
   label?: string;
+  purpose?: MediaAssetPurpose;
+  source?: string;
 };
 
 function formatBytes(value: number) {
@@ -23,16 +27,22 @@ function formatBytes(value: number) {
   return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default function EventImagePicker({ value, onChange, label = "Event Image" }: Props) {
+export default function EventImagePicker({
+  value,
+  onChange,
+  label = "Event Image",
+  purpose = "event_image",
+  source = "admin-event",
+}: Props) {
   const [options, setOptions] = useState<MediaOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  async function refreshLibrary() {
+  const refreshLibrary = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/admin/api/media", { cache: "no-store" });
+      const res = await fetch(`/admin/api/media?purpose=${encodeURIComponent(purpose)}`, { cache: "no-store" });
       if (!res.ok) throw new Error(await res.text());
       const body = await res.json() as { assets: MediaOption[] };
       setOptions(body.assets ?? []);
@@ -41,11 +51,14 @@ export default function EventImagePicker({ value, onChange, label = "Event Image
     } finally {
       setLoading(false);
     }
-  }
+  }, [purpose]);
 
   useEffect(() => {
-    void refreshLibrary();
-  }, []);
+    const timer = window.setTimeout(() => {
+      void refreshLibrary();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [refreshLibrary]);
 
   async function upload(file: File | undefined) {
     if (!file) return;
@@ -54,7 +67,8 @@ export default function EventImagePicker({ value, onChange, label = "Event Image
     try {
       const data = new FormData();
       data.set("file", file);
-      data.set("source", "admin-event");
+      data.set("source", source);
+      data.set("purpose", purpose);
       const res = await fetch("/admin/api/media", { method: "POST", body: data });
       if (!res.ok) throw new Error(await res.text());
       const body = await res.json() as { asset: MediaOption };

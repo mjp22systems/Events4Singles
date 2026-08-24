@@ -15,7 +15,7 @@ export function cityIntroCopy(city: City, listingCount: number, categoryCount: n
 export function categoryIntroCopy(category: Category, cityCount: number, listingCount: number) {
   const label = category.label.toLowerCase();
   return {
-    lead: `Explore ${label} listings for singles across Australia, from established organisers and specialist services through to local hosts, clubs and activity providers.`,
+    lead: category.seo_intro || `Explore ${label} listings for singles across Australia, from established organisers and specialist services through to local hosts, clubs and activity providers.`,
     detail: `Use this page to compare the available options, see which businesses feel like the right fit, and follow through to events or services that match your pace, interests and social comfort zone.`,
     support: `There are ${plural(listingCount, "listing")} mapped to this category across ${plural(cityCount, "city", "cities")}, with business details, links and contact pathways brought together for easier browsing.`,
   };
