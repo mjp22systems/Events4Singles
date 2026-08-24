@@ -79,4 +79,23 @@ test.describe("Profile page", () => {
     await page.mouse.wheel(0, 800);
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before.scrollY);
   });
+
+  test("admin edit drawer opens and cleans up page state", async ({ page }) => {
+    await addAdminCookie(page);
+    await page.goto(`/profile/${KNOWN_ID}`, { waitUntil: "domcontentloaded" });
+
+    await page.getByRole("button", { name: "Edit Listing" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit listing" })).toBeVisible();
+    await expect(page.getByText("Business name (shown as heading on all pages)")).toBeVisible();
+    await expect(page.locator(".e4s-edit-field input").first()).toBeVisible();
+    await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(true);
+
+    await page.getByRole("button", { name: "Close" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit listing" })).toBeHidden();
+    await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(false);
+
+    const scrollY = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 800);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollY);
+  });
 });

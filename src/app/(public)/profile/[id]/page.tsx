@@ -105,6 +105,7 @@ export default async function ProfilePage({ params }: Props) {
   const domain = web ? web.replace(/^https?:\/\/(www\.)?/, "").split("/")[0] : null;
   const phone = primary?.phone || primary?.mobile;
   const businessId = business?.id ?? null;
+  const showAdminEditor = isAdmin && primary;
 
   const isVerified = !!business?.advertiser_id;
   const ltype = primary?.listing_type ?? "standard";
@@ -129,8 +130,8 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <main id="site-content">
-      {isAdmin && <link rel="stylesheet" href="/admin.css" precedence="high" />}
-      {isAdmin && primary && (
+      {showAdminEditor && <link rel="stylesheet" href="/admin.css" precedence="high" />}
+      {showAdminEditor && (
         <AdminEditDrawer listing={primary} />
       )}
       <div className="e4s-shell">
