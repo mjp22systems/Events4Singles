@@ -1,5 +1,5 @@
 export function getCityHeroImage(slug: string): string {
-  return `/images/optimized/location-photo-${slug}-photo.webp`;
+  return `/images/cities/optimized/location-photo-${slug}-photo.webp`;
 }
 
 export function getCityHeroFallbacks(slug: string): string[] {

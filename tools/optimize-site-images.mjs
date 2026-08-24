@@ -4,12 +4,10 @@ import sharp from "sharp";
 
 const root = process.cwd();
 const imagesDir = path.join(root, "public", "images");
-const outputDir = path.join(imagesDir, "optimized");
-
 const jobs = [
-  { glob: /^home-city-.+\.jpg$/i, width: 640, height: 960 },
-  { glob: /^home-cat-.+\.jpg$/i, width: 720, height: 800 },
-  { glob: /^location-photo-.+-photo\.jpg$/i, width: 1600, height: 650 },
+  { glob: /^home-city-.+\.jpg$/i, width: 640, height: 960, outputDir: path.join(imagesDir, "optimized") },
+  { glob: /^home-cat-.+\.jpg$/i, width: 720, height: 800, outputDir: path.join(imagesDir, "optimized") },
+  { glob: /^location-photo-.+-photo\.jpg$/i, width: 1600, height: 650, outputDir: path.join(imagesDir, "cities", "optimized") },
 ];
 
 function outputName(filename) {
@@ -20,8 +18,6 @@ async function fileSize(file) {
   const stat = await fs.stat(file);
   return stat.size;
 }
-
-await fs.mkdir(outputDir, { recursive: true });
 
 const entries = await fs.readdir(imagesDir, { withFileTypes: true });
 const images = entries
@@ -35,7 +31,8 @@ let totalAfter = 0;
 for (const name of images) {
   const job = jobs.find((item) => item.glob.test(name));
   const source = path.join(imagesDir, name);
-  const target = path.join(outputDir, outputName(name));
+  await fs.mkdir(job.outputDir, { recursive: true });
+  const target = path.join(job.outputDir, outputName(name));
   const before = await fileSize(source);
 
   await sharp(source)
@@ -52,7 +49,7 @@ for (const name of images) {
   totalBefore += before;
   totalAfter += after;
   console.log(
-    `${name} -> optimized/${path.basename(target)} ` +
+    `${name} -> ${path.relative(imagesDir, target).replaceAll(path.sep, "/")} ` +
       `${Math.round(before / 1024)}KB -> ${Math.round(after / 1024)}KB`,
   );
 }
