@@ -216,7 +216,7 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
-  test("portrait listing toolbar keeps filters on second row", async ({ page }) => {
+  test("portrait listing toolbar keeps controls on second row", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.setContent(`
       <!doctype html>
@@ -264,10 +264,9 @@ test.describe("responsive CSS", () => {
       };
     });
 
-    expect(Math.abs(layout.sort.top - layout.title.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
-    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
-    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.sort.bottom);
-    expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(290);
+    expect(layout.sort.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
+    expect(Math.abs(layout.filter.top - layout.sort.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
+    expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(190);
     expect(layout.filterText.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterCount.left - 6);
     expect(layout.filterSummary.height, JSON.stringify(layout)).toBeLessThanOrEqual(32);
     expect(layout.filterText.height, JSON.stringify(layout)).toBeLessThanOrEqual(20);
