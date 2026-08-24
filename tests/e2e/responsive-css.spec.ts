@@ -54,6 +54,8 @@ test.describe("responsive CSS", () => {
       await page.setViewportSize(viewport);
       await page.goto("/", { waitUntil: "domcontentloaded" });
       await page.locator(".e4s-header__menu-btn").click();
+      await expect(page.locator(".e4s-nav__events-cell")).toBeVisible();
+      await page.waitForTimeout(150);
 
       const bounds = await page.evaluate(() => {
         const box = (selector: string) => {
@@ -181,6 +183,39 @@ test.describe("responsive CSS", () => {
     });
   }
 
+  test("portrait promo banners preserve advertiser image ratio", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body class="e4s-page-category">
+          <main class="e4s-category-template" id="site-content">
+            <section class="e4s-promo-banners e4s-promo-banners--one-row">
+              <a href="/advertise"><img alt="Wide advertiser" src="/images/advertise-here-180x120.svg"></a>
+              <a href="/advertise"><img alt="Wide advertiser 2" src="/images/advertise-here-180x120.svg"></a>
+            </section>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const boxes = await page.locator(".e4s-promo-banners > *").evaluateAll((items) =>
+      items.map((item) => {
+        const rect = item.getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      }),
+    );
+
+    for (const box of boxes) {
+      expect(box.width / box.height, JSON.stringify(boxes)).toBeCloseTo(1.5, 1);
+    }
+    await expectNoHorizontalOverflow(page);
+  });
+
   test("portrait listing toolbar stacks controls cleanly", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.setContent(`
@@ -215,17 +250,78 @@ test.describe("responsive CSS", () => {
       const title = document.querySelector(".e4s-listings-toolbar__title")!.getBoundingClientRect();
       const sort = document.querySelector(".e4s-listings-sort")!.getBoundingClientRect();
       const filter = document.querySelector(".e4s-listings-filter-group")!.getBoundingClientRect();
+      const filterSummary = document.querySelector(".e4s-listings-filter summary")!.getBoundingClientRect();
+      const filterText = document.querySelector(".e4s-listings-filter summary span")!.getBoundingClientRect();
+      const filterCount = document.querySelector(".e4s-listings-filter summary em")!.getBoundingClientRect();
       return {
         toolbar: { width: toolbar.width, height: toolbar.height },
         title: { top: title.top, bottom: title.bottom },
         sort: { top: sort.top, bottom: sort.bottom },
         filter: { top: filter.top, bottom: filter.bottom, width: filter.width },
+        filterSummary: { height: filterSummary.height },
+        filterText: { right: filterText.right, height: filterText.height },
+        filterCount: { left: filterCount.left },
       };
     });
 
     expect(layout.sort.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
     expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.sort.bottom);
     expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(290);
+    expect(layout.filterText.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterCount.left - 6);
+    expect(layout.filterSummary.height, JSON.stringify(layout)).toBeLessThanOrEqual(32);
+    expect(layout.filterText.height, JSON.stringify(layout)).toBeLessThanOrEqual(20);
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("wide portrait listing toolbar gives filters their own row", async ({ page }) => {
+    await page.setViewportSize({ width: 590, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body class="e4s-page-category">
+          <main class="e4s-category-template" id="site-content">
+            <div class="e4s-toolbar-shield">
+              <div class="e4s-listings-toolbar">
+                <span class="e4s-listings-toolbar__title">Speed Dating</span>
+                <label class="e4s-listings-sort"><span>Sort:</span><select><option>A-Z</option></select></label>
+                <div class="e4s-listings-filter-group">
+                  <details class="e4s-listings-filter">
+                    <summary><span>Filter: Cities</span><em>17/17</em></summary>
+                    <div class="e4s-listings-filter__panel"></div>
+                  </details>
+                  <button type="button" class="e4s-listings-filter-clear">Clear</button>
+                </div>
+              </div>
+            </div>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const layout = await page.evaluate(() => {
+      const title = document.querySelector(".e4s-listings-toolbar__title")!.getBoundingClientRect();
+      const sort = document.querySelector(".e4s-listings-sort")!.getBoundingClientRect();
+      const filter = document.querySelector(".e4s-listings-filter-group")!.getBoundingClientRect();
+      const filterText = document.querySelector(".e4s-listings-filter summary span")!.getBoundingClientRect();
+      const filterCount = document.querySelector(".e4s-listings-filter summary em")!.getBoundingClientRect();
+      return {
+        title: { top: title.top, bottom: title.bottom },
+        sort: { top: sort.top, bottom: sort.bottom },
+        filter: { top: filter.top, bottom: filter.bottom, width: filter.width },
+        filterText: { right: filterText.right },
+        filterCount: { left: filterCount.left },
+      };
+    });
+
+    expect(Math.abs(layout.sort.top - layout.title.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
+    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
+    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.sort.bottom);
+    expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(500);
+    expect(layout.filterText.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterCount.left - 6);
     await expectNoHorizontalOverflow(page);
   });
 

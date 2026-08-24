@@ -7542,17 +7542,18 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-promo-banners--one-row {
-    grid-template-rows: repeat(1, minmax(0, 126px));
+    grid-template-rows: repeat(1, auto);
   }
 
   .e4s-promo-banners--two-row {
-    grid-template-rows: repeat(2, minmax(0, 126px));
+    grid-template-rows: repeat(2, auto);
   }
 
   .e4s-promo-banners a,
   .e4s-promo-banners span {
     width: 100% !important;
-    height: 126px !important;
+    height: auto !important;
+    aspect-ratio: 3 / 2;
     min-width: 0 !important;
     padding: 0 !important;
     border: 0 !important;
@@ -7623,7 +7624,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 
   .e4s-listings-toolbar {
     display: grid;
-    grid-template-columns: minmax(88px, 1fr) auto minmax(132px, 1.2fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
     align-items: center;
     min-height: 56px;
@@ -7632,12 +7633,14 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-listings-toolbar__title {
+    grid-column: 1;
     min-width: 0;
   }
 
   .e4s-listings-sort {
+    grid-column: 2;
     display: inline-flex;
-    justify-self: start;
+    justify-self: end;
     min-width: 0;
     gap: 5px;
     white-space: nowrap;
@@ -7649,6 +7652,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-listings-filter-group {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
@@ -7808,12 +7812,18 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-listings-filter summary {
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    justify-content: stretch;
+    gap: 6px;
     width: 100%;
   }
 
   .e4s-listings-filter summary span {
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .e4s-listings-filter__panel {
