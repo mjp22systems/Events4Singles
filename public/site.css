@@ -970,14 +970,14 @@ body > div > table {
 
 .e4s-page-hero__blend-image--category {
   background-image: var(--e4s-category-hero-image);
-  -webkit-mask-image: linear-gradient(106deg, #000000 0%, #000000 42%, rgba(0, 0, 0, 0.72) 48%, rgba(0, 0, 0, 0.22) 56%, transparent 64%);
-  mask-image: linear-gradient(106deg, #000000 0%, #000000 42%, rgba(0, 0, 0, 0.72) 48%, rgba(0, 0, 0, 0.22) 56%, transparent 64%);
+  -webkit-mask-image: linear-gradient(98deg, #000000 0%, #000000 34%, rgba(0, 0, 0, 0.82) 41%, rgba(0, 0, 0, 0.34) 51%, rgba(0, 0, 0, 0.08) 62%, transparent 72%);
+  mask-image: linear-gradient(98deg, #000000 0%, #000000 34%, rgba(0, 0, 0, 0.82) 41%, rgba(0, 0, 0, 0.34) 51%, rgba(0, 0, 0, 0.08) 62%, transparent 72%);
 }
 
 .e4s-page-hero__blend-image--city {
   background-image: var(--e4s-city-hero-image);
-  -webkit-mask-image: linear-gradient(106deg, transparent 36%, rgba(0, 0, 0, 0.22) 44%, rgba(0, 0, 0, 0.72) 52%, #000000 58%, #000000 100%);
-  mask-image: linear-gradient(106deg, transparent 36%, rgba(0, 0, 0, 0.22) 44%, rgba(0, 0, 0, 0.72) 52%, #000000 58%, #000000 100%);
+  -webkit-mask-image: linear-gradient(98deg, transparent 28%, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.34) 49%, rgba(0, 0, 0, 0.82) 59%, #000000 66%, #000000 100%);
+  mask-image: linear-gradient(98deg, transparent 28%, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.34) 49%, rgba(0, 0, 0, 0.82) 59%, #000000 66%, #000000 100%);
   z-index: 1;
 }
 
