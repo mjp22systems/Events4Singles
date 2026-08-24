@@ -102,18 +102,41 @@ function Tag({ children, tone = "mint" }: { children: ReactNode; tone?: "mint" |
   return <span className={`e4s-love-tag e4s-love-tag--${tone}`}>{children}</span>;
 }
 
-function Thumb({ large = false }: { large?: boolean }) {
-  return <span className={large ? "e4s-love-thumb e4s-love-thumb--large" : "e4s-love-thumb"}><span /></span>;
+function ListingImage({ src = "/images/businesses/Social8-Dinners.webp", alt = "" }: { src?: string; alt?: string }) {
+  return (
+    <span className="e4s-listing-card__media">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img alt={alt} src={src} />
+    </span>
+  );
 }
 
 function StandardListing({ compact = false }: { compact?: boolean }) {
   return (
-    <article className="e4s-love-listing">
-      <Thumb />
-      <div>
-        <div className="e4s-love-row"><strong>Harbour Social Club</strong><Tag tone="plain">Listing</Tag></div>
-        <p>Speed dating & mixers · Sydney CBD</p>
-        {!compact && <div className="e4s-love-lines"><span /><span /></div>}
+    <article className="e4s-listing-card e4s-ad-real-card" data-e4s-listing-card>
+      <header className="e4s-listing-card__header">
+        <div className="e4s-listing-card__identity">
+          <div className="e4s-listing-card__title-row">
+            <h2 className="e4s-listing-card__title">Harbour Social Club</h2>
+            <span className="e4s-listing-card__unclaimed">Unclaimed</span>
+            <span className="e4s-listing-card__location-badge">Sydney</span>
+          </div>
+          <p className="e4s-listing-card__tagline">Speed dating and mixers for singles in the CBD</p>
+        </div>
+        <div className="e4s-listing-card__actions">
+          <span className="e4s-listing-card__action e4s-listing-card__action--phone" />
+          <span className="e4s-listing-card__action e4s-listing-card__action--web" />
+        </div>
+      </header>
+      <div className="e4s-listing-card__body">
+        <ListingImage alt="Singles dinner table" />
+        <div className="e4s-listing-card__content">
+          <p>{compact ? "A normal free listing in the city/category result order." : "A standard profile card with business name, image, contact actions, city badges, description and profile link."}</p>
+          <div className="e4s-listing-card__foot">
+            <span className="e4s-listing-card__promo">Free launch listing</span>
+            <span className="e4s-listing-card__more">View profile ›</span>
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -121,12 +144,30 @@ function StandardListing({ compact = false }: { compact?: boolean }) {
 
 function FeaturedListing() {
   return (
-    <article className="e4s-love-listing e4s-love-listing--featured">
-      <Thumb large />
-      <div>
-        <div className="e4s-love-row"><strong>Little Lane Singles Events</strong><Tag tone="berry">Featured</Tag></div>
-        <p>Wine tastings · Trivia nights · 30s-40s</p>
-        <div className="e4s-love-chip-row"><Tag>Photos</Tag><Tag>Booking link</Tag><Tag>3 cities</Tag></div>
+    <article className="e4s-listing-card e4s-listing-card--featured e4s-ad-real-card" data-e4s-listing-card>
+      <header className="e4s-listing-card__header">
+        <div className="e4s-listing-card__identity">
+          <div className="e4s-listing-card__title-row">
+            <h2 className="e4s-listing-card__title">Little Lane Singles Events</h2>
+            <span className="e4s-listing-card__badge">Featured</span>
+            <span className="e4s-listing-card__location-badge">Melbourne</span>
+          </div>
+          <p className="e4s-listing-card__tagline">Wine tastings, trivia nights and 30s-40s social events</p>
+        </div>
+        <div className="e4s-listing-card__actions">
+          <span className="e4s-listing-card__action e4s-listing-card__action--email" />
+          <span className="e4s-listing-card__action e4s-listing-card__action--web" />
+        </div>
+      </header>
+      <div className="e4s-listing-card__body">
+        <ListingImage alt="Featured singles event" src="/images/businesses/vitalpartners-banner-home-v2.webp" />
+        <div className="e4s-listing-card__content">
+          <p>Larger paid card treatment with richer promotion, city visibility and a Featured label above standard listings.</p>
+          <div className="e4s-listing-card__foot">
+            <span className="e4s-listing-card__promo">Booking link included</span>
+            <span className="e4s-listing-card__more">View profile ›</span>
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -134,8 +175,8 @@ function FeaturedListing() {
 
 function PriorityListing() {
   return (
-    <div className="e4s-love-priority">
-      <div className="e4s-love-row"><span>Pinned to top of Sydney results</span><Tag tone="teal">Priority</Tag></div>
+    <div className="e4s-ad-real-priority">
+      <div className="e4s-ad-real-label"><span>Sticky position 1 on Sydney results</span><Tag tone="teal">Priority</Tag></div>
       <StandardListing compact />
       <StandardListing compact />
     </div>
@@ -144,22 +185,30 @@ function PriorityListing() {
 
 function BannerStrip({ small = false }: { small?: boolean }) {
   return (
-    <div className={small ? "e4s-love-banner e4s-love-banner--small" : "e4s-love-banner"}>
-      <span>V</span>
-      <div><strong>Vue Rooftop - Singles Summer Series</strong>{!small && <p>Page-top banner · Sydney city page · 970 x 120</p>}</div>
-      <em>Sponsored</em>
-    </div>
+    <section aria-label="Featured advertisers" className={`e4s-promo-banners e4s-ad-real-banners${small ? " is-small" : ""}`}>
+      {["/images/20firsdates_90x60.jpg", "/images/atable4six-new16_130.jpg", "/images/arthurmurray_120x80.jpg", "/images/advertise-here-180x120.svg"].map((src, index) => (
+        <span key={src} title={index === 3 ? "Advertise on Events4Singles" : "Featured advertiser"}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt={index === 3 ? "Advertise on Events4Singles" : "Featured advertiser tile"} src={src} />
+        </span>
+      ))}
+    </section>
   );
 }
 
 function SidebarAd() {
   return (
-    <aside className="e4s-love-sidebar-ad">
-      <div className="e4s-love-row"><span>Sponsored</span><Tag tone="berry">Sidebar</Tag></div>
-      <div className="e4s-love-sidebar-art" />
-      <strong>Melbourne Singles Hikes</strong>
-      <p>Right-hand column on every Melbourne and Outdoors page.</p>
-      <span>View dates</span>
+    <aside className="e4s-ad-real-sidebar-demo">
+      <div className="e4s-sidebar-block__heading">Browse by category</div>
+      <div className="e4s-sidebar-nav">
+        <span>Speed Dating <em>42</em></span>
+        <span>Dinner Parties <em>18</em></span>
+        <span>Social Clubs <em>34</em></span>
+      </div>
+      <div className="e4s-sidebar-ad">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img alt="Advertise on Events4Singles sidebar" src="/images/advertise-here-180x120.svg" />
+      </div>
     </aside>
   );
 }
@@ -172,10 +221,10 @@ function WhatsOnList() {
   ];
 
   return (
-    <div className="e4s-love-whatson">
-      <div className="e4s-love-row"><strong>What&apos;s On · Sydney</strong><Tag>This week</Tag></div>
+    <div className="e4s-ad-real-events">
+      <div className="e4s-ad-real-label"><strong>What&apos;s On · Sydney</strong><Tag>This week</Tag></div>
       {events.map(([day, date, title, venue, price]) => (
-        <div key={title} className="e4s-love-event-line">
+        <div key={title} className="e4s-ad-real-event-line">
           <span>{day}<strong>{date}</strong></span>
           <div><strong>{title}</strong><p>{venue}</p></div>
           <em>{price}</em>
@@ -187,11 +236,23 @@ function WhatsOnList() {
 
 function PromotedEventRow() {
   return (
-    <div className="e4s-love-promoted-row">
-      <p>Every event page · second row</p>
-      <span className="e4s-love-fake-row" />
-      <div><span>E4S</span><div><strong>Masquerade Singles Ball - Brisbane</strong><p>Promoted placement · row two</p></div><Tag tone="berry">Ad</Tag></div>
-      <span className="e4s-love-fake-row" />
+    <div className="e4s-ad-real-promoted">
+      <p>Every event page · paid second row</p>
+      <div className="e4s-home-events-grid">
+        <article className="e4s-home-event-card">
+          <div className="e4s-home-event-card__img">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt="Promoted singles event" src="/images/home-blog-calendar.jpg" />
+            <span className="e4s-home-event-card__badge">AD</span>
+          </div>
+          <div className="e4s-home-event-card__body">
+            <p className="e4s-home-event-card__date">Fri, 12 Sep, 7:00 pm</p>
+            <h3>Masquerade Singles Ball</h3>
+            <p className="e4s-home-event-card__location">Brisbane CBD</p>
+            <p className="e4s-home-event-card__meta">Promoted row two</p>
+          </div>
+        </article>
+      </div>
     </div>
   );
 }
@@ -208,9 +269,17 @@ function HomepageFeaturedListing() {
 
 function HomepageTile() {
   return (
-    <div className="e4s-love-home-tile">
-      <div className="e4s-love-row"><strong>Featured across Australia</strong><Tag tone="plain">Homepage</Tag></div>
-      <div><article><Tag tone="teal">Sponsored tile</Tag><strong>Golden Hour Singles Cruise</strong><p>Sydney Harbour · Every Saturday</p></article><span /><span /></div>
+    <div className="e4s-home-featured__sidebar e4s-ad-real-home-tile">
+      <div className="e4s-ad-real-label"><strong>Homepage sponsored tiles</strong><Tag tone="plain">Homepage</Tag></div>
+      <span className="e4s-home-featured__sponsored">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img alt="Sponsored homepage tile" className="e4s-home-featured__sponsored-img" src="/images/businesses/Dinnerateight_main.jpg" />
+        <span className="e4s-home-featured__sponsored-overlay">
+          <span className="e4s-home-featured__sponsored-tag">Sponsored</span>
+          <span className="e4s-home-featured__sponsored-title">Golden Hour Singles Cruise</span>
+          <span className="e4s-home-featured__sponsored-sub">Book this spot →</span>
+        </span>
+      </span>
     </div>
   );
 }
@@ -241,7 +310,7 @@ function SitePreview({ active, onSelect }: { active: ZoneId; onSelect: (zone: Zo
         <Zone id="banner" active={active} label="Page-top banner" onSelect={onSelect}><BannerStrip small /></Zone>
         <div className="e4s-love-site-preview__grid">
           <div>
-            <Zone id="priority" active={active} label="Sticky listing" onSelect={onSelect}><div className="e4s-love-priority-single"><Thumb /><div><strong>Two Left Feet Dating</strong><p>Sticky position 1 · Sydney</p></div><Tag tone="teal">Priority</Tag></div></Zone>
+            <Zone id="priority" active={active} label="Sticky listing" onSelect={onSelect}><div className="e4s-ad-real-priority-single"><ListingImage src="/images/businesses/Social8-DinnerClub.jpg" /><div><strong>Two Left Feet Dating</strong><p>Sticky position 1 · Sydney</p></div><Tag tone="teal">Priority</Tag></div></Zone>
             <Zone id="featured" active={active} label="Featured listing" onSelect={onSelect}><FeaturedListing /></Zone>
             <Zone id="standard" active={active} label="Standard listing" onSelect={onSelect}><StandardListing compact /></Zone>
             <Zone id="whatson" active={active} label="What's On" onSelect={onSelect}><WhatsOnList /></Zone>

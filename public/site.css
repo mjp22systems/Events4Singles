@@ -6806,6 +6806,214 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   background: var(--love-paper-2);
 }
 
+.e4s-love-advertise .e4s-ad-real-card {
+  width: 100%;
+  min-width: 0;
+  height: 214px;
+  margin: 0;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(6, 78, 77, 0.07);
+  cursor: default;
+}
+
+.e4s-love-advertise .e4s-ad-real-card .e4s-listing-card__overlay {
+  display: none;
+}
+
+.e4s-love-advertise .e4s-ad-real-card .e4s-listing-card__title {
+  font-size: 18px;
+}
+
+.e4s-love-advertise .e4s-ad-real-card .e4s-listing-card__body {
+  grid-template-columns: var(--e4s-image-width) minmax(0, 1fr);
+}
+
+.e4s-love-advertise .e4s-ad-real-priority {
+  display: grid;
+  gap: 10px;
+  border: 2px solid rgba(8, 114, 113, 0.34);
+  border-radius: 10px;
+  background: #f8fcfb;
+  padding: 12px;
+}
+
+.e4s-ad-real-label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--e4s-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.e4s-ad-real-priority-single {
+  display: grid;
+  grid-template-columns: var(--e4s-image-width) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--e4s-border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+.e4s-ad-real-priority-single .e4s-listing-card__media {
+  width: 86px;
+  height: 58px;
+}
+
+.e4s-ad-real-priority-single strong {
+  color: var(--e4s-pink);
+  font-size: 15px;
+}
+
+.e4s-ad-real-priority-single p {
+  margin: 3px 0 0;
+  color: var(--e4s-muted);
+  font-size: 12px;
+}
+
+.e4s-love-advertise .e4s-ad-real-banners {
+  width: 100%;
+  margin: 0;
+  grid-template-columns: repeat(4, minmax(0, var(--e4s-image-width)));
+  justify-content: start;
+}
+
+.e4s-love-advertise .e4s-ad-real-banners.is-small {
+  grid-template-columns: repeat(4, minmax(58px, 1fr));
+}
+
+.e4s-love-advertise .e4s-ad-real-banners.is-small span {
+  width: 100%;
+  height: 56px;
+}
+
+.e4s-ad-real-sidebar-demo {
+  display: grid;
+  width: min(100%, 204px);
+  border: 1px solid var(--e4s-border);
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.e4s-ad-real-sidebar-demo .e4s-sidebar-nav {
+  display: grid;
+  max-height: none;
+  overflow: hidden;
+}
+
+.e4s-ad-real-sidebar-demo .e4s-sidebar-nav span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--e4s-border);
+  padding: 7px 8px 7px 12px;
+  color: var(--e4s-ink);
+  font-size: 13px;
+}
+
+.e4s-ad-real-sidebar-demo .e4s-sidebar-nav em {
+  color: var(--e4s-muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.e4s-ad-real-sidebar-demo .e4s-sidebar-ad {
+  margin: 12px auto;
+}
+
+.e4s-ad-real-events {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--e4s-border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+
+.e4s-ad-real-event-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--e4s-border);
+  padding: 10px 0;
+}
+
+.e4s-ad-real-event-line > span {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--e4s-teal-50);
+  color: var(--e4s-teal-900);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.e4s-ad-real-event-line > span strong {
+  font-size: 14px;
+}
+
+.e4s-ad-real-event-line strong {
+  color: var(--e4s-teal-900);
+  font-size: 13px;
+}
+
+.e4s-ad-real-event-line p {
+  margin: 2px 0 0;
+  color: var(--e4s-muted);
+  font-size: 12px;
+}
+
+.e4s-ad-real-event-line em {
+  color: var(--e4s-pink);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.e4s-ad-real-promoted {
+  display: grid;
+  gap: 8px;
+}
+
+.e4s-ad-real-promoted > p {
+  margin: 0;
+  color: var(--e4s-pink);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.e4s-ad-real-promoted .e4s-home-events-grid {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+.e4s-ad-real-promoted .e4s-home-event-card {
+  margin: 0;
+}
+
+.e4s-ad-real-home-tile {
+  display: grid;
+  gap: 10px;
+}
+
+.e4s-ad-real-home-tile .e4s-home-featured__sponsored {
+  display: block;
+  min-height: 190px;
+}
+
 .e4s-love-preview-note {
   margin-top: 12px;
   font-size: 12px;
