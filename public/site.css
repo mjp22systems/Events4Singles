@@ -2186,8 +2186,6 @@ body.e4s-page-location .e4s-page-intro p,
   gap: 9px;
   min-height: 118px;
   align-content: center;
-  background: linear-gradient(90deg, rgba(13, 148, 136, 0.08), #ffffff 28%);
-  border-left: 4px solid var(--e4s-teal-700);
 }
 
 .e4s-page-intro--editorial p,
@@ -2235,9 +2233,8 @@ body.e4s-page-location .e4s-page-intro--editorial .e4s-page-intro__lead,
   margin: 24px auto 0;
   padding: 20px 22px;
   border: 1px solid var(--e4s-border);
-  border-left: 4px solid var(--e4s-teal-700);
   border-radius: 8px;
-  background: linear-gradient(90deg, rgba(13, 148, 136, 0.08), #ffffff 30%);
+  background: #ffffff;
   color: var(--e4s-ink);
   box-shadow: 0 6px 18px rgba(6, 78, 77, 0.06);
   text-align: left;
@@ -12472,8 +12469,10 @@ h1, h2, h3, h4, h5, h6 {
 .e4s-seo-support {
   max-width: 920px;
   margin: 42px auto 56px;
-  padding: 30px 0 0;
-  border-top: 1px solid var(--e4s-border);
+  padding: 26px 28px;
+  border: 1px solid rgba(6, 78, 77, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
 }
 .e4s-seo-support h2 {
   margin: 0 0 12px;
@@ -12494,7 +12493,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
   .e4s-seo-support {
     margin: 32px auto 44px;
-    padding-top: 24px;
+    padding: 22px 18px;
   }
   .e4s-seo-support h2 {
     font-size: 1.35rem;
@@ -12505,11 +12504,6 @@ h1, h2, h3, h4, h5, h6 {
   .e4s-page-category .e4s-seo-support {
     width: min(calc(100% - 20px), var(--e4s-shell));
     margin: 32px auto 44px;
-    padding: 22px 18px;
-    border: 1px solid rgba(6, 78, 77, 0.14);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 8px 18px rgba(6, 78, 77, 0.08);
   }
 
   .e4s-page-category .e4s-seo-support h2 {
