@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import type { Category, City, Listing } from "@/lib/types";
 import ListingCard from "./listing-card";
 import OnlineCard from "./online-card";
@@ -42,6 +42,7 @@ export default function ListingsSection({
 }: ListingsSectionProps) {
   const [sort, setSort] = useState<SortKey>("az");
   const [selectedSlugs, setSelectedSlugs] = useState<string[] | null>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   const filterMode = filterCategories.length > 0 ? "Categories"
     : filterCities.length > 0 ? "Cities"
@@ -70,23 +71,51 @@ export default function ListingsSection({
     return copy;
   }, [activeSet, canFilter, filterMode, filterSlugs.length, listings, sort]);
 
+  const keepStickyToolbarPinned = useCallback((update: () => void) => {
+    const toolbar = toolbarRef.current;
+    if (!toolbar) {
+      update();
+      return;
+    }
+
+    const stickyTop = parseFloat(getComputedStyle(toolbar).top) || 0;
+    const toolbarTop = toolbar.getBoundingClientRect().top;
+    const shouldPin = toolbarTop <= stickyTop + 2;
+
+    update();
+
+    if (!shouldPin) return;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const currentToolbar = toolbarRef.current;
+        if (!currentToolbar) return;
+        const targetTop = currentToolbar.getBoundingClientRect().top + window.scrollY - stickyTop;
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
+      });
+    });
+  }, []);
+
   function toggleFilter(slug: string) {
-    setSelectedSlugs((current) => {
+    keepStickyToolbarPinned(() => setSelectedSlugs((current) => {
       const next = new Set(current ?? filterSlugs);
       if (next.has(slug)) next.delete(slug);
       else next.add(slug);
       return filterSlugs.filter((filterSlug) => next.has(filterSlug));
-    });
+    }));
   }
 
   return (
     <>
-      <div className="e4s-toolbar-shield">
+      <div className="e4s-toolbar-shield" ref={toolbarRef}>
         <div className="e4s-listings-toolbar">
           {title && <span className="e4s-listings-toolbar__title">{title}</span>}
           <label className="e4s-listings-sort">
             <span>Sort:</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+            <select
+              value={sort}
+              onChange={(e) => keepStickyToolbarPinned(() => setSort(e.target.value as SortKey))}
+            >
               <option value="az">A-Z</option>
               <option value="za">Z-A</option>
             </select>
@@ -100,10 +129,10 @@ export default function ListingsSection({
                 </summary>
                 <div className="e4s-listings-filter__panel">
                   <div className="e4s-listings-filter__actions">
-                    <button type="button" onClick={() => setSelectedSlugs(filterSlugs)}>
+                    <button type="button" onClick={() => keepStickyToolbarPinned(() => setSelectedSlugs(filterSlugs))}>
                       Select all
                     </button>
-                    <button type="button" onClick={() => setSelectedSlugs([])}>
+                    <button type="button" onClick={() => keepStickyToolbarPinned(() => setSelectedSlugs([]))}>
                       Deselect all
                     </button>
                   </div>
@@ -125,7 +154,7 @@ export default function ListingsSection({
               <button
                 type="button"
                 className="e4s-listings-filter-clear"
-                onClick={() => setSelectedSlugs(null)}
+                onClick={() => keepStickyToolbarPinned(() => setSelectedSlugs(null))}
               >
                 Clear
               </button>

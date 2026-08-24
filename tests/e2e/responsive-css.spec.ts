@@ -23,7 +23,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 test.describe("responsive CSS", () => {
   const baseUrl =
     process.env.E2E_BASE_URL ?? `http://localhost:${process.env.E2E_LOCAL_PORT ?? "10400"}`;
-  const stylesheetHref = `${baseUrl}/site.css`;
+  const stylesheetHref = `${baseUrl}/site.css?e2e=responsive-css`;
   const publicRoutes = [
     "/",
     "/advertise",
@@ -316,6 +316,11 @@ test.describe("responsive CSS", () => {
       </html>
     `);
 
+    await page.waitForFunction(() => {
+      const shield = document.querySelector(".e4s-toolbar-shield");
+      return shield && getComputedStyle(shield).position === "sticky";
+    });
+
     const sticky = await page.evaluate(async () => {
       const shield = document.querySelector(".e4s-toolbar-shield")!;
       const position = getComputedStyle(shield).position;
@@ -340,7 +345,7 @@ test.describe("responsive CSS", () => {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
-        <body>
+        <body class="e4s-page-home">
           <main class="e4s-home-page" id="site-content">
             <div class="e4s-shell e4s-home-exp-grid">
               <a class="e4s-home-exp-tile" href="#"><span class="e4s-home-exp-tile__img-wrap"></span><span class="e4s-home-exp-tile__body"><h3>Elegant Dinner Parties</h3><p>Copy</p></span></a>
@@ -351,6 +356,11 @@ test.describe("responsive CSS", () => {
         </body>
       </html>
     `);
+
+    await page.waitForFunction(() => {
+      const grid = document.querySelector(".e4s-home-exp-grid");
+      return grid && getComputedStyle(grid).gridTemplateColumns.split(" ").length === 3;
+    });
 
     const boxes = await page.locator(".e4s-home-exp-tile").evaluateAll((items) =>
       items.map((item) => {
@@ -374,7 +384,7 @@ test.describe("responsive CSS", () => {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
-        <body>
+        <body class="e4s-page-home">
           <main class="e4s-home-page" id="site-content">
             <div class="e4s-home-featured-layout">
               <div class="e4s-home-featured__listings"></div>
@@ -394,6 +404,11 @@ test.describe("responsive CSS", () => {
         </body>
       </html>
     `);
+
+    await page.waitForFunction(() => {
+      const sidebar = document.querySelector(".e4s-home-featured__sidebar");
+      return sidebar && getComputedStyle(sidebar).display === "block";
+    });
 
     const layout = await page.evaluate(() => {
       const sidebar = document.querySelector(".e4s-home-featured__sidebar")!;

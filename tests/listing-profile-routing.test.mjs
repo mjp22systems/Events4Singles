@@ -113,5 +113,8 @@ test("sidebar refine links update in place without resetting scroll", () => {
   assert.match(source, /useRouter/);
   assert.match(source, /router\.push\(href, \{ scroll: false \}\)/);
   assert.match(source, /preventDefault\(\)/);
+  assert.match(source, /e4s_pin_toolbar_after_refine/);
+  assert.match(source, /getPinnedToolbarTarget/);
+  assert.match(source, /restorePinnedToolbar/);
   assert.match(source, /e4s-sidebar-block--pending/);
 });

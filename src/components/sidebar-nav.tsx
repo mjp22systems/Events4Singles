@@ -1,5 +1,5 @@
 "use client";
-import { MouseEvent, useState, useTransition } from "react";
+import { MouseEvent, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -15,6 +15,29 @@ interface Props {
   heading: string;
   items: NavItem[];
   topItem?: { label: string; href: string; isActive?: boolean };
+}
+
+const PIN_TOOLBAR_KEY = "e4s_pin_toolbar_after_refine";
+
+function getPinnedToolbarTarget() {
+  const toolbar = document.querySelector<HTMLElement>(".e4s-toolbar-shield");
+  if (!toolbar) return null;
+
+  const stickyTop = parseFloat(getComputedStyle(toolbar).top) || 0;
+  const toolbarTop = toolbar.getBoundingClientRect().top;
+  return toolbarTop <= stickyTop + 2
+    ? Math.max(0, toolbarTop + window.scrollY - stickyTop)
+    : null;
+}
+
+function restorePinnedToolbar() {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const targetTop = getPinnedToolbarTarget();
+      if (targetTop === null) return;
+      window.scrollTo({ top: targetTop, behavior: "auto" });
+    });
+  });
 }
 
 export default function SidebarNav({ heading, items, topItem }: Props) {
@@ -42,11 +65,20 @@ export default function SidebarNav({ heading, items, topItem }: Props) {
       }
 
       event.preventDefault();
+      if (getPinnedToolbarTarget() !== null) {
+        sessionStorage.setItem(PIN_TOOLBAR_KEY, "1");
+      }
       startTransition(() => {
         router.push(href, { scroll: false });
       });
     };
   }
+
+  useEffect(() => {
+    if (isPending || sessionStorage.getItem(PIN_TOOLBAR_KEY) !== "1") return;
+    sessionStorage.removeItem(PIN_TOOLBAR_KEY);
+    restorePinnedToolbar();
+  }, [isPending]);
 
   return (
     <div className={`e4s-sidebar-block${isPending ? " e4s-sidebar-block--pending" : ""}`}>
