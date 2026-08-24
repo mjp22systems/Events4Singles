@@ -27,10 +27,17 @@ for (const width of [390, 768, 1280]) {
     await page.goto("/advertise", { waitUntil: "domcontentloaded" });
 
     await expect(page.locator("main#site-content")).toHaveCount(1);
-    await expect(page.locator(".e4s-advertise-pro-hero")).toBeVisible();
-    await expect(page.locator(".e4s-advertise-pro-hero__actions a").first()).toBeVisible();
-    await expect(page.locator(".e4s-advertise-inventory__grid")).toBeVisible();
-    await expect(page.locator(".e4s-advertise-placement-map")).toBeVisible();
+    await expect(page.locator(".e4s-love-hero")).toBeVisible();
+    await expect(page.locator(".e4s-love-actions a").first()).toBeVisible();
+    await expect(page.locator(".e4s-love-inventory")).toBeVisible();
+    await expect(page.locator(".e4s-love-site-preview")).toBeVisible();
+    await expect(page.locator(".e4s-ad-site-chrome").first()).toBeVisible();
+    await expect(page.locator(".e4s-ad-events-grid").first()).toBeVisible();
+    await expect(page.locator(".e4s-ad-sidebar-tiles").first()).toBeVisible();
+
+    const html = await page.content();
+    expect(html).not.toContain("e4s-shot-frame");
+    expect(html).not.toContain("/images/advertise-reference");
     await expectNoHorizontalOverflow(page);
   });
 }

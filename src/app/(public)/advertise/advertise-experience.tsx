@@ -111,27 +111,66 @@ function ListingImage({ src = "/images/businesses/Social8-Dinners.webp", alt = "
   );
 }
 
-function StandardListing({ compact = false }: { compact?: boolean }) {
+function SiteChrome({ page = "events4singles.com" }: { page?: string }) {
+  return (
+    <div className="e4s-ad-site-chrome">
+      <div className="e4s-ad-site-chrome__top">
+        <span className="e4s-ad-site-chrome__mark">E4S</span>
+        <div>
+          <strong>Events4Singles</strong>
+          <small>Australia&apos;s Singles Events Directory</small>
+        </div>
+        <em>Login</em>
+        <em>Advertiser</em>
+        <em>Menu</em>
+      </div>
+      <div className="e4s-ad-site-chrome__filters">
+        <span>Select City</span>
+        <span>Select Category</span>
+        <span>Site Information</span>
+        <strong>Dating Resources</strong>
+        <strong>What&apos;s On</strong>
+      </div>
+      <p>{page}</p>
+    </div>
+  );
+}
+
+function SiteHeading({ title, link = "View All ->" }: { title: string; link?: string }) {
+  return (
+    <div className="e4s-ad-site-heading">
+      <div>
+        <h3>{title}</h3>
+        <p>Sponsored and organic positions in the real page flow.</p>
+      </div>
+      <span>{link}</span>
+    </div>
+  );
+}
+
+function StandardListing({ compact = false, name = "Vital Partners", city = "Sydney" }: { compact?: boolean; name?: string; city?: string }) {
   return (
     <article className="e4s-listing-card e4s-ad-real-card" data-e4s-listing-card>
       <header className="e4s-listing-card__header">
         <div className="e4s-listing-card__identity">
           <div className="e4s-listing-card__title-row">
-            <h2 className="e4s-listing-card__title">Harbour Social Club</h2>
+            <h2 className="e4s-listing-card__title">{name}</h2>
             <span className="e4s-listing-card__unclaimed">Unclaimed</span>
-            <span className="e4s-listing-card__location-badge">Sydney</span>
+            <span className="e4s-listing-card__location-badge">{city}</span>
           </div>
-          <p className="e4s-listing-card__tagline">Speed dating and mixers for singles in the CBD</p>
+          <p className="e4s-listing-card__tagline">Singles introductions, events and dating support</p>
         </div>
         <div className="e4s-listing-card__actions">
+          <span className="e4s-listing-card__action e4s-listing-card__action--person" />
           <span className="e4s-listing-card__action e4s-listing-card__action--phone" />
+          <span className="e4s-listing-card__action e4s-listing-card__action--email" />
           <span className="e4s-listing-card__action e4s-listing-card__action--web" />
         </div>
       </header>
       <div className="e4s-listing-card__body">
-        <ListingImage alt="Singles dinner table" />
+        <ListingImage alt="Singles listing preview" />
         <div className="e4s-listing-card__content">
-          <p>{compact ? "A normal free listing in the city/category result order." : "A standard profile card with business name, image, contact actions, city badges, description and profile link."}</p>
+          <p>{compact ? "A normal approved listing in the city/category results." : "A standard profile card with name, logo/image, contact actions, city badges, description and profile link."}</p>
           <div className="e4s-listing-card__foot">
             <span className="e4s-listing-card__promo">Free launch listing</span>
             <span className="e4s-listing-card__more">View profile ›</span>
@@ -177,21 +216,29 @@ function PriorityListing() {
   return (
     <div className="e4s-ad-real-priority">
       <div className="e4s-ad-real-label"><span>Sticky position 1 on Sydney results</span><Tag tone="teal">Priority</Tag></div>
-      <StandardListing compact />
-      <StandardListing compact />
+      <StandardListing compact name="Melbourne River Cruises" city="Melbourne" />
+      <StandardListing compact name="Professional Edge Seminars" city="Brisbane" />
+    </div>
+  );
+}
+
+function PriorityListingSingle() {
+  return (
+    <div className="e4s-ad-real-priority-single">
+      <ListingImage src="/images/businesses/Dinnerateight_main.jpg" alt="Pinned listing preview" />
+      <div><strong>A Table for Six</strong><p>Sticky position 1 · Sydney singles dining</p></div>
+      <Tag tone="teal">Priority</Tag>
     </div>
   );
 }
 
 function BannerStrip({ small = false }: { small?: boolean }) {
   return (
-    <section aria-label="Featured advertisers" className={`e4s-promo-banners e4s-ad-real-banners${small ? " is-small" : ""}`}>
-      {["/images/20firsdates_90x60.jpg", "/images/atable4six-new16_130.jpg", "/images/arthurmurray_120x80.jpg", "/images/advertise-here-180x120.svg"].map((src, index) => (
-        <span key={src} title={index === 3 ? "Advertise on Events4Singles" : "Featured advertiser"}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt={index === 3 ? "Advertise on Events4Singles" : "Featured advertiser tile"} src={src} />
-        </span>
-      ))}
+    <section aria-label="Page top sponsor strip" className={`e4s-ad-top-banner${small ? " is-small" : ""}`}>
+      <span>Sponsored</span>
+      <strong>Meet quality singles this month</strong>
+      <p>Page-top strip above city, category and profile content.</p>
+      <em>Book this position</em>
     </section>
   );
 }
@@ -199,15 +246,24 @@ function BannerStrip({ small = false }: { small?: boolean }) {
 function SidebarAd() {
   return (
     <aside className="e4s-ad-real-sidebar-demo">
-      <div className="e4s-sidebar-block__heading">Browse by category</div>
+      <div className="e4s-sidebar-block__heading">Refine Listings</div>
       <div className="e4s-sidebar-nav">
-        <span>Speed Dating <em>42</em></span>
-        <span>Dinner Parties <em>18</em></span>
-        <span>Social Clubs <em>34</em></span>
+        <span>All Cities <em>⌄</em></span>
+        <span>All Categories <em>⌄</em></span>
       </div>
-      <div className="e4s-sidebar-ad">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="Advertise on Events4Singles sidebar" src="/images/advertise-here-180x120.svg" />
+      <div className="e4s-ad-sidebar-tiles">
+        {[
+          ["/images/home-cat-speed-dating.jpg", "Speed Dating", "Featured"],
+          ["/images/home-cat-dinner-parties.jpg", "Dinner Events", "Sponsored"],
+          ["/images/home-city-sydney.jpg", "Sydney Singles", "Ad"],
+        ].map(([src, title, label]) => (
+          <article key={title}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt="" src={src} />
+            <span>{label}</span>
+            <strong>{title}</strong>
+          </article>
+        ))}
       </div>
     </aside>
   );
@@ -215,21 +271,37 @@ function SidebarAd() {
 
 function WhatsOnList() {
   const events = [
-    ["FRI", "12", "Speed Dating 28-39", "The Rook, Sydney", "$45"],
-    ["SAT", "13", "Singles Wine Walk", "Surry Hills", "$60"],
-    ["SUN", "14", "Sunday Social Brunch", "Bondi", "$35"],
+    ["/images/home-cat-speed-dating.jpg", "Fri, 12 Sep, 6:30 pm", "BEST S25 CHOCOLATE TOUR", "Sydney CBD", "from $45"],
+    ["/images/businesses/Social8-Dinners.webp", "Fri, 12 Sep, 6:30 pm", "The Bachelors Social Drinks", "The Rocks", "from $35"],
+    ["/images/home-city-sydney.jpg", "Sat, 13 Sep, 10:00 am", "Manly Coastal Walk", "Manly Beach", "free"],
+    ["/images/home-cat-walks.jpg", "Sat, 13 Sep, 10:45 am", "Grand Cliff Top Walk", "Blue Mountains", "from $25"],
   ];
 
   return (
     <div className="e4s-ad-real-events">
-      <div className="e4s-ad-real-label"><strong>What&apos;s On · Sydney</strong><Tag>This week</Tag></div>
-      {events.map(([day, date, title, venue, price]) => (
-        <div key={title} className="e4s-ad-real-event-line">
-          <span>{day}<strong>{date}</strong></span>
-          <div><strong>{title}</strong><p>{venue}</p></div>
-          <em>{price}</em>
-        </div>
-      ))}
+      <div className="e4s-ad-events-toolbar">
+        <span>City: All Cities</span>
+        <span>Category: All Categories</span>
+        <span>Price: All</span>
+        <strong>List</strong>
+        <em>Calendar</em>
+      </div>
+      <div className="e4s-ad-events-grid">
+        {events.map(([src, date, title, venue, price], index) => (
+          <article key={title} className={index === 1 ? "is-promoted" : undefined}>
+            <div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img alt="" src={src} />
+              <span>{index === 1 ? "Promoted" : "Event"}</span>
+            </div>
+            <p>{date}</p>
+            <h4>{title}</h4>
+            <small>{venue}</small>
+            <em>{price}</em>
+            <span className="e4s-ad-event-link">View Details</span>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
@@ -237,21 +309,22 @@ function WhatsOnList() {
 function PromotedEventRow() {
   return (
     <div className="e4s-ad-real-promoted">
-      <p>Every event page · paid second row</p>
-      <div className="e4s-home-events-grid">
-        <article className="e4s-home-event-card">
-          <div className="e4s-home-event-card__img">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="Promoted singles event" src="/images/home-blog-calendar.jpg" />
-            <span className="e4s-home-event-card__badge">AD</span>
-          </div>
-          <div className="e4s-home-event-card__body">
-            <p className="e4s-home-event-card__date">Fri, 12 Sep, 7:00 pm</p>
-            <h3>Masquerade Singles Ball</h3>
-            <p className="e4s-home-event-card__location">Brisbane CBD</p>
-            <p className="e4s-home-event-card__meta">Promoted row two</p>
-          </div>
-        </article>
+      <p>Profile and event pages · paid second row</p>
+      <div className="e4s-ad-profile-shell">
+        <div className="e4s-ad-profile-card">
+          <strong>Live Big</strong>
+          <span>Current ad/listing area</span>
+          <p>Profile content, contact panel and listing context sit above related events.</p>
+        </div>
+        <div className="e4s-ad-paid-event-row">
+          {["Speed dating chocolate tour", "Singles wine walk", "Harbour After Dark", "Social brunch"].map((title, index) => (
+            <article key={title} className={index === 1 ? "is-promoted" : undefined}>
+              <span>{index === 1 ? "Promoted" : "Event"}</span>
+              <strong>{title}</strong>
+              <p>Second row event placement</p>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -269,17 +342,26 @@ function HomepageFeaturedListing() {
 
 function HomepageTile() {
   return (
-    <div className="e4s-home-featured__sidebar e4s-ad-real-home-tile">
+    <div className="e4s-ad-real-home-tile">
       <div className="e4s-ad-real-label"><strong>Homepage sponsored tiles</strong><Tag tone="plain">Homepage</Tag></div>
-      <span className="e4s-home-featured__sponsored">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="Sponsored homepage tile" className="e4s-home-featured__sponsored-img" src="/images/businesses/Dinnerateight_main.jpg" />
-        <span className="e4s-home-featured__sponsored-overlay">
-          <span className="e4s-home-featured__sponsored-tag">Sponsored</span>
-          <span className="e4s-home-featured__sponsored-title">Golden Hour Singles Cruise</span>
-          <span className="e4s-home-featured__sponsored-sub">Book this spot →</span>
-        </span>
-      </span>
+      <div className="e4s-ad-home-tiles">
+        <article className="is-large">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="" src="/images/businesses/Dinnerateight_main.jpg" />
+          <span>Sponsored</span>
+          <strong>Elegant Dinner Parties</strong>
+        </article>
+        <article>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="" src="/images/home-exp-dance-classes.jpg" />
+          <strong>Dance & Connect</strong>
+        </article>
+        <article>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="" src="/images/home-exp-travel.jpg" />
+          <strong>Singles Travel</strong>
+        </article>
+      </div>
     </div>
   );
 }
@@ -306,18 +388,18 @@ function SitePreview({ active, onSelect }: { active: ZoneId; onSelect: (zone: Zo
   return (
     <BrowserFrame>
       <div className="e4s-love-site-preview">
-        <div className="e4s-love-site-preview__nav"><span>E4S</span><strong>Events4Singles</strong><em>Cities</em><em>What&apos;s On</em><em>Categories</em></div>
-        <Zone id="banner" active={active} label="Page-top banner" onSelect={onSelect}><BannerStrip small /></Zone>
+        <SiteChrome page="events4singles.com" />
+        <SiteHeading title="What's On" />
+        <Zone id="whatson" active={active} label="What's On event cards" onSelect={onSelect}><WhatsOnList /></Zone>
         <div className="e4s-love-site-preview__grid">
           <div>
-            <Zone id="priority" active={active} label="Sticky listing" onSelect={onSelect}><div className="e4s-ad-real-priority-single"><ListingImage src="/images/businesses/Social8-DinnerClub.jpg" /><div><strong>Two Left Feet Dating</strong><p>Sticky position 1 · Sydney</p></div><Tag tone="teal">Priority</Tag></div></Zone>
+            <SiteHeading title="Featured Businesses" />
+            <Zone id="priority" active={active} label="Sticky listing" onSelect={onSelect}><PriorityListingSingle /></Zone>
             <Zone id="featured" active={active} label="Featured listing" onSelect={onSelect}><FeaturedListing /></Zone>
             <Zone id="standard" active={active} label="Standard listing" onSelect={onSelect}><StandardListing compact /></Zone>
-            <Zone id="whatson" active={active} label="What's On" onSelect={onSelect}><WhatsOnList /></Zone>
           </div>
           <div>
-            <Zone id="sidebar" active={active} label="Sidebar advert" onSelect={onSelect}><SidebarAd /></Zone>
-            <Zone id="tile" active={active} label="Homepage tile" onSelect={onSelect}><HomepageTile /></Zone>
+            <Zone id="sidebar" active={active} label="Right column adverts" onSelect={onSelect}><SidebarAd /></Zone>
           </div>
         </div>
       </div>
@@ -328,7 +410,7 @@ function SitePreview({ active, onSelect }: { active: ZoneId; onSelect: (zone: Zo
 function PlacementMockup({ active }: { active: PlacementId }) {
   if (active === "standard") return <div className="e4s-love-stack"><StandardListing /><StandardListing compact /></div>;
   if (active === "featured") return <div className="e4s-love-stack"><FeaturedListing /><PriorityListing /></div>;
-  if (active === "banners") return <div className="e4s-love-stack"><BannerStrip /><div className="e4s-love-two-col"><div><StandardListing compact /><StandardListing compact /></div><SidebarAd /></div></div>;
+  if (active === "banners") return <div className="e4s-love-stack"><SiteChrome page="events4singles.com/profile/example" /><BannerStrip /><div className="e4s-love-two-col"><div><StandardListing compact /><StandardListing compact /></div><SidebarAd /></div></div>;
   if (active === "whatson") return <div className="e4s-love-stack"><WhatsOnList /><PromotedEventRow /></div>;
   return <div className="e4s-love-stack"><HomepageFeaturedListing /><HomepageTile /></div>;
 }
