@@ -2,8 +2,6 @@
 -- These are the production equivalents of the ten local featured seed rows used
 -- while wiring the data-driven featured listing surface.
 
-BEGIN TRANSACTION;
-
 UPDATE listings
 SET listing_type = 'featured', updated_at = datetime('now')
 WHERE id = 452 AND title = 'Arthur Murray Dance Studios' AND status = 'active';
@@ -43,5 +41,3 @@ WHERE id = 456 AND title = 'NOSMO' AND status = 'active';
 UPDATE listings
 SET listing_type = 'featured', updated_at = datetime('now')
 WHERE id = 109 AND title = 'Latin Groove' AND status = 'active';
-
-COMMIT;
