@@ -10421,6 +10421,10 @@ body:not(.e4s-nav-open) .e4s-nav {
   border-color: var(--e4s-teal-600);
 }
 
+.e4s-sidebar-block--pending .e4s-sidebar-nav {
+  opacity: 0.72;
+}
+
 .e4s-home-featured__empty {
   padding: 24px;
   text-align: center;

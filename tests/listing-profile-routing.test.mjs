@@ -14,6 +14,7 @@ const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
 const homeFeaturedFile = path.join(projectRoot, "src", "components", "home-featured.tsx");
+const sidebarNavFile = path.join(projectRoot, "src", "components", "sidebar-nav.tsx");
 const adminEditDrawerFile = path.join(projectRoot, "src", "components", "admin-edit-drawer.tsx");
 const profileEditDrawerFile = path.join(projectRoot, "src", "components", "profile-edit-drawer.tsx");
 
@@ -64,6 +65,7 @@ test("featured listings directory is wired as the homepage view-all target", () 
   assert.match(featuredListingsSource, /AdvertiseCard/);
   assert.doesNotMatch(featuredListingsSource, /showFeatureSlot=\{false\}/);
   assert.doesNotMatch(homeFeaturedSource, /Refine Listings/);
+  assert.match(homeFeaturedSource, /Featured Business Spot/);
 });
 
 test("listing detail pages stay accessible but are not indexed", () => {
@@ -103,4 +105,13 @@ test("public edit drawers keep profile and listing fields distinct", () => {
   assert.match(profileDrawer, /Business Name/);
   assert.match(profileDrawer, /Profile Contact/);
   assert.match(profileDrawer, /Facebook URL/);
+});
+
+test("sidebar refine links update in place without resetting scroll", () => {
+  const source = readFileSync(sidebarNavFile, "utf8");
+
+  assert.match(source, /useRouter/);
+  assert.match(source, /router\.push\(href, \{ scroll: false \}\)/);
+  assert.match(source, /preventDefault\(\)/);
+  assert.match(source, /e4s-sidebar-block--pending/);
 });

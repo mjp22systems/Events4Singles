@@ -10,6 +10,7 @@ const SPONSORED = [
   { title: "Your Ad Here", sub: "Book this spot", href: "/advertise", img: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=300&q=70" },
   { title: "Social Clubs", sub: "Meet new people", href: "/social-clubs", img: "https://images.unsplash.com/photo-1529543544282-ea669407fca3?auto=format&fit=crop&w=300&q=70" },
   { title: "Speed Dating Events", sub: "Find your match", href: "/speed-dating", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=300&q=70" },
+  { title: "Featured Business Spot", sub: "Reserve this tile", href: "/advertise", img: "https://images.unsplash.com/photo-1528605105345-5344ea20e269?auto=format&fit=crop&w=300&q=70" },
 ];
 
 interface Props {
