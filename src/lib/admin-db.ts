@@ -428,6 +428,15 @@ export interface AdminBusiness {
   description: string | null;
   logo_url: string | null;
   website: string | null;
+  contact_name: string | null;
+  phone: string | null;
+  mobile: string | null;
+  email: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
+  linkedin_url: string | null;
   status: string | null;
   advertiser_id: number | null;
   merged_into_business_id: number | null;
@@ -459,6 +468,8 @@ export async function listBusinesses(search?: string, sort = "name_asc"): Promis
   const { results } = await db
     .prepare(
       `SELECT b.id, b.name, b.description, b.logo_url, b.website,
+              b.contact_name, b.phone, b.mobile, b.email,
+              b.facebook_url, b.instagram_url, b.tiktok_url, b.youtube_url, b.linkedin_url,
               COALESCE(b.status, 'active') AS status,
               b.advertiser_id, b.merged_into_business_id,
               COUNT(l.id) AS listing_count
@@ -477,7 +488,10 @@ export async function getBusinessById(id: number): Promise<AdminBusiness | null>
   const db = await getD1();
   return db
     .prepare(
-      `SELECT b.id, b.name, b.description, b.logo_url, b.website, b.advertiser_id,
+      `SELECT b.id, b.name, b.description, b.logo_url, b.website,
+              b.contact_name, b.phone, b.mobile, b.email,
+              b.facebook_url, b.instagram_url, b.tiktok_url, b.youtube_url, b.linkedin_url,
+              b.advertiser_id,
               COALESCE(b.status, 'active') AS status,
               b.merged_into_business_id,
               COUNT(l.id) AS listing_count
@@ -492,7 +506,12 @@ export async function getBusinessById(id: number): Promise<AdminBusiness | null>
 
 export async function updateBusiness(id: number, fields: Partial<AdminBusiness>): Promise<void> {
   const db = await getD1();
-  const allowed = ["name", "description", "logo_url", "website", "status"];
+  const allowed = [
+    "name", "description", "logo_url", "website",
+    "contact_name", "phone", "mobile", "email",
+    "facebook_url", "instagram_url", "tiktok_url", "youtube_url", "linkedin_url",
+    "status",
+  ];
   const updates = Object.keys(fields).filter((k) => allowed.includes(k));
   if (!updates.length) return;
   const set = updates.map((k) => `${k} = ?`).join(", ");

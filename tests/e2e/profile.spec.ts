@@ -107,13 +107,14 @@ test.describe("Profile page", () => {
 
     await expect(page.locator(".e4s-profile-stack").getByRole("link", { name: /Edit listing/i }).first()).toBeVisible();
     await page.getByRole("button", { name: "Edit Profile" }).click();
-    await expect(page.getByRole("dialog", { name: "Edit profile" })).toBeVisible();
-    await expect(page.getByText("Business name")).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "Edit Profile" })).toBeVisible();
+    await expect(page.getByText("Business Name")).toBeVisible();
+    await expect(page.getByText("Profile Contact")).toBeVisible();
     await expect(page.locator(".e4s-edit-field input").first()).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(true);
 
     await page.getByRole("button", { name: "Close" }).click();
-    await expect(page.getByRole("dialog", { name: "Edit profile" })).toBeHidden();
+    await expect(page.getByRole("dialog", { name: "Edit Profile" })).toBeHidden();
     await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(false);
 
     const scrollY = await page.evaluate(() => window.scrollY);

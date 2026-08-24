@@ -38,8 +38,7 @@ export default function ListingCard({ listing, context = "directory", isAdmin = 
     : null;
 
   const ltype = listing.listing_type;
-  const showAddress = ltype !== "service" && ltype !== "practitioner";
-  const addressActive = ltype === "venue";
+  const address = [listing.location, listing.location_city, listing.location_state].filter(Boolean).join(", ");
   const isCircle = ltype === "practitioner";
   const locations = locationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locations.length);
@@ -96,23 +95,48 @@ export default function ListingCard({ listing, context = "directory", isAdmin = 
           )}
         </div>
         <div className="e4s-listing-card__actions">
-          {phone && (
+          {listing.contact_name ? (
+            <span
+              aria-label={`Contact ${listing.contact_name}`}
+              className="e4s-listing-card__action e4s-listing-card__action--person e4s-listing-card__action--static"
+              title={`Contact: ${listing.contact_name}`}
+            />
+          ) : (
+            <span
+              aria-label="Contact Name Not Listed"
+              className="e4s-listing-card__action e4s-listing-card__action--person e4s-listing-card__action--disabled"
+              title="Contact Name Not Listed"
+            />
+          )}
+          {phone ? (
             <a
               aria-label={`Call ${title}`}
               className="e4s-listing-card__action e4s-listing-card__action--phone"
               href={`tel:${phone}`}
               title="Phone"
             />
+          ) : (
+            <span
+              aria-label="Phone Not Listed"
+              className="e4s-listing-card__action e4s-listing-card__action--phone e4s-listing-card__action--disabled"
+              title="Phone Not Listed"
+            />
           )}
-          {listing.email && (
+          {listing.email ? (
             <a
               aria-label={`Email ${title}`}
               className="e4s-listing-card__action e4s-listing-card__action--email"
               href={`mailto:${listing.email}`}
               title="Email"
             />
+          ) : (
+            <span
+              aria-label="Email Not Listed"
+              className="e4s-listing-card__action e4s-listing-card__action--email e4s-listing-card__action--disabled"
+              title="Email Not Listed"
+            />
           )}
-          {webHref && (
+          {webHref ? (
             <a
               aria-label={`Visit ${title} website`}
               className="e4s-listing-card__action e4s-listing-card__action--web"
@@ -121,17 +145,27 @@ export default function ListingCard({ listing, context = "directory", isAdmin = 
               target="_blank"
               title="Website"
             />
+          ) : (
+            <span
+              aria-label="Website Not Listed"
+              className="e4s-listing-card__action e4s-listing-card__action--web e4s-listing-card__action--disabled"
+              title="Website Not Listed"
+            />
           )}
-          {showAddress && addressActive && (
+          {address ? (
             <a
               aria-label={`Map for ${title}`}
               className="e4s-listing-card__action e4s-listing-card__action--address e4s-listing-card__action--address-active"
-              href={`https://maps.google.com/?q=${encodeURIComponent(
-                listing.location || listing.location_city || title
-              )}`}
+              href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
               rel="noopener"
               target="_blank"
               title="View on map"
+            />
+          ) : (
+            <span
+              aria-label="Address Not Listed"
+              className="e4s-listing-card__action e4s-listing-card__action--address e4s-listing-card__action--disabled"
+              title="Address Not Listed"
             />
           )}
         </div>

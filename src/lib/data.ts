@@ -754,7 +754,10 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
   }
 
   const business = await db.prepare(`
-    SELECT id, name, description, logo_url, website, advertiser_id, profile_slug
+    SELECT id, name, description, logo_url, website,
+           contact_name, phone, mobile, email,
+           facebook_url, instagram_url, tiktok_url, youtube_url, linkedin_url,
+           advertiser_id, profile_slug
     FROM businesses WHERE id = ?
   `).bind(businessId).first<Business>() ?? null;
 

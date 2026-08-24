@@ -1,0 +1,9 @@
+ALTER TABLE businesses ADD COLUMN contact_name TEXT;
+ALTER TABLE businesses ADD COLUMN phone TEXT;
+ALTER TABLE businesses ADD COLUMN mobile TEXT;
+ALTER TABLE businesses ADD COLUMN email TEXT;
+ALTER TABLE businesses ADD COLUMN facebook_url TEXT;
+ALTER TABLE businesses ADD COLUMN instagram_url TEXT;
+ALTER TABLE businesses ADD COLUMN tiktok_url TEXT;
+ALTER TABLE businesses ADD COLUMN youtube_url TEXT;
+ALTER TABLE businesses ADD COLUMN linkedin_url TEXT;

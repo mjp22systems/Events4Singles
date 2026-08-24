@@ -135,7 +135,9 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const web = business?.website || primary?.web || primary?.business_website;
   const webHref = web ? (web.startsWith("http") ? web : `https://${web}`) : null;
   const domain = web ? web.replace(/^https?:\/\/(www\.)?/, "").split("/")[0] : null;
-  const phone = primary?.phone || primary?.mobile;
+  const contactName = business?.contact_name || primary?.contact_name;
+  const phone = business?.phone || business?.mobile || primary?.phone || primary?.mobile;
+  const email = business?.email || primary?.email;
   const businessId = business?.id ?? null;
   const showAdminEditor = isAdmin && business !== null;
 
@@ -309,7 +311,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                 {primary && (
                   <div className="e4s-profile-social-row">
                     {SOCIAL_PLATFORMS.map((p) => {
-                      const href = primary[p.key];
+                      const href = business?.[p.key] || primary[p.key];
                       const fullHref = href ? (href.startsWith("http") ? href : `https://${href}`) : null;
                       return fullHref ? (
                         <a key={p.key} href={fullHref} rel="noopener" target="_blank"
@@ -335,10 +337,10 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                 )}
 
                 {/* Contact name */}
-                {primary?.contact_name ? (
+                {contactName ? (
                   <div className="e4s-profile-contact-row">
                     <span className="e4s-profile-contact-row__icon" aria-hidden="true">👤</span>
-                    <span className="e4s-profile-contact-row__text">{primary.contact_name}</span>
+                    <span className="e4s-profile-contact-row__text">{contactName}</span>
                   </div>
                 ) : (
                   <div className="e4s-profile-contact-row e4s-profile-contact-row--off">
@@ -362,8 +364,8 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                 )}
 
                 {/* Email */}
-                {primary?.email ? (
-                  <a href={`mailto:${primary.email}`} className="e4s-profile-contact-row" aria-label={`Email ${name}`}>
+                {email ? (
+                  <a href={`mailto:${email}`} className="e4s-profile-contact-row" aria-label={`Email ${name}`}>
                     <span className="e4s-profile-contact-row__icon" aria-hidden="true">✉</span>
                     <span className="e4s-profile-contact-row__text">Send email</span>
                     <span className="e4s-profile-contact-row__arr" aria-hidden="true">›</span>

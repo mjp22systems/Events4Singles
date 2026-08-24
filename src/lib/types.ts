@@ -82,6 +82,15 @@ export interface Business {
   description: string | null;
   logo_url: string | null;
   website: string | null;
+  contact_name: string | null;
+  phone: string | null;
+  mobile: string | null;
+  email: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
+  linkedin_url: string | null;
   advertiser_id: number | null;
   profile_slug: string | null;
 }

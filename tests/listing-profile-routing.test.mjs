@@ -14,6 +14,8 @@ const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
 const homeFeaturedFile = path.join(projectRoot, "src", "components", "home-featured.tsx");
+const adminEditDrawerFile = path.join(projectRoot, "src", "components", "admin-edit-drawer.tsx");
+const profileEditDrawerFile = path.join(projectRoot, "src", "components", "profile-edit-drawer.tsx");
 
 test("listing cards route claimed business records to the profile page", () => {
   const source = readFileSync(listingCardFile, "utf8");
@@ -22,6 +24,11 @@ test("listing cards route claimed business records to the profile page", () => {
   assert.match(source, /listing\.business_id\s*\?/);
   assert.match(source, /\/profile\/\$\{toProfileSlug/);
   assert.match(source, /View profile/);
+  assert.match(source, /Contact Name Not Listed/);
+  assert.match(source, /Phone Not Listed/);
+  assert.match(source, /Email Not Listed/);
+  assert.match(source, /Website Not Listed/);
+  assert.match(source, /Address Not Listed/);
 });
 
 test("homepage featured listings include business ids and only use paid tiers", () => {
@@ -80,4 +87,20 @@ test("public admin edit styles do not leak after route changes", () => {
   assert.match(publicLayout, /<PublicRouteStateReset \/>/);
   assert.match(routeReset, /usePathname/);
   assert.match(routeReset, /classList\.remove\("drawer-open"\)/);
+});
+
+test("public edit drawers keep profile and listing fields distinct", () => {
+  const listingDrawer = readFileSync(adminEditDrawerFile, "utf8");
+  const profileDrawer = readFileSync(profileEditDrawerFile, "utf8");
+
+  assert.match(listingDrawer, /Listing Title/);
+  assert.match(listingDrawer, /Contact Name/);
+  assert.match(listingDrawer, /Social Media/);
+  assert.doesNotMatch(listingDrawer, /Business name \(shown as heading/);
+  assert.doesNotMatch(listingDrawer, /confidence_score/);
+  assert.doesNotMatch(listingDrawer, /Confidence score/);
+
+  assert.match(profileDrawer, /Business Name/);
+  assert.match(profileDrawer, /Profile Contact/);
+  assert.match(profileDrawer, /Facebook URL/);
 });
