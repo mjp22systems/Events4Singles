@@ -7068,6 +7068,225 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   min-height: 190px;
 }
 
+.e4s-shot-frame {
+  position: relative;
+  display: block;
+  min-height: 210px;
+  overflow: hidden;
+  border: 1px solid var(--e4s-border);
+  border-radius: 8px;
+  background: #f8fcfb;
+  box-shadow: 0 6px 20px rgba(6, 78, 77, 0.07);
+}
+
+.e4s-shot-frame img {
+  position: absolute;
+  top: var(--shot-top, 0);
+  left: var(--shot-left, 50%);
+  width: var(--shot-width, 100%);
+  max-width: none;
+  height: auto;
+  transform: translateX(var(--shot-x, -50%));
+  transform-origin: top center;
+  user-select: none;
+}
+
+.e4s-shot-frame > span {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 9px;
+  color: var(--e4s-teal-900);
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(6, 78, 77, 0.12);
+}
+
+.e4s-shot-frame.is-hero-site {
+  height: 520px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.e4s-shot-frame.is-hero-site img {
+  --shot-top: -210px;
+  --shot-width: 420%;
+}
+
+.e4s-shot-frame.is-top-banner {
+  min-height: 138px;
+}
+
+.e4s-shot-frame.is-top-banner img {
+  --shot-top: -112px;
+  --shot-width: 210%;
+}
+
+.e4s-shot-frame.is-top-banner.is-small {
+  min-height: 78px;
+}
+
+.e4s-shot-frame.is-top-banner.is-small img {
+  --shot-top: -92px;
+  --shot-width: 190%;
+}
+
+.e4s-shot-frame.is-events-calendar {
+  min-height: 370px;
+}
+
+.e4s-shot-frame.is-events-calendar img {
+  --shot-top: -132px;
+  --shot-width: 520%;
+}
+
+.e4s-shot-frame.is-featured-listings,
+.e4s-shot-frame.is-standard,
+.e4s-shot-frame.is-home-featured {
+  min-height: 250px;
+}
+
+.e4s-shot-frame.is-featured-listings img,
+.e4s-shot-frame.is-standard img,
+.e4s-shot-frame.is-home-featured img {
+  --shot-top: -486px;
+  --shot-width: 520%;
+}
+
+.e4s-shot-frame.is-standard.is-compact {
+  min-height: 156px;
+}
+
+.e4s-shot-frame.is-standard.is-compact img {
+  --shot-top: -500px;
+  --shot-width: 550%;
+}
+
+.e4s-shot-frame.is-sidebar-shot {
+  min-height: 330px;
+}
+
+.e4s-shot-frame.is-sidebar-shot img {
+  --shot-top: -500px;
+  --shot-left: 74%;
+  --shot-width: 560%;
+}
+
+.e4s-shot-frame.is-profile-events {
+  min-height: 310px;
+}
+
+.e4s-shot-frame.is-profile-events img {
+  --shot-top: -330px;
+  --shot-width: 520%;
+}
+
+.e4s-shot-frame.is-home-tile {
+  min-height: 300px;
+}
+
+.e4s-shot-frame.is-home-tile img {
+  --shot-top: -128px;
+  --shot-left: 56%;
+  --shot-width: 520%;
+}
+
+.e4s-shot-stack {
+  display: grid;
+  gap: 10px;
+  border: 2px solid rgba(8, 114, 113, 0.34);
+  border-radius: 10px;
+  background: #f8fcfb;
+  padding: 12px;
+}
+
+.e4s-love-site-preview--screenshot {
+  position: relative;
+  min-height: 520px;
+  padding: 0;
+}
+
+.e4s-love-site-preview--screenshot .e4s-love-zone {
+  position: absolute;
+  z-index: 3;
+  min-height: 0;
+  border: 2px solid rgba(139, 47, 67, 0.56);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 0 0 999px rgba(6, 78, 77, 0);
+}
+
+.e4s-love-site-preview--screenshot .e4s-love-zone:hover,
+.e4s-love-site-preview--screenshot .e4s-love-zone:focus-visible,
+.e4s-love-site-preview--screenshot .e4s-love-zone.is-active {
+  border-color: var(--e4s-pink);
+  background: rgba(139, 47, 67, 0.07);
+  box-shadow: 0 0 0 999px rgba(6, 78, 77, 0.09);
+}
+
+.e4s-love-site-preview--screenshot .e4s-love-zone > span {
+  top: auto;
+  right: 8px;
+  bottom: 8px;
+  left: auto;
+  transform: none;
+  white-space: nowrap;
+}
+
+.e4s-love-zone.is-map-banner {
+  top: 4%;
+  left: 13%;
+  width: 74%;
+  height: 9%;
+}
+
+.e4s-love-zone.is-map-whatson {
+  top: 14%;
+  left: 12%;
+  width: 76%;
+  height: 31%;
+}
+
+.e4s-love-zone.is-map-featured {
+  top: 50%;
+  left: 12%;
+  width: 60%;
+  height: 31%;
+}
+
+.e4s-love-zone.is-map-standard {
+  top: 69%;
+  left: 12%;
+  width: 60%;
+  height: 13%;
+}
+
+.e4s-love-zone.is-map-sidebar {
+  top: 50%;
+  left: 75%;
+  width: 13%;
+  height: 32%;
+}
+
+.e4s-love-zone.is-map-priority {
+  top: 50%;
+  left: 12%;
+  width: 60%;
+  height: 8%;
+}
+
+.e4s-love-zone.is-map-home {
+  top: 82%;
+  left: 52%;
+  width: 36%;
+  height: 12%;
+}
+
 .e4s-love-preview-note {
   margin-top: 12px;
   font-size: 12px;
