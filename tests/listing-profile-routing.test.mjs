@@ -9,6 +9,9 @@ const homePageFile = path.join(projectRoot, "src", "app", "(public)", "page.tsx"
 const listingPageFile = path.join(projectRoot, "src", "app", "(public)", "listing", "[slug]", "page.tsx");
 const listingsPageFile = path.join(projectRoot, "src", "app", "(public)", "listings", "page.tsx");
 const dataFile = path.join(projectRoot, "src", "lib", "data.ts");
+const adminCssFile = path.join(projectRoot, "public", "admin.css");
+const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
+const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
 
 test("listing cards route claimed business records to the profile page", () => {
   const source = readFileSync(listingCardFile, "utf8");
@@ -56,4 +59,17 @@ test("listing detail pages stay accessible but are not indexed", () => {
   assert.match(source, /robots:\s*\{/);
   assert.match(source, /index:\s*false/);
   assert.match(source, /follow:\s*true/);
+});
+
+test("public admin edit styles do not leak after route changes", () => {
+  const adminCss = readFileSync(adminCssFile, "utf8");
+  const publicLayout = readFileSync(publicLayoutFile, "utf8");
+  const routeReset = readFileSync(publicRouteResetFile, "utf8");
+
+  assert.match(adminCss, /body:has\(\.e4s-header\)\.e4s-fixed-header/);
+  assert.match(adminCss, /body:has\(\.e4s-admin-bar\) \.e4s-header/);
+  assert.doesNotMatch(adminCss, /^\.e4s-header\s*\{/m);
+  assert.match(publicLayout, /<PublicRouteStateReset \/>/);
+  assert.match(routeReset, /usePathname/);
+  assert.match(routeReset, /classList\.remove\("drawer-open"\)/);
 });

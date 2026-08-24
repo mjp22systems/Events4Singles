@@ -1628,6 +1628,22 @@ body:has(.e4s-admin-bar) {
   font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
+/* Keep public pages usable if this stylesheet survives a client-side
+   transition after the admin edit bar unmounts. */
+html:has(.e4s-header) {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body:has(.e4s-header).e4s-fixed-header {
+  background: #ffffff;
+  color: #000066;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: var(--e4s-header-height, 0px) !important;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 /* Admin bar + edit drawer */
 .e4s-admin-bar {
   background: #0f766e;
@@ -1646,11 +1662,11 @@ body:has(.e4s-admin-bar) {
   z-index: 10000;
 }
 /* Push public header below admin bar (no-op on admin console - no .e4s-header there) */
-.e4s-header {
+body:has(.e4s-admin-bar) .e4s-header {
   top: 34px !important;
 }
 /* Extra body padding only when public header is present (:has avoids breaking admin console) */
-body:has(.e4s-header).e4s-fixed-header {
+body:has(.e4s-admin-bar).e4s-fixed-header {
   padding-top: calc(34px + var(--e4s-header-height, 101px)) !important;
 }
 /* Shift main content left when edit drawer opens */
