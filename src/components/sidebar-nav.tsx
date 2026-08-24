@@ -18,6 +18,8 @@ interface Props {
 }
 
 const PIN_TOOLBAR_KEY = "e4s_pin_toolbar_after_refine";
+const NAV_OPEN_STORAGE_KEY = "e4s-nav-open";
+const CLOSE_NAV_EVENT = "e4s:close-nav";
 
 function getPinnedToolbarTarget() {
   const toolbar = document.querySelector<HTMLElement>(".e4s-toolbar-shield");
@@ -30,14 +32,31 @@ function getPinnedToolbarTarget() {
     : null;
 }
 
+function getToolbarAnchorTarget() {
+  const toolbar = document.querySelector<HTMLElement>(".e4s-toolbar-shield");
+  if (!toolbar) return null;
+
+  const stickyTop = parseFloat(getComputedStyle(toolbar).top) || 0;
+  return Math.max(0, toolbar.getBoundingClientRect().top + window.scrollY - stickyTop);
+}
+
+function closeTopNavigation() {
+  localStorage.setItem(NAV_OPEN_STORAGE_KEY, "0");
+  document.body.classList.remove("e4s-nav-open");
+  window.dispatchEvent(new Event(CLOSE_NAV_EVENT));
+}
+
 function restorePinnedToolbar() {
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const targetTop = getPinnedToolbarTarget();
-      if (targetTop === null) return;
-      window.scrollTo({ top: targetTop, behavior: "auto" });
-    });
-  });
+  const restore = () => {
+    const targetTop = getToolbarAnchorTarget();
+    if (targetTop === null) return;
+    window.scrollTo({ top: targetTop, behavior: "auto" });
+  };
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    restore();
+    window.setTimeout(restore, 120);
+  }));
 }
 
 export default function SidebarNav({ heading, items, topItem }: Props) {
@@ -68,6 +87,7 @@ export default function SidebarNav({ heading, items, topItem }: Props) {
       if (getPinnedToolbarTarget() !== null) {
         sessionStorage.setItem(PIN_TOOLBAR_KEY, "1");
       }
+      closeTopNavigation();
       startTransition(() => {
         router.push(href, { scroll: false });
       });

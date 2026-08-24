@@ -115,6 +115,10 @@ test("sidebar refine links update in place without resetting scroll", () => {
   assert.match(source, /preventDefault\(\)/);
   assert.match(source, /e4s_pin_toolbar_after_refine/);
   assert.match(source, /getPinnedToolbarTarget/);
+  assert.match(source, /getToolbarAnchorTarget/);
+  assert.match(source, /closeTopNavigation/);
+  assert.match(source, /e4s:close-nav/);
+  assert.match(source, /localStorage\.setItem\(NAV_OPEN_STORAGE_KEY, "0"\)/);
   assert.match(source, /restorePinnedToolbar/);
   assert.match(source, /e4s-sidebar-block--pending/);
 });

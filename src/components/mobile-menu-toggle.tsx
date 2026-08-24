@@ -2,9 +2,16 @@
 import { useState, useCallback, useEffect } from "react";
 
 const NAV_OPEN_STORAGE_KEY = "e4s-nav-open";
+const CLOSE_NAV_EVENT = "e4s:close-nav";
 
 export default function MobileMenuToggle() {
   const [open, setOpen] = useState(false);
+
+  const close = useCallback(() => {
+    localStorage.setItem(NAV_OPEN_STORAGE_KEY, "0");
+    document.body.classList.remove("e4s-nav-open");
+    setOpen(false);
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem(NAV_OPEN_STORAGE_KEY);
@@ -16,6 +23,11 @@ export default function MobileMenuToggle() {
     setOpen(next);
     document.body.classList.toggle("e4s-nav-open", next);
   }, []);
+
+  useEffect(() => {
+    window.addEventListener(CLOSE_NAV_EVENT, close);
+    return () => window.removeEventListener(CLOSE_NAV_EVENT, close);
+  }, [close]);
 
   const toggle = useCallback(() => {
     setOpen((prev) => {
