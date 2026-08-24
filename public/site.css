@@ -7782,24 +7782,22 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 
 @media (max-width: 430px) and (orientation: portrait) {
   .e4s-listings-toolbar {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
     padding: 12px;
   }
 
-  .e4s-listings-toolbar__title,
-  .e4s-listings-sort,
-  .e4s-listings-filter-group {
-    grid-column: 1;
-    width: 100%;
-  }
-
   .e4s-listings-toolbar__title {
-    white-space: normal;
+    grid-column: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .e4s-listings-sort {
-    justify-content: space-between;
+    grid-column: 2;
+    justify-content: flex-end;
   }
 
   .e4s-listings-sort select {
@@ -7808,7 +7806,9 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-listings-filter-group {
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) auto;
+    width: 100%;
   }
 
   .e4s-listings-filter summary {
