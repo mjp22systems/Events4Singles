@@ -24,7 +24,7 @@ test("listing cards route claimed business records to the profile page", () => {
   assert.match(source, /toProfileSlug/);
   assert.match(source, /listing\.business_id\s*\?/);
   assert.match(source, /\/profile\/\$\{toProfileSlug/);
-  assert.match(source, /View profile/);
+  assert.match(source, /View Profile/);
   assert.match(source, /Contact Name Not Listed/);
   assert.match(source, /Phone Not Listed/);
   assert.match(source, /Email Not Listed/);

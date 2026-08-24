@@ -105,7 +105,7 @@ test.describe("Profile page", () => {
     await addAdminCookie(page);
     await page.goto(`/profile/${KNOWN_ID}`, { waitUntil: "domcontentloaded" });
 
-    await expect(page.locator(".e4s-profile-stack").getByRole("link", { name: /Edit listing/i }).first()).toBeVisible();
+    await expect(page.locator(".e4s-profile-stack").getByRole("link", { name: /View Listing/i }).first()).toBeVisible();
     await page.getByRole("button", { name: "Edit Profile" }).click();
     await expect(page.getByRole("dialog", { name: "Edit Profile" })).toBeVisible();
     await expect(page.getByText("Business Name")).toBeVisible();

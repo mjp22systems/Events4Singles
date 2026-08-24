@@ -26,7 +26,7 @@ function locationBadges(listing: Listing) {
   return [];
 }
 
-export default function ListingCard({ listing, context = "directory", isAdmin = false }: Props) {
+export default function ListingCard({ listing, context = "directory" }: Props) {
   const phone = listing.phone || listing.mobile;
   const web = listing.web || listing.business_website;
   const title = listing.business_name || listing.title;
@@ -48,8 +48,8 @@ export default function ListingCard({ listing, context = "directory", isAdmin = 
     : listingHref;
   const cardHref = context === "profile" ? listingHref : profileHref;
   const detailsLabel = context === "profile"
-    ? isAdmin ? "Edit listing ›" : "View listing ›"
-    : "View profile ›";
+    ? "View Listing ›"
+    : "View Profile ›";
 
   return (
     <article
