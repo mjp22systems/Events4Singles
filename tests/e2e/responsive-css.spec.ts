@@ -251,7 +251,8 @@ test.describe("responsive CSS", () => {
       const sort = document.querySelector(".e4s-listings-sort")!.getBoundingClientRect();
       const filter = document.querySelector(".e4s-listings-filter-group")!.getBoundingClientRect();
       const filterSummary = document.querySelector(".e4s-listings-filter summary")!.getBoundingClientRect();
-      const filterText = document.querySelector(".e4s-listings-filter summary span")!.getBoundingClientRect();
+      const filterTextElement = document.querySelector(".e4s-listings-filter summary span")!;
+      const filterText = filterTextElement.getBoundingClientRect();
       const filterCount = document.querySelector(".e4s-listings-filter summary em")!.getBoundingClientRect();
       return {
         toolbar: { width: toolbar.width, height: toolbar.height },
@@ -259,7 +260,12 @@ test.describe("responsive CSS", () => {
         sort: { top: sort.top, bottom: sort.bottom },
         filter: { top: filter.top, bottom: filter.bottom, width: filter.width },
         filterSummary: { height: filterSummary.height },
-        filterText: { right: filterText.right, height: filterText.height },
+        filterText: {
+          right: filterText.right,
+          height: filterText.height,
+          clientWidth: filterTextElement.clientWidth,
+          scrollWidth: filterTextElement.scrollWidth,
+        },
         filterCount: { left: filterCount.left },
       };
     });
@@ -268,6 +274,7 @@ test.describe("responsive CSS", () => {
     expect(Math.abs(layout.filter.top - layout.sort.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
     expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(190);
     expect(layout.filterText.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterCount.left - 6);
+    expect(layout.filterText.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterText.clientWidth + 1);
     expect(layout.filterSummary.height, JSON.stringify(layout)).toBeLessThanOrEqual(32);
     expect(layout.filterText.height, JSON.stringify(layout)).toBeLessThanOrEqual(20);
     await expectNoHorizontalOverflow(page);
