@@ -9,6 +9,7 @@ const outputDir = path.join(imagesDir, "optimized");
 const jobs = [
   { glob: /^home-city-.+\.jpg$/i, width: 640, height: 960 },
   { glob: /^home-cat-.+\.jpg$/i, width: 720, height: 800 },
+  { glob: /^location-photo-.+-photo\.jpg$/i, width: 1600, height: 650 },
 ];
 
 function outputName(filename) {

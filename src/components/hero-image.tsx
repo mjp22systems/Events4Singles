@@ -17,6 +17,8 @@ export default function HeroImage({ src, fallbacks = [], alt, title }: Props) {
   return (
     <img
       alt={alt}
+      decoding="async"
+      fetchPriority="high"
       loading="eager"
       src={srcs[idx]}
       title={title || alt}

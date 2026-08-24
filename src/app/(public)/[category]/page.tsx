@@ -33,6 +33,7 @@ import {
 import SeoSupportSection from "@/components/seo-support-section";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage } from "@/lib/category-card-assets";
+import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -111,8 +112,8 @@ export default async function CategoryOrCityPage({ params }: Props) {
           <div className="e4s-page-hero__image">
             <HeroImage
               alt={cityMeta.label}
-              src={`/images/location-photo-${param}-photo.jpg`}
-              fallbacks={[`/images/location-photo-${param}-v2.png`, `/images/location-hero-${param}.svg`]}
+              src={getCityHeroImage(param)}
+              fallbacks={getCityHeroFallbacks(param)}
             />
           </div>
           <div className="e4s-page-hero__caption">

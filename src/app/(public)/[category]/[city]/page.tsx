@@ -19,6 +19,7 @@ import SeoSupportSection from "@/components/seo-support-section";
 import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCopy } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage } from "@/lib/category-card-assets";
+import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
 
 interface Props {
   params: Promise<{ category: string; city: string }>;
@@ -58,8 +59,13 @@ export default async function CategoryCityPage({ params }: Props) {
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
   const footerCopy = categoryCitySeoFooterCopy(catMeta, cityMeta, listings.length);
-  const categoryImage = catMeta.hero_image_url ?? getCategoryCardImage(category) ?? `/images/category-hero-${category}.svg`;
-  const cityImage = `/images/location-photo-${city}-photo.jpg`;
+  const categoryCardImage = getCategoryCardImage(category);
+  const categoryImage = catMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${category}.svg`;
+  const categoryImageFallbacks = [
+    ...(catMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
+    `/images/category-hero-${category}.svg`,
+  ];
+  const cityImage = getCityHeroImage(city);
   const jsonLd = [
     collectionPageJsonLd({
       name: `${catMeta.label} in ${cityMeta.label}`,
@@ -101,7 +107,9 @@ export default async function CategoryCityPage({ params }: Props) {
         <CategoryCityHeroImage
           alt={`${catMeta.label} ${cityMeta.label}`}
           categoryImage={categoryImage}
+          categoryFallbacks={categoryImageFallbacks}
           cityImage={cityImage}
+          cityFallbacks={getCityHeroFallbacks(city)}
         />
         <div className="e4s-page-hero__caption">
           <h1>{catMeta.label} {cityMeta.label}</h1>
