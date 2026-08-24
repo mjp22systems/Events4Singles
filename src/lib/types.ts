@@ -73,6 +73,7 @@ export interface Banner {
   image_url: string;
   click_url: string;
   alt_text: string;
+  placement?: string | null;
 }
 
 export interface Business {

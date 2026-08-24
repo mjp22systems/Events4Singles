@@ -60,6 +60,27 @@ test.describe("Profile page", () => {
     await expect(page.locator('[role="banner"]')).toBeVisible({ timeout: 10000 });
   });
 
+  test("profile listing cards link to listing detail pages for visitors", async ({ page }) => {
+    await page.goto(`/profile/${KNOWN_ID}`);
+    const profileListings = page.locator(".e4s-profile-stack");
+    await expect(profileListings.getByRole("link", { name: /View profile/i })).toHaveCount(0);
+    const listingLink = profileListings.getByRole("link", { name: /View listing/i }).first();
+    await expect(listingLink).toBeVisible();
+    await expect(listingLink).toHaveAttribute("href", /\/listing\//);
+    await listingLink.click();
+    await expect(page).toHaveURL(/\/listing\//);
+  });
+
+  test("profile events filter applies from the dropdown", async ({ page }) => {
+    await page.goto(`/profile/${KNOWN_ID}`);
+    const filter = page.locator("#profile-events-filter");
+    await expect(filter).toBeVisible();
+    await expect(page.locator(".e4s-profile-events__filter").getByRole("button", { name: /apply/i })).toHaveCount(0);
+
+    await filter.selectOption("past");
+    await expect(page).toHaveURL(/events=past/);
+  });
+
   test("admin-authenticated profile pages remain scrollable", async ({ page }) => {
     await addAdminCookie(page);
     await page.goto(`/profile/${KNOWN_ID}`, { waitUntil: "domcontentloaded" });
@@ -80,18 +101,19 @@ test.describe("Profile page", () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before.scrollY);
   });
 
-  test("admin edit drawer opens and cleans up page state", async ({ page }) => {
+  test("admin profile editor opens and cleans up page state", async ({ page }) => {
     await addAdminCookie(page);
     await page.goto(`/profile/${KNOWN_ID}`, { waitUntil: "domcontentloaded" });
 
-    await page.getByRole("button", { name: "Edit Listing" }).click();
-    await expect(page.getByRole("dialog", { name: "Edit listing" })).toBeVisible();
-    await expect(page.getByText("Business name (shown as heading on all pages)")).toBeVisible();
+    await expect(page.locator(".e4s-profile-stack").getByRole("link", { name: /Edit listing/i }).first()).toBeVisible();
+    await page.getByRole("button", { name: "Edit Profile" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit profile" })).toBeVisible();
+    await expect(page.getByText("Business name")).toBeVisible();
     await expect(page.locator(".e4s-edit-field input").first()).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(true);
 
     await page.getByRole("button", { name: "Close" }).click();
-    await expect(page.getByRole("dialog", { name: "Edit listing" })).toBeHidden();
+    await expect(page.getByRole("dialog", { name: "Edit profile" })).toBeHidden();
     await expect.poll(() => page.evaluate(() => document.body.classList.contains("drawer-open"))).toBe(false);
 
     const scrollY = await page.evaluate(() => window.scrollY);

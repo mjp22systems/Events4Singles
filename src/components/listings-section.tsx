@@ -12,6 +12,7 @@ type ListingsSectionProps = {
   title?: string;
   filterCategories?: Category[];
   filterCities?: City[];
+  showFeatureSlot?: boolean;
 };
 
 function sortName(l: Listing) {
@@ -37,6 +38,7 @@ export default function ListingsSection({
   title,
   filterCategories = [],
   filterCities = [],
+  showFeatureSlot = true,
 }: ListingsSectionProps) {
   const [sort, setSort] = useState<SortKey>("az");
   const [selectedSlugs, setSelectedSlugs] = useState<string[] | null>(null);
@@ -133,7 +135,7 @@ export default function ListingsSection({
       </div>
       <div className="e4s-listing-viewport">
         <div className="e4s-listing-stack">
-          <FeatureSlotCard />
+          {showFeatureSlot && <FeatureSlotCard />}
           {sorted.length > 0 ? (
             sorted.map((listing) =>
               listing.listing_type === "online" ? (

@@ -4,9 +4,11 @@ import { toListingSlug } from "@/lib/constants";
 
 interface Props {
   listing: Listing;
+  context?: "directory" | "profile";
+  isAdmin?: boolean;
 }
 
-export default function OnlineCard({ listing }: Props) {
+export default function OnlineCard({ listing, context = "directory", isAdmin = false }: Props) {
   const title = listing.business_name || listing.title;
   const web = listing.web || listing.business_website;
   const webHref = web ? (web.startsWith("http") ? web : `https://${web}`) : null;
@@ -19,6 +21,9 @@ export default function OnlineCard({ listing }: Props) {
     ? web.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]
     : null;
   const cardHref = `/listing/${toListingSlug(listing.id, title)}`;
+  const listingLabel = context === "profile"
+    ? isAdmin ? "Edit Listing ›" : "View Listing ›"
+    : "More info ›";
 
   return (
     <article
@@ -73,12 +78,17 @@ export default function OnlineCard({ listing }: Props) {
           >
             Visit Site ›
           </a>
+          {context === "profile" && (
+            <Link href={cardHref} className="e4s-online-card__more">
+              {listingLabel}
+            </Link>
+          )}
           {domain && <span className="e4s-online-card__domain">{domain}</span>}
         </div>
       ) : (
         <div className="e4s-online-card__cta">
           <Link href={cardHref} className="e4s-online-card__more">
-            More info ›
+            {listingLabel}
           </Link>
         </div>
       )}

@@ -1066,15 +1066,34 @@ body {
   table-layout: fixed;
 }
 
-.a-users-col-check { width: 4%; }
-.a-users-col-row { width: 5%; }
-.a-users-col-user { width: 18%; }
-.a-users-col-email { width: 20%; }
-.a-users-col-plan { width: 13%; }
-.a-users-col-business { width: 18%; }
-.a-users-col-presence { width: 9%; }
-.a-users-col-role { width: 6%; }
-.a-users-col-actions { width: 7%; }
+.a-table--users th,
+.a-table--users td {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.a-users-col-check { width: 3.5%; }
+.a-users-col-row { width: 4%; }
+.a-users-col-user { width: 16%; }
+.a-users-col-email { width: 17%; }
+.a-users-col-plan { width: 12%; }
+.a-users-col-business { width: 16%; }
+.a-users-col-presence { width: 13%; }
+.a-users-col-role { width: 11%; }
+.a-users-col-actions { width: 7.5%; }
+
+.a-table--users .a-badge {
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.a-table--users td:nth-child(4) span,
+.a-table--users td:nth-child(6) a {
+  min-width: 0;
+}
 
 @media (max-width: 1180px) {
   .a-integrations-col-check { width: 5%; }

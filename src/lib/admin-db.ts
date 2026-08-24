@@ -458,7 +458,9 @@ export async function listBusinesses(search?: string, sort = "name_asc"): Promis
 
   const { results } = await db
     .prepare(
-      `SELECT b.id, b.name, b.description, b.website,
+      `SELECT b.id, b.name, b.description, b.logo_url, b.website,
+              COALESCE(b.status, 'active') AS status,
+              b.advertiser_id, b.merged_into_business_id,
               COUNT(l.id) AS listing_count
        FROM businesses b
        LEFT JOIN listings l ON l.business_id = b.id AND l.deleted_at IS NULL
@@ -476,6 +478,7 @@ export async function getBusinessById(id: number): Promise<AdminBusiness | null>
   return db
     .prepare(
       `SELECT b.id, b.name, b.description, b.logo_url, b.website, b.advertiser_id,
+              COALESCE(b.status, 'active') AS status,
               b.merged_into_business_id,
               COUNT(l.id) AS listing_count
        FROM businesses b

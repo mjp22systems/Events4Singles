@@ -5,6 +5,8 @@ import ListingCardMedia from "./listing-card-media";
 
 interface Props {
   listing: Listing;
+  context?: "directory" | "profile";
+  isAdmin?: boolean;
 }
 
 function splitList(value?: string | null) {
@@ -24,7 +26,7 @@ function locationBadges(listing: Listing) {
   return [];
 }
 
-export default function ListingCard({ listing }: Props) {
+export default function ListingCard({ listing, context = "directory", isAdmin = false }: Props) {
   const phone = listing.phone || listing.mobile;
   const web = listing.web || listing.business_website;
   const title = listing.business_name || listing.title;
@@ -42,9 +44,13 @@ export default function ListingCard({ listing }: Props) {
   const locations = locationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locations.length);
   const listingHref = `/listing/${toListingSlug(listing.id, listing.business_name || listing.title)}`;
-  const cardHref = listing.business_id
+  const profileHref = listing.business_id
     ? `/profile/${toProfileSlug(listing.business_id, listing.business_name || listing.title)}`
     : listingHref;
+  const cardHref = context === "profile" ? listingHref : profileHref;
+  const detailsLabel = context === "profile"
+    ? isAdmin ? "Edit listing ›" : "View listing ›"
+    : "View profile ›";
 
   return (
     <article
@@ -152,7 +158,7 @@ export default function ListingCard({ listing }: Props) {
               <span className="e4s-listing-card__promo">{listing.promo}</span>
             )}
             <Link href={cardHref} className="e4s-listing-card__more">
-              View profile ›
+              {detailsLabel}
             </Link>
           </div>
         </div>

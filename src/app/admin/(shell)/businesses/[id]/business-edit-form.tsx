@@ -8,6 +8,7 @@ type Business = {
   description: string | null;
   logo_url: string | null;
   website: string | null;
+  status: string | null;
   advertiser_id: number | null;
   listing_count: number;
   merged_into_business_id: number | null;
@@ -40,6 +41,10 @@ const BADGE: Record<string, string> = {
   archived: "a-badge-paused",
   deleted: "a-badge-deleted",
 };
+
+function statusLabel(status: string | null) {
+  return (status ?? "active").replace(/_/g, " ");
+}
 
 export default function BusinessEditForm({ business, listings, allBusinesses }: Props) {
   const router = useRouter();
@@ -121,7 +126,12 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
               </div>
               <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
-                  <label className="a-label">Name</label>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "6px" }}>
+                    <label className="a-label" style={{ marginBottom: 0 }}>Name</label>
+                    <span className={`a-badge ${BADGE[business.status ?? "active"] ?? "a-badge-paused"}`}>
+                      {statusLabel(business.status)}
+                    </span>
+                  </div>
                   <input className="a-input" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: "100%" }} />
                 </div>
                 <div>

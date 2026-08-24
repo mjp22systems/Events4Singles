@@ -132,6 +132,7 @@ export async function getFeaturedListings(limit = 6): Promise<Listing[]> {
            l.phone, l.mobile, l.email, l.web, l.image_url,
            l.location, l.location_city, l.location_state,
            l.listing_type, l.confidence_score,
+           l.business_id,
            b.name AS business_name, b.website AS business_website,
            b.advertiser_id AS business_advertiser_id,
            MAX(p.city_slug) AS city_slug,
@@ -141,12 +142,83 @@ export async function getFeaturedListings(limit = 6): Promise<Listing[]> {
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
     LEFT JOIN listing_placements p ON p.listing_id = l.id
-    WHERE l.confidence_score >= 80 AND l.email != '' AND l.status = 'active'
+    WHERE l.status = 'active'
+      AND l.listing_type IN ('featured', 'premium')
     GROUP BY l.id
-    ORDER BY l.confidence_score DESC
+    ORDER BY RANDOM()
     LIMIT ?
   `).bind(limit).all<Listing>();
   return results;
+}
+
+export async function getAllFeaturedListings(limit = 200): Promise<Listing[]> {
+  const db = await getD1();
+  const { results } = await db.prepare(`
+    SELECT l.id, l.title, l.tagline, l.description, l.promo,
+           l.phone, l.mobile, l.email, l.web, l.image_url,
+           l.location, l.location_city, l.location_state,
+           l.listing_type, l.confidence_score,
+           l.business_id,
+           b.name AS business_name, b.website AS business_website,
+           b.advertiser_id AS business_advertiser_id,
+           MAX(p.city_slug) AS city_slug,
+           MAX(p.category_slug) AS category_slug,
+           GROUP_CONCAT(DISTINCT p.city_slug) AS city_slugs,
+           GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs,
+           GROUP_CONCAT(DISTINCT COALESCE(ci.label, p.city_slug)) AS city_labels
+    FROM listings l
+    LEFT JOIN businesses b ON b.id = l.business_id
+    LEFT JOIN listing_placements p ON p.listing_id = l.id
+    LEFT JOIN cities ci ON ci.slug = p.city_slug
+    WHERE l.status = 'active'
+      AND l.listing_type IN ('featured', 'premium')
+    GROUP BY l.id
+    ORDER BY
+      CASE l.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END,
+      l.confidence_score DESC,
+      COALESCE(b.name, l.title) COLLATE NOCASE ASC
+    LIMIT ?
+  `).bind(limit).all<Listing>();
+  return results;
+}
+
+export async function getFeaturedListingCategories(): Promise<Category[]> {
+  const db = await getD1();
+  const suppressed = [...SUPPRESSED_CATEGORIES];
+  const placeholders = suppressed.map(() => "?").join(",");
+  const { results } = await db.prepare(`
+    SELECT p.category_slug AS slug, c.label, c.parent_slug,
+           c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
+           COUNT(DISTINCT p.listing_id) AS listing_count
+    FROM listing_placements p
+    LEFT JOIN categories c ON c.slug = p.category_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
+    WHERE p.category_slug IS NOT NULL
+      AND p.category_slug NOT IN (${placeholders})
+      AND l.listing_type IN ('featured', 'premium')
+    GROUP BY p.category_slug
+    ORDER BY listing_count DESC, COALESCE(c.label, p.category_slug) COLLATE NOCASE ASC
+  `).bind(...suppressed).all<{
+    slug: string; label: string | null; parent_slug: string | null;
+    description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
+  }>();
+  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+}
+
+export async function getFeaturedListingCities(): Promise<City[]> {
+  const db = await getD1();
+  const { results } = await db.prepare(`
+    SELECT p.city_slug AS slug, ci.label, ci.state, ci.seo_title, ci.seo_description,
+           COUNT(DISTINCT p.listing_id) AS listing_count
+    FROM listing_placements p
+    LEFT JOIN cities ci ON ci.slug = p.city_slug
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
+    WHERE p.city_slug IS NOT NULL
+      AND l.listing_type IN ('featured', 'premium')
+    GROUP BY p.city_slug
+    ORDER BY listing_count DESC, COALESCE(ci.label, p.city_slug) COLLATE NOCASE ASC
+  `).all<{ slug: string; label: string | null; state: string | null; seo_title: string | null; seo_description: string | null; listing_count: number }>();
+  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 export async function getAllBusinessesForDirectory(): Promise<{ id: number; name: string; profile_slug: string | null }[]> {
@@ -154,10 +226,12 @@ export async function getAllBusinessesForDirectory(): Promise<{ id: number; name
   const { results } = await db.prepare(`
     SELECT b.id, b.name, b.profile_slug
     FROM businesses b
-    INNER JOIN listings l ON l.business_id = b.id AND l.status = 'active'
-    WHERE b.name IS NOT NULL AND b.name != ''
+    WHERE b.name IS NOT NULL
+      AND TRIM(b.name) != ''
+      AND COALESCE(b.status, 'active') = 'active'
+      AND b.merged_into_business_id IS NULL
     GROUP BY b.id
-    ORDER BY b.name ASC
+    ORDER BY b.name COLLATE NOCASE ASC
   `).all<{ id: number; name: string; profile_slug: string | null }>();
   return results;
 }
@@ -588,6 +662,32 @@ export async function getBannersForCity(cityDbSlug: string): Promise<Banner[]> {
   return banners;
 }
 
+export async function getFeaturedDirectoryBanners(): Promise<Banner[]> {
+  const db = await getD1();
+  const { results } = await db.prepare(`
+    SELECT id, image_url, click_url, alt_text FROM banners
+    WHERE is_active = 1
+      AND image_url IS NOT NULL
+      AND image_url != ''
+      AND (
+        page_scope IN ('listings', 'homepage', 'site', 'global')
+        OR (category_slug IS NULL AND city_slug IS NULL)
+      )
+    ORDER BY
+      CASE page_scope
+        WHEN 'listings' THEN 0
+        WHEN 'homepage' THEN 1
+        WHEN 'site' THEN 2
+        WHEN 'global' THEN 3
+        ELSE 4
+      END,
+      COALESCE(slot_position, 999),
+      id DESC
+    LIMIT 12
+  `).all<Banner>();
+  return results;
+}
+
 // ── Static params for SSG ─────────────────────────────────────────────────────
 
 export async function getAllCategoryParams(): Promise<{ category: string }[]> {
@@ -619,9 +719,20 @@ export async function getAllCategoryCityParams(): Promise<{ category: string; ci
 export interface ProfileData {
   business: Business | null;
   listings: Listing[];
+  banners: ProfileBanner[];
+  events: PublicEvent[];
+  nextEvent: PublicEvent | null;
+  totalEvents: number;
 }
 
-export async function getProfileData(slugOrId: string): Promise<ProfileData> {
+export type ProfileEventFilter = "upcoming" | "past";
+
+export interface ProfileBanner extends Banner {
+  title: string | null;
+  placement: string | null;
+}
+
+export async function getProfileData(slugOrId: string, eventFilter: ProfileEventFilter = "upcoming"): Promise<ProfileData> {
   const db = await getD1();
 
   // Resolution order:
@@ -638,7 +749,9 @@ export async function getProfileData(slugOrId: string): Promise<ProfileData> {
     businessId = idFromProfileSlug(slugOrId);
   }
 
-  if (businessId === null) return { business: null, listings: [] };
+  if (businessId === null) {
+    return { business: null, listings: [], banners: [], events: [], nextEvent: null, totalEvents: 0 };
+  }
 
   const business = await db.prepare(`
     SELECT id, name, description, logo_url, website, advertiser_id, profile_slug
@@ -682,7 +795,78 @@ export async function getProfileData(slugOrId: string): Promise<ProfileData> {
     LIMIT 50
   `).bind(businessId).all<Listing>();
 
-  return { business, listings };
+  const { results: accountRows } = await db.prepare(`
+    SELECT id FROM advertiser_accounts WHERE business_id = ?
+    UNION
+    SELECT account_id AS id
+    FROM advertiser_account_businesses
+    WHERE business_id = ? AND status = 'active'
+  `).bind(businessId, businessId).all<{ id: string }>();
+  const accountIds = accountRows.map((row) => row.id).filter(Boolean);
+
+  let banners: ProfileBanner[] = [];
+  let events: PublicEvent[] = [];
+  let nextEvent: PublicEvent | null = null;
+  let totalEvents = 0;
+
+  if (accountIds.length > 0) {
+    const accountPlaceholders = accountIds.map(() => "?").join(",");
+
+    const { results: bannerRows } = await db.prepare(`
+      SELECT id,
+             image_url,
+             COALESCE(NULLIF(link_url, ''), NULLIF(click_url, ''), '/advertise') AS click_url,
+             COALESCE(NULLIF(alt_text, ''), NULLIF(title, ''), 'Advertiser banner') AS alt_text,
+             title,
+             placement
+      FROM banners
+      WHERE account_id IN (${accountPlaceholders})
+        AND COALESCE(is_active, 1) = 1
+        AND COALESCE(status, 'active') IN ('active', 'approved')
+        AND image_url IS NOT NULL
+        AND image_url != ''
+      ORDER BY COALESCE(slot_position, 999), COALESCE(created_at, '') DESC, id DESC
+      LIMIT 12
+    `).bind(...accountIds).all<ProfileBanner>();
+    banners = bannerRows;
+
+    const now = new Date().toISOString();
+    const countRow = await db.prepare(`
+      SELECT COUNT(*) AS count
+      FROM events
+      WHERE account_id IN (${accountPlaceholders})
+        AND status = 'approved'
+        AND COALESCE(is_visible, 1) = 1
+    `).bind(...accountIds).first<{ count: number }>();
+    totalEvents = countRow?.count ?? 0;
+
+    nextEvent = await db.prepare(`
+      SELECT ${PUBLIC_EVENT_FIELDS}
+      FROM events
+      WHERE account_id IN (${accountPlaceholders})
+        AND status = 'approved'
+        AND COALESCE(is_visible, 1) = 1
+        AND starts_at >= ?
+      ORDER BY starts_at ASC
+      LIMIT 1
+    `).bind(...accountIds, now).first<PublicEvent>() ?? null;
+
+    const eventWindow = eventFilter === "past" ? "starts_at < ?" : "starts_at >= ?";
+    const eventOrder = eventFilter === "past" ? "starts_at DESC" : "starts_at ASC";
+    const { results: eventRows } = await db.prepare(`
+      SELECT ${PUBLIC_EVENT_FIELDS}
+      FROM events
+      WHERE account_id IN (${accountPlaceholders})
+        AND status = 'approved'
+        AND COALESCE(is_visible, 1) = 1
+        AND ${eventWindow}
+      ORDER BY ${eventOrder}
+      LIMIT 12
+    `).bind(...accountIds, now).all<PublicEvent>();
+    events = eventRows;
+  }
+
+  return { business, listings, banners, events, nextEvent, totalEvents };
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────

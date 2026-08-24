@@ -1,5 +1,6 @@
-import { getBannersForCity, getBannersForPage } from "@/lib/data";
+import { getBannersForCity, getBannersForPage, getFeaturedDirectoryBanners } from "@/lib/data";
 import type { Banner } from "@/lib/types";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 const SLOTS_PER_ROW = 6;
@@ -7,12 +8,15 @@ const MAX_SLOTS = SLOTS_PER_ROW * 2;
 
 type Props =
   | { mode: "category"; categoryDbSlug: string; cityDbSlug?: string | null }
-  | { mode: "city"; cityDbSlug: string };
+  | { mode: "city"; cityDbSlug: string }
+  | { mode: "featured" };
 
 export default async function PromoBanners(props: Props) {
   let banners: Banner[];
 
-  if (props.mode === "city") {
+  if (props.mode === "featured") {
+    banners = await getFeaturedDirectoryBanners();
+  } else if (props.mode === "city") {
     banners = await getBannersForCity(props.cityDbSlug);
   } else {
     banners = await getBannersForPage(props.categoryDbSlug, props.cityDbSlug);
@@ -31,13 +35,15 @@ export default async function PromoBanners(props: Props) {
     <section aria-label="Featured advertisers" className={`e4s-promo-banners ${rowClass}`}>
       {visibleBanners.map((b, i) => (
         <a key={b.id} href={b.click_url} rel="noopener" style={{ "--e4s-promo-index": i } as CSSProperties} target="_blank" title={b.alt_text}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt={`${b.alt_text} advertiser tile`} loading="lazy" src={b.image_url} title={b.alt_text} />
         </a>
       ))}
       {Array.from({ length: placeholderCount }).map((_, i) => (
-        <a key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" style={{ "--e4s-promo-index": visibleBanners.length + i } as CSSProperties} title="Advertise on Events4Singles">
+        <Link key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" style={{ "--e4s-promo-index": visibleBanners.length + i } as CSSProperties} title="Advertise on Events4Singles">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
-        </a>
+        </Link>
       ))}
     </section>
   );

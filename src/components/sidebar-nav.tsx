@@ -13,7 +13,7 @@ interface NavItem {
 interface Props {
   heading: string;
   items: NavItem[];
-  topItem?: { label: string; href: string };
+  topItem?: { label: string; href: string; isActive?: boolean };
 }
 
 export default function SidebarNav({ heading, items, topItem }: Props) {
@@ -50,7 +50,7 @@ export default function SidebarNav({ heading, items, topItem }: Props) {
       </div>
       <nav className="e4s-sidebar-nav" aria-label={heading}>
         {topItem && (
-          <Link href={topItem.href} aria-current="page">
+          <Link href={topItem.href} aria-current={topItem.isActive ? "page" : undefined}>
             <span>{topItem.label}</span>
           </Link>
         )}

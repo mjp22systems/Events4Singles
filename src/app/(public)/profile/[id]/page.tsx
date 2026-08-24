@@ -5,17 +5,21 @@ import { cookies } from "next/headers";
 import { getProfileData } from "@/lib/data";
 import ListingCard from "@/components/listing-card";
 import OnlineCard from "@/components/online-card";
-import AdminEditDrawer from "@/components/admin-edit-drawer";
+import ProfileEditDrawer from "@/components/profile-edit-drawer";
+import ProfileEventsFilter from "@/components/profile-events-filter";
 import BackLink from "@/components/back-link";
 import { pageMetadata } from "@/lib/seo";
 import { toUrlSlug, toProfileSlug, slugToLabel } from "@/lib/constants";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
+import { eventPath } from "@/lib/event-slugs";
+import { eventDescriptionExcerpt } from "@/lib/event-text";
 import type { Listing } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ events?: string }>;
 }
 
 const SOCIAL_PLATFORMS = [
@@ -67,6 +71,27 @@ function collectCategorySlugs(listings: Listing[]): string[] {
   return out;
 }
 
+function formatEventDate(iso: string, timezone: string) {
+  try {
+    return new Date(iso).toLocaleDateString("en-AU", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: timezone,
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function formatEventPrice(min: number | null) {
+  if (min === null) return null;
+  if (min === 0) return "Free";
+  return `From $${(min / 100).toFixed(0)}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id: slug } = await params;
   const { business, listings } = await getProfileData(slug);
@@ -85,9 +110,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function ProfilePage({ params }: Props) {
+export default async function ProfilePage({ params, searchParams }: Props) {
   const { id: slug } = await params;
-  const { business, listings } = await getProfileData(slug);
+  const search = searchParams ? await searchParams : {};
+  const eventFilter = search.events === "past" ? "past" : "upcoming";
+  const profileData = await getProfileData(slug, eventFilter);
+  const { business, listings } = profileData;
+  const banners = profileData.banners ?? [];
+  const events = profileData.events ?? [];
+  const nextEvent = profileData.nextEvent ?? null;
+  const totalEvents = profileData.totalEvents ?? events.length;
   if (!business && listings.length === 0) notFound();
 
   const cookieStore = await cookies();
@@ -105,7 +137,7 @@ export default async function ProfilePage({ params }: Props) {
   const domain = web ? web.replace(/^https?:\/\/(www\.)?/, "").split("/")[0] : null;
   const phone = primary?.phone || primary?.mobile;
   const businessId = business?.id ?? null;
-  const showAdminEditor = isAdmin && primary;
+  const showAdminEditor = isAdmin && business !== null;
 
   const isVerified = !!business?.advertiser_id;
   const ltype = primary?.listing_type ?? "standard";
@@ -132,7 +164,7 @@ export default async function ProfilePage({ params }: Props) {
     <main id="site-content">
       {showAdminEditor && <link rel="stylesheet" href="/admin.css" precedence="high" />}
       {showAdminEditor && (
-        <AdminEditDrawer listing={primary} />
+        <ProfileEditDrawer business={business} />
       )}
       <div className="e4s-shell">
 
@@ -173,9 +205,14 @@ export default async function ProfilePage({ params }: Props) {
             </div>
           </div>
 
-          {/* Events strip — placeholder until Phase 3 */}
-          <div className="e4s-events-strip e4s-events-strip--none">
-            <span>📅 No upcoming events listed for this profile</span>
+          <div className={`e4s-events-strip${nextEvent ? " e4s-events-strip--active" : " e4s-events-strip--none"}`}>
+            {nextEvent ? (
+              <Link href={eventPath(nextEvent)}>
+                Upcoming event: {nextEvent.title}
+              </Link>
+            ) : (
+              <span>📅 No upcoming events listed for this profile</span>
+            )}
           </div>
 
           {/* Body */}
@@ -393,9 +430,9 @@ export default async function ProfilePage({ params }: Props) {
                 <div className="e4s-profile-stack">
                   {listings.map((listing) =>
                     listing.listing_type === "online" ? (
-                      <OnlineCard key={listing.id} listing={listing} />
+                      <OnlineCard key={listing.id} listing={listing} context="profile" isAdmin={isAdmin} />
                     ) : (
-                      <ListingCard key={listing.id} listing={listing} />
+                      <ListingCard key={listing.id} listing={listing} context="profile" isAdmin={isAdmin} />
                     )
                   )}
                 </div>
@@ -405,11 +442,29 @@ export default async function ProfilePage({ params }: Props) {
             </div>
             <div className="e4s-profile-activity__col">
               <div className="e4s-profile-activity__col-head">
-                Banners <span className="e4s-profile-activity__count">(0)</span>
+                Banners <span className="e4s-profile-activity__count">({banners.length})</span>
               </div>
-              <div className="e4s-profile-banner-placeholder">
-                This advertiser doesn&apos;t currently promote any banner ads.
-              </div>
+              {banners.length > 0 ? (
+                <div className="e4s-profile-banners">
+                  {banners.map((banner) => (
+                    <a
+                      key={banner.id}
+                      className="e4s-profile-banner"
+                      href={banner.click_url}
+                      rel="noopener"
+                      target={banner.click_url.startsWith("/") ? undefined : "_blank"}
+                      title={banner.alt_text}
+                    >
+                      <img alt={`${banner.alt_text} advertiser banner`} loading="lazy" src={banner.image_url} />
+                      {banner.placement && <span>{slugToLabel(banner.placement)}</span>}
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="e4s-profile-banner-placeholder">
+                  This advertiser doesn&apos;t currently promote any banner ads.
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -417,14 +472,37 @@ export default async function ProfilePage({ params }: Props) {
         {/* Events */}
         <section className="e4s-profile-events">
           <div className="e4s-profile-activity__col-head">
-            Events <span className="e4s-profile-activity__count">(0)</span>
+            Events <span className="e4s-profile-activity__count">({totalEvents})</span>
+            <ProfileEventsFilter value={eventFilter} />
           </div>
           <div className="e4s-profile-events__grid">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="e4s-profile-event-placeholder">
+            {events.map((event) => {
+                const price = formatEventPrice(event.price_min);
+                const location = [event.venue_name, event.suburb, event.city].filter(Boolean).join(", ");
+                const excerpt = eventDescriptionExcerpt(event.description);
+                return (
+                  <article className="e4s-home-event-card e4s-profile-event-card" key={event.id}>
+                    {event.image_url && (
+                      <div className="e4s-home-event-card__img">
+                        <img alt={event.title} loading="lazy" src={event.image_url} />
+                      </div>
+                    )}
+                    <div className="e4s-home-event-card__body">
+                      <p className="e4s-home-event-card__date">{formatEventDate(event.starts_at, event.timezone)}</p>
+                      <h3>{event.title}</h3>
+                      {location && <p className="e4s-home-event-card__location">{location}</p>}
+                      {excerpt && <p className="e4s-home-event-card__desc">{excerpt}</p>}
+                      {price && <p className="e4s-home-event-card__meta">{price}</p>}
+                      <Link className="e4s-home-event-card__link" href={eventPath(event)}>View Details</Link>
+                    </div>
+                  </article>
+                );
+            })}
+            {Array.from({ length: Math.max(0, Math.max(4, Math.ceil(events.length / 4) * 4) - events.length) }).map((_, i) => (
+              <div key={`placeholder-${i}`} className="e4s-profile-event-placeholder">
                 <div className="e4s-profile-event-placeholder__img" aria-hidden="true" />
                 <div className="e4s-profile-event-placeholder__body">
-                  <span>No events for this advertiser</span>
+                  <span>No {eventFilter === "past" ? "past" : "upcoming"} event in this slot</span>
                 </div>
               </div>
             ))}

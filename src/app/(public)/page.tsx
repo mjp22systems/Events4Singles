@@ -44,9 +44,11 @@ const RESOURCES = [
   { badge: "CALENDAR", img: "/images/home-blog-calendar.jpg", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
 ];
 
+const HOMEPAGE_FEATURED_LISTING_LIMIT = 5;
+
 export default async function HomePage() {
   const [featured, upcomingEvents] = await Promise.all([
-    getFeaturedListings(5),
+    getFeaturedListings(HOMEPAGE_FEATURED_LISTING_LIMIT),
     getUpcomingEvents(8),
   ]);
 
@@ -197,7 +199,7 @@ export default async function HomePage() {
               <h2>Featured Businesses</h2>
               <p>Hand-picked event organisers, venues and services for singles across Australia. Filter by location or category to find what suits you.</p>
             </div>
-            <Link className="e4s-home-section__more" href="/speed-dating/sydney">View All Listings</Link>
+            <Link className="e4s-home-section__more" href="/listings">View All Listings</Link>
           </div>
           <div className="e4s-shell">
             <HomeFeatured listings={featured} />
