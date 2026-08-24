@@ -53,7 +53,12 @@ test.describe("responsive CSS", () => {
     test(`landscape header menu quick links do not overlap selects at ${viewport.width}px`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.goto("/", { waitUntil: "domcontentloaded" });
-      await page.locator(".e4s-header__menu-btn").click();
+      const menuButton = page.locator(".e4s-header__menu-btn");
+      const eventsCell = page.locator(".e4s-nav__events-cell");
+      await page.waitForLoadState("load");
+      if (!(await eventsCell.isVisible())) {
+        await menuButton.click();
+      }
       await expect(page.locator(".e4s-nav__events-cell")).toBeVisible();
       await page.waitForTimeout(150);
 
@@ -277,6 +282,141 @@ test.describe("responsive CSS", () => {
     expect(layout.filterText.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterText.clientWidth + 1);
     expect(layout.filterSummary.height, JSON.stringify(layout)).toBeLessThanOrEqual(32);
     expect(layout.filterText.height, JSON.stringify(layout)).toBeLessThanOrEqual(20);
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("portrait listing toolbar stays sticky while scrolling", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body class="e4s-page-category" style="--e4s-sticky-top: 72px;">
+          <main class="e4s-category-template" id="site-content">
+            <div style="height: 240px;"></div>
+            <div class="e4s-toolbar-shield">
+              <div class="e4s-listings-toolbar">
+                <span class="e4s-listings-toolbar__title">Speed Dating</span>
+                <label class="e4s-listings-sort"><span>Sort:</span><select><option>A-Z</option></select></label>
+                <div class="e4s-listings-filter-group">
+                  <details class="e4s-listings-filter">
+                    <summary><span>Filter: Cities</span><em>17/17</em></summary>
+                    <div class="e4s-listings-filter__panel"></div>
+                  </details>
+                  <button type="button" class="e4s-listings-filter-clear">Clear</button>
+                </div>
+              </div>
+            </div>
+            <div style="height: 1400px;"></div>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const sticky = await page.evaluate(async () => {
+      const shield = document.querySelector(".e4s-toolbar-shield")!;
+      const position = getComputedStyle(shield).position;
+      window.scrollTo(0, 520);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const rect = shield.getBoundingClientRect();
+      return { position, top: Math.round(rect.top) };
+    });
+
+    expect(sticky.position).toBe("sticky");
+    expect(sticky.top, JSON.stringify(sticky)).toBeGreaterThanOrEqual(70);
+    expect(sticky.top, JSON.stringify(sticky)).toBeLessThanOrEqual(76);
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("landscape homepage experiences keep all three tiles in one row", async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body>
+          <main class="e4s-home-page" id="site-content">
+            <div class="e4s-shell e4s-home-exp-grid">
+              <a class="e4s-home-exp-tile" href="#"><span class="e4s-home-exp-tile__img-wrap"></span><span class="e4s-home-exp-tile__body"><h3>Elegant Dinner Parties</h3><p>Copy</p></span></a>
+              <a class="e4s-home-exp-tile" href="#"><span class="e4s-home-exp-tile__img-wrap"></span><span class="e4s-home-exp-tile__body"><h3>Dance & Connect</h3><p>Copy</p></span></a>
+              <a class="e4s-home-exp-tile" href="#"><span class="e4s-home-exp-tile__img-wrap"></span><span class="e4s-home-exp-tile__body"><h3>Singles Travel</h3><p>Copy</p></span></a>
+            </div>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const boxes = await page.locator(".e4s-home-exp-tile").evaluateAll((items) =>
+      items.map((item) => {
+        const rect = item.getBoundingClientRect();
+        return { top: Math.round(rect.top), width: rect.width, height: rect.height };
+      }),
+    );
+
+    expect(boxes).toHaveLength(3);
+    expect(new Set(boxes.map((box) => box.top)).size, JSON.stringify(boxes)).toBe(1);
+    expect(Math.min(...boxes.map((box) => box.width)), JSON.stringify(boxes)).toBeGreaterThan(190);
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("mobile featured sponsored tiles remain available below listings", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body>
+          <main class="e4s-home-page" id="site-content">
+            <div class="e4s-home-featured-layout">
+              <div class="e4s-home-featured__listings"></div>
+              <aside class="e4s-home-featured__sidebar">
+                <div class="e4s-home-featured__refine">Refine Listings</div>
+                ${Array.from({ length: 7 }, (_, index) => `
+                  <a class="e4s-home-featured__sponsored" href="/advertise">
+                    <span class="e4s-home-featured__sponsored-img"></span>
+                    <span class="e4s-home-featured__sponsored-overlay">
+                      <span class="e4s-home-featured__sponsored-title">Sponsored ${index + 1}</span>
+                    </span>
+                  </a>
+                `).join("")}
+              </aside>
+            </div>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const layout = await page.evaluate(() => {
+      const sidebar = document.querySelector(".e4s-home-featured__sidebar")!;
+      const refine = document.querySelector(".e4s-home-featured__refine")!;
+      const sponsored = Array.from(document.querySelectorAll(".e4s-home-featured__sponsored"));
+      const sidebarRect = sidebar.getBoundingClientRect();
+      return {
+        sidebarDisplay: getComputedStyle(sidebar).display,
+        sidebarHeight: sidebarRect.height,
+        refineDisplay: getComputedStyle(refine).display,
+        sponsoredCount: sponsored.length,
+        visibleSponsored: sponsored.filter((item) => {
+          const style = getComputedStyle(item);
+          return style.visibility !== "hidden" && Number(style.opacity) > 0.5;
+        }).length,
+      };
+    });
+
+    expect(layout.sidebarDisplay).toBe("block");
+    expect(layout.sidebarHeight, JSON.stringify(layout)).toBeGreaterThan(100);
+    expect(layout.refineDisplay).toBe("none");
+    expect(layout.sponsoredCount).toBe(7);
+    expect(layout.visibleSponsored, JSON.stringify(layout)).toBeGreaterThanOrEqual(2);
     await expectNoHorizontalOverflow(page);
   });
 

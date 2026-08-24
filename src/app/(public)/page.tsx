@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { CalendarDays } from "lucide-react";
 import { getFeaturedListings, getUpcomingEvents } from "@/lib/data";
 import NewsletterForm from "@/components/newsletter-form";
 import HomeFeatured from "@/components/home-featured";
@@ -182,7 +183,10 @@ export default async function HomePage() {
             <h2>What&apos;s On</h2>
             <p>Upcoming events across Australia.</p>
           </div>
-          <Link className="e4s-home-section__more e4s-home-section__more--calendar" href="/events">View What&apos;s On</Link>
+          <Link className="e4s-home-section__more e4s-home-section__more--calendar" href="/events">
+            <span>View What&apos;s On</span>
+            <CalendarDays aria-hidden="true" className="e4s-home-section__more-icon" size={16} />
+          </Link>
         </div>
         {upcomingEvents.length > 0 ? (
           <EventCardGrid events={upcomingEvents} />

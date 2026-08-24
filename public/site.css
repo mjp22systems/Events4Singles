@@ -3116,8 +3116,7 @@ body.e4s-page-home {
 }
 
 @media (max-width: 700px) {
-  html,
-  body {
+  body.e4s-page-home {
     max-width: 100%;
     overflow-x: hidden;
   }
@@ -7746,8 +7745,6 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
 /* Final mobile homepage containment -------------------------------------
    This sits last so the rebuilt front page cannot inherit legacy fixed widths. */
 @media (max-width: 640px) {
-  html,
-  body,
   body.e4s-page-home {
     width: 100% !important;
     max-width: 100% !important;
@@ -7766,7 +7763,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
     min-width: 0 !important;
     margin-right: auto !important;
     margin-left: auto !important;
-    overflow-x: hidden !important;
+    overflow: visible !important;
   }
 
   .e4s-category-template,
@@ -7776,7 +7773,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
     min-width: 0 !important;
     margin-right: auto !important;
     margin-left: auto !important;
-    overflow-x: hidden !important;
+    overflow: visible !important;
   }
 
   .e4s-category-template > *,
@@ -7868,16 +7865,16 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow { color: var(--e4s-
   }
 
   .e4s-toolbar-shield {
-    position: static;
-    top: auto;
-    z-index: 1;
+    position: sticky;
+    top: var(--e4s-sticky-top, var(--e4s-header-height, 143px));
+    z-index: 10;
     margin: 10px 0 12px;
     padding-bottom: 0;
-    background: transparent !important;
+    background: var(--e4s-page-bg, #f5faf9) !important;
   }
 
   .e4s-toolbar-shield::after {
-    display: none !important;
+    display: block !important;
   }
 
   .e4s-toolbar-shield::before {
@@ -12087,5 +12084,159 @@ h1, h2, h3, h4, h5, h6 {
 
   .e4s-page-category .e4s-seo-support p {
     color: #41515f;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE REFINEMENTS - homepage, event CTAs, sticky tools
+   ========================================================= */
+.e4s-home-section__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.e4s-home-section__more--calendar::after {
+  content: none;
+}
+
+.e4s-home-section__more-icon {
+  flex-shrink: 0;
+  stroke-width: 2.2;
+}
+
+.e4s-page-foot {
+  margin-top: 2.5rem;
+  padding: 24px;
+  border: 1px solid rgba(6, 78, 77, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 18px rgba(6, 78, 77, 0.08);
+}
+
+.e4s-page-foot h2 {
+  margin: 0 0 8px;
+  color: var(--e4s-teal-900);
+}
+
+.e4s-page-foot p {
+  margin: 0;
+  color: #41515f;
+  line-height: 1.65;
+}
+
+.e4s-page-foot a {
+  color: var(--e4s-teal-700);
+  font-weight: 800;
+}
+
+.e4s-event-detail__list-cta {
+  width: 100%;
+}
+
+@media (max-width: 960px) and (orientation: landscape) {
+  .e4s-home-exp-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto;
+  }
+
+  .e4s-home-exp-tile,
+  .e4s-home-exp-tile:first-child {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  .e4s-home-exp-tile__body {
+    padding: 34px 12px 12px;
+  }
+
+  .e4s-home-exp-tile__body p {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .e4s-home-featured__sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 16px;
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .e4s-home-featured__refine {
+    display: none;
+  }
+
+  .e4s-home-featured__sponsored {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 640px) {
+  .e4s-home-featured__sidebar {
+    display: block;
+    height: min(34vw, 150px);
+    overflow: hidden;
+  }
+
+  .e4s-home-featured__sponsored {
+    position: absolute;
+    top: 0;
+    width: calc((100% - 10px) / 2);
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    animation: e4s-home-sponsored-rotate 32s infinite;
+  }
+
+  .e4s-home-featured__sponsored:nth-of-type(2n + 1) {
+    left: 0;
+  }
+
+  .e4s-home-featured__sponsored:nth-of-type(2n) {
+    right: 0;
+  }
+
+  .e4s-home-featured__sponsored:nth-of-type(3),
+  .e4s-home-featured__sponsored:nth-of-type(4) {
+    animation-delay: 8s;
+  }
+
+  .e4s-home-featured__sponsored:nth-of-type(5),
+  .e4s-home-featured__sponsored:nth-of-type(6) {
+    animation-delay: 16s;
+  }
+
+  .e4s-home-featured__sponsored:nth-of-type(7) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    animation-delay: 24s;
+  }
+}
+
+@keyframes e4s-home-sponsored-rotate {
+  0%,
+  21% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  25%,
+  96% {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
   }
 }

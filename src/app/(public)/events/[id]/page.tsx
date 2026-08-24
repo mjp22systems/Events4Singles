@@ -383,6 +383,14 @@ export default async function EventDetailPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        <div className="e4s-page-foot e4s-event-detail__list-cta">
+          <h2>List Your Event</h2>
+          <p>
+            Running singles events? <Link href="/advertise">View advertising packages</Link> to get
+            your events in front of thousands of singles across Australia.
+          </p>
+        </div>
       </article>
     </main>
   );
