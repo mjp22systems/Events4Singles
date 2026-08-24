@@ -970,22 +970,19 @@ body > div > table {
 
 .e4s-page-hero__blend-image--category {
   background-image: var(--e4s-category-hero-image);
-  clip-path: polygon(0 0, 66% 0, 39% 100%, 0 100%);
+  -webkit-mask-image: linear-gradient(106deg, #000000 0%, #000000 42%, rgba(0, 0, 0, 0.72) 48%, rgba(0, 0, 0, 0.22) 56%, transparent 64%);
+  mask-image: linear-gradient(106deg, #000000 0%, #000000 42%, rgba(0, 0, 0, 0.72) 48%, rgba(0, 0, 0, 0.22) 56%, transparent 64%);
 }
 
 .e4s-page-hero__blend-image--city {
   background-image: var(--e4s-city-hero-image);
-  clip-path: polygon(61% 0, 100% 0, 100% 100%, 34% 100%);
+  -webkit-mask-image: linear-gradient(106deg, transparent 36%, rgba(0, 0, 0, 0.22) 44%, rgba(0, 0, 0, 0.72) 52%, #000000 58%, #000000 100%);
+  mask-image: linear-gradient(106deg, transparent 36%, rgba(0, 0, 0, 0.22) 44%, rgba(0, 0, 0, 0.72) 52%, #000000 58%, #000000 100%);
+  z-index: 1;
 }
 
 .e4s-page-hero__blend-softener {
-  background:
-    linear-gradient(104deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18) 48%, rgba(255, 255, 255, 0));
-  backdrop-filter: blur(13px) saturate(1.05);
-  -webkit-mask-image: linear-gradient(104deg, transparent 0%, rgba(0, 0, 0, 0.34) 31%, #000000 50%, rgba(0, 0, 0, 0.34) 69%, transparent 100%);
-  mask-image: linear-gradient(104deg, transparent 0%, rgba(0, 0, 0, 0.34) 31%, #000000 50%, rgba(0, 0, 0, 0.34) 69%, transparent 100%);
-  clip-path: polygon(58% 0, 68% 0, 41% 100%, 31% 100%);
-  z-index: 1;
+  display: none;
 }
 
 body.e4s-city-sydney .e4s-page-hero__image img {
