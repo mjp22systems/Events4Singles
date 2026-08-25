@@ -60,6 +60,7 @@ function run(command, args) {
       ...process.env,
       CLOUDFLARE_API_TOKEN: token,
       CLOUDFLARE_ACCOUNT_ID: account,
+      E4S_NEXT_BUILD_CPUS: process.env.E4S_NEXT_BUILD_CPUS ?? "1",
       // This Windows machine has a local certificate-chain issue with Wrangler's fetch.
       // Direct Cloudflare API calls work; this keeps Wrangler deploys unblocked here.
       NODE_TLS_REJECT_UNAUTHORIZED: process.env.NODE_TLS_REJECT_UNAUTHORIZED ?? "0",

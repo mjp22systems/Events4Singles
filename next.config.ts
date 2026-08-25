@@ -7,6 +7,9 @@ initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   distDir: process.env.E4S_NEXT_DIST_DIR || ".next",
+  experimental: process.env.E4S_NEXT_BUILD_CPUS
+    ? { cpus: Number(process.env.E4S_NEXT_BUILD_CPUS) }
+    : undefined,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
