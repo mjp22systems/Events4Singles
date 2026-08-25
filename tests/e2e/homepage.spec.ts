@@ -22,6 +22,44 @@ test.describe("Homepage", () => {
     await expect(cta).toHaveAttribute("href", /events|cities|categories/);
   });
 
+  test("homepage CTA buttons keep component styling", async ({ page }) => {
+    const intentBrowse = page.locator(".e4s-home-intent-tile__browse").first();
+    const advertiserCta = page.locator(".e4s-home-advertise-cta__btn");
+
+    await expect(intentBrowse).toBeVisible();
+    await expect(advertiserCta).toBeVisible();
+
+    const styles = await page.evaluate(() => {
+      const intent = document.querySelector(".e4s-home-intent-tile__browse") as HTMLElement;
+      const advertiser = document.querySelector(".e4s-home-advertise-cta__btn") as HTMLElement;
+      const intentStyle = getComputedStyle(intent);
+      const advertiserStyle = getComputedStyle(advertiser);
+
+      return {
+        intentDisplay: intentStyle.display,
+        intentJustify: intentStyle.justifyContent,
+        intentHeight: intent.getBoundingClientRect().height,
+        intentColor: intentStyle.color,
+        advertiserDisplay: advertiserStyle.display,
+        advertiserJustify: advertiserStyle.justifyContent,
+        advertiserColor: advertiserStyle.color,
+      };
+    });
+
+    expect(styles.intentDisplay).toBe("flex");
+    expect(styles.intentJustify).toBe("center");
+    expect(styles.intentHeight).toBeGreaterThanOrEqual(46);
+    expect(styles.intentColor).toBe("rgb(139, 47, 67)");
+    expect(styles.advertiserDisplay).toBe("inline-flex");
+    expect(styles.advertiserJustify).toBe("center");
+    expect(styles.advertiserColor).toBe("rgb(255, 255, 255)");
+  });
+
+  test("preloads the italic hero font", async ({ page }) => {
+    const italicPreload = page.locator('link[rel="preload"][href="/fonts/source-serif-4-italic-latin.woff2"]');
+    await expect(italicPreload).toHaveAttribute("as", "font");
+  });
+
   test("header is present", async ({ page }) => {
     await expect(page.locator('[role="banner"]')).toBeVisible();
   });
