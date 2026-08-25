@@ -134,7 +134,7 @@ export default async function HomePage() {
       </section>
 
       {/* 4. EXPLORE BY CITY */}
-      <section className="e4s-home-section e4s-home-section--tinted" id="cities">
+      <section className="e4s-home-section e4s-home-section--cities" id="cities">
         <div className="e4s-shell e4s-home-section__head">
           <div>
             <h2>Explore by City</h2>
@@ -177,7 +177,7 @@ export default async function HomePage() {
       </section>
 
       {/* 4. WHAT'S ON */}
-      <section className="e4s-home-section" id="events-calendar">
+      <section className="e4s-home-section e4s-home-section--events" id="events-calendar">
         <div className="e4s-shell e4s-home-section__head">
           <div>
             <h2>What&apos;s On</h2>
@@ -199,7 +199,7 @@ export default async function HomePage() {
 
       {/* 5. FEATURED BUSINESSES */}
       {featured.length > 0 && (
-        <section className="e4s-home-section e4s-home-section--tinted" id="featured-organizers">
+        <section className="e4s-home-section e4s-home-section--featured" id="featured-organizers">
           <div className="e4s-shell e4s-home-section__head">
             <div>
               <h2>Featured Businesses</h2>

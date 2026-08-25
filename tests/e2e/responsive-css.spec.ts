@@ -389,7 +389,6 @@ test.describe("responsive CSS", () => {
             <div class="e4s-home-featured-layout">
               <div class="e4s-home-featured__listings"></div>
               <aside class="e4s-home-featured__sidebar">
-                <div class="e4s-home-featured__refine">Refine Listings</div>
                 ${Array.from({ length: 7 }, (_, index) => `
                   <a class="e4s-home-featured__sponsored" href="/advertise">
                     <span class="e4s-home-featured__sponsored-img"></span>
@@ -412,13 +411,11 @@ test.describe("responsive CSS", () => {
 
     const layout = await page.evaluate(() => {
       const sidebar = document.querySelector(".e4s-home-featured__sidebar")!;
-      const refine = document.querySelector(".e4s-home-featured__refine")!;
       const sponsored = Array.from(document.querySelectorAll(".e4s-home-featured__sponsored"));
       const sidebarRect = sidebar.getBoundingClientRect();
       return {
         sidebarDisplay: getComputedStyle(sidebar).display,
         sidebarHeight: sidebarRect.height,
-        refineDisplay: getComputedStyle(refine).display,
         sponsoredCount: sponsored.length,
         visibleSponsored: sponsored.filter((item) => {
           const style = getComputedStyle(item);
@@ -429,7 +426,6 @@ test.describe("responsive CSS", () => {
 
     expect(layout.sidebarDisplay).toBe("block");
     expect(layout.sidebarHeight, JSON.stringify(layout)).toBeGreaterThan(100);
-    expect(layout.refineDisplay).toBe("none");
     expect(layout.sponsoredCount).toBe(7);
     expect(layout.visibleSponsored, JSON.stringify(layout)).toBeGreaterThanOrEqual(2);
     await expectNoHorizontalOverflow(page);

@@ -2,7 +2,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const sourceDirs = ["src"];
+const sourceRoots = [
+  { dir: "src", extensions: [".ts", ".tsx", ".js", ".jsx", ".mdx", ".html"] },
+  { dir: "public", extensions: [".html", ".htm", ".js"] },
+];
+const dynamicClassSafelist = new Map([
+  [
+    "public/site.css",
+    new Set(["e4s-love-tag--berry", "e4s-love-tag--mint", "e4s-love-tag--plain", "e4s-love-tag--teal"]),
+  ],
+]);
 
 function walk(dir, extensions) {
   if (!fs.existsSync(dir)) return [];
@@ -84,8 +93,8 @@ function getClassNames(css) {
 }
 
 function readSourceText() {
-  return sourceDirs
-    .flatMap((dir) => walk(path.join(root, dir), new Set([".ts", ".tsx", ".js", ".jsx", ".mdx", ".html"])))
+  return sourceRoots
+    .flatMap(({ dir, extensions }) => walk(path.join(root, dir), new Set(extensions)))
     .map((file) => fs.readFileSync(file, "utf8"))
     .join("\n");
 }
@@ -110,7 +119,8 @@ const report = cssFiles
       .filter(([, count]) => count > 1)
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const classNames = getClassNames(css);
-    const unusedCandidates = classNames.filter((name) => !sourceText.includes(name));
+    const safelist = dynamicClassSafelist.get(file) ?? new Set();
+    const unusedCandidates = classNames.filter((name) => !sourceText.includes(name) && !safelist.has(name));
     const nonAsciiLineSamples = getNonAsciiLineSamples(css);
     const nonAsciiCommentSamples = getNonAsciiCommentSamples(css);
 

@@ -57,6 +57,17 @@ Use the stylesheet section order as the source of truth. Avoid late "final fix" 
 
 When a selector needs a correction, move the corrected value into the owning section and remove the older duplicate. Prefer tokens for shared color, spacing, radius and shadow values. Use `!important` only for unavoidable legacy containment or third-party overrides, and leave a short reason beside it.
 
+Do not create ID-based visual styling for page sections when a reusable class can express the same intent. Keep IDs for anchors and script targets. Use modifier classes such as `.e4s-home-section--events` or `.e4s-home-section--featured` for visual variants.
+
+Before adding a new selector, search for an existing owner:
+
+- component class in `public/site.css`;
+- page module section in `public/site.css`;
+- matching React component under `src/components`;
+- matching page route under `src/app/(public)`.
+
+If the owning selector exists, edit it in place. If a new selector is needed, place it in the closest owning section and add only the smallest responsive rule needed for the breakpoint.
+
 Prefix ownership should stay clear:
 
 - `e4s-` for public site components.
@@ -85,12 +96,20 @@ Before committing responsive CSS, check mobile, tablet and desktop widths for:
 6. Run focused Playwright checks across mobile, tablet and desktop.
 7. Commit the slice while the working tree is clean.
 
+The audit command is:
+
+```powershell
+npm run audit:css
+```
+
+The audit scans `src` plus public `.html`, `.htm`, and `.js` files so legacy compatibility classes are not accidentally removed as false positives.
+
 ## Current Cleanup Targets
 
 The remaining public CSS cleanup should focus on these areas first:
 
-- Fold late homepage overrides back into the main homepage section.
-- Consolidate repeated advertise page selectors, especially inventory grids and placement map rules.
-- Review `!important` use in `public/site.css` and keep only the declarations needed for legacy containment.
-- Convert unused legacy homepage selectors only after visual checks confirm they are no longer referenced by current markup.
+- Consolidate repeated advertise page selectors, especially `.e4s-love-*` layout and panel rules.
+- Keep reducing `!important` use in `public/site.css`; the remaining valid uses should mostly be accessibility hiding, legacy table containment, or mobile overflow guards with tests.
+- Review promo banner responsive rules only with the existing mobile/landscape tests, because they intentionally switch between rotation and six-wide landscape layouts.
+- Keep legacy utility selectors until public legacy HTML is removed or converted.
 - Keep admin and portal cleanup separate from public-site cleanup because their prefixes and route layouts are intentionally separate.

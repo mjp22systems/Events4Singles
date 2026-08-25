@@ -1,15 +1,21 @@
 # Events4Singles CSS Architecture Cleanup
 
-Last updated: 2026-08-13
+Last updated: 2026-08-25
 
 ## Current State
 
-`public/site.css` is the active stylesheet source of truth.
+`public/site.css` is the active stylesheet source of truth for the public website.
 
-Current rough metrics:
+Current audit metrics after the August 25 cleanup pass:
 
-- 5,558 lines
-- about 1,291 selector/comment/media entries detected by simple scan
+- 9,048 lines
+- 1,635 selectors
+- 1,323 unique selectors
+- 236 duplicate selector groups
+- 30 `!important` declarations
+- 0 unused public class candidates after accounting for known dynamic class names
+- 0 non-ASCII lines
+- 0 non-ASCII comment blocks
 - one file serving several jobs at once:
   - legacy FrontPage/Joomla compatibility
   - modern app shell
@@ -21,27 +27,25 @@ Current rough metrics:
   - listing detail
   - advertise page
   - article/events pages
-  - patch overrides from recent work
+  - scoped responsive safeguards
 
 The file is large because it still contains hundreds of legacy extracted utility classes such as colour, width, table, border, and spacing classes. Those were created while preserving old content and should be treated as compatibility CSS, not as a pattern for new work.
 
-## Immediate Correction Made
+The audit command is:
 
-The app layout has been put back onto the canonical stylesheet:
-
-```tsx
-<link rel="stylesheet" href="/site.css?v=20260813-restore" />
+```powershell
+npm run audit:css
 ```
 
-The query string is only a cache token. It is not a second stylesheet and not version history.
+The audit scans `src` plus public `.html` and `.js` assets. Do not delete a class solely because it is absent from React code; old public markup may still depend on it.
 
-Do not point the app at copied CSS files such as:
+## Stylesheet Ownership
 
-- `site-filter-clear-20260813.css`
-- `site-homepage-fix-20260813.css`
-- `site-homepage-fix-20260813b.css`
-
-Those files should be treated as temporary artifacts and can be deleted after confirming nothing references them.
+- `public/site.css` owns the public site.
+- `public/admin.css` owns admin.
+- `public/portal.css` owns the advertiser portal.
+- `public/fonts.css` owns font loading.
+- `src/app/globals.css` should stay minimal and should not become another public style surface.
 
 ## Why The CSS Is Too Complex
 
@@ -59,15 +63,9 @@ These should not be extended. They should either remain isolated for legacy cont
 
 ### 2. New component CSS was added as late overrides
 
-Recent changes added new homepage and advertising selectors late in the file. This made the cascade harder to reason about.
+Recent changes added new homepage, advertising, footer, and mobile selectors late in the file. This made the cascade harder to reason about.
 
-Examples:
-
-- `.e4s-home-pro-*`
-- `.e4s-advertise-pro-*`
-- final mobile override blocks
-
-The homepage has now been restored, so `.e4s-home-pro-*` is not part of the active homepage. The advertising page still uses `.e4s-advertise-pro-*`.
+The cleanup pattern is to fold effective values back into the owning section, remove the appended override, and verify the related page or component.
 
 ### 3. Responsive rules are split across multiple areas
 
@@ -75,7 +73,7 @@ There are mobile rules near older homepage sections and again near newer rescue 
 
 ### 4. Inline styles still exist
 
-The restored homepage uses inline styles. That is structurally stable but not clean CSS architecture. A future homepage rebuild should move every style into scoped classes.
+Most current homepage styling is class-based. Keep visual section variants as modifier classes, not IDs. IDs should remain anchors or script targets only.
 
 ## Target CSS Structure
 
@@ -85,32 +83,32 @@ The clean end state should be either one well-structured stylesheet or a small s
 
 Keep `public/site.css` but make the table of contents real and strict:
 
-1. Tokens
-2. Reset and base elements
-3. Legacy compatibility utilities
+1. Reset and base elements
+2. Legacy compatibility utilities
+3. Tokens and CSS variables
 4. Shell and layout primitives
 5. Header and navigation
 6. Footer
-7. Page hero and intro
-8. Listing cards
-9. Listing toolbar, filters, and sort controls
-10. Promo banners and advertising tiles
-11. Sidebar
-12. Location/category page templates
-13. Listing detail page
-14. Info/static pages
-15. Articles/advice/events pages
-16. Advertise page
-17. Homepage
-18. Responsive rules by component
-19. Dark mode, if retained
+7. Page hero and intro sections
+8. Shell responsive adjustments
+9. Listing cards
+10. Page intro, banners and listing toolbar
+11. Category navigation and page layouts
+12. Sidebar layout
+13. Info and listing detail pages
+14. Advertise page
+15. Articles and events pages
+16. Home page
+17. Blog and dating-resources pages
+18. Dark-mode overrides
+19. Portal references, if any remain in this file
 
 Rules:
 
-- Each selector belongs to one section.
+- Each selector belongs to one owning section.
 - No random "final override" block unless it has a dated bug note.
-- New homepage CSS must be scoped under `.e4s-home-new`.
-- New advertising CSS must be scoped under `.e4s-advertise-page`.
+- New homepage CSS must use existing `.e4s-home-*` components or section modifiers.
+- New advertising CSS must use existing `.e4s-love-*` components while `/advertise` uses that implementation.
 - No new `.w-*`, `.bg-*`, or `.text-*` utility classes.
 
 ### Option B: Split Stylesheets
@@ -180,22 +178,13 @@ Classify selectors as:
 
 ### Phase 3: Remove dead experiment CSS
 
-Safe first candidates after homepage restore:
-
-- `.e4s-home-pro-*` if no page references it
-- temporary final mobile containment blocks for `.e4s-home-pro`
-- copied stylesheet files not referenced by layout
+Remove only after source search and responsive verification. Safe candidates are classes that have no source reference in `src`, no public markup/script reference, and are not generated dynamically by a component.
 
 Keep `.e4s-advertise-pro-*` while `/advertise` uses it.
 
-### Phase 4: Move inline homepage styles
+### Phase 4: Fold late overrides
 
-The restored homepage currently has inline styles. Before external design implementation, either:
-
-- leave it as a temporary baseline, or
-- convert it into a clean `.e4s-home-baseline` class set.
-
-Do not spend design effort here if the homepage is about to be replaced by an external design.
+When a late override is still needed, move its effective values into the component's base section or nearest responsive block. Prefer structural specificity over `!important`.
 
 ### Phase 5: Split or reorganise
 
@@ -205,6 +194,8 @@ After selector inventory and dead CSS removal, either:
 - split into imported module files under `public/styles`.
 
 Do not split until the app is visually stable, because line movement alone can make diff review harder.
+
+Current recommendation: keep one canonical `public/site.css` until the remaining duplicate groups are mostly component breakpoints. Splitting too early will make review harder and can hide cascade changes inside import ordering.
 
 ## CSS Naming Rules Going Forward
 
@@ -217,13 +208,14 @@ Use component-scoped names:
 .e4s-listing-card--featured {}
 ```
 
-Use page-scoped names:
+Use page or section-scoped names:
 
 ```css
-.e4s-home-new {}
-.e4s-home-new__hero {}
-.e4s-home-new__city-grid {}
-.e4s-home-new__newsletter {}
+.e4s-home-section--events {}
+.e4s-home-section--featured {}
+.e4s-home-hero {}
+.e4s-home-city-grid {}
+.e4s-home-newsletter {}
 ```
 
 Avoid:
@@ -256,11 +248,9 @@ Do not deploy CSS refactors without a screenshot comparison.
 
 ## Practical Recommendation
 
-Do not redesign inside the current `site.css` until the homepage design is selected externally.
+Continue cleanup in small verified slices:
 
-First:
-
-1. Keep the restored homepage live.
-2. Use `external-homepage-design-handoff.md` with Framer, Relume/Figma, Webflow, or a human designer.
-3. Implement the approved homepage under `.e4s-home-new`.
-4. Then remove dead `.e4s-home-pro-*` CSS and any unused copied stylesheets.
+1. Public site CSS first: advertise page, promo banners, listing toolbar, homepage, event detail.
+2. Portal CSS second: shell/sidebar/form duplicates.
+3. Admin CSS third: table column sizing duplicates.
+4. Only split CSS files after duplicate override debt is reduced enough that import order is obvious.
