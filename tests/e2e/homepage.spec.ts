@@ -63,7 +63,15 @@ test.describe("Homepage", () => {
       items.map((item) => getComputedStyle(item).color),
     );
 
-    expect(new Set(colours)).toEqual(new Set(["rgb(20, 49, 63)"]));
+    expect(new Set(colours)).toEqual(new Set(["rgb(8, 114, 113)"]));
+  });
+
+  test("sets manual scroll restoration before app hydration", async ({ page }) => {
+    await page.route("**/_next/static/**/*.js", (route) => route.abort());
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const mode = await page.evaluate(() => window.history.scrollRestoration);
+    expect(mode).toBe("manual");
   });
 
   test("renders all curated experience tiles on portrait mobile", async ({ page }) => {

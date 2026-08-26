@@ -7837,7 +7837,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 12px;
   padding: 10px 0;
   border-top: 1px solid rgba(189, 222, 219, 0.55);
-  color: var(--e4s-ink);
+  color: var(--e4s-teal-700);
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
@@ -7849,7 +7849,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .e4s-home-intent-tile__cat:visited {
-  color: var(--e4s-ink);
+  color: var(--e4s-teal-700);
 }
 
 .e4s-home-intent-tile__cat:hover,

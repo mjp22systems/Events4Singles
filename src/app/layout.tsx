@@ -46,6 +46,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const scrollRestorationScript = `
+    (function () {
+      try {
+        if ("scrollRestoration" in window.history) {
+          window.history.scrollRestoration = "manual";
+        }
+      } catch (error) {}
+    })();
+  `;
+
   const navStateScript = `
     (function () {
       try {
@@ -60,9 +70,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang="en-AU" suppressHydrationWarning>
         <head>
+          <script id="e4s-scroll-restoration-init" dangerouslySetInnerHTML={{ __html: scrollRestorationScript }} />
           <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/fonts/source-serif-4-normal-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/fonts/source-serif-4-italic-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
+          <link rel="preload" href="/images/optimized/home-cat-mixers.webp" as="image" fetchPriority="high" />
           <link rel="stylesheet" href="/fonts.css" />
           {process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
             <script
