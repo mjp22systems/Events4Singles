@@ -47,6 +47,20 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test("header dropdown placeholders reflect all and nested route state", async ({ page }) => {
+    test.setTimeout(60_000);
+    await page.setViewportSize({ width: 1280, height: 900 });
+
+    await page.goto("/cities", { waitUntil: "domcontentloaded" });
+    await expect(page.locator(".e4s-nav select").nth(0).locator("option").first()).toHaveText("All Cities");
+
+    await page.goto("/categories", { waitUntil: "domcontentloaded" });
+    await expect(page.locator(".e4s-nav select").nth(1).locator("option").first()).toHaveText("All Categories");
+
+    await page.goto("/dance-classes/salsa/sydney", { waitUntil: "domcontentloaded" });
+    await expect(page.locator(".e4s-nav select").nth(0).locator("option").first()).toHaveText("Sydney");
+  });
+
   for (const viewport of [
     { width: 844, height: 390 },
     { width: 932, height: 430 },

@@ -13,12 +13,11 @@ export default function NavDropdowns({ cities, categories }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const routeSegmentToLabel = (segment: string) =>
+    segment.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
   const citySet = new Set(cities.map((c) => toUrlSlug(c.slug)));
   const segs = pathname.split("/").filter(Boolean);
   const seg0 = segs[0] ?? "";
-  const seg1 = segs[1] ?? "";
-
-  const selectedCity = citySet.has(seg1) ? seg1 : citySet.has(seg0) ? seg0 : "";
 
   const INFO_ROUTES: Record<string, string> = {
     about: "About",
@@ -33,13 +32,30 @@ export default function NavDropdowns({ cities, categories }: Props) {
   };
 
   const infoSlugs = new Set(Object.keys(INFO_ROUTES));
+  const filteredCats = categories.filter((c) => c.slug !== "events");
+  const nestedCitySegment =
+    segs.length >= 3 && seg0 !== "listing" && !infoSlugs.has(seg0)
+      ? segs[segs.length - 1]
+      : "";
+  const selectedCity = [...segs].reverse().find((segment) => citySet.has(segment)) ?? nestedCitySegment;
   const selectedCat =
     seg0 && !citySet.has(seg0) && seg0 !== "listing" && !infoSlugs.has(seg0)
       ? seg0
       : "";
   const selectedInfo = INFO_ROUTES[seg0] ?? "";
-
-  const filteredCats = categories.filter((c) => c.slug !== "events");
+  const selectedCityLabel = selectedCity
+    ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? routeSegmentToLabel(selectedCity))
+    : "Select City";
+  const cityLabel = seg0 === "cities"
+    ? "All Cities"
+    : selectedCity
+      ? selectedCityLabel
+      : "Select City";
+  const categoryLabel = seg0 === "categories"
+    ? "All Categories"
+    : selectedCat
+      ? (filteredCats.find((c) => toUrlSlug(c.slug) === selectedCat)?.label ?? "Select Category")
+      : "Select Category";
 
   const sortedCities = [...cities].sort((a, b) => a.label.localeCompare(b.label));
   const sortedCats = [...filteredCats].sort((a, b) => a.label.localeCompare(b.label));
@@ -57,9 +73,7 @@ export default function NavDropdowns({ cities, categories }: Props) {
           }}
         >
           <option value="" disabled>
-            {selectedCity
-              ? (cities.find((c) => toUrlSlug(c.slug) === selectedCity)?.label ?? "Select City")
-              : "Select City"}
+            {cityLabel}
           </option>
           <option value="__all__">All Cities →</option>
           <option value="__sep__" disabled>─────────────</option>
@@ -82,9 +96,7 @@ export default function NavDropdowns({ cities, categories }: Props) {
           }}
         >
           <option value="" disabled>
-            {selectedCat
-              ? (filteredCats.find((c) => toUrlSlug(c.slug) === selectedCat)?.label ?? "Select Category")
-              : "Select Category"}
+            {categoryLabel}
           </option>
           <option value="__all__">All Categories →</option>
           <option value="__sep__" disabled>─────────────</option>

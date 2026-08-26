@@ -107,11 +107,12 @@ export default async function CategoryCityPage({ params }: Props) {
     }
 
     const subcategoryUrlSlug = `${category}/${subcategory}`;
-    const [cities, listings, siblingSubcategories] = await Promise.all([
+    const [childCities, listings, siblingSubcategories] = await Promise.all([
       getCitiesForCategory(childMeta.slug),
       getListingsForCategory(childMeta.slug),
       getSubcategoriesForCategory(categoryDbSlug),
     ]);
+    const cities = childCities.length > 0 ? childCities : await getCitiesForCategory(catMeta.slug);
     const styleSubcategories = categoryDbSlug === "dance_classes"
       ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
       : siblingSubcategories;
