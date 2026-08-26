@@ -6,6 +6,7 @@ import {
   getCitiesForCategory,
   getListingsForPage,
   getListingsForCategory,
+  getSubcategoriesForCategory,
 } from "@/lib/data";
 import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/constants";
 import ListingsSection from "@/components/listings-section";
@@ -106,10 +107,14 @@ export default async function CategoryCityPage({ params }: Props) {
     }
 
     const subcategoryUrlSlug = `${category}/${subcategory}`;
-    const [cities, listings] = await Promise.all([
+    const [cities, listings, siblingSubcategories] = await Promise.all([
       getCitiesForCategory(childMeta.slug),
       getListingsForCategory(childMeta.slug),
+      getSubcategoriesForCategory(categoryDbSlug),
     ]);
+    const styleSubcategories = categoryDbSlug === "dance_classes"
+      ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
+      : siblingSubcategories;
     const intro = categoryIntroCopy(childMeta, cities.length, listings.length);
     const footerCopy = categorySeoFooterCopy(childMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
@@ -187,6 +192,12 @@ export default async function CategoryCityPage({ params }: Props) {
             categoryUrlSlug={subcategoryUrlSlug}
             backLabel={catMeta.label}
             backHref={`/${category}`}
+            subcategories={styleSubcategories}
+            currentSubcategoryDbSlug={childMeta.slug}
+            subcategoryBaseUrlSlug={category}
+            subcategoryHeading={categoryDbSlug === "dance_classes" ? "Browse other styles" : undefined}
+            guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
+            guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
           />
         )}
         after={<SeoSupportSection {...footerCopy} />}
@@ -201,9 +212,15 @@ export default async function CategoryCityPage({ params }: Props) {
     );
   }
 
-  const cities = await getCitiesForCategory(categoryDbSlug);
+  const [cities, subcategories] = await Promise.all([
+    getCitiesForCategory(categoryDbSlug),
+    getSubcategoriesForCategory(categoryDbSlug),
+  ]);
   const cityMeta = cities.find((c) => c.slug === cityDbSlug);
   if (!cityMeta) notFound();
+  const styleSubcategories = categoryDbSlug === "dance_classes"
+    ? subcategories.filter((cat) => cat.slug !== "dance_styles")
+    : subcategories;
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
@@ -284,6 +301,12 @@ export default async function CategoryCityPage({ params }: Props) {
           categoryUrlSlug={category}
           currentCityDbSlug={cityDbSlug}
           backLabel={catMeta.label}
+          subcategories={styleSubcategories}
+          subcategoryBaseUrlSlug={category}
+          subcategoryCityUrlSlug={subcategory}
+          subcategoryHeading={categoryDbSlug === "dance_classes" ? `Browse ${cityMeta.label} styles` : undefined}
+          guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
+          guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
         />
       )}
       after={<SeoSupportSection {...footerCopy} />}

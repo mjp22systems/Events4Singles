@@ -12,6 +12,12 @@ type Props =
       backLabel?: string;
       backHref?: string;
       subcategories?: Category[];
+      currentSubcategoryDbSlug?: string;
+      subcategoryBaseUrlSlug?: string;
+      subcategoryCityUrlSlug?: string;
+      subcategoryHeading?: string;
+      guideHref?: string;
+      guideLabel?: string;
     }
   | {
       mode: "city";
@@ -106,12 +112,28 @@ export default function PageSidebar(props: Props) {
   const topItem = !props.currentCityDbSlug
     ? { label: "All cities", href: `/${props.categoryUrlSlug}`, isActive: true }
     : undefined;
-  const subcategoryItems = props.subcategories?.map((cat) => ({
-    key: cat.slug,
-    label: cat.label,
-    href: `/${props.categoryUrlSlug}/${toCategoryChildUrlSegment(toDbSlug(props.categoryUrlSlug), cat.slug)}`,
-    count: cat.listing_count,
-  })) ?? [];
+  const subcategoryBaseUrlSlug = props.subcategoryBaseUrlSlug ?? props.categoryUrlSlug;
+  const subcategoryParentDbSlug = toDbSlug(subcategoryBaseUrlSlug);
+  const subcategoryItems = props.subcategories?.map((cat) => {
+    const childSegment = toCategoryChildUrlSegment(subcategoryParentDbSlug, cat.slug);
+    const childPath = `/${subcategoryBaseUrlSlug}/${childSegment}`;
+    return {
+      key: cat.slug,
+      label: cat.label,
+      href: props.subcategoryCityUrlSlug
+        ? `${childPath}/${props.subcategoryCityUrlSlug}`
+        : childPath,
+      count: cat.listing_count,
+      isActive: cat.slug === props.currentSubcategoryDbSlug,
+    };
+  }) ?? [];
+  const subcategoryTopItem = props.guideHref && props.guideLabel
+    ? {
+        label: props.guideLabel,
+        href: props.guideHref,
+        isActive: props.currentSubcategoryDbSlug === "dance_styles",
+      }
+    : undefined;
 
   return (
     <aside className="e4s-sidebar">
@@ -122,8 +144,9 @@ export default function PageSidebar(props: Props) {
       )}
       {subcategoryItems.length > 0 && (
         <SidebarNav
-          heading="Browse by style"
+          heading={props.subcategoryHeading ?? "Browse by style"}
           items={subcategoryItems}
+          topItem={subcategoryTopItem}
         />
       )}
       <SidebarNav

@@ -5,6 +5,7 @@ import {
   getCategoryMeta,
   getCitiesForCategory,
   getListingsForPage,
+  getSubcategoriesForCategory,
 } from "@/lib/data";
 import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/constants";
 import ListingsSection from "@/components/listings-section";
@@ -69,11 +70,17 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   if (!parentMeta || !childMeta) notFound();
 
   const subcategoryUrlSlug = `${category}/${subcategory}`;
-  const childCities = await getCitiesForCategory(childMeta.slug);
+  const [childCities, siblingSubcategories] = await Promise.all([
+    getCitiesForCategory(childMeta.slug),
+    getSubcategoriesForCategory(parentDbSlug),
+  ]);
   const parentCities = childCities.length > 0 ? [] : await getCitiesForCategory(parentMeta.slug);
   const cities = childCities.length > 0 ? childCities : parentCities;
   const cityMeta = cities.find((c) => c.slug === cityDbSlug);
   if (!cityMeta) notFound();
+  const styleSubcategories = parentDbSlug === "dance_classes"
+    ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
+    : siblingSubcategories;
 
   const listings = await getListingsForPage(childMeta.slug, cityDbSlug);
   const intro = categoryCityIntroCopy(childMeta, cityMeta, listings.length);
@@ -175,6 +182,13 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           currentCityDbSlug={cityDbSlug}
           backLabel={parentMeta.label}
           backHref={`/${category}`}
+          subcategories={styleSubcategories}
+          currentSubcategoryDbSlug={childMeta.slug}
+          subcategoryBaseUrlSlug={category}
+          subcategoryCityUrlSlug={city}
+          subcategoryHeading={parentDbSlug === "dance_classes" ? `Browse ${cityMeta.label} styles` : undefined}
+          guideHref={parentDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
+          guideLabel={parentDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
         />
       )}
       after={<SeoSupportSection {...footerCopy} />}

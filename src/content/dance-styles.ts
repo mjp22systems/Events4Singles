@@ -23,7 +23,7 @@ export const danceStyleLinks: DanceStyleLink[] = [
     title: "Bachata Dance",
     href: "/dance-classes/bachata",
     summary: "A modern Latin social style with approachable timing and close musical connection.",
-    image: "/images/categories/optimized/dance-latin-style.webp",
+    image: "/images/categories/optimized/dance-bachata.webp",
   },
   {
     title: "Tango Dance",
@@ -35,7 +35,7 @@ export const danceStyleLinks: DanceStyleLink[] = [
     title: "Swing Dance",
     href: "/dance-classes/swing",
     summary: "Upbeat jive, Lindy Hop and swing classes with a playful social feel.",
-    image: "/images/categories/optimized/dance-styles.webp",
+    image: "/images/categories/optimized/dance-swing.webp",
   },
   {
     title: "Ceroc and Modern Jive",
@@ -59,7 +59,7 @@ export const danceStyleLinks: DanceStyleLink[] = [
     title: "Line Dancing",
     href: "/dance-classes/line-dancing",
     summary: "No-partner group movement with clear steps, music and easy social momentum.",
-    image: "/images/categories/optimized/dance-fitness-and-health.webp",
+    image: "/images/categories/optimized/dance-line-dancing.webp",
   },
   {
     title: "Dance Fitness",
