@@ -12,6 +12,7 @@ import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/consta
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
+import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import CategoryCitySelect from "@/components/category-city-select";
 import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
@@ -163,6 +164,16 @@ export default async function CategoryCityPage({ params }: Props) {
               <Link className="e4s-category-child-nav__back" href={`/${category}`}>
                 Back to {catMeta.label}
               </Link>
+              {styleSubcategories.length > 1 ? (
+                <label className="e4s-category-child-nav__control">
+                  <span>View another style</span>
+                  <SubcategoryNavSelect
+                    subcategories={styleSubcategories}
+                    parentUrlSlug={category}
+                    currentSubcategorySlug={childMeta.slug}
+                  />
+                </label>
+              ) : null}
             </nav>
           </>
         )}

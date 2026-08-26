@@ -11,6 +11,7 @@ import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/consta
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
+import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
@@ -82,6 +83,17 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const styleSubcategories = parentDbSlug === "dance_classes"
     ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
     : siblingSubcategories;
+  const citySubcategoryAvailability = await Promise.all(
+    styleSubcategories.map(async (cat) => ({
+      category: cat,
+      listings: await getListingsForPage(cat.slug, cityDbSlug),
+    })),
+  );
+  const navigableSubcategories = citySubcategoryAvailability
+    .filter(({ category, listings: categoryListings }) => (
+      category.slug === childMeta.slug || categoryListings.length > 0
+    ))
+    .map(({ category }) => category);
 
   const listings = await getListingsForPage(childMeta.slug, cityDbSlug);
   const intro = categoryCityIntroCopy(childMeta, cityMeta, listings.length);
@@ -117,7 +129,7 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   return (
     <ListingDirectoryPage
       jsonLd={jsonLd}
-      bodyClasses={["e4s-page-category", "e4s-page-child"]}
+      bodyClasses={["e4s-page-category", "e4s-page-child", "e4s-page-deep-child"]}
       beforeHero={(
         <>
           <CategoryCityPager
@@ -134,11 +146,22 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           />
           <nav
             aria-label={`${childMeta.label} city navigation`}
-            className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
+            className="e4s-category-child-nav e4s-category-child-nav--has-sidebar e4s-category-child-nav--multi"
           >
             <Link className="e4s-category-child-nav__back" href={`/${category}`}>
               Back to {parentMeta.label}
             </Link>
+            {navigableSubcategories.length > 1 ? (
+              <label className="e4s-category-child-nav__control">
+                <span>View another style</span>
+                <SubcategoryNavSelect
+                  subcategories={navigableSubcategories}
+                  parentUrlSlug={category}
+                  currentSubcategorySlug={childMeta.slug}
+                  cityUrlSlug={city}
+                />
+              </label>
+            ) : null}
             <label className="e4s-category-child-nav__control">
               <span>View another city</span>
               <NavSelect

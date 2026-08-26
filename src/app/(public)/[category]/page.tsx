@@ -18,6 +18,7 @@ import HeroImage from "@/components/hero-image";
 import LocationPager from "@/components/location-pager";
 import CategoryPager from "@/components/category-pager";
 import CategoryCitySelect from "@/components/category-city-select";
+import NavSelect from "@/components/nav-select";
 import PromoBanners from "@/components/promo-banners";
 import PageSidebar from "@/components/page-sidebar";
 import CityCategorySelect from "@/components/city-category-select";
@@ -193,7 +194,29 @@ export default async function CategoryOrCityPage({ params }: Props) {
     <ListingDirectoryPage
       jsonLd={jsonLd}
       bodyClasses={["e4s-page-category"]}
-      beforeHero={<CategoryPager categories={parentCats} currentDbSlug={dbSlug} />}
+      beforeHero={(
+        <>
+          <CategoryPager categories={parentCats} currentDbSlug={dbSlug} />
+          <nav
+            aria-label={`${catMeta.label} mobile navigation`}
+            className="e4s-category-child-nav e4s-category-child-nav--category-mobile"
+          >
+            <Link className="e4s-category-child-nav__back" href="/categories">
+              All Categories
+            </Link>
+            {cities.length > 0 ? (
+              <label className="e4s-category-child-nav__control">
+                <span>View city</span>
+                <NavSelect
+                  cities={cities}
+                  categoryUrlSlug={param}
+                  placeholder="Select city"
+                />
+              </label>
+            ) : null}
+          </nav>
+        </>
+      )}
       hero={(
         <PageHero
           ariaLabel={catMeta.label}

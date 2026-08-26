@@ -6,18 +6,27 @@ import { toUrlSlug } from "@/lib/constants";
 interface Props {
   cities: City[];
   categoryUrlSlug: string;
-  currentCitySlug: string;
+  currentCitySlug?: string;
+  placeholder?: string;
 }
 
-export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug }: Props) {
+export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug = "", placeholder }: Props) {
   const router = useRouter();
 
   return (
     <select
       value={currentCitySlug}
-      onChange={(e) => router.push(`/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`)}
+      onChange={(e) => {
+        if (!e.target.value) return;
+        router.push(`/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`);
+      }}
       aria-label="Choose city"
     >
+      {placeholder ? (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      ) : null}
       {cities.map((city) => (
         <option key={city.slug} value={city.slug}>
           {city.label} ({city.listing_count})
