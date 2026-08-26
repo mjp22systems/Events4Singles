@@ -115,9 +115,9 @@ const CATEGORY_CARD_SUMMARIES: Record<string, string> = {
 };
 
 export function getCategoryCardImage(slug: string): string | undefined {
-  return CATEGORY_CARD_IMAGES[slug];
+  return CATEGORY_CARD_IMAGES[slug.replace(/_/g, "-")];
 }
 
 export function getCategoryCardSummary(slug: string, fallback?: string | null): string {
-  return CATEGORY_CARD_SUMMARIES[slug] ?? fallback ?? "";
+  return CATEGORY_CARD_SUMMARIES[slug.replace(/_/g, "-")] ?? fallback ?? "";
 }
