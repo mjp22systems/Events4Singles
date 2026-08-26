@@ -38,6 +38,8 @@
 #site-content > table + table {
   margin-top: 6px;
 }/* 03. Tokens and CSS variables */
+/* Events4Singles public stylesheet, pinned 2026-08-27 to avoid stale Worker asset keys. */
+
 :root {
   --e4s-teal-900: #064e4d;
   --e4s-teal-800: #075f5e;
