@@ -58,46 +58,46 @@ export default async function PortalBusinessesPage() {
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "8px", flexWrap: "wrap" }}>
-        <h1 className="p-page-title" style={{ margin: 0 }}>Businesses</h1>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+      <div className="p-inline-72c7fa58" >
+        <h1 className="p-page-title p-inline-b646589c" >Businesses</h1>
+        <div className="p-inline-306fee7f" >
           <Link href="/portal/listings" className="p-btn">View listings</Link>
           <BusinessRequestForm requestBusiness={requestBusiness} />
         </div>
       </div>
       <p className="p-muted">Businesses linked to your portal login.</p>
 
-      <div className="p-card" style={{ marginTop: "20px" }}>
+      <div className="p-card p-inline-ba93ebdf" >
         {businesses.length === 0 ? (
           <div className="p-empty">
             <p>No businesses linked to your account yet.</p>
-            <p style={{ fontSize: "13px" }}>
+            <p className="p-inline-eca1b296" >
               Use <strong>Add business</strong> to claim or connect a business.
             </p>
           </div>
         ) : (
-          <div className="p-card__section" style={{ display: "grid", gap: "14px" }}>
+          <div className="p-card__section p-inline-a7c5473c" >
             {businesses.map((business) => (
-              <div key={business.id} style={{ display: "grid", gap: "8px", borderBottom: "1px solid var(--p-border)", paddingBottom: "14px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+              <div key={business.id} className="p-inline-4b0ede5a" >
+                <div className="p-inline-5175b1e6" >
                   <div>
-                    <h2 className="p-section-title" style={{ margin: 0 }}>{business.name}</h2>
-                    <p className="p-muted" style={{ margin: "4px 0 0", fontSize: "13px" }}>
+                    <h2 className="p-section-title p-inline-b646589c" >{business.name}</h2>
+                    <p className="p-muted p-inline-3b7ea823" >
                       Business ID <code>{business.id}</code> · {business.role}{business.is_primary ? " · primary" : ""}
                     </p>
                   </div>
-                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <Link href={`/portal/listings?business_id=${business.id}`} className="p-btn" style={{ height: "32px" }}>
+                  <div className="p-inline-12abe072" >
+                    <Link href={`/portal/listings?business_id=${business.id}`} className="p-btn p-inline-ec69b25e" >
                       {business.listing_count} listing{business.listing_count === 1 ? "" : "s"}
                     </Link>
                     {business.website && (
-                      <a href={business.website.startsWith("http") ? business.website : `https://${business.website}`} className="p-btn" style={{ height: "32px" }} target="_blank" rel="noopener">
+                      <a href={business.website.startsWith("http") ? business.website : `https://${business.website}`} className="p-btn p-inline-ec69b25e"  target="_blank" rel="noopener">
                         Website
                       </a>
                     )}
                   </div>
                 </div>
-                {business.description && <p className="p-muted" style={{ margin: 0 }}>{business.description}</p>}
+                {business.description && <p className="p-muted p-inline-b646589c" >{business.description}</p>}
               </div>
             ))}
           </div>

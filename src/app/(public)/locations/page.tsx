@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InfoPage } from "@/components/public-page";
 import { getAllCities } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
 import { pageMetadata } from "@/lib/seo";
@@ -16,7 +17,7 @@ export default async function LocationsPage() {
   const cities = await getAllCities();
 
   return (
-    <main className="e4s-info-page e4s-shell" id="site-content">
+    <InfoPage>
       <h1>Find Singles Events by Location</h1>
       <p className="e4s-lead">
         Browse all Australian cities and regions in the Events4Singles directory.
@@ -44,6 +45,6 @@ export default async function LocationsPage() {
           business in front of singles in your city.
         </p>
       </section>
-    </main>
+    </InfoPage>
   );
 }

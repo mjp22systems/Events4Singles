@@ -6,6 +6,7 @@ import { getListingById, getListingBySlug, getListingPlacements, getBusinessList
 import { toUrlSlug, idFromListingSlug, slugToLabel, toProfileSlug, toListingSlug } from "@/lib/constants";
 import ListingCard from "@/components/listing-card";
 import BackLink from "@/components/back-link";
+import { PublicMain } from "@/components/public-page";
 import { cleanDescription, pageMetadata } from "@/lib/seo";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
 import AdminEditDrawer from "@/components/admin-edit-drawer";
@@ -137,7 +138,7 @@ export default async function ListingPage({ params }: Props) {
   };
 
   return (
-    <main id="site-content">
+    <PublicMain>
       {isAdmin && <link rel="stylesheet" href="/admin.css" precedence="high" />}
       {isAdmin && <AdminEditDrawer listing={listing} />}
       <script
@@ -405,6 +406,6 @@ export default async function ListingPage({ params }: Props) {
         </section>
 
       </div>
-    </main>
+    </PublicMain>
   );
 }

@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AdvertiseCard from "@/components/advertise-card";
-import BodyClass from "@/components/body-class";
 import HeroImage from "@/components/hero-image";
 import ListingsSection from "@/components/listings-section";
 import PageSidebar from "@/components/page-sidebar";
 import PromoBanners from "@/components/promo-banners";
+import {
+  EditorialIntro,
+  ListingDirectoryPage,
+  PageHero,
+} from "@/components/listing-directory-page";
 import { getAllFeaturedListings } from "@/lib/data";
 import { slugToLabel, toDbSlug } from "@/lib/constants";
 import type { Category, City, Listing } from "@/lib/types";
@@ -140,57 +144,39 @@ export default async function FeaturedListingsPage({ searchParams }: { searchPar
   ];
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <BodyClass add="e4s-page-category" />
-
-      <section aria-label="Featured Listings" className="e4s-page-hero">
-        <div className="e4s-page-hero__image">
-          <HeroImage
-            alt="Featured Listings"
-            src="/images/optimized/home-cat-mixers.webp"
-            fallbacks={[
-              "/images/home-cat-mixers.jpg",
-              "/images/optimized/home-cat-speed-dating.webp",
-            ]}
-          />
-        </div>
-        <div className="e4s-page-hero__caption">
-          <h1>Featured Listings</h1>
-          <p className="e4s-lead">
-            Featured event organisers, venues and services for singles across Australia.
-          </p>
-        </div>
-      </section>
-
-      <PromoBanners mode="featured" />
-
-      <section className="e4s-page-intro e4s-page-intro--editorial">
-        <p className="e4s-page-intro__lead">
-          These are paid featured placements from across the Events4Singles directory.
-        </p>
-        <p>
-          Refine the showcase by category or city, or browse the full featured pool when you want a high-level view.
-        </p>
-      </section>
-
-      <div className="e4s-page-with-sidebar">
-        <main className="e4s-category-template" id="site-content">
-          <ListingsSection
-            listings={filteredListings}
-            title="Featured Listings"
-          />
-          {filteredListings.length === 0 && (activeCategoryDbSlug || activeCityDbSlug) && (
-            <div className="e4s-empty-state">
-              <p>No featured listings match those refinements.</p>
-              <Link href="/featured-listings">Show all featured listings</Link>
+    <ListingDirectoryPage
+      jsonLd={jsonLd}
+      bodyClasses={["e4s-page-category"]}
+      hero={(
+        <PageHero
+          ariaLabel="Featured Listings"
+          media={(
+            <div className="e4s-page-hero__image">
+              <HeroImage
+                alt="Featured Listings"
+                src="/images/optimized/home-cat-mixers.webp"
+                fallbacks={[
+                  "/images/home-cat-mixers.jpg",
+                  "/images/optimized/home-cat-speed-dating.webp",
+                ]}
+              />
             </div>
           )}
-          <AdvertiseCard />
-        </main>
+          title="Featured Listings"
+          subtext="Featured event organisers, venues and services for singles across Australia."
+        />
+      )}
+      promo={<PromoBanners mode="featured" />}
+      intro={(
+        <EditorialIntro
+          lead="These are paid featured placements from across the Events4Singles directory."
+        >
+          <p>
+            Refine the showcase by category or city, or browse the full featured pool when you want a high-level view.
+          </p>
+        </EditorialIntro>
+      )}
+      sidebar={(
         <PageSidebar
           mode="featured"
           categories={categoryOptions}
@@ -198,7 +184,19 @@ export default async function FeaturedListingsPage({ searchParams }: { searchPar
           activeCategoryDbSlug={activeCategoryDbSlug}
           activeCityDbSlug={activeCityDbSlug}
         />
-      </div>
-    </>
+      )}
+    >
+      <ListingsSection
+        listings={filteredListings}
+        title="Featured Listings"
+      />
+      {filteredListings.length === 0 && (activeCategoryDbSlug || activeCityDbSlug) && (
+        <div className="e4s-empty-state">
+          <p>No featured listings match those refinements.</p>
+          <Link href="/featured-listings">Show all featured listings</Link>
+        </div>
+      )}
+      <AdvertiseCard />
+    </ListingDirectoryPage>
   );
 }

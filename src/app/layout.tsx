@@ -59,6 +59,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const navStateScript = `
     (function () {
       try {
+        if ("scrollRestoration" in window.history) {
+          window.history.scrollRestoration = "manual";
+        }
         if (window.localStorage.getItem("e4s-nav-open") === "1") {
           document.body.classList.add("e4s-nav-open");
         }
@@ -75,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <link rel="preload" href="/fonts/source-serif-4-normal-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/fonts/source-serif-4-italic-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/images/optimized/home-cat-mixers.webp" as="image" fetchPriority="high" />
-          <link rel="stylesheet" href="/fonts.css" />
+          <link rel="stylesheet" href="/typography.css" />
           {process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
             <script
               defer

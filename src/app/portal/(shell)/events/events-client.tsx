@@ -425,7 +425,7 @@ export default function EventsClient({
         <button className="p-btn p-btn--primary" onClick={() => setShowModal(true)}>+ Add event</button>
       </div>
       <p className="p-muted">Events submitted to the Events4Singles calendar.</p>
-      {message && <p className="p-muted" style={{ marginTop: "10px", color: message.includes("cannot") ? "#991b1b" : "var(--p-teal)" }}>{message}</p>}
+      {message && <p className={`p-muted p-message${message.includes("cannot") ? " p-message--error" : " p-message--success"}`}>{message}</p>}
 
       {events.length > 0 && (
         <div className="p-control-row" aria-label="Event filters and sorting">
@@ -466,11 +466,11 @@ export default function EventsClient({
         </div>
       )}
 
-      <div className="p-card" style={{ marginTop: "20px" }}>
+      <div className="p-card p-inline-ba93ebdf" >
         {events.length === 0 ? (
           <div className="p-empty">
             <p>No events submitted yet.</p>
-            <p style={{ fontSize: "13px" }}>Click <strong>Add event</strong> to submit an event for review.</p>
+            <p className="p-inline-eca1b296" >Click <strong>Add event</strong> to submit an event for review.</p>
           </div>
         ) : (
           <>

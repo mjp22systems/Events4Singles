@@ -28,15 +28,15 @@ export default function ListingsClient({
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-        <h1 className="p-page-title" style={{ margin: 0 }}>Listings</h1>
+      <div className="p-inline-7cf1efdb" >
+        <h1 className="p-page-title p-inline-b646589c" >Listings</h1>
         <button className="p-btn p-btn--primary" onClick={() => setShowModal(true)}>+ Request listing</button>
       </div>
       <p className="p-muted">Your active listings on Events4Singles.</p>
 
       {businesses.length > 1 && (
-        <form method="GET" action="/portal/listings" style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "18px", flexWrap: "wrap" }}>
-          <select name="business_id" className="p-select" defaultValue={selectedBusinessId ? String(selectedBusinessId) : ""} style={{ maxWidth: "280px" }}>
+        <form method="GET" action="/portal/listings" className="p-inline-910807be" >
+          <select name="business_id" className="p-select p-inline-49182df8" defaultValue={selectedBusinessId ? String(selectedBusinessId) : ""} >
             <option value="">All businesses</option>
             {businesses.map((business) => (
               <option key={business.id} value={business.id}>
@@ -49,41 +49,37 @@ export default function ListingsClient({
         </form>
       )}
 
-      <div className="p-card" style={{ marginTop: "20px" }}>
+      <div className="p-card p-inline-ba93ebdf" >
         {listings.length === 0 ? (
           <div className="p-empty">
             <p>No listings linked to your account yet.</p>
-            <p style={{ fontSize: "13px" }}>
+            <p className="p-inline-eca1b296" >
               Click <strong>Request listing</strong> above or email{" "}
               <a href="mailto:support@events4singles.com">support@events4singles.com</a>.
             </p>
           </div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table className="p-inline-3d9ff13f" >
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--p-border)" }}>
-                <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Title</th>
-                <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Business</th>
-                <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>City</th>
-                <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Status</th>
-                <th style={{ width: "120px" }} />
+              <tr className="p-inline-b7e3c804" >
+                <th className="p-label p-inline-29909338" >Title</th>
+                <th className="p-label p-inline-29909338" >Business</th>
+                <th className="p-label p-inline-29909338" >City</th>
+                <th className="p-label p-inline-29909338" >Status</th>
+                <th className="p-inline-891409a5"  />
               </tr>
             </thead>
             <tbody>
               {listings.map((l) => (
-                <tr key={l.id} style={{ borderBottom: "1px solid var(--p-border)" }}>
-                  <td style={{ padding: "10px 0", fontSize: "14px", color: "var(--p-ink)" }}>{l.title}</td>
-                  <td style={{ padding: "10px 0", fontSize: "14px", color: "var(--p-muted)" }}>{l.business_name ?? `#${l.business_id}`}</td>
-                  <td style={{ padding: "10px 0", fontSize: "14px", color: "var(--p-muted)" }}>{l.location_city}</td>
-                  <td style={{ padding: "10px 0" }}>
-                    <span style={{
-                      fontSize: "12px", padding: "2px 8px", borderRadius: "12px",
-                      background: l.status === "active" ? "#d1fae5" : "#fef3c7",
-                      color: l.status === "active" ? "#065f46" : "#92400e",
-                    }}>{l.status}</span>
+                <tr key={l.id} className="p-inline-b7e3c804" >
+                  <td className="p-inline-3d73efb4" >{l.title}</td>
+                  <td className="p-inline-11a67c90" >{l.business_name ?? `#${l.business_id}`}</td>
+                  <td className="p-inline-11a67c90" >{l.location_city}</td>
+                  <td className="p-inline-d6e989d8" >
+                    <span className={`p-status-pill p-status-pill--${l.status === "active" ? "active" : "pending"}`}>{l.status}</span>
                   </td>
-                  <td style={{ padding: "10px 0", textAlign: "right" }}>
-                    <a href={`/portal/analytics?listing=${l.id}`} className="p-btn" style={{ fontSize: "12px", height: "28px", padding: "0 10px" }}>
+                  <td className="p-inline-3534e1cf" >
+                    <a href={`/portal/analytics?listing=${l.id}`} className="p-btn p-inline-d0cb2021" >
                       Analytics
                     </a>
                   </td>

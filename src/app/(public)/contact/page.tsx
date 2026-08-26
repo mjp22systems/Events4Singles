@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ContactForm from "@/components/contact-form";
+import { InfoPage } from "@/components/public-page";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -12,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function ContactPage() {
   return (
-    <main className="e4s-info-page e4s-shell" id="site-content">
+    <InfoPage>
       <div className="e4s-contact-header">
         <h1>Contact Us</h1>
         <p className="e4s-lead">
@@ -67,6 +68,6 @@ export default function ContactPage() {
           </div>
         </aside>
       </div>
-    </main>
+    </InfoPage>
   );
 }

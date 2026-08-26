@@ -17,12 +17,12 @@ function Field({
   hint?: string;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-      <label style={{ fontSize: "12px", fontWeight: 600, color: "var(--a-ink-muted)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+    <div className="a-inline-b9bd1a8f" >
+      <label className="a-inline-f541ad79" >
         {label}
       </label>
       {children}
-      {hint && <span style={{ fontSize: "11px", color: "var(--a-ink-faint)" }}>{hint}</span>}
+      {hint && <span className="a-inline-b937af7d" >{hint}</span>}
     </div>
   );
 }
@@ -70,8 +70,8 @@ function TextArea({
       onChange={(e) => onChange(e.target.value)}
       rows={rows}
       placeholder={placeholder}
-      className="a-input"
-      style={{ resize: "vertical" }}
+      className="a-input a-inline-e770c315"
+      
     />
   );
 }
@@ -79,25 +79,11 @@ function TextArea({
 function SectionHeader({ title }: { title: string }) {
   return (
     <div
-      style={{
-        fontSize: "11px",
-        fontWeight: 700,
-        color: "var(--a-ink-faint)",
-        textTransform: "uppercase",
-        letterSpacing: "0.1em",
-        paddingBottom: "12px",
-        borderBottom: "1px solid var(--a-border)",
-        marginBottom: "16px",
-        marginTop: "4px",
-      }}
+      className="a-inline-ba69aad3" 
     >
       {title}
     </div>
   );
-}
-
-function grid2(): React.CSSProperties {
-  return { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" };
 }
 
 type F = string | null;
@@ -156,6 +142,7 @@ export default function ListingEditForm({
   const [placements, setPlacements] = useState<PlacementDraft[]>(() => placementDrafts(initialPlacements));
 
   const [imageUrl, setImageUrl] = useState(s(listing.image_url));
+  const [imagePreviewFailed, setImagePreviewFailed] = useState(false);
 
   const [facebookUrl, setFacebookUrl] = useState(s(listing.facebook_url));
   const [instagramUrl, setInstagramUrl] = useState(s(listing.instagram_url));
@@ -244,34 +231,12 @@ export default function ListingEditForm({
     }
   }
 
-  const selectStyle: React.CSSProperties = {
-    background: "var(--a-surface-2)",
-    border: "1px solid var(--a-border)",
-    borderRadius: "7px",
-    color: "var(--a-ink)",
-    fontSize: "13px",
-    padding: "8px 12px",
-    width: "100%",
-  };
-
   return (
     <form onSubmit={handleSave}>
       {/* Toast */}
       {toast && (
         <div
-          style={{
-            position: "fixed",
-            bottom: "24px",
-            right: "24px",
-            zIndex: 9999,
-            padding: "10px 18px",
-            borderRadius: "8px",
-            fontSize: "13px",
-            fontWeight: 500,
-            background: toast.type === "ok" ? "var(--a-success)" : "var(--a-danger)",
-            color: "#fff",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
-          }}
+          className={`a-toast a-toast--${toast.type === "ok" ? "success" : "danger"}`}
           role="status"
           aria-live="polite"
         >
@@ -279,13 +244,13 @@ export default function ListingEditForm({
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "20px", alignItems: "start" }}>
+      <div className="a-inline-fc6c1a9a" >
         {/* Left column — main content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className="a-inline-754940be" >
 
           {/* Core content */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Content" />
               <Field label="Title">
                 <TextInput name="title" value={title} onChange={setTitle} placeholder="Listing title" />
@@ -304,12 +269,12 @@ export default function ListingEditForm({
 
           {/* Contact */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Contact" />
               <Field label="Contact Name">
                 <TextInput name="contact_name" value={contactName} onChange={setContactName} />
               </Field>
-              <div style={grid2()}>
+              <div className="a-form-grid a-form-grid--two">
                 <Field label="Phone">
                   <TextInput name="phone" value={phone} onChange={setPhone} placeholder="02 xxxx xxxx" />
                 </Field>
@@ -328,12 +293,12 @@ export default function ListingEditForm({
 
           {/* Location */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Location" />
               <Field label="Address / Suburb">
                 <TextInput name="location" value={location} onChange={setLocation} placeholder="Street, suburb" />
               </Field>
-              <div style={grid2()}>
+              <div className="a-form-grid a-form-grid--two">
                 <Field label="City">
                   <TextInput name="location_city" value={locationCity} onChange={setLocationCity} placeholder="Sydney" />
                 </Field>
@@ -346,26 +311,21 @@ export default function ListingEditForm({
 
           {/* Placements */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            <div className="a-card-body a-inline-a73cc8f2" >
               <SectionHeader title="Categories & Cities" />
-              <p style={{ margin: "-6px 0 0", fontSize: "12px", color: "var(--a-ink-muted)" }}>
+              <p className="a-inline-7b35a585" >
                 These placements control which category and city pages this listing appears on.
               </p>
               {placements.map((placement, index) => (
                 <div
                   key={index}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr auto",
-                    gap: "10px",
-                    alignItems: "end",
-                  }}
+                  className="a-inline-342ab72f" 
                 >
                   <Field label={index === 0 ? "Category" : "Category"}>
                     <select
                       value={placement.category_slug}
                       onChange={(e) => updatePlacement(index, "category_slug", e.target.value)}
-                      style={selectStyle}
+                      className="a-input a-form-select"
                     >
                       <option value="">No category</option>
                       {categories.map((category) => (
@@ -379,7 +339,7 @@ export default function ListingEditForm({
                     <select
                       value={placement.city_slug}
                       onChange={(e) => updatePlacement(index, "city_slug", e.target.value)}
-                      style={selectStyle}
+                      className="a-input a-form-select"
                     >
                       <option value="">All / no city</option>
                       {cities.map((city) => (
@@ -391,15 +351,15 @@ export default function ListingEditForm({
                   </Field>
                   <button
                     type="button"
-                    className="a-btn a-btn-ghost"
+                    className="a-btn a-btn-ghost a-inline-03f51d3c"
                     onClick={() => removePlacement(index)}
-                    style={{ minHeight: "37px", padding: "6px 10px" }}
+                    
                   >
                     Remove
                   </button>
                 </div>
               ))}
-              <button type="button" className="a-btn a-btn-ghost" onClick={addPlacement} style={{ width: "fit-content" }}>
+              <button type="button" className="a-btn a-btn-ghost a-inline-0435c1c7" onClick={addPlacement} >
                 + Add category / city
               </button>
             </div>
@@ -407,9 +367,9 @@ export default function ListingEditForm({
 
           {/* Social */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Social Links" />
-              <div style={grid2()}>
+              <div className="a-form-grid a-form-grid--two">
                 <Field label="Facebook">
                   <TextInput name="facebook_url" value={facebookUrl} onChange={setFacebookUrl} placeholder="https://facebook.com/…" />
                 </Field>
@@ -431,9 +391,9 @@ export default function ListingEditForm({
 
           {/* Additional */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Additional" />
-              <div style={grid2()}>
+              <div className="a-form-grid a-form-grid--two">
                 <Field label="ABN">
                   <TextInput name="abn" value={abn} onChange={setAbn} />
                 </Field>
@@ -452,37 +412,27 @@ export default function ListingEditForm({
         </div>
 
         {/* Right column — settings + meta */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "sticky", top: "24px" }}>
+        <div className="a-inline-cdbcc3e6" >
 
           {/* Save / actions */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <button type="submit" className="a-btn a-btn-primary" disabled={saving} style={{ width: "100%" }}>
+            <div className="a-card-body a-inline-ba80689b" >
+              <button type="submit" className="a-btn a-btn-primary a-inline-aef14f3c" disabled={saving} >
                 {saving ? "Saving…" : "Save Changes"}
               </button>
               <a
                 href={`/listing/${title.toLowerCase().replace(/\s+/g, "-")}-${id}`}
                 target="_blank"
                 rel="noopener"
-                className="a-btn a-btn-ghost"
-                style={{ width: "100%", textAlign: "center" }}
+                className="a-btn a-btn-ghost a-inline-25c9cb5c"
+                
               >
                 View Live ↗
               </a>
               <button
                 type="button"
                 onClick={() => setShowDelete(true)}
-                style={{
-                  width: "100%",
-                  background: "none",
-                  border: "1px solid var(--a-danger)",
-                  borderRadius: "7px",
-                  color: "var(--a-danger)",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  padding: "7px 14px",
-                  cursor: "pointer",
-                }}
+                className="a-inline-39231d77" 
               >
                 Delete Listing
               </button>
@@ -491,28 +441,28 @@ export default function ListingEditForm({
 
           {/* Status & type */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-card-body a-inline-b55e6460" >
               <SectionHeader title="Settings" />
               <Field label="Status">
-                <select value={status} onChange={(e) => setStatus(e.target.value)} style={selectStyle}>
+                <select value={status} onChange={(e) => setStatus(e.target.value)} className="a-input a-form-select">
                   {STATUSES.map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </Field>
               <Field label="Listing Type">
-                <select value={listingType} onChange={(e) => setListingType(e.target.value)} style={selectStyle}>
+                <select value={listingType} onChange={(e) => setListingType(e.target.value)} className="a-input a-form-select">
                   {TYPES.map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
                 </select>
               </Field>
-              <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", cursor: "pointer" }}>
+              <label className="a-inline-2cac9f62" >
                 <input
                   type="checkbox"
                   checked={unclaimed}
                   onChange={(e) => setUnclaimed(e.target.checked)}
-                  style={{ width: "16px", height: "16px", accentColor: "var(--a-teal)" }}
+                  className="a-inline-62b6727b" 
                 />
                 Unclaimed listing
               </label>
@@ -521,18 +471,26 @@ export default function ListingEditForm({
 
           {/* Image */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div className="a-card-body a-inline-060e799f" >
               <SectionHeader title="Image" />
-              {imageUrl && (
+              {imageUrl && !imagePreviewFailed && (
                 <img
                   src={imageUrl}
                   alt=""
-                  style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", borderRadius: "6px", background: "var(--a-surface-2)" }}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  className="a-inline-4dbd6f1e" 
+                  onError={() => setImagePreviewFailed(true)}
                 />
               )}
               <Field label="Image URL">
-                <TextInput name="image_url" value={imageUrl} onChange={setImageUrl} placeholder="https://…" />
+                <TextInput
+                  name="image_url"
+                  value={imageUrl}
+                  onChange={(value) => {
+                    setImageUrl(value);
+                    setImagePreviewFailed(false);
+                  }}
+                  placeholder="https://…"
+                />
               </Field>
               {imageOptions.length > 0 && (
                 <Field label="Choose from image library">
@@ -541,7 +499,7 @@ export default function ListingEditForm({
                     onChange={(e) => {
                       if (e.target.value) setImageUrl(e.target.value);
                     }}
-                    style={selectStyle}
+                    className="a-input a-form-select"
                   >
                     <option value="">Select existing image...</option>
                     {imageOptions.map((option) => (
@@ -557,7 +515,7 @@ export default function ListingEditForm({
 
           {/* Meta info */}
           <div className="a-card">
-            <div className="a-card-body" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div className="a-card-body a-inline-ba80689b" >
               <SectionHeader title="Meta" />
               {[
                 ["ID", String(id)],
@@ -567,9 +525,9 @@ export default function ListingEditForm({
                 ["Created", fmtDate(listing.created_at)],
                 ["Expires", fmtDate(listing.expires_at)],
               ].map(([k, v]) => (
-                <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: "12px" }}>
-                  <span style={{ color: "var(--a-ink-muted)" }}>{k}</span>
-                  <span style={{ color: "var(--a-ink)", fontWeight: 500, maxWidth: "180px", textAlign: "right", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{v}</span>
+                <div key={k} className="a-inline-51015687" >
+                  <span className="a-inline-22dfbba3" >{k}</span>
+                  <span className="a-inline-ad45e838" >{v}</span>
                 </div>
               ))}
             </div>
@@ -580,61 +538,36 @@ export default function ListingEditForm({
       {/* Delete confirmation modal */}
       {showDelete && (
         <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9998,
-          }}
+          className="a-inline-e487d544" 
           onClick={() => setShowDelete(false)}
         >
           <div
-            style={{
-              background: "var(--a-surface)",
-              border: "1px solid var(--a-border)",
-              borderRadius: "12px",
-              padding: "28px",
-              width: "440px",
-              maxWidth: "90vw",
-            }}
+            className="a-inline-5d69d044" 
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ fontSize: "17px", fontWeight: 700, marginBottom: "8px", color: "var(--a-ink)" }}>
+            <h2 className="a-inline-9b09ab50" >
               Delete listing #{id}?
             </h2>
-            <p style={{ fontSize: "13px", color: "var(--a-ink-muted)", marginBottom: "20px" }}>
+            <p className="a-inline-78b3742a" >
               This soft-deletes the listing. It can be recovered from the database.
             </p>
             <Field label="Reason (optional)">
               <TextInput name="delete_reason" value={deleteReason} onChange={setDeleteReason} placeholder="e.g. Duplicate, spam, outdated" />
             </Field>
-            <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            <div className="a-inline-c1fdbf4c" >
               <button
                 type="button"
                 onClick={handleDelete}
                 disabled={deleting}
-                style={{
-                  flex: 1,
-                  background: "var(--a-danger)",
-                  border: "none",
-                  borderRadius: "7px",
-                  color: "#fff",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  padding: "9px",
-                  cursor: "pointer",
-                }}
+                className="a-inline-fcf28a78" 
               >
                 {deleting ? "Deleting…" : "Delete"}
               </button>
               <button
                 type="button"
                 onClick={() => setShowDelete(false)}
-                className="a-btn a-btn-ghost"
-                style={{ flex: 1 }}
+                className="a-btn a-btn-ghost a-inline-19f5d7de"
+                
               >
                 Cancel
               </button>
@@ -645,3 +578,4 @@ export default function ListingEditForm({
     </form>
   );
 }
+

@@ -5,6 +5,7 @@ import { toDbSlug } from "@/lib/constants";
 import EventsFilter from "@/components/events-filter";
 import EventsCalendarLoader from "@/components/events-calendar-loader";
 import EventCardGrid from "@/components/event-card-grid";
+import { PublicMain, PublicPageFoot } from "@/components/public-page";
 import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
 
@@ -45,7 +46,7 @@ export default async function EventsPage({
   ]);
 
   return (
-    <main className="e4s-events-page" id="site-content">
+    <PublicMain className="e4s-events-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -88,13 +89,13 @@ export default async function EventsPage({
         </div>
       )}
 
-      <div className="e4s-shell e4s-page-foot">
+      <PublicPageFoot>
         <h2>List Your Event</h2>
         <p>
           Running singles events? <Link href="/advertise">View advertising packages</Link> to get
           your events in front of thousands of singles across Australia.
         </p>
-      </div>
-    </main>
+      </PublicPageFoot>
+    </PublicMain>
   );
 }

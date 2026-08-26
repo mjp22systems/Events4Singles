@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { CategoryDirectoryGrid } from "@/components/directory-sort";
+import { IndexPage, PublicPageFoot } from "@/components/public-page";
 import { getAllCategories } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
@@ -36,7 +37,7 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
   });
 
   return (
-    <main className="e4s-index-page" id="site-content">
+    <IndexPage>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -53,13 +54,13 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
         lead="Everything from speed dating to dance classes — find the format that suits you."
       />
 
-      <div className="e4s-shell e4s-page-foot">
+      <PublicPageFoot>
         <h2>Don&rsquo;t see your category?</h2>
         <p>
           If you run a singles event that doesn&rsquo;t fit neatly into a category,{" "}
           <Link href="/contact">get in touch</Link> — we&rsquo;re always expanding the directory.
         </p>
-      </div>
-    </main>
+      </PublicPageFoot>
+    </IndexPage>
   );
 }

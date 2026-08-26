@@ -28,7 +28,7 @@ export default function BusinessRequestForm({
       <button className="p-btn p-btn--primary" type="button" onClick={() => setOpen(true)}>
         + Add business
       </button>
-      {sent && <span style={{ color: "var(--p-teal)", fontSize: "13px" }}>Request sent</span>}
+      {sent && <span className="p-inline-23d57fd6" >Request sent</span>}
 
       {open && (
         <div className="p-modal-backdrop" onClick={() => setOpen(false)}>
@@ -67,7 +67,7 @@ export default function BusinessRequestForm({
                   <label className="p-label">Notes</label>
                   <textarea className="p-textarea" name="message" placeholder="Tell us whether this is a new business, an existing listing to claim, or another brand you manage." />
                 </div>
-                <p className="p-muted" style={{ fontSize: "12px" }}>
+                <p className="p-muted p-inline-c0e576d8" >
                   We will verify the request before linking the business to your portal login.
                 </p>
               </div>

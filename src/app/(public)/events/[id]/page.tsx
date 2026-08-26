@@ -7,6 +7,7 @@ import { slugToLabel, toProfileSlug } from "@/lib/constants";
 import { eventPath } from "@/lib/event-slugs";
 import { cleanEventDescription } from "@/lib/event-text";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
+import { PublicMain, PublicPageFoot } from "@/components/public-page";
 
 export const dynamic = "force-dynamic";
 
@@ -207,7 +208,7 @@ export default async function EventDetailPage({ params }: Props) {
   };
 
   return (
-    <main id="site-content">
+    <PublicMain>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <article className="e4s-event-detail">
         {datePager.previous && (
@@ -384,14 +385,14 @@ export default async function EventDetailPage({ params }: Props) {
           </section>
         )}
 
-        <div className="e4s-page-foot e4s-event-detail__list-cta">
+        <PublicPageFoot className="e4s-event-detail__list-cta" shell={false}>
           <h2>List Your Event</h2>
           <p>
             Running singles events? <Link href="/advertise">View advertising packages</Link> to get
             your events in front of thousands of singles across Australia.
           </p>
-        </div>
+        </PublicPageFoot>
       </article>
-    </main>
+    </PublicMain>
   );
 }

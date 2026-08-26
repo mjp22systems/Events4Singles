@@ -7,7 +7,7 @@ import EventImagePicker from "@/components/admin/event-image-picker";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--a-ink-muted)", marginBottom: "12px" }}>
+    <div className="a-inline-7b214f71" >
       {children}
     </div>
   );
@@ -15,8 +15,8 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: "14px" }}>
-      <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "var(--a-ink-muted)", marginBottom: "4px" }}>{label}</label>
+    <div className="a-inline-7aed4385" >
+      <label className="a-inline-8cc84cfe" >{label}</label>
       {children}
     </div>
   );
@@ -26,8 +26,8 @@ function TextInput({ value, onChange, placeholder, type = "text" }: { value: str
   return (
     <input
       type={type}
-      className="a-input"
-      style={{ width: "100%" }}
+      className="a-input a-inline-aef14f3c"
+      
       value={value}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
@@ -38,8 +38,8 @@ function TextInput({ value, onChange, placeholder, type = "text" }: { value: str
 function TextArea({ value, onChange, rows = 4 }: { value: string; onChange: (v: string) => void; rows?: number }) {
   return (
     <textarea
-      className="a-input"
-      style={{ width: "100%", resize: "vertical" }}
+      className="a-input a-inline-e6eed6ec"
+      
       rows={rows}
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -191,16 +191,16 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
   }
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "20px", alignItems: "start" }}>
+    <div className="a-inline-18d895f9" >
       {toast && (
-        <div style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 999, padding: "12px 20px", borderRadius: "8px", background: toast.type === "ok" ? "var(--a-teal)" : "#c0392b", color: "#fff", fontWeight: 600, fontSize: "14px", boxShadow: "0 4px 16px rgba(0,0,0,0.18)" }}>
+        <div className={`a-toast a-toast--${toast.type === "ok" ? "success" : "danger"}`}>
           {toast.msg}
         </div>
       )}
 
       {/* Left column */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        <div className="a-card" style={{ padding: "20px" }}>
+      <div className="a-inline-b55e6460" >
+        <div className="a-card a-inline-d1745038" >
           <SectionHeader>Event Details</SectionHeader>
           <Field label="Title">
             <TextInput value={title} onChange={setTitle} placeholder="Event title" />
@@ -210,9 +210,9 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           </Field>
         </div>
 
-        <div className="a-card" style={{ padding: "20px" }}>
+        <div className="a-card a-inline-d1745038" >
           <SectionHeader>Date & Time</SectionHeader>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "12px" }}>
+          <div className="a-inline-0b95fcba" >
             <Field label="Start Date">
               <TextInput type="date" value={startDate} onChange={setStartDate} />
             </Field>
@@ -227,17 +227,17 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
             </Field>
           </div>
           <Field label="Timezone">
-            <select className="a-input" style={{ width: "100%" }} value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+            <select className="a-input a-inline-aef14f3c"  value={timezone} onChange={(e) => setTimezone(e.target.value)}>
               {AU_TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
             </select>
           </Field>
         </div>
 
-        <div className="a-card" style={{ padding: "20px" }}>
+        <div className="a-card a-inline-d1745038" >
           <SectionHeader>Location</SectionHeader>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
+          <div className="a-inline-92c0961c" >
             <Field label="City">
-              <select className="a-input" style={{ width: "100%" }} value={city} onChange={(e) => setCity(e.target.value)}>
+              <select className="a-input a-inline-aef14f3c"  value={city} onChange={(e) => setCity(e.target.value)}>
                 <option value="">— select city —</option>
                 {cityOptions.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
               </select>
@@ -254,9 +254,9 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           </Field>
         </div>
 
-        <div className="a-card" style={{ padding: "20px" }}>
+        <div className="a-card a-inline-d1745038" >
           <SectionHeader>Pricing & Registration</SectionHeader>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div className="a-inline-99cabfbe" >
             <Field label="Price From (AUD)">
               <TextInput type="number" value={priceMin} onChange={setPriceMin} placeholder="0 = free" />
             </Field>
@@ -265,7 +265,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
             </Field>
           </div>
           <Field label="Registration destination">
-            <select className="a-input" style={{ width: "100%" }} value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
+            <select className="a-input a-inline-aef14f3c"  value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
               {REGISTRATION_MODES.map((mode) => <option key={mode.value} value={mode.value}>{mode.label}</option>)}
             </select>
           </Field>
@@ -279,54 +279,54 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
       </div>
 
       {/* Right sidebar */}
-      <div style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div className="a-card" style={{ padding: "16px" }}>
+      <div className="a-inline-69cf3403" >
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Save</SectionHeader>
-          <button className="a-btn a-btn-primary" style={{ width: "100%" }} onClick={save} disabled={saving}>
+          <button className="a-btn a-btn-primary a-inline-aef14f3c"  onClick={save} disabled={saving}>
             {saving ? "Saving…" : "Save Changes"}
           </button>
         </div>
 
-        <div className="a-card" style={{ padding: "16px" }}>
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Moderation</SectionHeader>
-          <div style={{ marginBottom: "8px", fontSize: "12px", color: "var(--a-ink-muted)" }}>
+          <div className="a-inline-2352e462" >
             Status: <strong>{status}</strong>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <button className="a-btn a-btn-primary" style={{ width: "100%", background: "var(--a-teal)" }} onClick={approve} disabled={saving || status === "approved"}>
+          <div className="a-inline-71c26c24" >
+            <button className="a-btn a-btn-primary a-inline-179fa7ed"  onClick={approve} disabled={saving || status === "approved"}>
               ✓ Approve
             </button>
-            <button className="a-btn a-btn-ghost" style={{ width: "100%", color: "var(--a-red, #c0392b)" }} onClick={reject} disabled={saving || status === "rejected"}>
+            <button className="a-btn a-btn-ghost a-inline-4017a949"  onClick={reject} disabled={saving || status === "rejected"}>
               ✕ Reject
             </button>
           </div>
         </div>
 
-        <div className="a-card" style={{ padding: "16px" }}>
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Category</SectionHeader>
-          <select className="a-input" style={{ width: "100%" }} value={category} onChange={(e) => setCategory(e.target.value)}>
+          <select className="a-input a-inline-aef14f3c"  value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">— uncategorised —</option>
             {CATEGORIES.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
           </select>
         </div>
 
-        <div className="a-card" style={{ padding: "16px" }}>
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Image</SectionHeader>
           <EventImagePicker value={imageUrl} onChange={setImageUrl} />
         </div>
 
-        <div className="a-card" style={{ padding: "16px" }}>
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Source</SectionHeader>
-          <div style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+          <div className="a-inline-691df809" >
             <div>{event.source}</div>
-            {event.source_id && <div style={{ marginTop: "4px" }}>ID: {event.source_id}</div>}
-            {event.submitted_by && <div style={{ marginTop: "4px" }}>By: {event.submitted_by}</div>}
+            {event.source_id && <div className="a-inline-aa071055" >ID: {event.source_id}</div>}
+            {event.submitted_by && <div className="a-inline-aa071055" >By: {event.submitted_by}</div>}
           </div>
         </div>
 
-        <div className="a-card" style={{ padding: "16px" }}>
+        <div className="a-card a-inline-96e3c8f1" >
           <SectionHeader>Danger</SectionHeader>
-          <button className="a-btn a-btn-ghost" style={{ width: "100%", color: "var(--a-red, #c0392b)" }} onClick={del} disabled={deleting}>
+          <button className="a-btn a-btn-ghost a-inline-4017a949"  onClick={del} disabled={deleting}>
             {deleting ? "Deleting…" : "Delete Event"}
           </button>
         </div>

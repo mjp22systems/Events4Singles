@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { permanentRedirect } from "next/navigation";
 import { CityDirectoryGrid } from "@/components/directory-sort";
+import { IndexPage, PublicPageFoot } from "@/components/public-page";
 import { getAllCities } from "@/lib/data";
 import { toUrlSlug } from "@/lib/constants";
 import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
@@ -54,7 +55,7 @@ export default async function CitiesPage({ searchParams }: CitiesPageProps) {
   });
 
   return (
-    <main className="e4s-index-page" id="site-content">
+    <IndexPage>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -71,14 +72,14 @@ export default async function CitiesPage({ searchParams }: CitiesPageProps) {
         lead="Browse all Australian cities and regions in the Events4Singles directory. Select your city to explore speed dating, dinner parties, social clubs and more."
       />
 
-      <div className="e4s-shell e4s-page-foot">
+      <PublicPageFoot>
         <h2>List Your Event</h2>
         <p>
           Running singles events in Australia?{" "}
           <Link href="/advertise">View advertising packages</Link> to get your
           business in front of singles in your city.
         </p>
-      </div>
-    </main>
+      </PublicPageFoot>
+    </IndexPage>
   );
 }

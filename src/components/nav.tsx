@@ -2,10 +2,19 @@ import Link from "next/link";
 import { getAllCategories, getAllCities } from "@/lib/data";
 import NavDropdowns from "./nav-dropdowns";
 import MobileMenuToggle from "./mobile-menu-toggle";
+import type { Category, City } from "@/lib/types";
 
 export default async function Nav() {
-  const cities = await getAllCities();
-  const categories = (await getAllCategories()).filter((c) => !c.parent_slug);
+  let cities: City[] = [];
+  let categories: Category[] = [];
+
+  try {
+    cities = await getAllCities();
+    categories = (await getAllCategories()).filter((c) => !c.parent_slug);
+  } catch {
+    cities = [];
+    categories = [];
+  }
 
   return (
     <header className="e4s-header" role="banner">

@@ -61,25 +61,25 @@ export default function CategoryEditForm({ category }: { category: Category }) {
 
   return (
     <>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "20px", alignItems: "start" }}>
+      <div className="a-inline-18d895f9" >
         <form onSubmit={handleSave}>
-          <div className="a-card" style={{ marginBottom: "20px" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+          <div className="a-card a-inline-e5cf13bb" >
+            <div className="a-inline-d84dd62c" >
               Category details
             </div>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">Label</label>
-                <input className="a-input" value={label} onChange={(e) => setLabel(e.target.value)} required style={{ width: "100%" }} />
+                <input className="a-input a-inline-aef14f3c" value={label} onChange={(e) => setLabel(e.target.value)} required  />
               </div>
               <div>
                 <label className="a-label">Description</label>
                 <textarea
-                  className="a-input"
+                  className="a-input a-inline-e6eed6ec"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
-                  style={{ width: "100%", resize: "vertical" }}
+                  
                   placeholder="Shown below banner row on category pages"
                 />
               </div>
@@ -95,80 +95,80 @@ export default function CategoryEditForm({ category }: { category: Category }) {
             </div>
           </div>
 
-          <div className="a-card" style={{ marginBottom: "20px" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+          <div className="a-card a-inline-e5cf13bb" >
+            <div className="a-inline-d84dd62c" >
               SEO
             </div>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">SEO title</label>
-                <input className="a-input" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} style={{ width: "100%" }} maxLength={70} />
-                <div style={{ fontSize: "11px", color: seoTitle.length > 60 ? "var(--a-warning)" : "var(--a-ink-muted)", marginTop: "4px" }}>
+                <input className="a-input a-inline-aef14f3c" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
+                <div className={`a-char-count${seoTitle.length > 60 ? " is-warning" : ""}`}>
                   {seoTitle.length}/60
                 </div>
               </div>
               <div>
                 <label className="a-label">SEO description</label>
-                <textarea className="a-input" value={seoDesc} onChange={(e) => setSeoDesc(e.target.value)} rows={3} style={{ width: "100%", resize: "vertical" }} maxLength={200} />
-                <div style={{ fontSize: "11px", color: seoDesc.length > 160 ? "var(--a-warning)" : "var(--a-ink-muted)", marginTop: "4px" }}>
+                <textarea className="a-input a-inline-e6eed6ec" value={seoDesc} onChange={(e) => setSeoDesc(e.target.value)} rows={3}  maxLength={200} />
+                <div className={`a-char-count${seoDesc.length > 160 ? " is-warning" : ""}`}>
                   {seoDesc.length}/160
                 </div>
               </div>
               <div>
                 <label className="a-label">Page intro</label>
                 <textarea
-                  className="a-input"
+                  className="a-input a-inline-e6eed6ec"
                   value={seoIntro}
                   onChange={(e) => setSeoIntro(e.target.value)}
                   rows={5}
-                  style={{ width: "100%", resize: "vertical" }}
+                  
                   placeholder="Shown as the lead text block on this category page"
                 />
               </div>
             </div>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div className="a-inline-edc8bbe4" >
             <button type="submit" className="a-btn a-btn-primary" disabled={saving}>
               {saving ? "Saving…" : "Save changes"}
             </button>
           </div>
         </form>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="a-inline-b55e6460" >
           <div className="a-card">
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+            <div className="a-inline-d84dd62c" >
               Settings
             </div>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">Slug</label>
-                <div style={{ fontFamily: "monospace", fontSize: "13px", padding: "8px 10px", background: "var(--a-surface-2)", borderRadius: "6px", color: "var(--a-ink-muted)" }}>
+                <div className="a-inline-fb91cc1e" >
                   {category.slug}
                 </div>
               </div>
               <div>
                 <label className="a-label">Banner rows</label>
-                <select className="a-input" value={bannerRows} onChange={(e) => setBannerRows(e.target.value)} style={{ width: "100%" }}>
+                <select className="a-input a-inline-aef14f3c" value={bannerRows} onChange={(e) => setBannerRows(e.target.value)} >
                   <option value="1">1 row</option>
                   <option value="2">2 rows</option>
                 </select>
               </div>
               <div>
                 <label className="a-label">Sort order</label>
-                <input className="a-input" type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ width: "100%" }} />
+                <input className="a-input a-inline-aef14f3c" type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}  />
               </div>
             </div>
           </div>
 
           <div className="a-card">
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+            <div className="a-inline-d84dd62c" >
               Stats
             </div>
-            <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: "10px", fontSize: "13px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "var(--a-ink-muted)" }}>Listings</span>
-                <a href={`/admin/listings?category=${category.slug}`} style={{ color: "var(--a-teal)" }}>
+            <div className="a-inline-92f261f0" >
+              <div className="a-inline-39536e27" >
+                <span className="a-inline-22dfbba3" >Listings</span>
+                <a href={`/admin/listings?category=${category.slug}`} className="a-inline-b3f1b3c6" >
                   {category.listing_count}
                 </a>
               </div>
@@ -181,13 +181,7 @@ export default function CategoryEditForm({ category }: { category: Category }) {
         <div
           role="status"
           aria-live="polite"
-          style={{
-            position: "fixed", bottom: "24px", right: "24px",
-            background: toast.ok ? "var(--a-success)" : "var(--a-danger)",
-            color: "#fff", padding: "10px 18px", borderRadius: "8px",
-            fontSize: "14px", fontWeight: 500, zIndex: 200,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-          }}
+          className={`a-toast a-toast--${toast.ok ? "success" : "danger"}`}
         >
           {toast.msg}
         </div>

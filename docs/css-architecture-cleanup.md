@@ -1,18 +1,20 @@
 # Events4Singles CSS Architecture Cleanup
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 ## Current State
 
 `public/site.css` is the active stylesheet source of truth for the public website.
 
-Current audit metrics after the August 25 cleanup pass:
+Current audit metrics after the August 26 typography and template ownership pass:
 
-- 9,048 lines
-- 1,635 selectors
-- 1,323 unique selectors
-- 236 duplicate selector groups
-- 30 `!important` declarations
+- `public/site.css`: 6,005 audit-counted lines
+- `public/admin.css`: 1,817 audit-counted lines
+- `public/portal.css`: 1,477 audit-counted lines
+- `public/typography.css`: 5,735 audit-counted lines
+- `site.css`, `admin.css`, and `portal.css`: 0 typography declarations by static scan
+- active React inline `style` props: 0
+- public listing-directory scaffold selectors are now emitted from `src/components/listing-directory-page.tsx`
 - 0 unused public class candidates after accounting for known dynamic class names
 - 0 non-ASCII lines
 - 0 non-ASCII comment blocks
@@ -44,7 +46,7 @@ The audit scans `src` plus public `.html` and `.js` assets. Do not delete a clas
 - `public/site.css` owns the public site.
 - `public/admin.css` owns admin.
 - `public/portal.css` owns the advertiser portal.
-- `public/fonts.css` owns font loading.
+- `public/typography.css` owns font loading, font-family tokens, shared type scale tokens, global typography defaults, and all selector-level typography declarations for public, admin, and portal UI.
 - `src/app/globals.css` should stay minimal and should not become another public style surface.
 
 ## Why The CSS Is Too Complex
@@ -71,9 +73,9 @@ The cleanup pattern is to fold effective values back into the owning section, re
 
 There are mobile rules near older homepage sections and again near newer rescue sections. That makes it easy for one rule to undo another.
 
-### 4. Inline styles still exist
+### 4. Generated ownership classes still exist
 
-Most current homepage styling is class-based. Keep visual section variants as modifier classes, not IDs. IDs should remain anchors or script targets only.
+Active React inline `style` props have been removed. The current cleanup debt is the generated `*-inline-*` class layer created during extraction. Those classes should be folded into semantic component classes once each UI surface is stable.
 
 ## Target CSS Structure
 
@@ -101,11 +103,12 @@ Keep `public/site.css` but make the table of contents real and strict:
 16. Home page
 17. Blog and dating-resources pages
 18. Dark-mode overrides
-19. Portal references, if any remain in this file
+19. Generated extraction classes awaiting semantic consolidation
 
 Rules:
 
 - Each selector belongs to one owning section.
+- Typography properties belong in `public/typography.css`, not in the route owner files.
 - No random "final override" block unless it has a dated bug note.
 - New homepage CSS must use existing `.e4s-home-*` components or section modifiers.
 - New advertising CSS must use existing `.e4s-love-*` components while `/advertise` uses that implementation.
@@ -196,6 +199,15 @@ After selector inventory and dead CSS removal, either:
 Do not split until the app is visually stable, because line movement alone can make diff review harder.
 
 Current recommendation: keep one canonical `public/site.css` until the remaining duplicate groups are mostly component breakpoints. Splitting too early will make review harder and can hide cascade changes inside import ordering.
+
+## Current Duplicate Targets
+
+The next cleanup passes should focus on these measured duplicate clusters:
+
+- `public/site.css`: homepage experience tiles, navigation cells, promo banners, pathway grids, repeated 640px and 900px media blocks.
+- `public/typography.css`: `body`, advertise hero headings, advertise section headings, portal sidebar link typography, portal side nav item typography.
+- `public/portal.css`: shell/sidebar/form toolbar repeats, especially events toolbar and control rows.
+- `public/admin.css`: table column sizing repeats for events/integrations and admin table utility classes.
 
 ## CSS Naming Rules Going Forward
 

@@ -32,12 +32,12 @@ export default async function PortalAnalytics({
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px", flexWrap: "wrap" }}>
-        <h1 className="p-page-title" style={{ margin: 0 }}>Analytics</h1>
+      <div className="p-inline-66703592" >
+        <h1 className="p-page-title p-inline-b646589c" >Analytics</h1>
         {filteredListing && (
-          <span style={{ fontSize: "13px", background: "var(--p-border)", padding: "2px 10px", borderRadius: "12px", color: "var(--p-ink)" }}>
+          <span className="p-inline-fed45b63" >
             {filteredListing.title}
-            <a href="/portal/analytics" style={{ marginLeft: "8px", color: "var(--p-muted)", textDecoration: "none" }}>×</a>
+            <a href="/portal/analytics" className="p-inline-1e76b197" >×</a>
           </span>
         )}
       </div>
@@ -51,7 +51,7 @@ export default async function PortalAnalytics({
         ))}
       </div>
 
-      <div className="p-stat-row" style={{ marginTop: "20px" }}>
+      <div className="p-stat-row p-inline-ba93ebdf" >
         {[
           ["impression", "Impressions"],
           ["click_website", "Website Clicks"],
@@ -68,16 +68,16 @@ export default async function PortalAnalytics({
       </div>
 
       {typed.length > 0 && !filteredId && (
-        <div className="p-card" style={{ marginTop: "24px" }}>
+        <div className="p-card p-inline-94d668c2" >
           <div className="p-card__section">
             <h2 className="p-section-title">By listing</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table className="p-inline-3d9ff13f" >
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--p-border)" }}>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Listing</th>
-                  <th className="p-label" style={{ textAlign: "right", padding: "8px 0", fontWeight: 600 }}>Views</th>
-                  <th className="p-label" style={{ textAlign: "right", padding: "8px 0", fontWeight: 600 }}>Clicks</th>
-                  <th style={{ width: "100px" }} />
+                <tr className="p-inline-b7e3c804" >
+                  <th className="p-label p-inline-29909338" >Listing</th>
+                  <th className="p-label p-inline-cf6e47e1" >Views</th>
+                  <th className="p-label p-inline-cf6e47e1" >Clicks</th>
+                  <th className="p-inline-c576062a"  />
                 </tr>
               </thead>
               <tbody>
@@ -86,12 +86,12 @@ export default async function PortalAnalytics({
                   const views = lStats.filter((s) => s.event_type === "impression").reduce((a, b) => a + b.total, 0);
                   const clicks = lStats.filter((s) => s.event_type !== "impression").reduce((a, b) => a + b.total, 0);
                   return (
-                    <tr key={l.id} style={{ borderBottom: "1px solid var(--p-border)" }}>
-                      <td style={{ padding: "10px 0", fontSize: "14px", color: "var(--p-ink)" }}>{l.title}</td>
-                      <td style={{ padding: "10px 0", fontSize: "14px", textAlign: "right" }}>{views}</td>
-                      <td style={{ padding: "10px 0", fontSize: "14px", textAlign: "right" }}>{clicks}</td>
-                      <td style={{ padding: "10px 0", textAlign: "right" }}>
-                        <a href={`/portal/analytics?listing=${l.id}&days=${days}`} className="p-btn" style={{ fontSize: "12px", height: "28px", padding: "0 10px" }}>
+                    <tr key={l.id} className="p-inline-b7e3c804" >
+                      <td className="p-inline-3d73efb4" >{l.title}</td>
+                      <td className="p-inline-ebe0b1e6" >{views}</td>
+                      <td className="p-inline-ebe0b1e6" >{clicks}</td>
+                      <td className="p-inline-3534e1cf" >
+                        <a href={`/portal/analytics?listing=${l.id}&days=${days}`} className="p-btn p-inline-d0cb2021" >
                           Details
                         </a>
                       </td>
@@ -105,23 +105,23 @@ export default async function PortalAnalytics({
       )}
 
       {daily.length > 0 && (
-        <div className="p-card" style={{ marginTop: "16px" }}>
+        <div className="p-card p-inline-180c4ed5" >
           <div className="p-card__section">
             <h2 className="p-section-title">Daily breakdown</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table className="p-inline-3d9ff13f" >
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--p-border)" }}>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Date</th>
-                  <th className="p-label" style={{ textAlign: "left", padding: "8px 0", fontWeight: 600 }}>Event</th>
-                  <th className="p-label" style={{ textAlign: "right", padding: "8px 0", fontWeight: 600 }}>Count</th>
+                <tr className="p-inline-b7e3c804" >
+                  <th className="p-label p-inline-29909338" >Date</th>
+                  <th className="p-label p-inline-29909338" >Event</th>
+                  <th className="p-label p-inline-cf6e47e1" >Count</th>
                 </tr>
               </thead>
               <tbody>
                 {daily.map((row, i) => (
-                  <tr key={i} style={{ borderBottom: "1px solid var(--p-border)" }}>
-                    <td style={{ padding: "8px 0", fontSize: "13px", color: "var(--p-muted)" }}>{row.date}</td>
-                    <td style={{ padding: "8px 0", fontSize: "13px", color: "var(--p-ink)" }}>{row.event_type}</td>
-                    <td style={{ padding: "8px 0", fontSize: "13px", textAlign: "right" }}>{row.count}</td>
+                  <tr key={i} className="p-inline-b7e3c804" >
+                    <td className="p-inline-f5f379af" >{row.date}</td>
+                    <td className="p-inline-13032d21" >{row.event_type}</td>
+                    <td className="p-inline-2d5b0580" >{row.count}</td>
                   </tr>
                 ))}
               </tbody>
@@ -131,7 +131,7 @@ export default async function PortalAnalytics({
       )}
 
       {surfaceIds.length === 0 && (
-        <div className="p-card" style={{ marginTop: "24px" }}>
+        <div className="p-card p-inline-94d668c2" >
           <div className="p-empty"><p>No data yet — analytics appear once your listings are active.</p></div>
         </div>
       )}

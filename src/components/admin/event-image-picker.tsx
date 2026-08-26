@@ -38,6 +38,7 @@ export default function EventImagePicker({
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [previewFailed, setPreviewFailed] = useState(false);
 
   const refreshLibrary = useCallback(async () => {
     setLoading(true);
@@ -59,6 +60,10 @@ export default function EventImagePicker({
     }, 0);
     return () => window.clearTimeout(timer);
   }, [refreshLibrary]);
+
+  useEffect(() => {
+    setPreviewFailed(false);
+  }, [value]);
 
   async function upload(file: File | undefined) {
     if (!file) return;
@@ -91,8 +96,8 @@ export default function EventImagePicker({
     <div className="admin-media-picker">
       <label className="a-label">{label}</label>
       <div className="admin-media-picker__preview">
-        {value ? (
-          <img src={value} alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} />
+        {value && !previewFailed ? (
+          <img src={value} alt="" onError={() => setPreviewFailed(true)} />
         ) : (
           <span>No image selected</span>
         )}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InfoPage } from "@/components/public-page";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="e4s-info-page e4s-shell" id="site-content">
+    <InfoPage>
       <h1>Terms &amp; Conditions</h1>
       <p className="e4s-lead">
         By accessing or using Events4Singles you agree to be bound by these terms. Please read
@@ -155,6 +156,6 @@ export default function TermsPage() {
         terms since 2001.{" "}
         <Link href="/privacy-policy">Privacy Policy</Link>
       </p>
-    </main>
+    </InfoPage>
   );
 }

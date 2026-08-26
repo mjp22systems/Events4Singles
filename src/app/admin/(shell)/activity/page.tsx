@@ -31,23 +31,23 @@ export default async function AdminActivity() {
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id}>
-                    <td style={{ whiteSpace: "nowrap", color: "var(--a-ink-muted)", fontSize: "12px" }}>
+                    <td className="a-inline-754b3590" >
                       {new Date(row.created_at * 1000).toLocaleString("en-AU", {
                         dateStyle: "short",
                         timeStyle: "short",
                       })}
                     </td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>
+                    <td className="a-inline-5d69a8cc" >
                       {row.actor_type}
                       {row.actor_id ? ` (${row.actor_id})` : ""}
                     </td>
-                    <td style={{ fontWeight: 500 }}>{row.action}</td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>
+                    <td className="a-inline-da6c85ac" >{row.action}</td>
+                    <td className="a-inline-5d69a8cc" >
                       {row.entity_type} {row.entity_id ? `#${row.entity_id}` : ""}
                     </td>
-                    <td style={{ fontSize: "12px", color: "var(--a-ink-muted)", maxWidth: "260px" }}>
+                    <td className="a-inline-9ef1689b" >
                       {row.meta ? (
-                        <code style={{ fontSize: "11px", wordBreak: "break-all" }}>{row.meta}</code>
+                        <code className="a-inline-e102a236" >{row.meta}</code>
                       ) : (
                         "—"
                       )}

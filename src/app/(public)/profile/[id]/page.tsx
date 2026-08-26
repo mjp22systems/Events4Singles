@@ -8,6 +8,7 @@ import OnlineCard from "@/components/online-card";
 import ProfileEditDrawer from "@/components/profile-edit-drawer";
 import ProfileEventsFilter from "@/components/profile-events-filter";
 import BackLink from "@/components/back-link";
+import { PublicMain } from "@/components/public-page";
 import { pageMetadata } from "@/lib/seo";
 import { toUrlSlug, toProfileSlug, slugToLabel } from "@/lib/constants";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
@@ -163,7 +164,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
     : null;
 
   return (
-    <main id="site-content">
+    <PublicMain>
       {showAdminEditor && <link rel="stylesheet" href="/admin.css" precedence="high" />}
       {showAdminEditor && (
         <ProfileEditDrawer business={business} />
@@ -186,7 +187,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
             <div className="e4s-profile-head__left">
               <div className="e4s-profile-head__row">
                 {isPractitioner && logoUrl && (
-                  <div className="e4s-profile-prac-photo" style={{ display: "inline-block" }}>
+                  <div className="e4s-profile-prac-photo">
                     <img src={logoUrl} alt={name} loading="lazy" />
                   </div>
                 )}
@@ -512,6 +513,6 @@ export default async function ProfilePage({ params, searchParams }: Props) {
         </section>
 
       </div>
-    </main>
+    </PublicMain>
   );
 }

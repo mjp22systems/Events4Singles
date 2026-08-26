@@ -70,96 +70,96 @@ export default async function AdminBusinessRequestsPage({ searchParams }: PagePr
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Business Requests
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {sorted.length.toLocaleString()}
           </span>
         </h1>
       </div>
 
       <form method="GET" action="/admin/business-requests" className="admin-filter-bar">
-        <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
           {STATUSES.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
-        {hasActiveFilters && <Link href="/admin/business-requests" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
+        {hasActiveFilters && <Link href="/admin/business-requests" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form id={BULK_FORM_ID} method="POST" action="/admin/api/business-requests/bulk">
         <input type="hidden" name="redirect" value={currentPath} />
       </form>
       <div className="a-card">
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+        <div className="a-inline-2b655313" >
+          <label className="a-inline-3ae3b235" >
             <AdminBulkSelectAll form={BULK_FORM_ID} />
             All
           </label>
-          <select form={BULK_FORM_ID} name="action" className="a-input" style={{ width: "160px" }}>
+          <select form={BULK_FORM_ID} name="action" className="a-input a-inline-dc2a05f8" >
             <option value="">Bulk Action…</option>
             <option value="approve">Approve</option>
             <option value="reject">Reject</option>
           </select>
-          <button form={BULK_FORM_ID} type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+          <button form={BULK_FORM_ID} type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
         </div>
         <div className="a-table-wrap">
           <table className="a-table">
             <thead>
               <tr>
-                <th style={{ width: "36px" }}></th>
-                <th style={{ width: "52px" }}>#</th>
+                <th className="a-inline-b9c114f7" ></th>
+                <th className="a-inline-672380eb" >#</th>
                 <th>Business</th>
                 <th>Requested by</th>
                 <th>Contact</th>
-                <th style={{ width: "90px" }}>Status</th>
-                <th style={{ width: "56px" }}>Actions</th>
+                <th className="a-inline-54442ae7" >Status</th>
+                <th className="a-inline-29fbde53" >Actions</th>
               </tr>
             </thead>
             <tbody>
               {sorted.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={7} className="a-inline-ac953bfd" >
                     No business requests found
                   </td>
                 </tr>
               ) : sorted.map((request, index) => (
                 <tr key={request.id}>
                   <td><input form={BULK_FORM_ID} type="checkbox" name="ids" value={request.id} className="bulk-check" /></td>
-                  <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
+                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
                   <td>
-                    <div style={{ fontWeight: 650 }}>{request.business_name}</div>
-                    <div style={{ fontSize: "12px", color: "var(--a-ink-muted)", marginTop: "3px" }}>
+                    <div className="a-inline-11a836b8" >{request.business_name}</div>
+                    <div className="a-inline-8054e521" >
                       {[request.city, request.website].filter(Boolean).join(" · ") || "No website/city supplied"}
                     </div>
                     {request.message && (
-                      <div style={{ fontSize: "12px", color: "var(--a-ink-muted)", marginTop: "6px" }}>
+                      <div className="a-inline-98f16669" >
                         {request.message}
                       </div>
                     )}
                   </td>
-                  <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                  <td className="a-inline-691df809" >
                     <div>{request.portal_email ?? "No email"}</div>
-                    <div style={{ marginTop: "3px" }}>Account {request.account_id}</div>
-                    <div style={{ marginTop: "3px" }}>Requested {formatDate(request.created_at)}</div>
+                    <div className="a-inline-046a013e" >Account {request.account_id}</div>
+                    <div className="a-inline-046a013e" >Requested {formatDate(request.created_at)}</div>
                   </td>
-                  <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                  <td className="a-inline-691df809" >
                     <div>{request.contact_email ?? "—"}</div>
-                    <div style={{ marginTop: "3px" }}>{request.phone ?? "—"}</div>
+                    <div className="a-inline-046a013e" >{request.phone ?? "—"}</div>
                   </td>
                   <td>
                     <span className={`a-badge ${BADGE[request.status] ?? "a-badge-paused"}`}>
                       {request.status}
                     </span>
                     {request.resolved_business_id && (
-                      <div style={{ marginTop: "6px", fontSize: "12px" }}>
-                        <Link href={`/admin/businesses/${request.resolved_business_id}`} style={{ color: "var(--a-teal)" }}>
+                      <div className="a-inline-8d47a182" >
+                        <Link href={`/admin/businesses/${request.resolved_business_id}`} className="a-inline-b3f1b3c6" >
                           Business #{request.resolved_business_id}
                         </Link>
                       </div>
@@ -174,12 +174,12 @@ export default async function AdminBusinessRequestsPage({ searchParams }: PagePr
                         </form>
                         <form action={rejectRequest}>
                           <input type="hidden" name="id" value={request.id} />
-                          <input className="a-input" name="notes" placeholder="Reason" style={{ fontSize: "12px", minHeight: "30px" }} />
+                          <input className="a-input a-inline-a71566a6" name="notes" placeholder="Reason"  />
                           <button className="admin-actions-menu__danger" type="submit">Reject</button>
                         </form>
                       </AdminActionsMenu>
                     ) : (
-                      <span style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>Resolved</span>
+                      <span className="a-inline-5d69a8cc" >Resolved</span>
                     )}
                   </td>
                 </tr>

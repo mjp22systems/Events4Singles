@@ -10,12 +10,16 @@ import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/consta
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
-import BodyClass from "@/components/body-class";
 import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
 import SeoSupportSection from "@/components/seo-support-section";
+import {
+  EditorialIntro,
+  ListingDirectoryPage,
+  PageHero,
+} from "@/components/listing-directory-page";
 import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCopy } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage } from "@/lib/category-card-assets";
@@ -103,68 +107,67 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   ];
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <BodyClass add="e4s-page-category" />
-      <BodyClass add="e4s-page-child" />
-      <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={subcategoryUrlSlug} />
-
-      <nav aria-label={`${childMeta.label} city navigation`} className="e4s-category-child-nav e4s-category-child-nav--has-sidebar">
-        <Link className="e4s-category-child-nav__back" href={`/${category}`}>
-          Back to {parentMeta.label}
-        </Link>
-        <label className="e4s-category-child-nav__control">
-          <span>View another city</span>
-          <NavSelect
+    <ListingDirectoryPage
+      jsonLd={jsonLd}
+      bodyClasses={["e4s-page-category", "e4s-page-child"]}
+      beforeHero={(
+        <>
+          <CategoryCityPager
             cities={cities}
+            currentCityDbSlug={cityDbSlug}
             categoryUrlSlug={subcategoryUrlSlug}
-            currentCitySlug={cityDbSlug}
           />
-        </label>
-      </nav>
-
-      <section aria-label={`${childMeta.label} ${cityMeta.label}`} className="e4s-page-hero">
-        <CategoryCityHeroImage
-          alt={`${childMeta.label} ${cityMeta.label}`}
-          parentCategoryImage={parentImage}
-          parentCategoryFallbacks={parentImageFallbacks}
-          categoryImage={categoryImage}
-          categoryFallbacks={categoryImageFallbacks}
-          cityImage={cityImage}
-          cityFallbacks={getCityHeroFallbacks(city)}
+          <nav
+            aria-label={`${childMeta.label} city navigation`}
+            className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
+          >
+            <Link className="e4s-category-child-nav__back" href={`/${category}`}>
+              Back to {parentMeta.label}
+            </Link>
+            <label className="e4s-category-child-nav__control">
+              <span>View another city</span>
+              <NavSelect
+                cities={cities}
+                categoryUrlSlug={subcategoryUrlSlug}
+                currentCitySlug={cityDbSlug}
+              />
+            </label>
+          </nav>
+        </>
+      )}
+      hero={(
+        <PageHero
+          ariaLabel={`${childMeta.label} ${cityMeta.label}`}
+          media={(
+            <CategoryCityHeroImage
+              alt={`${childMeta.label} ${cityMeta.label}`}
+              parentCategoryImage={parentImage}
+              parentCategoryFallbacks={parentImageFallbacks}
+              categoryImage={categoryImage}
+              categoryFallbacks={categoryImageFallbacks}
+              cityImage={cityImage}
+              cityFallbacks={getCityHeroFallbacks(city)}
+            />
+          )}
+          title={`${childMeta.label} ${cityMeta.label}`}
+          subtext={categoryCityHeroSubtext(childMeta, cityMeta)}
         />
-        <div className="e4s-page-hero__caption">
-          <h1>{childMeta.label} {cityMeta.label}</h1>
-          <p>{categoryCityHeroSubtext(childMeta, cityMeta)}</p>
-        </div>
-      </section>
-
-      <PromoBanners mode="category" categoryDbSlug={childMeta.slug} cityDbSlug={cityDbSlug} />
-
-      <section className="e4s-page-intro e4s-page-intro--editorial">
-        <p className="e4s-page-intro__lead">{intro.lead}</p>
-        <p>{intro.detail}</p>
-        <p>{intro.support}</p>
-      </section>
-
-      <div className="e4s-page-with-sidebar">
-        <main className="e4s-category-template" id="site-content">
-          {listings.length === 0 && (
-            <div className="e4s-empty-state">
-              <p>No listings found for {childMeta.label} in {cityMeta.label}.</p>
-              <Link href={`/${subcategoryUrlSlug}`}>
-                Browse other cities
-              </Link>
-            </div>
-          )}
-          {listings.length > 0 && (
-            <ListingsSection listings={listings} title={`${childMeta.label} - ${cityMeta.label}`} />
-          )}
-          <AdvertiseCard />
-        </main>
+      )}
+      promo={(
+        <PromoBanners
+          mode="category"
+          categoryDbSlug={childMeta.slug}
+          cityDbSlug={cityDbSlug}
+        />
+      )}
+      intro={(
+        <EditorialIntro
+          lead={intro.lead}
+          detail={intro.detail}
+          support={intro.support}
+        />
+      )}
+      sidebar={(
         <PageSidebar
           mode="category"
           cities={cities}
@@ -173,8 +176,19 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           backLabel={parentMeta.label}
           backHref={`/${category}`}
         />
-      </div>
-      <SeoSupportSection {...footerCopy} />
-    </>
+      )}
+      after={<SeoSupportSection {...footerCopy} />}
+    >
+      {listings.length === 0 && (
+        <div className="e4s-empty-state">
+          <p>No listings found for {childMeta.label} in {cityMeta.label}.</p>
+          <Link href={`/${subcategoryUrlSlug}`}>Browse other cities</Link>
+        </div>
+      )}
+      {listings.length > 0 && (
+        <ListingsSection listings={listings} title={`${childMeta.label} - ${cityMeta.label}`} />
+      )}
+      <AdvertiseCard />
+    </ListingDirectoryPage>
   );
 }

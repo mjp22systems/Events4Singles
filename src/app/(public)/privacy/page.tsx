@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { InfoPage } from "@/components/public-page";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="e4s-info-page e4s-shell" id="site-content">
+    <InfoPage>
       <h1>Privacy Policy</h1>
       <p className="e4s-lead">
         Events4Singles is committed to protecting the privacy of visitors and advertisers.
@@ -136,6 +137,6 @@ export default function PrivacyPage() {
         Events4Singles has operated in Australia since 2001 and is subject to the
         Australian Privacy Act 1988 (Cth).
       </p>
-    </main>
+    </InfoPage>
   );
 }

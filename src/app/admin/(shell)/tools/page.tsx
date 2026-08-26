@@ -38,43 +38,43 @@ export default async function AdminTools({ searchParams }: PageProps) {
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Listing Review
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {rows.length} issues
           </span>
         </h1>
       </div>
 
       <form method="GET" action="/admin/tools" className="admin-filter-bar">
-        <select name="tab" defaultValue={tab} className="a-input" style={{ flex: 1, minWidth: "160px" }}>
+        <select name="tab" defaultValue={tab} className="a-input a-inline-ab674353" >
           {TABS.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
         </select>
-        <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
+        <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
       </form>
 
       <form method="POST" action="/admin/api/listings/bulk">
         <input type="hidden" name="redirect" value={`/admin/tools?tab=${tab}`} />
         <div className="a-card">
           {rows.length === 0 ? (
-            <div className="a-empty" style={{ padding: "48px", textAlign: "center" }}>
-              <div style={{ fontSize: "32px", marginBottom: "12px" }}>✓</div>
+            <div className="a-empty a-inline-1d446031" >
+              <div className="a-inline-afcda366" >✓</div>
               <div className="a-empty__text">No issues found</div>
             </div>
           ) : (
             <>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+              <div className="a-inline-2b655313" >
+                <label className="a-inline-3ae3b235" >
                   <AdminBulkSelectAll />
                   All
                 </label>
-                <select name="action" className="a-input" style={{ width: "160px" }}>
+                <select name="action" className="a-input a-inline-dc2a05f8" >
                   <option value="">Bulk Action…</option>
                   <option value="activate">Activate</option>
                   <option value="archive">Archive</option>
                   <option value="delete">Delete</option>
                 </select>
-                <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+                <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
               </div>
               <div className="a-table-wrap">
                 <table className={`a-table a-table--single-line a-table--listing-review a-table--listing-review-${tab}`}>
@@ -106,17 +106,17 @@ export default async function AdminTools({ searchParams }: PageProps) {
                     {rows.map((l, index) => (
                       <tr key={l.id}>
                         <td><input type="checkbox" name="ids" value={l.id} className="bulk-check" /></td>
-                        <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
-                        <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{l.id}</td>
-                        <td title={l.title} style={{ fontWeight: 500 }}>{l.title}</td>
-                        <td style={{ color: "var(--a-ink-muted)", fontSize: "13px" }} title={l.business_name ?? undefined}>{l.business_name ?? "—"}</td>
+                        <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                        <td className="a-inline-5d69a8cc" >{l.id}</td>
+                        <td title={l.title} className="a-inline-da6c85ac" >{l.title}</td>
+                        <td className="a-inline-24fc8284"  title={l.business_name ?? undefined}>{l.business_name ?? "—"}</td>
                         {tab === "low-confidence" && (
-                          <td style={{ fontWeight: 600, fontSize: "12px", color: (l.confidence_score ?? 0) < 50 ? "var(--a-danger)" : "var(--a-warning)" }}>
+                          <td className={`a-confidence-score${(l.confidence_score ?? 0) < 50 ? " is-danger" : " is-warning"}`}>
                             {l.confidence_score}%
                           </td>
                         )}
                         {tab === "no-image" && (
-                          <td title={l.image_url || undefined} style={{ fontSize: "11px", color: "var(--a-ink-muted)" }}>
+                          <td title={l.image_url || undefined} className="a-inline-bb3abc5b" >
                             {l.image_url || "null"}
                           </td>
                         )}

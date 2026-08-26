@@ -60,14 +60,14 @@ export default async function AdminCategories({ searchParams }: PageProps) {
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+      <div className="a-inline-32e1f70f" >
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Categories
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {categories.length.toLocaleString()}
           </span>
         </h1>
-        <Link href="/admin/categories?add=1" className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+        <Link href="/admin/categories?add=1" className="a-btn a-btn-primary a-inline-65d1aa8a" >
           + Add Category
         </Link>
       </div>
@@ -99,60 +99,60 @@ export default async function AdminCategories({ searchParams }: PageProps) {
         </AdminAddModal>
       )}
 
-      <form method="GET" action="/admin/categories" style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-        <input name="q" type="search" defaultValue={q} placeholder="Search label or slug..." className="a-input" style={{ flex: 1, minWidth: "160px" }} />
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+      <form method="GET" action="/admin/categories" className="a-inline-8ff7e847" >
+        <input name="q" type="search" defaultValue={q} placeholder="Search label or slug..." className="a-input a-inline-ab674353"  />
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           {SORTS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
         </select>
-        <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
-        {hasActiveFilters && <Link href="/admin/categories" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
+        {hasActiveFilters && <Link href="/admin/categories" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form method="POST" action="/admin/api/categories/bulk">
         <input type="hidden" name="redirect" value="/admin/categories" />
         <div className="a-card">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+          <div className="a-inline-2b655313" >
+            <label className="a-inline-3ae3b235" >
               <AdminBulkSelectAll />
               All
             </label>
-            <select name="action" className="a-input" style={{ width: "160px" }}>
+            <select name="action" className="a-input a-inline-dc2a05f8" >
               <option value="">Bulk action...</option>
               <option value="delete">Delete</option>
             </select>
-            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+            <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
           </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line">
             <thead>
               <tr>
-                <th style={{ width: "36px" }}></th>
-                <th style={{ width: "52px" }}>#</th>
+                <th className="a-inline-b9c114f7" ></th>
+                <th className="a-inline-672380eb" >#</th>
                 <th>Label</th>
                 <th>Slug</th>
                 <th>Listings</th>
                 <th>Banner rows</th>
                 <th>SEO title</th>
-                <th style={{ width: "56px" }}>Actions</th>
+                <th className="a-inline-29fbde53" >Actions</th>
               </tr>
             </thead>
             <tbody>
               {categories.map((c, index) => (
                 <tr key={c.slug}>
                   <td><input type="checkbox" name="ids" value={c.slug} className="bulk-check" /></td>
-                  <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
-                  <td style={{ fontWeight: 600, whiteSpace: "nowrap" }}>{c.label}</td>
-                  <td style={{ fontFamily: "monospace", fontSize: "12px", color: "var(--a-ink-muted)", whiteSpace: "nowrap" }}>
+                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                  <td className="a-inline-b4472ba8" >{c.label}</td>
+                  <td className="a-inline-8a1c5026" >
                     {c.slug}
                   </td>
-                  <td style={{ color: "var(--a-ink-muted)", whiteSpace: "nowrap" }}>{c.listing_count}</td>
-                  <td style={{ whiteSpace: "nowrap" }}>
-                    <span className="a-badge" style={{ background: "var(--a-surface-2)", color: "var(--a-ink-muted)" }}>
+                  <td className="a-inline-92865007" >{c.listing_count}</td>
+                  <td className="a-inline-7c53fa98" >
+                    <span className="a-badge a-inline-09ec73bf" >
                       {c.banner_row_count} row{c.banner_row_count !== 1 ? "s" : ""}
                     </span>
                   </td>
-                  <td style={{ fontSize: "12px", color: "var(--a-ink-muted)", maxWidth: "220px" }}>
-                    <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.seo_title ?? undefined}>
+                  <td className="a-inline-4493214f" >
+                    <span className="a-inline-14ec14f6"  title={c.seo_title ?? undefined}>
                       {c.seo_title ?? "—"}
                     </span>
                   </td>

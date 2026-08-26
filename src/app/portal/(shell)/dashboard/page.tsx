@@ -79,13 +79,13 @@ export default async function PortalDashboard() {
       </div>
 
       {listings.length === 0 && (
-        <div className="p-card" style={{ marginTop: "28px" }}>
+        <div className="p-card p-inline-a5e938b2" >
           <div className="p-card__section">
             <h2 className="p-section-title">Get started</h2>
             <p className="p-muted">Your account is set up. To link your business listing, contact us at{" "}
               <a href="mailto:support@events4singles.com">support@events4singles.com</a>.
             </p>
-            <p className="p-muted" style={{ marginTop: "8px" }}>
+            <p className="p-muted p-inline-4be13c81" >
               Plan: <strong>{account?.plan ?? "free"}</strong>
             </p>
           </div>
@@ -93,14 +93,14 @@ export default async function PortalDashboard() {
       )}
 
       {listings.length > 0 && (
-        <div className="p-card" style={{ marginTop: "28px" }}>
+        <div className="p-card p-inline-a5e938b2" >
           <div className="p-card__section">
             <h2 className="p-section-title">Your listings</h2>
-            <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            <ul className="p-inline-30213900" >
               {(listings as { id: string; title: string; status: string }[]).map((l) => (
-                <li key={l.id} style={{ padding: "8px 0", borderBottom: "1px solid var(--p-border)", display: "flex", justifyContent: "space-between" }}>
+                <li key={l.id} className="p-inline-678f4d5a" >
                   <span>{l.title}</span>
-                  <span className="p-muted" style={{ fontSize: "12px" }}>{l.status}</span>
+                  <span className="p-muted p-inline-c0e576d8" >{l.status}</span>
                 </li>
               ))}
             </ul>

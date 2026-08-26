@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { InfoPage } from "@/components/public-page";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -11,7 +12,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function AboutPage() {
   return (
-    <main className="e4s-info-page e4s-shell" id="site-content">
+    <InfoPage>
       <h1>About Events4Singles</h1>
       <p className="e4s-lead">
         Australia&apos;s longest-running singles events directory, helping singles find
@@ -65,6 +66,6 @@ export default function AboutPage() {
           Questions, corrections, or advertising enquiries — see our <Link href="/contact">contact page</Link>.
         </p>
       </section>
-    </main>
+    </InfoPage>
   );
 }

@@ -236,13 +236,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Users
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {accounts.length.toLocaleString()}
           </span>
         </h1>
-        <Link href={usersHref(filters, { add: "1" })} className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+        <Link href={usersHref(filters, { add: "1" })} className="a-btn a-btn-primary a-inline-65d1aa8a" >
           + Add User
         </Link>
       </div>
@@ -427,21 +427,21 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       )}
 
       <form method="GET" action="/admin/users" className="admin-filter-bar">
-        <input name="q" type="search" defaultValue={q} placeholder="Search name, contact email, Clerk id, business..." className="a-input" style={{ flex: 2, minWidth: "180px" }} />
-        <select name="role" defaultValue={role} className="a-input" style={{ flex: 1, minWidth: "130px" }}>
+        <input name="q" type="search" defaultValue={q} placeholder="Search name, contact email, Clerk id, business..." className="a-input a-inline-69fd621e"  />
+        <select name="role" defaultValue={role} className="a-input a-inline-e6992af7" >
           <option value="all">All Roles</option>
           <option value="super_admin">Super Admins</option>
           <option value="admin">Admins</option>
           <option value="advertiser">Advertisers</option>
         </select>
-        <select name="plan" defaultValue={plan} className="a-input" style={{ flex: 1, minWidth: "120px" }}>
+        <select name="plan" defaultValue={plan} className="a-input a-inline-9cf50eca" >
           <option value="all">All Plans</option>
           <option value="free">Free</option>
           <option value="starter">Starter</option>
           <option value="pro">Pro</option>
           <option value="premium">Premium</option>
         </select>
-        <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "130px" }}>
+        <select name="status" defaultValue={status} className="a-input a-inline-e6992af7" >
           <option value="all">All Statuses</option>
           <option value="active">Active</option>
           <option value="trialing">Trialing</option>
@@ -449,7 +449,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           <option value="cancelled">Cancelled</option>
           <option value="paused">Paused</option>
         </select>
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           <option value="name_asc">Name A-Z</option>
           <option value="name_desc">Name Z-A</option>
           <option value="email_asc">Email A-Z</option>
@@ -457,25 +457,25 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           <option value="newest">Newest</option>
           <option value="updated">Recently Updated</option>
         </select>
-        <button className="a-btn a-btn-ghost" type="submit" style={{ flexShrink: 0 }}>Search</button>
-        {hasActiveFilters && <Link href="/admin/users" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button className="a-btn a-btn-ghost a-inline-47390085" type="submit" >Search</button>
+        {hasActiveFilters && <Link href="/admin/users" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form method="POST" action="/admin/api/users/bulk">
         <input type="hidden" name="redirect" value="/admin/users" />
         <div className="a-card">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+          <div className="a-inline-2b655313" >
+            <label className="a-inline-3ae3b235" >
               <AdminBulkSelectAll />
               All
             </label>
-            <select name="action" className="a-input" style={{ width: "180px" }}>
+            <select name="action" className="a-input a-inline-e621d310" >
               <option value="">Bulk Action...</option>
               <option value="activate">Activate</option>
               <option value="pause">Pause</option>
               <option value="cancel">Cancel</option>
             </select>
-            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+            <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
         </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line a-table--users">
@@ -496,17 +496,17 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <th>#</th>
                 <th>User</th>
                 <th>Contact email</th>
-                <th style={{ whiteSpace: "nowrap" }}>Plan</th>
+                <th className="a-inline-7c53fa98" >Plan</th>
                 <th>Primary business</th>
-                <th style={{ whiteSpace: "nowrap" }}>Presence</th>
-                <th style={{ whiteSpace: "nowrap" }}>Role</th>
+                <th className="a-inline-7c53fa98" >Presence</th>
+                <th className="a-inline-7c53fa98" >Role</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {accounts.length === 0 ? (
                 <tr>
-                  <td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={9} className="a-inline-ac953bfd" >
                     No users found
                   </td>
                 </tr>
@@ -517,54 +517,54 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 return (
                   <tr key={account.id}>
                     <td><input type="checkbox" name="ids" value={account.id} className="bulk-check" /></td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
-                    <td style={{ maxWidth: "180px" }}>
+                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                    <td className="a-inline-16a1f861" >
                       <span
-                        style={{ fontWeight: 600, display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                        className="a-inline-aa54abcb" 
                         title={account.display_name ?? "Unnamed user"}
                       >
                         {account.display_name ?? "Unnamed user"}
                       </span>
                     </td>
-                    <td style={{ maxWidth: "200px" }}>
+                    <td className="a-inline-bcd3d86e" >
                       <span
-                        style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: account.portal_email || account.billing_email ? "var(--a-ink)" : "var(--a-ink-muted)" }}
+                        className={`a-user-email${account.portal_email || account.billing_email ? "" : " is-muted"}`}
                         title={account.portal_email ?? account.billing_email ?? undefined}
                       >
                         {account.portal_email ?? account.billing_email ?? "No email"}
                       </span>
                     </td>
-                    <td style={{ whiteSpace: "nowrap" }}>
+                    <td className="a-inline-7c53fa98" >
                       <span className={`a-badge ${account.sub_status === "active" ? "a-badge-active" : "a-badge-paused"}`}>
                         {account.plan} · {account.sub_status.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td style={{ maxWidth: "160px" }}>
+                    <td className="a-inline-b7687fbf" >
                       {primary ? (
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
+                        <div className="a-inline-5b1c161c" >
                           <Link
                             href={`/admin/businesses/${primary.id}`}
-                            style={{ color: "var(--a-teal)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                            className="a-inline-84fdde33" 
                             title={primary.name || `#${primary.id}`}
                           >
                             {primary.name || `#${primary.id}`}
                           </Link>
                           {owned.length > 1 && (
-                            <span className="a-badge a-badge-paused" style={{ flexShrink: 0 }}>
+                            <span className="a-badge a-badge-paused a-inline-47390085" >
                               +{owned.length - 1}
                             </span>
                           )}
                         </div>
                       ) : (
-                        <span style={{ color: "var(--a-ink-muted)", fontSize: "13px" }}>—</span>
+                        <span className="a-inline-24fc8284" >—</span>
                       )}
                     </td>
-                    <td style={{ whiteSpace: "nowrap" }}>
+                    <td className="a-inline-7c53fa98" >
                       <span className={`a-badge ${presence.className}`} title={presence.detail}>
                         {presence.label}{presence.detail ? ` · ${presence.detail}` : ""}
                       </span>
                     </td>
-                    <td style={{ whiteSpace: "nowrap" }}>
+                    <td className="a-inline-7c53fa98" >
                       <span className={`a-badge ${account.account_role === "advertiser" ? "a-badge-paused" : "a-badge-active"}`}>
                         {formatAccountRole(account.account_role)}
                       </span>

@@ -58,13 +58,13 @@ export default function RedirectsClient({
     <>
       <h1 className="a-page-title">Redirects</h1>
 
-      <div className="a-card" style={{ marginBottom: "20px" }}>
+      <div className="a-card a-inline-e5cf13bb" >
         <div className="a-card-header">
           <span className="a-card-title">404 redirect candidates ({misses.length})</span>
         </div>
         {misses.length === 0 ? (
           <div className="a-card-body">
-            <p style={{ color: "var(--a-ink-muted)", fontSize: "13px" }}>No unresolved 404 hits logged yet.</p>
+            <p className="a-inline-24fc8284" >No unresolved 404 hits logged yet.</p>
           </div>
         ) : (
           <div className="a-table-wrap">
@@ -75,29 +75,29 @@ export default function RedirectsClient({
                   <th>Hits</th>
                   <th>Last seen</th>
                   <th>Referrer</th>
-                  <th style={{ textAlign: "right" }}></th>
+                  <th className="a-inline-ff9d652c" ></th>
                 </tr>
               </thead>
               <tbody>
                 {misses.map((hit) => (
                   <tr key={hit.id}>
-                    <td><code style={{ fontSize: "12px" }}>{hit.path}</code></td>
+                    <td><code className="a-inline-d4d63c8b" >{hit.path}</code></td>
                     <td>{hit.hit_count}</td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px", whiteSpace: "nowrap" }}>
+                    <td className="a-inline-dc6a5919" >
                       {hit.last_seen ? formatDate(hit.last_seen) : "—"}
                     </td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px", maxWidth: "240px", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <td className="a-inline-9df4cd55" >
                       {hit.referrer || "Direct / unknown"}
                     </td>
-                    <td style={{ textAlign: "right" }}>
+                    <td className="a-inline-ff9d652c" >
                       <button
-                        className="a-btn"
+                        className="a-btn a-inline-fed8595c"
                         type="button"
                         onClick={() => {
                           setFrom(hit.path);
                           setTo("");
                         }}
-                        style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
+                        
                       >
                         Create redirect
                       </button>
@@ -108,24 +108,24 @@ export default function RedirectsClient({
             </table>
           </div>
         )}
-        <div className="a-card-body" style={{ paddingTop: misses.length ? "10px" : undefined }}>
-          <p style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+        <div className={`a-card-body${misses.length ? " a-card-body--compact-top" : ""}`}>
+          <p className="a-inline-691df809" >
             These are public 404 hits grouped by normalised path. Add a redirect when a missed URL is getting repeated traffic.
           </p>
         </div>
       </div>
 
-      <div className="a-card" style={{ marginBottom: "20px" }}>
+      <div className="a-card a-inline-e5cf13bb" >
         <div className="a-card-header">
           <span className="a-card-title">Add redirect</span>
         </div>
         <div className="a-card-body">
-          <form onSubmit={handleAdd} style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-end" }}>
-            <div style={{ flex: "1 1 180px" }}>
+          <form onSubmit={handleAdd} className="a-inline-59fba262" >
+            <div className="a-inline-5e319852" >
               <label className="a-label">From path</label>
               <input className="a-input" type="text" placeholder="/old-slug" value={from} onChange={e => setFrom(e.target.value)} />
             </div>
-            <div style={{ flex: "1 1 180px" }}>
+            <div className="a-inline-5e319852" >
               <label className="a-label">To path</label>
               <input className="a-input" type="text" placeholder="/new-slug" value={to} onChange={e => setTo(e.target.value)} />
             </div>
@@ -136,21 +136,21 @@ export default function RedirectsClient({
             </div>
           </form>
           {error && (
-            <p style={{ color: "var(--a-danger)", marginTop: "8px", fontSize: "13px" }}>{error}</p>
+            <p className="a-inline-2d7b62eb" >{error}</p>
           )}
-          <p style={{ marginTop: "10px", fontSize: "12px", color: "var(--a-ink-muted)" }}>
+          <p className="a-inline-f5d522c6" >
             Serves as a permanent 301. Takes effect immediately — no redeploy needed.
           </p>
         </div>
       </div>
 
-      <div className="a-card" style={{ marginBottom: "20px" }}>
+      <div className="a-card a-inline-e5cf13bb" >
         <div className="a-card-header">
           <span className="a-card-title">Active redirects ({redirects.length})</span>
         </div>
         {redirects.length === 0 ? (
           <div className="a-card-body">
-            <p style={{ color: "var(--a-ink-muted)", fontSize: "13px" }}>No redirects configured.</p>
+            <p className="a-inline-24fc8284" >No redirects configured.</p>
           </div>
         ) : (
           <div className="a-table-wrap">
@@ -160,22 +160,22 @@ export default function RedirectsClient({
                   <th>From</th>
                   <th>To</th>
                   <th>Added</th>
-                  <th style={{ textAlign: "right" }}></th>
+                  <th className="a-inline-ff9d652c" ></th>
                 </tr>
               </thead>
               <tbody>
                 {redirects.map(r => (
                   <tr key={r.id}>
-                    <td><code style={{ fontSize: "12px" }}>{r.from_path}</code></td>
-                    <td><code style={{ fontSize: "12px" }}>{r.to_path}</code></td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px", whiteSpace: "nowrap" }}>
+                    <td><code className="a-inline-d4d63c8b" >{r.from_path}</code></td>
+                    <td><code className="a-inline-d4d63c8b" >{r.to_path}</code></td>
+                    <td className="a-inline-dc6a5919" >
                       {r.created_at ? formatDate(r.created_at) : "—"}
                     </td>
-                    <td style={{ textAlign: "right" }}>
+                    <td className="a-inline-ff9d652c" >
                       <button
-                        className="a-btn a-btn-danger"
+                        className="a-btn a-btn-danger a-inline-fed8595c"
                         onClick={() => handleDelete(r.id)}
-                        style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
+                        
                       >
                         Delete
                       </button>
@@ -192,8 +192,8 @@ export default function RedirectsClient({
         <div className="a-card-header">
           <span className="a-card-title">Static redirects (next.config.ts)</span>
         </div>
-        <div className="a-card-body" style={{ paddingBottom: "4px" }}>
-          <p style={{ fontSize: "12px", color: "var(--a-ink-muted)", marginBottom: "12px" }}>
+        <div className="a-card-body a-inline-b2abf013" >
+          <p className="a-inline-c153a8f9" >
             Hardcoded — require a redeploy to change. Edit <code>website/next.config.ts</code>.
           </p>
         </div>
@@ -204,19 +204,19 @@ export default function RedirectsClient({
             </thead>
             <tbody>
               <tr>
-                <td><code style={{ fontSize: "12px" }}>/locations</code></td>
-                <td><code style={{ fontSize: "12px" }}>/cities</code></td>
-                <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>Permanent</td>
+                <td><code className="a-inline-d4d63c8b" >/locations</code></td>
+                <td><code className="a-inline-d4d63c8b" >/cities</code></td>
+                <td className="a-inline-5d69a8cc" >Permanent</td>
               </tr>
               <tr>
-                <td><code style={{ fontSize: "12px" }}>/privacy</code></td>
-                <td><code style={{ fontSize: "12px" }}>/privacy-policy</code></td>
-                <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>Permanent</td>
+                <td><code className="a-inline-d4d63c8b" >/privacy</code></td>
+                <td><code className="a-inline-d4d63c8b" >/privacy-policy</code></td>
+                <td className="a-inline-5d69a8cc" >Permanent</td>
               </tr>
               <tr>
-                <td><code style={{ fontSize: "12px" }}>/terms</code></td>
-                <td><code style={{ fontSize: "12px" }}>/terms-and-conditions</code></td>
-                <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>Permanent</td>
+                <td><code className="a-inline-d4d63c8b" >/terms</code></td>
+                <td><code className="a-inline-d4d63c8b" >/terms-and-conditions</code></td>
+                <td className="a-inline-5d69a8cc" >Permanent</td>
               </tr>
             </tbody>
           </table>

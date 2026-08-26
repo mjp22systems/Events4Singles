@@ -2,6 +2,7 @@ import Link from "next/link";
 import { articles } from "@/content/articles";
 import { CATEGORY_COPY, articleCategory, groupArticles, topicId } from "@/content/article-categories";
 import FeaturedArticlesCarousel, { type FeaturedArticleCard } from "@/components/featured-articles-carousel";
+import { InfoPage } from "@/components/public-page";
 
 function featuredArticles(groups: ReturnType<typeof groupArticles>): FeaturedArticleCard[] {
   const dayOffset = Math.floor(Date.now() / 86_400_000);
@@ -39,7 +40,7 @@ export default function DatingResourcesHub() {
   const featured = featuredArticles(groups);
 
   return (
-    <main className="e4s-info-page e4s-shell e4s-blog" id="site-content">
+    <InfoPage className="e4s-blog">
       <header className="e4s-blog-hero">
         <h1>Dating Resources</h1>
         <p className="e4s-lead">
@@ -122,6 +123,6 @@ export default function DatingResourcesHub() {
         </div>
         <Link href="/events">Browse singles events</Link>
       </section>
-    </main>
+    </InfoPage>
   );
 }

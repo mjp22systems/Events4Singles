@@ -23,6 +23,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 test.describe("responsive CSS", () => {
   const baseUrl =
     process.env.E2E_BASE_URL ?? `http://localhost:${process.env.E2E_LOCAL_PORT ?? "10400"}`;
+  const typographyHref = `${baseUrl}/typography.css?e2e=responsive-css`;
   const stylesheetHref = `${baseUrl}/site.css?e2e=responsive-css`;
   const publicRoutes = [
     "/",
@@ -163,6 +164,7 @@ test.describe("responsive CSS", () => {
         <html>
           <head>
             <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="${typographyHref}">
             <link rel="stylesheet" href="${stylesheetHref}">
           </head>
           <body class="e4s-page-category">
@@ -195,6 +197,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category">
@@ -228,6 +231,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category">
@@ -292,6 +296,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category" style="--e4s-sticky-top: 72px;">
@@ -343,6 +348,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-home">
@@ -382,6 +388,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-home">
@@ -438,6 +445,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category">
@@ -490,6 +498,7 @@ test.describe("responsive CSS", () => {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category">

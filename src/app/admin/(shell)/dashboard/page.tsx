@@ -13,12 +13,12 @@ export default async function AdminDashboard() {
     <>
       <h1 className="a-page-title">Dashboard</h1>
 
-      <div className="a-stat-grid" style={{ marginBottom: "28px" }}>
+      <div className="a-stat-grid a-inline-d189665d" >
         <div className="a-stat">
           <div className="a-stat__label">Active Listings</div>
           <div className="a-stat__value">{stats.activeListings.toLocaleString()}</div>
           <div className="a-stat__sub">
-            <Link href="/admin/listings?status=active" style={{ color: "var(--a-teal)" }}>
+            <Link href="/admin/listings?status=active" className="a-inline-b3f1b3c6" >
               View all →
             </Link>
           </div>
@@ -26,14 +26,13 @@ export default async function AdminDashboard() {
         <div className="a-stat">
           <div className="a-stat__label">Pending Review</div>
           <div
-            className="a-stat__value"
-            style={{ color: stats.pendingReview > 0 ? "var(--a-warning)" : undefined }}
+            className={`a-stat__value${stats.pendingReview > 0 ? " is-warning" : ""}`}
           >
             {stats.pendingReview.toLocaleString()}
           </div>
           {stats.pendingReview > 0 && (
             <div className="a-stat__sub">
-              <Link href="/admin/listings?status=pending" style={{ color: "var(--a-warning)" }}>
+              <Link href="/admin/listings?status=pending" className="a-inline-06e70187" >
                 Review now →
               </Link>
             </div>
@@ -43,7 +42,7 @@ export default async function AdminDashboard() {
           <div className="a-stat__label">Unclaimed</div>
           <div className="a-stat__value">{stats.unclaimedListings.toLocaleString()}</div>
           <div className="a-stat__sub">
-            <Link href="/admin/listings?status=unclaimed" style={{ color: "var(--a-teal)" }}>
+            <Link href="/admin/listings?status=unclaimed" className="a-inline-b3f1b3c6" >
               View →
             </Link>
           </div>
@@ -52,7 +51,7 @@ export default async function AdminDashboard() {
           <div className="a-stat__label">Businesses</div>
           <div className="a-stat__value">{stats.totalBusinesses.toLocaleString()}</div>
           <div className="a-stat__sub">
-            <Link href="/admin/businesses" style={{ color: "var(--a-teal)" }}>
+            <Link href="/admin/businesses" className="a-inline-b3f1b3c6" >
               View all →
             </Link>
           </div>
@@ -60,14 +59,13 @@ export default async function AdminDashboard() {
         <div className="a-stat">
           <div className="a-stat__label">Events Pending</div>
           <div
-            className="a-stat__value"
-            style={{ color: stats.pendingEvents > 0 ? "var(--a-warning)" : undefined }}
+            className={`a-stat__value${stats.pendingEvents > 0 ? " is-warning" : ""}`}
           >
             {stats.pendingEvents.toLocaleString()}
           </div>
           {stats.pendingEvents > 0 && (
             <div className="a-stat__sub">
-              <Link href="/admin/events?status=pending" style={{ color: "var(--a-warning)" }}>
+              <Link href="/admin/events?status=pending" className="a-inline-06e70187" >
                 Review now →
               </Link>
             </div>
@@ -78,7 +76,7 @@ export default async function AdminDashboard() {
       <div className="a-card">
         <div className="a-card-header">
           <span className="a-card-title">Recent Activity</span>
-          <Link href="/admin/activity" className="a-btn a-btn-ghost" style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}>
+          <Link href="/admin/activity" className="a-btn a-btn-ghost a-inline-fed8595c" >
             View all
           </Link>
         </div>
@@ -100,10 +98,10 @@ export default async function AdminDashboard() {
                 {activity.map((row) => (
                   <tr key={row.id}>
                     <td>{row.action}</td>
-                    <td style={{ color: "var(--a-ink-muted)" }}>
+                    <td className="a-inline-22dfbba3" >
                       {row.entity_type} {row.entity_id ? `#${row.entity_id}` : ""}
                     </td>
-                    <td style={{ color: "var(--a-ink-muted)", whiteSpace: "nowrap" }}>
+                    <td className="a-inline-92865007" >
                       {new Date(row.created_at * 1000).toLocaleString("en-AU", {
                         dateStyle: "short",
                         timeStyle: "short",

@@ -46,13 +46,13 @@ export default async function AdminBusinesses({ searchParams }: PageProps) {
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Businesses
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {businesses.length.toLocaleString()}
           </span>
         </h1>
-        <Link href="/admin/businesses?add=1" className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+        <Link href="/admin/businesses?add=1" className="a-btn a-btn-primary a-inline-65d1aa8a" >
           + Add Business
         </Link>
       </div>
@@ -85,50 +85,50 @@ export default async function AdminBusinesses({ searchParams }: PageProps) {
       )}
 
       <form method="GET" action="/admin/businesses" className="admin-filter-bar">
-        <input name="q" type="search" defaultValue={q} placeholder="Search business name…" className="a-input" style={{ flex: 1, minWidth: "160px" }} />
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <input name="q" type="search" defaultValue={q} placeholder="Search business name…" className="a-input a-inline-ab674353"  />
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
-        {hasActiveFilters && <Link href="/admin/businesses" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
+        {hasActiveFilters && <Link href="/admin/businesses" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form method="POST" action="/admin/api/businesses/bulk">
         <input type="hidden" name="redirect" value="/admin/businesses" />
         <div className="a-card">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+          <div className="a-inline-2b655313" >
+            <label className="a-inline-3ae3b235" >
               <AdminBulkSelectAll />
               All
             </label>
-            <select name="action" className="a-input" style={{ width: "160px" }}>
+            <select name="action" className="a-input a-inline-dc2a05f8" >
               <option value="">Bulk Action…</option>
               <option value="activate">Activate</option>
               <option value="pause">Pause (hide)</option>
               <option value="delete">Delete</option>
             </select>
-            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+            <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
           </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line">
             <thead>
               <tr>
-                <th style={{ width: "36px" }}></th>
-                <th style={{ width: "52px" }}>#</th>
-                <th style={{ width: "50px" }}>ID</th>
+                <th className="a-inline-b9c114f7" ></th>
+                <th className="a-inline-672380eb" >#</th>
+                <th className="a-inline-ab8ba9f4" >ID</th>
                 <th>Name</th>
-                <th style={{ width: "60px" }}>Listings</th>
+                <th className="a-inline-65906ce8" >Listings</th>
                 <th>Website</th>
-                <th style={{ width: "85px" }}>Status</th>
-                <th style={{ width: "56px" }}>Actions</th>
+                <th className="a-inline-228c8711" >Status</th>
+                <th className="a-inline-29fbde53" >Actions</th>
               </tr>
             </thead>
             <tbody>
               {businesses.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={8} className="a-inline-ac953bfd" >
                     No businesses found
                   </td>
                 </tr>
@@ -136,17 +136,17 @@ export default async function AdminBusinesses({ searchParams }: PageProps) {
                 businesses.map((b, index) => (
                   <tr key={b.id}>
                     <td><input type="checkbox" name="ids" value={b.id} className="bulk-check" /></td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{b.id}</td>
-                    <td style={{ fontWeight: 500 }}>{b.name}</td>
+                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                    <td className="a-inline-5d69a8cc" >{b.id}</td>
+                    <td className="a-inline-da6c85ac" >{b.name}</td>
                     <td>
-                      <Link href={`/admin/listings?business_id=${b.id}`} style={{ color: "var(--a-teal)", fontSize: "13px" }}>
+                      <Link href={`/admin/listings?business_id=${b.id}`} className="a-inline-d862cb1b" >
                         {b.listing_count}
                       </Link>
                     </td>
-                    <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }} title={b.website ?? undefined}>
+                    <td className="a-inline-691df809"  title={b.website ?? undefined}>
                       {b.website ? (
-                        <a href={b.website} target="_blank" rel="noopener" style={{ color: "var(--a-teal)", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <a href={b.website} target="_blank" rel="noopener" className="a-inline-bd37cbb4" >
                           {b.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                         </a>
                       ) : "—"}

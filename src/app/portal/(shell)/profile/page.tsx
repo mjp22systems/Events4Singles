@@ -35,17 +35,17 @@ export default async function PortalProfile() {
       <div className="p-card">
         <div className="p-card__section">
           <h2 className="p-section-title">Account</h2>
-          <div className="p-form-grid" style={{ marginTop: "12px" }}>
+          <div className="p-form-grid p-inline-69959809" >
             <div className="p-field">
               <label className="p-label">Portal account ID</label>
-              <input className="p-input" type="text" value={account?.id ?? ""} readOnly style={{ opacity: 0.6 }} />
+              <input className="p-input p-inline-f820b63b" type="text" value={account?.id ?? ""} readOnly  />
             </div>
             <div className="p-field">
               <label className="p-label">Login provider user ID</label>
-              <input className="p-input" type="text" value={user.id} readOnly style={{ opacity: 0.6 }} />
+              <input className="p-input p-inline-f820b63b" type="text" value={user.id} readOnly  />
             </div>
           </div>
-          <p className="p-muted" style={{ marginTop: "8px", fontSize: "12px" }}>Internal IDs are locked. Your portal name and contact email can be changed below.</p>
+          <p className="p-muted p-inline-c73fed2f" >Internal IDs are locked. Your portal name and contact email can be changed below.</p>
         </div>
         <div className="p-card__section">
           <h2 className="p-section-title">Contact and billing</h2>
@@ -54,15 +54,15 @@ export default async function PortalProfile() {
         <div className="p-card__section">
           <h2 className="p-section-title">Businesses</h2>
           {businesses.length > 0 ? (
-            <div style={{ display: "grid", gap: "8px" }}>
+            <div className="p-inline-caa61160" >
               {businesses.map((business) => (
-                <p key={business.id} className="p-muted" style={{ margin: 0 }}>
-                  <strong style={{ color: "var(--p-ink)" }}>{business.name}</strong>{" "}
+                <p key={business.id} className="p-muted p-inline-b646589c" >
+                  <strong className="p-inline-410df61f" >{business.name}</strong>{" "}
                   <code>#{business.id}</code>
                   {business.is_primary ? " · primary" : ""} · {business.role}
                 </p>
               ))}
-              <p className="p-muted" style={{ margin: "8px 0 0" }}>
+              <p className="p-muted p-inline-fe1086d2" >
                 Manage owned businesses from the <a href="/portal/businesses">Businesses</a> page.
               </p>
             </div>

@@ -258,9 +258,9 @@ export default function IntegrationsClient({
         </form>
       </section>
 
-      <div className="p-section-header" style={{ marginTop: "24px" }}>
+      <div className="p-section-header p-inline-94d668c2" >
         <div className="p-section-header__text">
-          <h2 className="p-section-title" style={{ margin: 0 }}>Connected integrations</h2>
+          <h2 className="p-section-title p-inline-b646589c" >Connected integrations</h2>
           <p className="p-muted">Only sources you have connected appear here.</p>
         </div>
       </div>

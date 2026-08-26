@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import type { Article } from "@/content/articles";
 import { articles, getArticle } from "@/content/articles";
 import { articleCategory, groupArticles, topicId } from "@/content/article-categories";
+import { InfoPage } from "@/components/public-page";
 import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 interface Props {
@@ -119,7 +120,7 @@ export default async function DatingResourceArticlePage({ params }: Props) {
   ];
 
   return (
-    <main className="e4s-info-page e4s-shell e4s-blog-article" id="site-content">
+    <InfoPage className="e4s-blog-article">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -221,6 +222,6 @@ export default async function DatingResourceArticlePage({ params }: Props) {
           </Link>
         ) : <span />}
       </nav>
-    </main>
+    </InfoPage>
   );
 }

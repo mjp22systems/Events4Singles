@@ -35,8 +35,8 @@ export default function FeatureSlotCard() {
               </linearGradient>
             </defs>
             <rect width="180" height="120" rx="8" fill="url(#fsg)" />
-            <text x="90" y="50" textAnchor="middle" fill="#fff" fontFamily="Verdana,Arial,sans-serif" fontSize="13" fontWeight="700">Your</text>
-            <text x="90" y="70" textAnchor="middle" fill="#dff3f1" fontFamily="Verdana,Arial,sans-serif" fontSize="13" fontWeight="700">Logo Here</text>
+            <text className="e4s-feature-slot-svg__text e4s-feature-slot-svg__text--primary" x="90" y="50" textAnchor="middle">Your</text>
+            <text className="e4s-feature-slot-svg__text e4s-feature-slot-svg__text--secondary" x="90" y="70" textAnchor="middle">Logo Here</text>
           </svg>
         </div>
         <div className="e4s-listing-card__content">

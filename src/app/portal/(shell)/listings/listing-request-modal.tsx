@@ -72,7 +72,7 @@ export default function ListingRequestModal({
               <label className="p-label">Additional info</label>
               <textarea className="p-textarea" name="message" placeholder="Anything else we should know about your business…" />
             </div>
-            <div className="p-modal__footer" style={{ padding: 0, marginTop: "8px" }}>
+            <div className="p-modal__footer p-inline-19683953" >
               <button type="button" className="p-btn" onClick={onClose}>Cancel</button>
               <button type="submit" className="p-btn p-btn--primary" disabled={pending}>
                 {pending ? "Sending…" : "Submit request"}
@@ -81,7 +81,7 @@ export default function ListingRequestModal({
           </form>
         )}
         {done && (
-          <div style={{ textAlign: "right", marginTop: "12px" }}>
+          <div className="p-inline-f17b7ea3" >
             <button className="p-btn" onClick={onClose}>Close</button>
           </div>
         )}

@@ -45,53 +45,53 @@ export default function CityEditForm({ city }: { city: City }) {
 
   return (
     <>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "20px", alignItems: "start" }}>
+      <div className="a-inline-18d895f9" >
         <form onSubmit={handleSave}>
-          <div className="a-card" style={{ marginBottom: "20px" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+          <div className="a-card a-inline-e5cf13bb" >
+            <div className="a-inline-d84dd62c" >
               City details
             </div>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">Label</label>
-                <input className="a-input" value={label} onChange={(e) => setLabel(e.target.value)} required style={{ width: "100%" }} />
+                <input className="a-input a-inline-aef14f3c" value={label} onChange={(e) => setLabel(e.target.value)} required  />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="a-inline-99cabfbe" >
                 <div>
                   <label className="a-label">State</label>
-                  <input className="a-input" value={state} onChange={(e) => setState(e.target.value)} placeholder="NSW" style={{ width: "100%" }} />
+                  <input className="a-input a-inline-aef14f3c" value={state} onChange={(e) => setState(e.target.value)} placeholder="NSW"  />
                 </div>
                 <div>
                   <label className="a-label">Region</label>
-                  <input className="a-input" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Greater Sydney" style={{ width: "100%" }} />
+                  <input className="a-input a-inline-aef14f3c" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Greater Sydney"  />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="a-card" style={{ marginBottom: "20px" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+          <div className="a-card a-inline-e5cf13bb" >
+            <div className="a-inline-d84dd62c" >
               SEO
             </div>
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">SEO title</label>
-                <input className="a-input" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} style={{ width: "100%" }} maxLength={70} />
-                <div style={{ fontSize: "11px", color: seoTitle.length > 60 ? "var(--a-warning)" : "var(--a-ink-muted)", marginTop: "4px" }}>
+                <input className="a-input a-inline-aef14f3c" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
+                <div className={`a-char-count${seoTitle.length > 60 ? " is-warning" : ""}`}>
                   {seoTitle.length}/60
                 </div>
               </div>
               <div>
                 <label className="a-label">SEO description</label>
-                <textarea className="a-input" value={seoDesc} onChange={(e) => setSeoDesc(e.target.value)} rows={3} style={{ width: "100%", resize: "vertical" }} maxLength={200} />
-                <div style={{ fontSize: "11px", color: seoDesc.length > 160 ? "var(--a-warning)" : "var(--a-ink-muted)", marginTop: "4px" }}>
+                <textarea className="a-input a-inline-e6eed6ec" value={seoDesc} onChange={(e) => setSeoDesc(e.target.value)} rows={3}  maxLength={200} />
+                <div className={`a-char-count${seoDesc.length > 160 ? " is-warning" : ""}`}>
                   {seoDesc.length}/160
                 </div>
               </div>
             </div>
           </div>
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div className="a-inline-edc8bbe4" >
             <button type="submit" className="a-btn a-btn-primary" disabled={saving}>
               {saving ? "Saving…" : "Save changes"}
             </button>
@@ -99,17 +99,17 @@ export default function CityEditForm({ city }: { city: City }) {
         </form>
 
         <div className="a-card">
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--a-border)", fontWeight: 600, fontSize: "14px" }}>
+          <div className="a-inline-d84dd62c" >
             Info
           </div>
-          <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: "10px", fontSize: "13px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "var(--a-ink-muted)" }}>Slug</span>
-              <span style={{ fontFamily: "monospace" }}>{city.slug}</span>
+          <div className="a-inline-92f261f0" >
+            <div className="a-inline-39536e27" >
+              <span className="a-inline-22dfbba3" >Slug</span>
+              <span className="a-inline-36887086" >{city.slug}</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "var(--a-ink-muted)" }}>Listings</span>
-              <a href={`/admin/listings?city=${city.slug}`} style={{ color: "var(--a-teal)" }}>
+            <div className="a-inline-39536e27" >
+              <span className="a-inline-22dfbba3" >Listings</span>
+              <a href={`/admin/listings?city=${city.slug}`} className="a-inline-b3f1b3c6" >
                 {city.listing_count}
               </a>
             </div>
@@ -121,13 +121,7 @@ export default function CityEditForm({ city }: { city: City }) {
         <div
           role="status"
           aria-live="polite"
-          style={{
-            position: "fixed", bottom: "24px", right: "24px",
-            background: toast.ok ? "var(--a-success)" : "var(--a-danger)",
-            color: "#fff", padding: "10px 18px", borderRadius: "8px",
-            fontSize: "14px", fontWeight: 500, zIndex: 200,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-          }}
+          className={`a-toast a-toast--${toast.ok ? "success" : "danger"}`}
         >
           {toast.msg}
         </div>

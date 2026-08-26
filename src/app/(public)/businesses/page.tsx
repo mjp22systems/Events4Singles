@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicMain } from "@/components/public-page";
 import { getAllBusinessesForDirectory } from "@/lib/data";
 import { toProfileSlug } from "@/lib/constants";
 import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
@@ -34,7 +35,7 @@ export default async function BusinessesPage() {
   }
 
   return (
-    <main className="e4s-shell e4s-businesses" id="site-content">
+    <PublicMain className="e4s-businesses" shell>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -100,26 +101,26 @@ export default async function BusinessesPage() {
     var items = list.querySelectorAll('.e4s-businesses__item');
     var groups = list.querySelectorAll('.e4s-businesses__group');
     if (!q) {
-      items.forEach(function(el){ el.style.display = ''; });
-      groups.forEach(function(el){ el.style.display = ''; });
-      if (index) index.style.display = '';
+      items.forEach(function(el){ el.hidden = false; });
+      groups.forEach(function(el){ el.hidden = false; });
+      if (index) index.hidden = false;
       return;
     }
-    if (index) index.style.display = 'none';
+    if (index) index.hidden = true;
     groups.forEach(function (group) {
       var visible = 0;
       group.querySelectorAll('.e4s-businesses__item').forEach(function (item) {
         var match = item.dataset.title.indexOf(q) !== -1;
-        item.style.display = match ? '' : 'none';
+        item.hidden = !match;
         if (match) visible++;
       });
-      group.style.display = visible ? '' : 'none';
+      group.hidden = !visible;
     });
   });
 })();
 `,
         }}
       />
-    </main>
+    </PublicMain>
   );
 }

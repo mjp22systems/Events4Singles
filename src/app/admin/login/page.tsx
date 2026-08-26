@@ -67,9 +67,9 @@ export default function AdminLoginPage() {
           </div>
           <button
             type="submit"
-            className="a-btn a-btn-primary"
+            className="a-btn a-btn-primary a-inline-93473ca2"
             disabled={loading}
-            style={{ width: "100%", justifyContent: "center" }}
+            
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

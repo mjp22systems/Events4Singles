@@ -2,21 +2,21 @@ export const metadata = { title: "Portal Design Preview | Events4Singles" };
 
 export default function PortalPreviewPage() {
   return (
-    <div style={{ fontFamily: "'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif", background: "#f8fafb", minHeight: "100vh", padding: "40px 24px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <div className="e4s-inline-5622a46c" >
+      <div className="e4s-inline-ca330715" >
 
         {/* ── Header ─────────────────────────────────────────── */}
-        <div style={{ marginBottom: 48, borderBottom: "1px solid #dde4ea", paddingBottom: 24 }}>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700, color: "#14313f" }}>Portal Design System</h1>
-          <p style={{ margin: "8px 0 0", color: "#647887", fontSize: 14 }}>Events4Singles Advertiser Portal · <code>p-</code> class inventory</p>
+        <div className="e4s-inline-38acb587" >
+          <h1 className="e4s-inline-99028b16" >Portal Design System</h1>
+          <p className="e4s-inline-b4cfb71c" >Events4Singles Advertiser Portal · <code>p-</code> class inventory</p>
         </div>
 
         {/* ── Shell preview ──────────────────────────────────── */}
         <Section title="Shell Layout">
-          <div className="p-shell" style={{ height: 420, borderRadius: 12, overflow: "hidden", boxShadow: "0 2px 16px rgba(20,49,63,0.12)" }}>
+          <div className="p-shell e4s-inline-594903f7" >
 
             {/* Sidebar */}
-            <aside className="p-sidebar" style={{ position: "relative" }}>
+            <aside className="p-sidebar e4s-inline-6180275a" >
               <div className="p-sidebar__logo">
                 <div className="p-sidebar__logo-mark">e4s</div>
                 <div className="p-sidebar__logo-text">
@@ -103,7 +103,7 @@ export default function PortalPreviewPage() {
 
         {/* ── Buttons ────────────────────────────────────────── */}
         <Section title="Buttons">
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          <div className="e4s-inline-a52ea15e" >
             <button className="p-btn p-btn--primary">Primary action</button>
             <button className="p-btn">Default</button>
             <button className="p-btn p-btn--danger">Delete</button>
@@ -115,7 +115,7 @@ export default function PortalPreviewPage() {
 
         {/* ── Status chips ───────────────────────────────────── */}
         <Section title="Status Chips">
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <div className="e4s-inline-89481a99" >
             <span className="p-status-chip p-status-chip--active">Active</span>
             <span className="p-status-chip p-status-chip--pending">Pending review</span>
             <span className="p-status-chip p-status-chip--rejected">Rejected</span>
@@ -126,7 +126,7 @@ export default function PortalPreviewPage() {
 
         {/* ── Filter chips ───────────────────────────────────── */}
         <Section title="Filter Chips">
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div className="e4s-inline-9897f202" >
             <div className="p-filter-chip"><a href="#">All cities</a></div>
             <div className="p-filter-chip"><a href="#">Sydney</a></div>
             <div className="p-filter-chip"><a href="#">Melbourne</a></div>
@@ -146,7 +146,7 @@ export default function PortalPreviewPage() {
 
         {/* ── Alerts / banners ───────────────────────────────── */}
         <Section title="Alerts">
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="e4s-inline-50d5eadc" >
             <div className="p-alert p-alert--ok">Listing approved and live on the directory.</div>
             <div className="p-alert p-alert--warn">Your plan expires in 7 days. Renew to keep your listings live.</div>
             <div className="p-alert p-alert--err">Payment failed. Update your billing details to continue.</div>
@@ -156,7 +156,7 @@ export default function PortalPreviewPage() {
 
         {/* ── Form elements ──────────────────────────────────── */}
         <Section title="Form Elements">
-          <div style={{ maxWidth: 480, display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="e4s-inline-f5f4fff1" >
             <div className="p-form-group">
               <label className="p-label">Business name *</label>
               <input className="p-input" placeholder="Your business name" defaultValue="" />
@@ -252,7 +252,7 @@ export default function PortalPreviewPage() {
           <div className="p-upload-zone">
             <p className="p-upload-zone__label">Drop banner image here or click to upload</p>
             <p className="p-upload-zone__hint">PNG or JPG · 970 × 90 px · max 500 KB</p>
-            <button className="p-btn p-btn--sm" style={{ marginTop: 8 }}>Browse files</button>
+            <button className="p-btn p-btn--sm e4s-inline-40d8d379" >Browse files</button>
           </div>
         </Section>
 
@@ -311,8 +311,8 @@ export default function PortalPreviewPage() {
 
         {/* ── Modal (inline, always visible) ────────────────── */}
         <Section title="Modal">
-          <div style={{ position: "relative", height: 420, background: "rgba(10,25,33,0.32)", borderRadius: 12, overflow: "hidden" }}>
-            <div className="p-modal" style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="e4s-inline-42cd09aa" >
+            <div className="p-modal e4s-inline-7775cebf" >
               <div className="p-modal__box">
                 <div className="p-modal__header">
                   <h2 className="p-modal__title">Request a listing</h2>
@@ -355,7 +355,7 @@ export default function PortalPreviewPage() {
               <button className="p-btn p-btn--primary p-btn--sm">Upload banner</button>
             </div>
             <div className="p-card__body">
-              <p style={{ color: "var(--p-ink-muted)", margin: 0 }}>
+              <p className="e4s-inline-97e3068a" >
                 Banner ads appear at the top of category and city pages. Upload a 970 × 90 px image to get started.
               </p>
             </div>
@@ -364,28 +364,28 @@ export default function PortalPreviewPage() {
 
         {/* ── Token reference ────────────────────────────────── */}
         <Section title="Colour Tokens">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+          <div className="e4s-inline-7fedb58f" >
             {[
-              ["--p-teal", "#0d9488"],
-              ["--p-teal-hover", "#0f766e"],
-              ["--p-teal-light", "#f0fdfa"],
-              ["--p-maroon", "#8b2f43"],
-              ["--p-maroon-hover", "#6b2033"],
-              ["--p-ink", "#14313f"],
-              ["--p-ink-muted", "#647887"],
-              ["--p-ink-faint", "#9ab0bc"],
-              ["--p-bg", "#f8fafb"],
-              ["--p-surface", "#ffffff"],
-              ["--p-surface-2", "#f0f4f7"],
-              ["--p-border", "#dde4ea"],
-              ["--p-sidebar-bg", "#14313f"],
-              ["--p-sidebar-active", "#2dd4bf"],
-            ].map(([token, hex]) => (
-              <div key={token} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: 6, background: hex, border: "1px solid rgba(0,0,0,0.08)", flexShrink: 0 }} />
+              ["--p-teal", "#0d9488", "e4s-portal-preview-swatch--p-teal"],
+              ["--p-teal-hover", "#0f766e", "e4s-portal-preview-swatch--p-teal-hover"],
+              ["--p-teal-light", "#f0fdfa", "e4s-portal-preview-swatch--p-teal-light"],
+              ["--p-maroon", "#8b2f43", "e4s-portal-preview-swatch--p-maroon"],
+              ["--p-maroon-hover", "#6b2033", "e4s-portal-preview-swatch--p-maroon-hover"],
+              ["--p-ink", "#14313f", "e4s-portal-preview-swatch--p-ink"],
+              ["--p-ink-muted", "#647887", "e4s-portal-preview-swatch--p-ink-muted"],
+              ["--p-ink-faint", "#9ab0bc", "e4s-portal-preview-swatch--p-ink-faint"],
+              ["--p-bg", "#f8fafb", "e4s-portal-preview-swatch--p-bg"],
+              ["--p-surface", "#ffffff", "e4s-portal-preview-swatch--p-surface"],
+              ["--p-surface-2", "#f0f4f7", "e4s-portal-preview-swatch--p-surface-2"],
+              ["--p-border", "#dde4ea", "e4s-portal-preview-swatch--p-border"],
+              ["--p-sidebar-bg", "#14313f", "e4s-portal-preview-swatch--p-sidebar-bg"],
+              ["--p-sidebar-active", "#2dd4bf", "e4s-portal-preview-swatch--p-sidebar-active"],
+            ].map(([token, hex, swatchClass]) => (
+              <div key={token} className="e4s-inline-1d6a9405" >
+                <div className={`e4s-portal-preview-swatch ${swatchClass}`} />
                 <div>
-                  <div style={{ fontSize: 11, fontFamily: "monospace", color: "#647887" }}>{token}</div>
-                  <div style={{ fontSize: 11, fontFamily: "monospace", color: "#14313f" }}>{hex}</div>
+                  <div className="e4s-inline-a46e9e3f" >{token}</div>
+                  <div className="e4s-inline-31bcf3d6" >{hex}</div>
                 </div>
               </div>
             ))}
@@ -399,8 +399,8 @@ export default function PortalPreviewPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 56 }}>
-      <h2 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#647887" }}>{title}</h2>
+    <div className="e4s-inline-dc53681c" >
+      <h2 className="e4s-inline-788b0d4f" >{title}</h2>
       {children}
     </div>
   );

@@ -54,10 +54,10 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+      <div className="a-inline-32e1f70f" >
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Integrations
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {integrations.length.toLocaleString()}
           </span>
         </h1>
@@ -66,39 +66,39 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
         </form>
       </div>
 
-      <form method="GET" action="/admin/integrations" style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-        <input name="q" type="search" defaultValue={q} placeholder="Search account or business..." className="a-input" style={{ flex: 1, minWidth: "160px" }} />
-        <select name="platform" defaultValue={platform} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+      <form method="GET" action="/admin/integrations" className="a-inline-8ff7e847" >
+        <input name="q" type="search" defaultValue={q} placeholder="Search account or business..." className="a-input a-inline-ab674353"  />
+        <select name="platform" defaultValue={platform} className="a-input a-inline-37a89abe" >
           <option value="">All platforms</option>
           {PLATFORMS.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
           <option value="">All statuses</option>
           {STATUSES.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <button className="a-btn a-btn-ghost" type="submit" style={{ flexShrink: 0 }}>Filter</button>
-        {hasActiveFilters && <Link href="/admin/integrations" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button className="a-btn a-btn-ghost a-inline-47390085" type="submit" >Filter</button>
+        {hasActiveFilters && <Link href="/admin/integrations" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form id={BULK_FORM_ID} method="POST" action="/admin/api/integrations/bulk">
         <input type="hidden" name="redirect" value={currentPath} />
       </form>
       <div className="a-card">
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+        <div className="a-inline-2b655313" >
+          <label className="a-inline-3ae3b235" >
             <AdminBulkSelectAll form={BULK_FORM_ID} />
             All
           </label>
-          <select form={BULK_FORM_ID} name="action" className="a-input" style={{ width: "190px" }}>
+          <select form={BULK_FORM_ID} name="action" className="a-input a-inline-94c78c41" >
             <option value="">Bulk action...</option>
             <option value="sync">Force sync</option>
             <option value="auto_approve_on">Auto-approve on</option>
@@ -107,7 +107,7 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
             <option value="push_off">Push enabled off</option>
             <option value="disconnect">Disconnect</option>
           </select>
-          <button form={BULK_FORM_ID} type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+          <button form={BULK_FORM_ID} type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
         </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line a-table--integrations">
@@ -142,25 +142,25 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
             <tbody>
               {integrations.length === 0 ? (
                 <tr>
-                  <td colSpan={11} style={{ padding: "40px", textAlign: "center", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={11} className="a-inline-f61db55c" >
                     No integrations connected yet
                   </td>
                 </tr>
               ) : integrations.map((row, index) => (
                 <tr key={row.id}>
                   <td><input form={BULK_FORM_ID} type="checkbox" name="ids" value={row.id} className="bulk-check" /></td>
-                  <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
+                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
                   <td title={`${accountLabel(row)} (${row.account_id})`}>
-                    <span style={{ fontWeight: 600 }}>{accountLabel(row)}</span>
-                    <div style={{ fontSize: "11px", color: "var(--a-ink-muted)" }}>{row.account_id}</div>
+                    <span className="a-inline-6c835a8d" >{accountLabel(row)}</span>
+                    <div className="a-inline-bb3abc5b" >{row.account_id}</div>
                   </td>
-                  <td style={{ textTransform: "capitalize" }}>{row.platform}</td>
-                  <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                  <td className="a-inline-056f71dd" >{row.platform}</td>
+                  <td className="a-inline-691df809" >
                     {row.last_synced ? new Date(row.last_synced).toLocaleString("en-AU") : "Never"}
                   </td>
                   <td>{row.event_count}</td>
                   <td className="a-table__badge-cell"><span className={`a-badge ${STATUS_CLASS[row.sync_status] ?? "a-badge-paused"}`}>{row.sync_status}</span></td>
-                  <td title={row.sync_error || undefined} style={{ color: row.sync_error ? "#991b1b" : "var(--a-ink-muted)", fontSize: "12px" }}>
+                  <td title={row.sync_error || undefined} className={`a-status-message${row.sync_error ? " is-danger" : ""}`}>
                     {row.sync_error || "-"}
                   </td>
                   <td className="a-table__toggle-cell">

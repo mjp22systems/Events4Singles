@@ -23,7 +23,7 @@ export default function PortalSubscription() {
     <>
       <h1 className="p-page-title">Subscription</h1>
 
-      <div className="p-card" style={{ marginBottom: "24px" }}>
+      <div className="p-card p-inline-d0a4cc24" >
         <div className="p-card__section">
           <p className="p-muted">Current plan: <strong>Free</strong></p>
         </div>
@@ -44,7 +44,7 @@ export default function PortalSubscription() {
         ))}
       </div>
 
-      <p className="p-muted" style={{ marginTop: "24px", fontSize: "13px" }}>
+      <p className="p-muted p-inline-150ac35f" >
         Subscription plans launching soon. <a href="mailto:support@events4singles.com">Contact us</a> for early access pricing.
       </p>
     </>

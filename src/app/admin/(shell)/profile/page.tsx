@@ -34,22 +34,22 @@ export default async function AdminProfilePage() {
   return (
     <>
       <h1 className="a-page-title">Admin Profile</h1>
-      <div className="a-card" style={{ maxWidth: "720px" }}>
+      <div className="a-card a-inline-b52bebf2" >
         <div className="a-card-header">
           <span className="a-card-title">Login</span>
         </div>
-        <div className="a-card-body" style={{ display: "grid", gap: "14px" }}>
+        <div className="a-card-body a-inline-7b050c66" >
           <div>
             <span className="a-label">Display name</span>
-            <p style={{ margin: 0, fontWeight: 650 }}>{displayName}</p>
+            <p className="a-inline-7fdb314a" >{displayName}</p>
           </div>
           <div>
             <span className="a-label">Email</span>
-            <p style={{ margin: 0, color: "var(--a-ink-muted)", fontSize: "13px" }}>{email}</p>
+            <p className="a-inline-b12c8a54" >{email}</p>
           </div>
           <div>
             <span className="a-label">Account role</span>
-            <p style={{ margin: 0 }}>
+            <p className="a-inline-0ad5d5dc" >
               <span className={`a-badge ${account?.account_role === "super_admin" ? "a-badge-active" : "a-badge-paused"}`}>
                 {formatRole(account?.account_role)}
               </span>
@@ -57,13 +57,13 @@ export default async function AdminProfilePage() {
           </div>
           <div>
             <span className="a-label">Auth model</span>
-            <p style={{ margin: 0, color: "var(--a-ink-muted)", fontSize: "13px" }}>
+            <p className="a-inline-b12c8a54" >
               Admin console uses the shared admin password and links the session to an admin user record when available.
             </p>
           </div>
           <div>
             <span className="a-label">Session</span>
-            <p style={{ margin: 0 }}>
+            <p className="a-inline-0ad5d5dc" >
               <span className={`a-badge ${session ? "a-badge-active" : "a-badge-deleted"}`}>
                 {session ? "Active" : "Missing"}
               </span>

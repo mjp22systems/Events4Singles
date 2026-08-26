@@ -79,13 +79,13 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Banners
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {banners.length.toLocaleString()}
           </span>
         </h1>
-        <Link href="/admin/banners?add=1" className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+        <Link href="/admin/banners?add=1" className="a-btn a-btn-primary a-inline-65d1aa8a" >
           + Add Banner
         </Link>
       </div>
@@ -126,36 +126,36 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
       )}
 
       <form method="GET" action="/admin/banners" className="admin-filter-bar">
-        <input name="q" type="search" defaultValue={q} placeholder="Search title, business, link..." className="a-input" style={{ flex: 1, minWidth: "160px" }} />
-        <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <input name="q" type="search" defaultValue={q} placeholder="Search title, business, link..." className="a-input a-inline-ab674353"  />
+        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
           {STATUSES.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <select name="placement" defaultValue={placement} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="placement" defaultValue={placement} className="a-input a-inline-37a89abe" >
           <option value="">All Placements</option>
           {placements.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <button className="a-btn a-btn-ghost" type="submit" style={{ flexShrink: 0 }}>Filter</button>
-        {hasActiveFilters && <Link href="/admin/banners" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Clear</Link>}
+        <button className="a-btn a-btn-ghost a-inline-47390085" type="submit" >Filter</button>
+        {hasActiveFilters && <Link href="/admin/banners" className="a-btn a-btn-ghost a-inline-47390085" >Clear</Link>}
       </form>
 
       <form method="POST" action="/admin/api/banners/bulk">
         <input type="hidden" name="redirect" value="/admin/banners" />
         <div className="a-card">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+          <div className="a-inline-2b655313" >
+            <label className="a-inline-3ae3b235" >
               <AdminBulkSelectAll />
               All
             </label>
-            <select name="action" className="a-input" style={{ width: "160px" }}>
+            <select name="action" className="a-input a-inline-dc2a05f8" >
               <option value="">Bulk Action…</option>
               <option value="approve">Approve</option>
               <option value="reject">Reject</option>
@@ -163,20 +163,20 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
               <option value="activate">Reactivate</option>
               <option value="delete">Delete</option>
             </select>
-            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+            <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
           </div>
         <div className="a-table-wrap">
           <table className="a-table a-table--single-line a-table--banners">
             <colgroup>
-              <col style={{ width: "36px" }} />
-              <col style={{ width: "52px" }} />
-              <col style={{ width: "50px" }} />
-              <col style={{ width: "28%" }} />
-              <col style={{ width: "19%" }} />
-              <col style={{ width: "13%" }} />
-              <col style={{ width: "90px" }} />
-              <col style={{ width: "90px" }} />
-              <col style={{ width: "72px" }} />
+              <col className="a-inline-b9c114f7"  />
+              <col className="a-inline-672380eb"  />
+              <col className="a-inline-ab8ba9f4"  />
+              <col className="a-inline-94308b39"  />
+              <col className="a-inline-e68ac0ac"  />
+              <col className="a-inline-48c753a6"  />
+              <col className="a-inline-54442ae7"  />
+              <col className="a-inline-54442ae7"  />
+              <col className="a-inline-49412b1d"  />
             </colgroup>
             <thead>
               <tr>
@@ -194,7 +194,7 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
             <tbody>
               {banners.length === 0 ? (
                 <tr>
-                  <td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={9} className="a-inline-ac953bfd" >
                     No banners found
                   </td>
                 </tr>
@@ -204,8 +204,8 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
                 return (
                   <tr key={banner.id}>
                     <td><input type="checkbox" name="ids" value={banner.id} className="bulk-check" /></td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{index + 1}</td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{banner.id}</td>
+                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                    <td className="a-inline-5d69a8cc" >{banner.id}</td>
                     <td>
                       <div className="admin-banner-cell">
                         <img
@@ -216,12 +216,12 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
                         <div className="admin-banner-cell__text">{banner.title ?? banner.alt_text ?? "Untitled banner"}</div>
                       </div>
                     </td>
-                    <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                    <td className="a-inline-691df809" >
                       <div>{banner.business_name ?? banner.billing_email ?? "No owner linked"}</div>
-                      {banner.account_id && <div style={{ marginTop: "3px" }}>Account {banner.account_id}</div>}
+                      {banner.account_id && <div className="a-inline-046a013e" >Account {banner.account_id}</div>}
                     </td>
-                    <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>{banner.placement ?? "—"}</td>
-                    <td style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+                    <td className="a-inline-691df809" >{banner.placement ?? "—"}</td>
+                    <td className="a-inline-691df809" >
                       {banner.created_at ? new Date(banner.created_at).toLocaleDateString("en-AU") : "—"}
                     </td>
                     <td>
@@ -233,7 +233,7 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
                           <a href={link} target="_blank" rel="noopener">Visit</a>
                         </AdminActionsMenu>
                       ) : (
-                        <span style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>—</span>
+                        <span className="a-inline-5d69a8cc" >—</span>
                       )}
                     </td>
                   </tr>

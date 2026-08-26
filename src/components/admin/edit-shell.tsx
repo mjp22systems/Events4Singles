@@ -14,8 +14,8 @@ export default function AdminEditShell({ backHref, backLabel, title, eyebrow, ch
       <div className="admin-edit-shell__bar">
         <Link
           href={backHref}
-          className="a-btn a-btn-ghost"
-          style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
+          className="a-btn a-btn-ghost a-inline-fed8595c"
+          
         >
           {backLabel}
         </Link>

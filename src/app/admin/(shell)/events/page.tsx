@@ -126,9 +126,9 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="a-page-title" style={{ margin: 0 }}>
+        <h1 className="a-page-title a-inline-0ad5d5dc" >
           Events
-          <span style={{ marginLeft: "10px", fontSize: "15px", fontWeight: 500, color: "var(--a-ink-muted)" }}>
+          <span className="a-inline-a0bf08bc" >
             {total.toLocaleString()}
           </span>
           {pendingCount > 0 && (
@@ -137,7 +137,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
             </span>
           )}
         </h1>
-        <Link href="/admin/events?add=1" className="a-btn a-btn-primary" style={{ fontSize: "13px" }}>
+        <Link href="/admin/events?add=1" className="a-btn a-btn-primary a-inline-65d1aa8a" >
           + Add Event
         </Link>
       </div>
@@ -151,31 +151,31 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
       {/* Filters */}
       <div>
         <form method="GET" action="/admin/events" className="admin-filter-bar">
-          <input name="q" type="search" defaultValue={q} placeholder="Search title, venue, category..." className="a-input" style={{ flex: 1, minWidth: "160px" }} />
-          <select name="status" defaultValue={status} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+          <input name="q" type="search" defaultValue={q} placeholder="Search title, venue, category..." className="a-input a-inline-ab674353"  />
+          <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="city" defaultValue={city} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+          <select name="city" defaultValue={city} className="a-input a-inline-37a89abe" >
             <option value="">All Cities</option>
             {cities.map((c) => (
               <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <select name="source" defaultValue={source} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+          <select name="source" defaultValue={source} className="a-input a-inline-37a89abe" >
             {SOURCES.map((s) => (
               <option key={s.value || "all"} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="sort" defaultValue={sort} className="a-input" style={{ flex: 1, minWidth: "140px" }}>
+          <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
             {SORTS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <button type="submit" className="a-btn a-btn-ghost" style={{ flexShrink: 0 }}>Filter</button>
+          <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
           {hasActiveFilters && (
-            <Link href="/admin/events" className="a-btn a-btn-ghost" style={{ color: "var(--a-ink-muted)", flexShrink: 0 }}>Clear</Link>
+            <Link href="/admin/events" className="a-btn a-btn-ghost a-inline-d47b2105" >Clear</Link>
           )}
         </form>
       </div>
@@ -183,12 +183,12 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
       <form method="POST" action="/admin/api/events/bulk">
         <input type="hidden" name="redirect" value={currentPath} />
         <div className="a-card">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 16px", borderBottom: "1px solid var(--a-border)" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "var(--a-ink-muted)", cursor: "pointer" }}>
+          <div className="a-inline-2b655313" >
+            <label className="a-inline-3ae3b235" >
               <AdminBulkSelectAll />
               All
             </label>
-            <select name="action" className="a-input" style={{ width: "160px" }}>
+            <select name="action" className="a-input a-inline-dc2a05f8" >
               <option value="">Bulk Action…</option>
               <option value="approve">Approve</option>
               <option value="reject">Reject</option>
@@ -197,7 +197,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
               <option value="cancel">Cancel</option>
               <option value="delete">Delete</option>
             </select>
-            <button type="submit" className="a-btn a-btn-ghost" style={{ fontSize: "13px" }}>Apply</button>
+            <button type="submit" className="a-btn a-btn-ghost a-inline-65d1aa8a" >Apply</button>
           </div>
         <div className="a-table-wrap a-table-wrap--events">
           <table className="a-table a-table--single-line a-table--events">
@@ -228,7 +228,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
             <tbody>
               {events.length === 0 ? (
                 <tr>
-                  <td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "var(--a-ink-muted)" }}>
+                  <td colSpan={9} className="a-inline-ac953bfd" >
                     No events found
                   </td>
                 </tr>
@@ -236,14 +236,14 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
                 events.map((ev, index) => (
                   <tr key={ev.id}>
                     <td><input type="checkbox" name="ids" value={ev.id} className="bulk-check" /></td>
-                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px" }}>{offset + index + 1}</td>
+                    <td className="a-inline-5d69a8cc" >{offset + index + 1}</td>
                     <td className="a-events-title-cell" title={[ev.title, ev.category].filter(Boolean).join(" · ")}>
                       <span className="a-events-title-text">{ev.title}</span>
                       {ev.category && <span className="a-events-category-text">· {ev.category}</span>}
                     </td>
-                    <td style={{ fontSize: "12px" }}>{formatDate(ev.starts_at)}</td>
-                    <td className="a-events-city-cell" style={{ fontSize: "13px" }}>{formatCityName(ev.city)}</td>
-                    <td style={{ fontSize: "12px" }}>{formatPrice(ev.price_min, ev.price_max)}</td>
+                    <td className="a-inline-d4d63c8b" >{formatDate(ev.starts_at)}</td>
+                    <td className="a-events-city-cell a-inline-65d1aa8a" >{formatCityName(ev.city)}</td>
+                    <td className="a-inline-d4d63c8b" >{formatPrice(ev.price_min, ev.price_max)}</td>
                     <td className="a-table__badge-cell"><span className={`a-badge ${SOURCE_BADGE[ev.source] ?? "a-badge-paused"}`}>{SOURCE_LABELS[ev.source] ?? ev.source}</span></td>
                     <td className="a-table__badge-cell">
                       <span className={`a-badge ${BADGE[ev.status] ?? "a-badge-paused"}`}>{ev.status}</span>
@@ -261,14 +261,14 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
         </div>
 
         {totalPages > 1 && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderTop: "1px solid var(--a-border)", fontSize: "13px", color: "var(--a-ink-muted)" }}>
+          <div className="a-inline-d39120f1" >
             <span>Page {page} of {totalPages} — {total.toLocaleString()} total</span>
-            <div style={{ display: "flex", gap: "6px" }}>
+            <div className="a-inline-2631df32" >
               {page > 1 && (
-                <Link href={filterUrl({ page: String(page - 1) })} className="a-btn a-btn-ghost" style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}>← Prev</Link>
+                <Link href={filterUrl({ page: String(page - 1) })} className="a-btn a-btn-ghost a-inline-fed8595c" >← Prev</Link>
               )}
               {page < totalPages && (
-                <Link href={filterUrl({ page: String(page + 1) })} className="a-btn a-btn-ghost" style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}>Next →</Link>
+                <Link href={filterUrl({ page: String(page + 1) })} className="a-btn a-btn-ghost a-inline-fed8595c" >Next →</Link>
               )}
             </div>
           </div>

@@ -61,11 +61,11 @@ export default function ProfileForm({
           />
         </div>
       </div>
-      <div style={{ marginTop: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
+      <div className="p-inline-c25ddb03" >
         <button className="p-btn p-btn--primary" type="submit" disabled={pending}>
           {pending ? "Saving…" : "Save changes"}
         </button>
-        {saved && <span style={{ color: "var(--p-teal)", fontSize: "13px" }}>Saved</span>}
+        {saved && <span className="p-inline-23d57fd6" >Saved</span>}
       </div>
     </form>
   );

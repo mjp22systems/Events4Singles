@@ -26,7 +26,7 @@ export default function BannerSubmitForm({
     return (
       <div className="p-modal__body">
         <div className="p-success-banner">Banner submitted for review. We&apos;ll approve it within 1 business day.</div>
-        <div style={{ textAlign: "right", marginTop: "12px" }}>
+        <div className="p-inline-f17b7ea3" >
           <button className="p-btn" onClick={onDone}>Close</button>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function BannerSubmitForm({
         <div className="p-form-group">
           <label className="p-label">Banner image URL *</label>
           <input className="p-input" name="image_url" type="url" required placeholder="https://cdn.yoursite.com/banner.jpg" />
-          <p className="p-muted" style={{ fontSize: "12px", marginTop: "4px" }}>180×120px JPG or PNG. Host it on your own CDN or image host, then paste the URL here.</p>
+          <p className="p-muted p-inline-96c04b42" >180×120px JPG or PNG. Host it on your own CDN or image host, then paste the URL here.</p>
         </div>
         <div className="p-form-group">
           <label className="p-label">Click-through URL *</label>
@@ -49,7 +49,7 @@ export default function BannerSubmitForm({
           <label className="p-label">Banner title (internal reference)</label>
           <input className="p-input" name="title" placeholder="e.g. Summer 2026 promo" />
         </div>
-        <p className="p-muted" style={{ fontSize: "12px" }}>Banners are reviewed within 1 business day before going live.</p>
+        <p className="p-muted p-inline-c0e576d8" >Banners are reviewed within 1 business day before going live.</p>
       </div>
       <div className="p-modal__footer">
         <button type="button" className="p-btn" onClick={onDone}>Cancel</button>
