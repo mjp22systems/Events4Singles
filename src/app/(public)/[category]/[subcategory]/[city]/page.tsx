@@ -15,6 +15,7 @@ import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
+import SubcategoryPager from "@/components/subcategory-pager";
 import SeoSupportSection from "@/components/seo-support-section";
 import {
   EditorialIntro,
@@ -124,6 +125,13 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
             currentCityDbSlug={cityDbSlug}
             categoryUrlSlug={subcategoryUrlSlug}
           />
+          <SubcategoryPager
+            subcategories={styleSubcategories}
+            currentDbSlug={childMeta.slug}
+            parentUrlSlug={category}
+            cityUrlSlug={city}
+            variant="secondary"
+          />
           <nav
             aria-label={`${childMeta.label} city navigation`}
             className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
@@ -186,7 +194,7 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           currentSubcategoryDbSlug={childMeta.slug}
           subcategoryBaseUrlSlug={category}
           subcategoryCityUrlSlug={city}
-          subcategoryHeading={parentDbSlug === "dance_classes" ? `Browse ${cityMeta.label} styles` : undefined}
+          subcategoryHeading={parentDbSlug === "dance_classes" ? "Other Styles" : undefined}
           guideHref={parentDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
           guideLabel={parentDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
         />

@@ -92,7 +92,7 @@ export default function PageSidebar(props: Props) {
 
     return (
       <aside className="e4s-sidebar">
-        <SidebarNav heading="Browse by category" items={items} />
+        <SidebarNav heading="Other Categories" items={items} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
@@ -144,13 +144,13 @@ export default function PageSidebar(props: Props) {
       )}
       {subcategoryItems.length > 0 && (
         <SidebarNav
-          heading={props.subcategoryHeading ?? "Browse by style"}
+          heading={props.subcategoryHeading ?? "Other Styles"}
           items={subcategoryItems}
           topItem={subcategoryTopItem}
         />
       )}
       <SidebarNav
-        heading={props.currentCityDbSlug ? "Other cities" : "Browse by city"}
+        heading="Other Cities"
         items={items}
         topItem={topItem}
       />

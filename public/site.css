@@ -621,6 +621,8 @@ body > div > table {
   left: max(8px, calc(((100vw - var(--e4s-shell)) / 4) - 27px));
 }.e4s-location-pager--next {
   right: max(8px, calc(((100vw - var(--e4s-shell)) / 4) - 27px));
+}.e4s-location-pager--secondary {
+  top: calc(var(--e4s-header-height, 0px) + ((100vh - var(--e4s-header-height, 0px)) / 2) + 72px);
 }.e4s-location-pager:hover,
 .e4s-location-pager:focus-visible {
   background: rgba(139, 47, 67, 0.92);

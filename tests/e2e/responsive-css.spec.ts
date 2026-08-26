@@ -61,6 +61,47 @@ test.describe("responsive CSS", () => {
     await expect(page.locator(".e4s-nav select").nth(0).locator("option").first()).toHaveText("Sydney");
   });
 
+  test("secondary side pagers stack below primary side pagers", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body>
+          <a class="e4s-location-pager e4s-location-pager--prev" href="#"><span class="e4s-location-pager__icon"></span><span class="e4s-location-pager__label">Melbourne</span></a>
+          <a class="e4s-location-pager e4s-location-pager--next" href="#"><span class="e4s-location-pager__icon"></span><span class="e4s-location-pager__label">Brisbane</span></a>
+          <a class="e4s-location-pager e4s-location-pager--prev e4s-location-pager--secondary" href="#"><span class="e4s-location-pager__icon"></span><span class="e4s-location-pager__label">Ceroc</span></a>
+          <a class="e4s-location-pager e4s-location-pager--next e4s-location-pager--secondary" href="#"><span class="e4s-location-pager__icon"></span><span class="e4s-location-pager__label">Tango</span></a>
+          <aside>
+            <nav aria-label="Other Styles"><a href="#">Tango</a></nav>
+            <nav aria-label="Other Cities"><a href="#">Brisbane</a></nav>
+          </aside>
+        </body>
+      </html>
+    `);
+
+    await expect(page.locator(".e4s-location-pager--prev").first()).toBeVisible();
+    await expect(page.locator(".e4s-location-pager--next").first()).toBeVisible();
+    await expect(page.locator(".e4s-location-pager--secondary.e4s-location-pager--prev")).toHaveCount(1);
+    await expect(page.locator(".e4s-location-pager--secondary.e4s-location-pager--next")).toHaveCount(1);
+    await expect(page.getByRole("navigation", { name: "Other Styles" })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Other Cities" })).toBeVisible();
+
+    const offsets = await page.evaluate(() => {
+      const primary = document.querySelector(".e4s-location-pager--prev:not(.e4s-location-pager--secondary)")!.getBoundingClientRect();
+      const secondary = document.querySelector(".e4s-location-pager--prev.e4s-location-pager--secondary")!.getBoundingClientRect();
+      return {
+        primaryTop: Math.round(primary.top),
+        secondaryTop: Math.round(secondary.top),
+      };
+    });
+    expect(offsets.secondaryTop - offsets.primaryTop, JSON.stringify(offsets)).toBe(72);
+  });
+
   for (const viewport of [
     { width: 844, height: 390 },
     { width: 932, height: 430 },

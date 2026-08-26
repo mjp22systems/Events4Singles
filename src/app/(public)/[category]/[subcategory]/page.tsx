@@ -17,6 +17,7 @@ import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
+import SubcategoryPager from "@/components/subcategory-pager";
 import SeoSupportSection from "@/components/seo-support-section";
 import DanceStylesGuide from "@/components/dance-styles-guide";
 import {
@@ -149,14 +150,21 @@ export default async function CategoryCityPage({ params }: Props) {
         jsonLd={jsonLd}
         bodyClasses={["e4s-page-category", "e4s-page-child"]}
         beforeHero={(
-          <nav
-            aria-label={`${childMeta.label} navigation`}
-            className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
-          >
-            <Link className="e4s-category-child-nav__back" href={`/${category}`}>
-              Back to {catMeta.label}
-            </Link>
-          </nav>
+          <>
+            <SubcategoryPager
+              subcategories={styleSubcategories}
+              currentDbSlug={childMeta.slug}
+              parentUrlSlug={category}
+            />
+            <nav
+              aria-label={`${childMeta.label} navigation`}
+              className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
+            >
+              <Link className="e4s-category-child-nav__back" href={`/${category}`}>
+                Back to {catMeta.label}
+              </Link>
+            </nav>
+          </>
         )}
         hero={(
           <PageHero
@@ -196,7 +204,7 @@ export default async function CategoryCityPage({ params }: Props) {
             subcategories={styleSubcategories}
             currentSubcategoryDbSlug={childMeta.slug}
             subcategoryBaseUrlSlug={category}
-            subcategoryHeading={categoryDbSlug === "dance_classes" ? "Browse other styles" : undefined}
+            subcategoryHeading={categoryDbSlug === "dance_classes" ? "Other Styles" : undefined}
             guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
             guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
           />
@@ -305,7 +313,7 @@ export default async function CategoryCityPage({ params }: Props) {
           subcategories={styleSubcategories}
           subcategoryBaseUrlSlug={category}
           subcategoryCityUrlSlug={subcategory}
-          subcategoryHeading={categoryDbSlug === "dance_classes" ? `Browse ${cityMeta.label} styles` : undefined}
+          subcategoryHeading={categoryDbSlug === "dance_classes" ? "Other Styles" : undefined}
           guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
           guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
         />
