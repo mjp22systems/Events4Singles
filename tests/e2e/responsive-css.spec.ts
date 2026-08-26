@@ -451,6 +451,57 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test("portrait child category subnav keeps city select readable", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body class="e4s-page-category e4s-page-child" style="--e4s-sticky-top: 84px;">
+          <nav class="e4s-category-child-nav e4s-category-child-nav--has-sidebar">
+            <a class="e4s-category-child-nav__back" href="/dance-classes">Back to Dance Classes</a>
+            <label class="e4s-category-child-nav__control">
+              <span>View another city</span>
+              <select><option>Canberra (10)</option></select>
+            </label>
+          </nav>
+          <main class="e4s-category-template" id="site-content">
+            <div style="height: 280px;"></div>
+            <div class="e4s-toolbar-shield">
+              <div class="e4s-listings-toolbar">
+                <span class="e4s-listings-toolbar__title">Dance Classes - Canberra</span>
+                <label class="e4s-listings-sort"><span>Sort:</span><select><option>A-Z</option></select></label>
+              </div>
+            </div>
+            <div style="height: 1400px;"></div>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const layout = await page.evaluate(async () => {
+      window.scrollTo(0, 500);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const nav = document.querySelector(".e4s-category-child-nav")!.getBoundingClientRect();
+      const select = document.querySelector(".e4s-category-child-nav__control select")!.getBoundingClientRect();
+      const shield = document.querySelector(".e4s-toolbar-shield")!.getBoundingClientRect();
+      return {
+        nav: { top: Math.round(nav.top), bottom: Math.round(nav.bottom), height: Math.round(nav.height) },
+        select: { width: Math.round(select.width) },
+        shield: { top: Math.round(shield.top) },
+      };
+    });
+
+    expect(layout.nav.height, JSON.stringify(layout)).toBeGreaterThanOrEqual(100);
+    expect(layout.select.width, JSON.stringify(layout)).toBeGreaterThanOrEqual(160);
+    expect(layout.shield.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.nav.bottom - 1);
+    await expectNoHorizontalOverflow(page);
+  });
+
   test("portrait deep category subnav fits city and style controls above toolbar", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.setContent(`
