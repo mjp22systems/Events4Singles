@@ -2,13 +2,21 @@
 
 import { useState } from "react";
 import type { AdminRedirect } from "@/lib/admin-db";
+import type { NotFoundHit } from "@/lib/not-found";
 
 function formatDate(ts: number) {
   return new Date(ts * 1000).toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default function RedirectsClient({ initial }: { initial: AdminRedirect[] }) {
+export default function RedirectsClient({
+  initial,
+  notFoundHits,
+}: {
+  initial: AdminRedirect[];
+  notFoundHits: NotFoundHit[];
+}) {
   const [redirects, setRedirects] = useState(initial);
+  const [misses, setMisses] = useState(notFoundHits);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [error, setError] = useState("");
@@ -20,15 +28,17 @@ export default function RedirectsClient({ initial }: { initial: AdminRedirect[] 
     if (!from.trim() || !to.trim()) { setError("Both fields required"); return; }
     setSaving(true);
     try {
+      const submittedFrom = from.trim();
       const res = await fetch("/admin/api/redirects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ from_path: from.trim(), to_path: to.trim() }),
+        body: JSON.stringify({ from_path: submittedFrom, to_path: to.trim() }),
       });
       const data = await res.json() as { error?: string };
       if (!res.ok) { setError(data.error ?? "Failed to save"); return; }
       const refreshed = await fetch("/admin/api/redirects").then(r => r.json()) as AdminRedirect[];
       setRedirects(refreshed);
+      setMisses((items) => items.filter((item) => item.path !== submittedFrom));
       setFrom("");
       setTo("");
     } catch {
@@ -47,6 +57,63 @@ export default function RedirectsClient({ initial }: { initial: AdminRedirect[] 
   return (
     <>
       <h1 className="a-page-title">Redirects</h1>
+
+      <div className="a-card" style={{ marginBottom: "20px" }}>
+        <div className="a-card-header">
+          <span className="a-card-title">404 redirect candidates ({misses.length})</span>
+        </div>
+        {misses.length === 0 ? (
+          <div className="a-card-body">
+            <p style={{ color: "var(--a-ink-muted)", fontSize: "13px" }}>No unresolved 404 hits logged yet.</p>
+          </div>
+        ) : (
+          <div className="a-table-wrap">
+            <table className="a-table a-table--single-line">
+              <thead>
+                <tr>
+                  <th>Missed URL</th>
+                  <th>Hits</th>
+                  <th>Last seen</th>
+                  <th>Referrer</th>
+                  <th style={{ textAlign: "right" }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {misses.map((hit) => (
+                  <tr key={hit.id}>
+                    <td><code style={{ fontSize: "12px" }}>{hit.path}</code></td>
+                    <td>{hit.hit_count}</td>
+                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px", whiteSpace: "nowrap" }}>
+                      {hit.last_seen ? formatDate(hit.last_seen) : "—"}
+                    </td>
+                    <td style={{ color: "var(--a-ink-muted)", fontSize: "12px", maxWidth: "240px", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {hit.referrer || "Direct / unknown"}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <button
+                        className="a-btn"
+                        type="button"
+                        onClick={() => {
+                          setFrom(hit.path);
+                          setTo("");
+                        }}
+                        style={{ fontSize: "12px", padding: "4px 10px", minHeight: "auto" }}
+                      >
+                        Create redirect
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="a-card-body" style={{ paddingTop: misses.length ? "10px" : undefined }}>
+          <p style={{ fontSize: "12px", color: "var(--a-ink-muted)" }}>
+            These are public 404 hits grouped by normalised path. Add a redirect when a missed URL is getting repeated traffic.
+          </p>
+        </div>
+      </div>
 
       <div className="a-card" style={{ marginBottom: "20px" }}>
         <div className="a-card-header">

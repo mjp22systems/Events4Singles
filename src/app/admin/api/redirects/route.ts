@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listRedirects, createRedirect } from "@/lib/admin-db";
 import { requireAdmin } from "@/lib/require-admin";
+import { resolveNotFoundHit } from "@/lib/not-found";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +30,6 @@ export async function POST(req: NextRequest) {
   }
 
   await createRedirect(from_path, to_path);
+  await resolveNotFoundHit(from_path);
   return NextResponse.json({ ok: true });
 }

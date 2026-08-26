@@ -304,6 +304,8 @@ Current decision:
 - Images should have business/listing-based alt/title text rather than filename-only text.
 - Category/city page metadata should be database/admin editable later.
 - Slug edits in admin must write redirect records automatically.
+- 404s are tracked in `not_found_hits`; the public 404 page logs the missed URL, suggests likely current city/category/event pages, and keeps the response `noindex`.
+- Detailed URL, metadata, redirect, and 404 rules live in `docs/seo-redirects-404.md`.
 
 ## Brand And Design
 
