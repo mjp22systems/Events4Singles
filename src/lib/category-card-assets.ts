@@ -19,7 +19,7 @@ const CATEGORY_CARD_IMAGES: Record<string, string> = {
   "dance-teachers": "/images/categories/optimized/dance-teachers.webp",
   "dating-coaches": "/images/categories/optimized/dating-coaches.webp",
   "dating-profile-photography": "/images/categories/optimized/dating-profile-photography.webp",
-  "dinner-for-six": "/images/categories/optimized/dinner-for-six-clean.webp",
+  "dinner-for-six": "/images/categories/optimized/dinner-for-six.webp",
   "dinner-parties": "/images/categories/optimized/dinner-parties.webp",
   "finance-mortgage": "/images/categories/optimized/finance-mortgage.webp",
   "fitness4singles": "/images/categories/optimized/fitness4singles.webp",

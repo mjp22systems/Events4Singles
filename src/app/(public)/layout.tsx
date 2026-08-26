@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <link rel="stylesheet" href="/site-20260827.css" />
+      <link rel="stylesheet" href="/site.css" />
       <HeaderHeight />
       <PublicRouteStateReset />
       <NavigationTracker />
