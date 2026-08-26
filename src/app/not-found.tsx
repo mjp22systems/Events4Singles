@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <>
-      <link rel="stylesheet" href="/site.css" />
+      <link rel="stylesheet" href="/site-20260827.css" />
       <main id="site-content">
         <NotFoundHelper />
       </main>
