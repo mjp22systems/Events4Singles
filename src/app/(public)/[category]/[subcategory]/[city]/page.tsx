@@ -65,7 +65,9 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   if (!parentMeta || !childMeta) notFound();
 
   const subcategoryUrlSlug = `${category}/${subcategory}`;
-  const cities = await getCitiesForCategory(childMeta.slug);
+  const childCities = await getCitiesForCategory(childMeta.slug);
+  const parentCities = childCities.length > 0 ? [] : await getCitiesForCategory(parentMeta.slug);
+  const cities = childCities.length > 0 ? childCities : parentCities;
   const cityMeta = cities.find((c) => c.slug === cityDbSlug);
   if (!cityMeta) notFound();
 
