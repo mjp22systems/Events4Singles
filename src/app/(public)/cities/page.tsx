@@ -22,6 +22,7 @@ const CITY_IMAGES: Record<string, string> = {
   perth: "/images/optimized/home-city-perth.webp",
   adelaide: "/images/optimized/home-city-adelaide.webp",
   hobart: "/images/optimized/home-city-hobart.webp",
+  tasmania: "/images/optimized/home-city-hobart.webp",
   "gold-coast": "/images/optimized/home-city-gold-coast.webp",
   canberra: "/images/optimized/home-city-canberra.webp",
   "byron-bay": "/images/optimized/home-city-byron-bay.webp",
