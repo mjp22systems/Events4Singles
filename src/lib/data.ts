@@ -19,6 +19,12 @@ const SUPPRESSED_CATEGORIES = new Set([
   "walks4singles",
 ]);
 const SUPPRESSED_BANNER_CATEGORIES = new Set(["nightclubs"]);
+const SUPPRESSED_PUBLIC_CITIES = new Set([
+  "national",
+  "online",
+  "no_location",
+  "international",
+]);
 
 function placeholders(values: unknown[]): string {
   return values.map(() => "?").join(", ");
@@ -236,7 +242,9 @@ export async function getFeaturedListingCategories(): Promise<Category[]> {
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
-  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+  return results
+    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug) && r.listing_count > 0)
+    .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 export async function getFeaturedListingCities(): Promise<City[]> {
@@ -252,7 +260,9 @@ export async function getFeaturedListingCities(): Promise<City[]> {
     GROUP BY p.city_slug
     ORDER BY listing_count DESC, COALESCE(ci.label, p.city_slug) COLLATE NOCASE ASC
   `).all<{ slug: string; label: string | null; state: string | null; seo_title: string | null; seo_description: string | null; listing_count: number }>();
-  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+  return results
+    .filter((r) => !SUPPRESSED_PUBLIC_CITIES.has(r.slug) && r.listing_count > 0)
+    .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 export async function getAllBusinessesForDirectory(): Promise<{ id: number; name: string; profile_slug: string | null }[]> {
@@ -291,7 +301,7 @@ export async function getAllCategories(): Promise<Category[]> {
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
   return results
-    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug))
+    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug) && !r.parent_slug && r.listing_count > 0)
     .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
@@ -356,7 +366,9 @@ export async function getAllCities(): Promise<City[]> {
     GROUP BY p.city_slug
     ORDER BY listing_count DESC
   `).bind().all<{ slug: string; label: string | null; state: string | null; seo_title: string | null; seo_description: string | null; listing_count: number }>();
-  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+  return results
+    .filter((r) => !SUPPRESSED_PUBLIC_CITIES.has(r.slug) && r.listing_count > 0)
+    .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 export async function getCitiesForCategory(categoryDbSlug: string): Promise<City[]> {
@@ -375,7 +387,9 @@ export async function getCitiesForCategory(categoryDbSlug: string): Promise<City
     GROUP BY p.city_slug
     ORDER BY listing_count DESC
   `).bind(...categorySlugs).all<{ slug: string; label: string | null; state: string | null; seo_title: string | null; seo_description: string | null; listing_count: number }>();
-  return results.map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+  return results
+    .filter((r) => !SUPPRESSED_PUBLIC_CITIES.has(r.slug) && r.listing_count > 0)
+    .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
 export async function getListingsForCity(cityDbSlug: string): Promise<Listing[]> {

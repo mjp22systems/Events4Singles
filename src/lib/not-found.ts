@@ -25,6 +25,14 @@ type RouteCandidate = {
   kind: "city" | "category";
 };
 
+const SUPPRESSED_SUGGESTION_CITIES = new Set([
+  "international",
+  "melbourne2",
+  "national",
+  "no-location",
+  "online",
+]);
+
 function cleanPath(path: string): string {
   try {
     path = new URL(path, "https://events4singles.com").pathname;
@@ -124,9 +132,6 @@ function scoreCandidate(normalized: string, candidate: RouteCandidate): number {
   if (lastPart === candidate.token) score += 100;
   if (pathParts.includes(candidate.token)) score += 80;
   if (loosePath.includes(candidate.token)) score += 50;
-  const words = candidate.token.split("-");
-  if (words.length > 1 && words.every((word) => loosePath.includes(word))) score += 35;
-  if (candidate.kind === "city" && pathParts.length === 1) score += 10;
   return score;
 }
 
@@ -135,15 +140,17 @@ export async function getNotFoundSuggestions(path: string, limit = 4): Promise<N
   const normalized = normalizeNotFoundPath(path);
   const [{ results: cities }, { results: categories }] = await Promise.all([
     db.prepare("SELECT slug, label FROM cities ORDER BY label ASC").all<{ slug: string; label: string }>(),
-    db.prepare("SELECT slug, label FROM categories ORDER BY label ASC").all<{ slug: string; label: string }>(),
+    db.prepare("SELECT slug, label FROM categories WHERE parent_slug IS NULL ORDER BY label ASC").all<{ slug: string; label: string }>(),
   ]);
 
-  const cityCandidates: RouteCandidate[] = cities.map((city) => ({
-    href: `/${toUrlSlug(city.slug)}`,
-    label: city.label,
-    token: toUrlSlug(city.slug),
-    kind: "city",
-  }));
+  const cityCandidates: RouteCandidate[] = cities
+    .map((city) => ({
+      href: `/${toUrlSlug(city.slug)}`,
+      label: city.label,
+      token: toUrlSlug(city.slug),
+      kind: "city" as const,
+    }))
+    .filter((city) => !SUPPRESSED_SUGGESTION_CITIES.has(city.token));
   const categoryCandidates: RouteCandidate[] = categories.map((category) => ({
     href: `/${toUrlSlug(category.slug)}`,
     label: category.label,
@@ -153,7 +160,7 @@ export async function getNotFoundSuggestions(path: string, limit = 4): Promise<N
 
   const scored = [...cityCandidates, ...categoryCandidates]
     .map((candidate) => ({ candidate, score: scoreCandidate(normalized, candidate) }))
-    .filter((item) => item.score > 0)
+    .filter((item) => item.score >= 80)
     .sort((a, b) => b.score - a.score || a.candidate.label.localeCompare(b.candidate.label));
 
   const suggestions: NotFoundSuggestion[] = [];
@@ -172,19 +179,10 @@ export async function getNotFoundSuggestions(path: string, limit = 4): Promise<N
     suggestions.push({
       href: item.candidate.href,
       label: item.candidate.label,
-      reason: item.candidate.kind === "city" ? "Closest city page" : "Closest category page",
+      reason: item.candidate.kind === "city" ? "Possible city match" : "Possible category match",
     });
     if (suggestions.length >= limit) break;
   }
 
-  const fallback: NotFoundSuggestion[] = [
-    { href: "/cities", label: "Browse all cities", reason: "City directory" },
-    { href: "/categories", label: "Browse all categories", reason: "Category directory" },
-    { href: "/events", label: "Upcoming events", reason: "Current event calendar" },
-  ];
-  for (const item of fallback) {
-    if (suggestions.length >= limit) break;
-    if (!suggestions.some((suggestion) => suggestion.href === item.href)) suggestions.push(item);
-  }
   return suggestions.slice(0, limit);
 }

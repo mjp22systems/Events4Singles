@@ -10,12 +10,6 @@ type Suggestion = {
   reason: string;
 };
 
-const FALLBACK_SUGGESTIONS: Suggestion[] = [
-  { href: "/cities", label: "Browse all cities", reason: "City directory" },
-  { href: "/categories", label: "Browse all categories", reason: "Category directory" },
-  { href: "/events", label: "Upcoming events", reason: "Current event calendar" },
-];
-
 const RECOVERY_LINKS = [
   { href: "/cities", label: "Cities" },
   { href: "/categories", label: "Categories" },
@@ -35,7 +29,7 @@ function isSuggestionResponse(value: unknown): value is { suggestions: Suggestio
 
 export default function NotFoundHelper() {
   const path = usePathname();
-  const [suggestions, setSuggestions] = useState<Suggestion[]>(FALLBACK_SUGGESTIONS);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
   useEffect(() => {
     const currentPath = path || window.location.pathname;
@@ -67,17 +61,19 @@ export default function NotFoundHelper() {
         </p>
         {path && (
           <p className="e4s-not-found__path">
-            You landed on <code>{path}</code>
+            Requested address: <code>{path}</code>
           </p>
         )}
-        <div className="e4s-not-found__suggestions" aria-label="Suggested pages">
-          {suggestions.map((suggestion) => (
-            <Link key={suggestion.href} href={suggestion.href}>
-              <span>{suggestion.reason}</span>
-              <strong>{suggestion.label}</strong>
-            </Link>
-          ))}
-        </div>
+        {suggestions.length > 0 && (
+          <div className="e4s-not-found__suggestions" aria-label="Suggested pages">
+            {suggestions.map((suggestion) => (
+              <Link key={suggestion.href} href={suggestion.href}>
+                <span>{suggestion.reason}</span>
+                <strong>{suggestion.label}</strong>
+              </Link>
+            ))}
+          </div>
+        )}
         <div className="e4s-not-found__recovery" aria-label="Browse Events4Singles">
           <span>Browse instead</span>
           <div>
