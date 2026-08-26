@@ -407,9 +407,13 @@ test.describe("responsive CSS", () => {
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category" style="--e4s-sticky-top: 84px;">
-          <nav class="e4s-category-child-nav e4s-category-child-nav--category-mobile">
+          <nav class="e4s-category-child-nav e4s-category-child-nav--category-mobile e4s-category-child-nav--category-has-subcategories">
             <a class="e4s-category-child-nav__back" href="/categories">All Categories</a>
-            <label class="e4s-category-child-nav__control">
+            <label class="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
+              <span>View style</span>
+              <select><option>Select style</option></select>
+            </label>
+            <label class="e4s-category-child-nav__control e4s-category-child-nav__control--city">
               <span>View city</span>
               <select><option>Select city</option></select>
             </label>
@@ -439,14 +443,24 @@ test.describe("responsive CSS", () => {
       window.scrollTo(0, 500);
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const nav = document.querySelector(".e4s-category-child-nav")!.getBoundingClientRect();
+      const back = document.querySelector(".e4s-category-child-nav__back")!.getBoundingClientRect();
+      const subcategory = document.querySelector(".e4s-category-child-nav__control--subcategory select")!.getBoundingClientRect();
+      const city = document.querySelector(".e4s-category-child-nav__control--city select")!.getBoundingClientRect();
       const shield = document.querySelector(".e4s-toolbar-shield")!.getBoundingClientRect();
       return {
         nav: { top: Math.round(nav.top), bottom: Math.round(nav.bottom), height: Math.round(nav.height) },
+        back: { top: Math.round(back.top), bottom: Math.round(back.bottom) },
+        subcategory: { top: Math.round(subcategory.top), width: Math.round(subcategory.width) },
+        city: { top: Math.round(city.top), width: Math.round(city.width) },
         shield: { top: Math.round(shield.top), bottom: Math.round(shield.bottom) },
       };
     });
 
     expect(layout.nav.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(82);
+    expect(Math.abs(layout.subcategory.top - layout.back.top), JSON.stringify(layout)).toBeLessThanOrEqual(2);
+    expect(layout.city.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.back.bottom);
+    expect(layout.subcategory.width, JSON.stringify(layout)).toBeGreaterThanOrEqual(170);
+    expect(layout.city.width, JSON.stringify(layout)).toBeGreaterThanOrEqual(180);
     expect(layout.shield.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.nav.bottom - 1);
     await expectNoHorizontalOverflow(page);
   });

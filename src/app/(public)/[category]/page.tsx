@@ -19,6 +19,7 @@ import LocationPager from "@/components/location-pager";
 import CategoryPager from "@/components/category-pager";
 import CategoryCitySelect from "@/components/category-city-select";
 import NavSelect from "@/components/nav-select";
+import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import PromoBanners from "@/components/promo-banners";
 import PageSidebar from "@/components/page-sidebar";
 import CityCategorySelect from "@/components/city-category-select";
@@ -176,6 +177,9 @@ export default async function CategoryOrCityPage({ params }: Props) {
   ]);
   const parentCats = allCats.filter((c) => !c.parent_slug);
   const subcategories = await getSubcategoriesForCategory(dbSlug);
+  const mobileSubcategories = dbSlug === "dance_classes"
+    ? subcategories.filter((cat) => cat.slug !== "dance_styles")
+    : subcategories;
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
   const footerCopy = categorySeoFooterCopy(catMeta, cities.length);
   const jsonLd = [
@@ -199,13 +203,23 @@ export default async function CategoryOrCityPage({ params }: Props) {
           <CategoryPager categories={parentCats} currentDbSlug={dbSlug} />
           <nav
             aria-label={`${catMeta.label} mobile navigation`}
-            className="e4s-category-child-nav e4s-category-child-nav--category-mobile"
+            className={`e4s-category-child-nav e4s-category-child-nav--category-mobile${mobileSubcategories.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
           >
             <Link className="e4s-category-child-nav__back" href="/categories">
               All Categories
             </Link>
+            {mobileSubcategories.length > 0 ? (
+              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
+                <span>View style</span>
+                <SubcategoryNavSelect
+                  subcategories={mobileSubcategories}
+                  parentUrlSlug={param}
+                  placeholder="Select style"
+                />
+              </label>
+            ) : null}
             {cities.length > 0 ? (
-              <label className="e4s-category-child-nav__control">
+              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
                 <span>View city</span>
                 <NavSelect
                   cities={cities}
