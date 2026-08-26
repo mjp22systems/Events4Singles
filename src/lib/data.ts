@@ -145,7 +145,10 @@ export async function getFeaturedListings(limit = 6): Promise<Listing[]> {
     WHERE l.status = 'active'
       AND l.listing_type IN ('featured', 'premium')
     GROUP BY l.id
-    ORDER BY RANDOM()
+    ORDER BY
+      CASE l.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END,
+      l.confidence_score DESC,
+      COALESCE(b.name, l.title) COLLATE NOCASE ASC
     LIMIT ?
   `).bind(limit).all<Listing>();
   return results;
@@ -968,6 +971,18 @@ const PUBLIC_EVENT_FIELDS = `
   ) AS host_account_name
 `;
 
+const PUBLIC_EVENT_LIST_FIELDS = `
+  id, slug, title, description, starts_at, ends_at, timezone, venue_name, address, suburb, city, state,
+  price_min, price_max, ticket_url, push_platform, push_url, registration_mode, image_url, source,
+  source_url, category, account_id,
+  NULL AS host_business_id,
+  NULL AS host_business_name,
+  NULL AS host_business_logo_url,
+  NULL AS host_business_website,
+  NULL AS host_business_profile_slug,
+  NULL AS host_account_name
+`;
+
 export async function getUpcomingEvents(
   limit = 8,
   city?: string,
@@ -985,7 +1000,7 @@ export async function getUpcomingEvents(
   if (paid === "paid") { conditions.push("price_min > 0"); }
   if (organiserId) { conditions.push("account_id = ?"); params.push(organiserId); }
   const { results } = await db
-    .prepare(`SELECT ${PUBLIC_EVENT_FIELDS} FROM events WHERE ${conditions.join(" AND ")} ORDER BY starts_at ASC LIMIT ?`)
+    .prepare(`SELECT ${PUBLIC_EVENT_LIST_FIELDS} FROM events WHERE ${conditions.join(" AND ")} ORDER BY starts_at ASC LIMIT ?`)
     .bind(...params, limit)
     .all<PublicEvent>();
   return results;
