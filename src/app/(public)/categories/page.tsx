@@ -22,7 +22,7 @@ type CategoriesPageProps = {
 export default async function CategoriesPage({ searchParams }: CategoriesPageProps) {
   if ((await searchParams)?.sort) permanentRedirect("/categories");
 
-  const categories = await getAllCategories();
+  const categories = (await getAllCategories()).filter((cat) => !cat.parent_slug);
   const categoryTiles = categories.map((cat) => {
     const slug = toUrlSlug(cat.slug);
     return {

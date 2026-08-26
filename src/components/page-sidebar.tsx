@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Category, City } from "@/lib/types";
-import { toUrlSlug } from "@/lib/constants";
+import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import SidebarNav from "@/components/sidebar-nav";
 
 type Props =
@@ -10,6 +10,8 @@ type Props =
       categoryUrlSlug: string;
       currentCityDbSlug?: string;
       backLabel?: string;
+      backHref?: string;
+      subcategories?: Category[];
     }
   | {
       mode: "city";
@@ -104,13 +106,25 @@ export default function PageSidebar(props: Props) {
   const topItem = !props.currentCityDbSlug
     ? { label: "All cities", href: `/${props.categoryUrlSlug}`, isActive: true }
     : undefined;
+  const subcategoryItems = props.subcategories?.map((cat) => ({
+    key: cat.slug,
+    label: cat.label,
+    href: `/${props.categoryUrlSlug}/${toCategoryChildUrlSegment(toDbSlug(props.categoryUrlSlug), cat.slug)}`,
+    count: cat.listing_count,
+  })) ?? [];
 
   return (
     <aside className="e4s-sidebar">
       {props.backLabel && (
-        <Link className="e4s-sidebar-back" href={`/${props.categoryUrlSlug}`}>
+        <Link className="e4s-sidebar-back" href={props.backHref ?? `/${props.categoryUrlSlug}`}>
           &lt;- {props.backLabel}
         </Link>
+      )}
+      {subcategoryItems.length > 0 && (
+        <SidebarNav
+          heading="Browse by style"
+          items={subcategoryItems}
+        />
       )}
       <SidebarNav
         heading={props.currentCityDbSlug ? "Other cities" : "Browse by city"}

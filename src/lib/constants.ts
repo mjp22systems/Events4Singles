@@ -1,6 +1,26 @@
 // Slug helpers
 export const toUrlSlug = (dbSlug: string) => dbSlug.replace(/_/g, "-");
 export const toDbSlug = (urlSlug: string) => urlSlug.replace(/-/g, "_");
+export function toCategoryChildUrlSegment(parentDbSlug: string, childDbSlug: string): string {
+  const parentPrefix = `${parentDbSlug}_`;
+  if (childDbSlug.startsWith(parentPrefix)) {
+    return toUrlSlug(childDbSlug.slice(parentPrefix.length));
+  }
+  if (parentDbSlug === "dance_classes" && childDbSlug.startsWith("dance_")) {
+    return toUrlSlug(childDbSlug.slice("dance_".length));
+  }
+  return toUrlSlug(childDbSlug);
+}
+
+export function categoryChildDbSlugCandidates(parentDbSlug: string, childUrlSegment: string): string[] {
+  const childDbSlug = toDbSlug(childUrlSegment);
+  const candidates = [childDbSlug, `${parentDbSlug}_${childDbSlug}`];
+  if (parentDbSlug === "dance_classes") {
+    candidates.push(`dance_${childDbSlug}`);
+  }
+  return [...new Set(candidates)];
+}
+
 export const slugToLabel = (slug: string) =>
   slug.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 

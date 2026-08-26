@@ -10,6 +10,7 @@ import {
   getCityMeta,
   getListingsForCategory,
   getListingsForCity,
+  getSubcategoriesForCategory,
 } from "@/lib/data";
 import { toDbSlug } from "@/lib/constants";
 import AdvertiseCard from "@/components/advertise-card";
@@ -172,6 +173,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
     getAllCategories(),
   ]);
   const parentCats = allCats.filter((c) => !c.parent_slug);
+  const subcategories = await getSubcategoriesForCategory(dbSlug);
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
   const footerCopy = categorySeoFooterCopy(catMeta, cities.length);
   const jsonLd = [
@@ -233,6 +235,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
           mode="category"
           cities={cities}
           categoryUrlSlug={param}
+          subcategories={subcategories}
         />
       </div>
       <SeoSupportSection {...footerCopy} />

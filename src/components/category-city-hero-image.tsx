@@ -4,6 +4,8 @@ import { useState } from "react";
 
 type Props = {
   alt: string;
+  parentCategoryImage?: string;
+  parentCategoryFallbacks?: string[];
   categoryImage: string;
   categoryFallbacks?: string[];
   cityImage: string;
@@ -38,17 +40,28 @@ function BlendImageLayer({ className, src, fallbacks = [] }: LayerProps) {
 
 export default function CategoryCityHeroImage({
   alt,
+  parentCategoryImage,
+  parentCategoryFallbacks,
   categoryImage,
   categoryFallbacks,
   cityImage,
   cityFallbacks,
 }: Props) {
+  const hasParentCategory = Boolean(parentCategoryImage);
+
   return (
     <div
       aria-label={alt}
-      className="e4s-page-hero__image e4s-page-hero__image--blend"
+      className={`e4s-page-hero__image e4s-page-hero__image--blend${hasParentCategory ? " e4s-page-hero__image--blend-trio" : ""}`}
       role="img"
     >
+      {parentCategoryImage && (
+        <BlendImageLayer
+          className="e4s-page-hero__blend-image e4s-page-hero__blend-image--parent-category"
+          src={parentCategoryImage}
+          fallbacks={parentCategoryFallbacks}
+        />
+      )}
       <BlendImageLayer
         className="e4s-page-hero__blend-image e4s-page-hero__blend-image--category"
         src={categoryImage}

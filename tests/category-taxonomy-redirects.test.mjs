@@ -7,6 +7,19 @@ const projectRoot = process.cwd();
 const nextConfig = readFileSync(path.join(projectRoot, "next.config.ts"), "utf8");
 
 const EXPECTED_REDIRECTS = new Map([
+  ["/dance_ballroom_style.htm", "/dance-classes/ballroom-style"],
+  ["/dance_fitness_and_health.htm", "/dance-classes/fitness-and-health"],
+  ["/dance_latin_style.htm", "/dance-classes/latin-style"],
+  ["/dance_modern_style.htm", "/dance-classes/modern-style"],
+  ["/dance_styles.htm", "/dance-classes/styles"],
+  ["/dance_teachers.htm", "/dance-classes/teachers"],
+  ["/dance_ballroomstyle.htm", "/dance-classes/ballroom-style"],
+  ["/dance_classes_ballroom_latin.htm", "/dance-classes/ballroom-style"],
+  ["/dance_classes_ceroc.htm", "/dance-classes/ceroc"],
+  ["/dance_classes_salsa.htm", "/dance-classes/salsa"],
+  ["/dance_classes_styles.htm", "/dance-classes/styles"],
+  ["/dance_classes_swing.htm", "/dance-classes/swing"],
+  ["/dance_classes_tango.htm", "/dance-classes/tango"],
   ["/travel-for-singles", "/solo-travel"],
   ["/travel_for_singles.htm", "/solo-travel"],
   ["/walks4singles", "/social-walks"],

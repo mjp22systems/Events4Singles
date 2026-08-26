@@ -950,6 +950,23 @@ body > div > table {
   display: none;
 }
 
+.e4s-page-hero__blend-image--parent-category {
+  -webkit-mask-image: linear-gradient(100deg, #000000 0%, #000000 21%, rgba(0, 0, 0, 0.84) 28%, rgba(0, 0, 0, 0.34) 36%, rgba(0, 0, 0, 0.08) 43%, transparent 51%);
+  mask-image: linear-gradient(100deg, #000000 0%, #000000 21%, rgba(0, 0, 0, 0.84) 28%, rgba(0, 0, 0, 0.34) 36%, rgba(0, 0, 0, 0.08) 43%, transparent 51%);
+}
+
+.e4s-page-hero__image--blend-trio .e4s-page-hero__blend-image--category {
+  -webkit-mask-image: linear-gradient(100deg, transparent 16%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.58) 34%, #000000 42%, #000000 56%, rgba(0, 0, 0, 0.58) 64%, rgba(0, 0, 0, 0.1) 73%, transparent 82%);
+  mask-image: linear-gradient(100deg, transparent 16%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.58) 34%, #000000 42%, #000000 56%, rgba(0, 0, 0, 0.58) 64%, rgba(0, 0, 0, 0.1) 73%, transparent 82%);
+  z-index: 1;
+}
+
+.e4s-page-hero__image--blend-trio .e4s-page-hero__blend-image--city {
+  -webkit-mask-image: linear-gradient(100deg, transparent 49%, rgba(0, 0, 0, 0.08) 57%, rgba(0, 0, 0, 0.34) 64%, rgba(0, 0, 0, 0.84) 72%, #000000 79%, #000000 100%);
+  mask-image: linear-gradient(100deg, transparent 49%, rgba(0, 0, 0, 0.08) 57%, rgba(0, 0, 0, 0.34) 64%, rgba(0, 0, 0, 0.84) 72%, #000000 79%, #000000 100%);
+  z-index: 2;
+}
+
 .e4s-location-pager,
 .e4s-location-pager:visited {
   position: fixed;

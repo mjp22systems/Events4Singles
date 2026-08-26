@@ -4,9 +4,10 @@ import {
   getAllCities,
   getAllListingParams,
   getAllCategoryCityParams,
+  getSubcategoriesForCategory,
 } from "@/lib/data";
 import { articles } from "@/content/articles";
-import { toUrlSlug } from "@/lib/constants";
+import { toCategoryChildUrlSegment, toUrlSlug } from "@/lib/constants";
 import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +39,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const category of await getAllCategories()) {
     if (!category.parent_slug) {
-      paths.add(`/${toUrlSlug(category.slug)}`);
+      const categoryPath = `/${toUrlSlug(category.slug)}`;
+      paths.add(categoryPath);
+      for (const child of await getSubcategoriesForCategory(category.slug)) {
+        paths.add(`${categoryPath}/${toCategoryChildUrlSegment(category.slug, child.slug)}`);
+      }
     }
   }
 
