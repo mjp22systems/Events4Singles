@@ -37,7 +37,7 @@ const FEATURED_CATS = [
 const EXPERIENCES = [
   { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/home-exp-dinner-parties.jpg", href: "/dinner-parties", badge: "PREMIUM" },
   { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/home-exp-dance-classes.jpg", href: "/dance-classes", badge: null },
-  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/home-exp-travel.jpg", href: "/travel-for-singles", badge: null },
+  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/home-exp-travel.jpg", href: "/solo-travel", badge: null },
 ];
 
 const RESOURCES = [

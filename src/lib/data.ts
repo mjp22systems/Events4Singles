@@ -241,15 +241,15 @@ export async function getAllBusinessesForDirectory(): Promise<{ id: number; name
 export async function getAllCategories(): Promise<Category[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
-    SELECT p.category_slug AS slug, c.label, c.parent_slug,
+    SELECT c.slug, c.label, c.parent_slug,
            c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
-           COUNT(DISTINCT p.listing_id) AS listing_count
-    FROM listing_placements p
-    LEFT JOIN categories c ON c.slug = p.category_slug
-    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
-    WHERE p.category_slug IS NOT NULL
-    GROUP BY p.category_slug
-    ORDER BY listing_count DESC
+           COUNT(DISTINCT l.id) AS listing_count
+    FROM categories c
+    LEFT JOIN listing_placements p ON p.category_slug = c.slug
+    LEFT JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
+    WHERE COALESCE(c.status, 'active') = 'active'
+    GROUP BY c.slug
+    ORDER BY COALESCE(c.sort_order, 999), listing_count DESC, c.label COLLATE NOCASE ASC
   `).bind().all<{
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
@@ -264,14 +264,14 @@ export async function getCategoryMeta(dbSlug: string): Promise<Category | null> 
 
   const db = await getD1();
   const row = await db.prepare(`
-    SELECT p.category_slug AS slug, c.label, c.parent_slug,
+    SELECT c.slug, c.label, c.parent_slug,
            c.description, c.seo_title, c.seo_description, c.seo_intro, c.hero_image_url,
-           COUNT(DISTINCT p.listing_id) AS listing_count
-    FROM listing_placements p
-    LEFT JOIN categories c ON c.slug = p.category_slug
-    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
-    WHERE p.category_slug = ?
-    GROUP BY p.category_slug
+           COUNT(DISTINCT l.id) AS listing_count
+    FROM categories c
+    LEFT JOIN listing_placements p ON p.category_slug = c.slug
+    LEFT JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
+    WHERE c.slug = ? AND COALESCE(c.status, 'active') = 'active'
+    GROUP BY c.slug
   `).bind(dbSlug).first<{
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;

@@ -55,6 +55,36 @@ test.describe("Homepage", () => {
     expect(styles.advertiserColor).toBe("rgb(255, 255, 255)");
   });
 
+  test("intent category links keep consistent resting colour", async ({ page }) => {
+    const categories = page.locator(".e4s-home-intent-tile__cat");
+    await expect(categories.first()).toBeVisible();
+
+    const colours = await categories.evaluateAll((items) =>
+      items.map((item) => getComputedStyle(item).color),
+    );
+
+    expect(new Set(colours)).toEqual(new Set(["rgb(20, 49, 63)"]));
+  });
+
+  test("renders all curated experience tiles on portrait mobile", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const tiles = page.locator(".e4s-home-exp-tile");
+    await expect(tiles).toHaveCount(3);
+    await expect(tiles.filter({ hasText: "Singles Travel" })).toBeVisible();
+
+    const visibleTiles = await tiles.evaluateAll((items) =>
+      items.filter((item) => {
+        const rect = item.getBoundingClientRect();
+        const style = getComputedStyle(item);
+        return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+      }).length,
+    );
+
+    expect(visibleTiles).toBe(3);
+  });
+
   test("preloads the italic hero font", async ({ page }) => {
     const italicPreload = page.locator('link[rel="preload"][href="/fonts/source-serif-4-italic-latin.woff2"]');
     await expect(italicPreload).toHaveAttribute("as", "font");

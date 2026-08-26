@@ -7425,6 +7425,7 @@ body:not(.e4s-nav-open) .e4s-nav {
   }
 
   .e4s-home-exp-tile:first-child {
+    grid-column: auto;
     grid-row: span 1;
   }
 
@@ -7705,7 +7706,12 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 0;
 }
 
-.e4s-home-intent-tile__cat:hover {
+.e4s-home-intent-tile__cat:visited {
+  color: var(--e4s-ink);
+}
+
+.e4s-home-intent-tile__cat:hover,
+.e4s-home-intent-tile__cat:focus-visible {
   color: var(--e4s-pink);
 }
 
