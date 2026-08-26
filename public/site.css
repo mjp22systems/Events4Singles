@@ -1658,35 +1658,18 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 6px 18px rgba(6, 78, 77, 0.05);
-}.e4s-page-category .e4s-page-hero {
-  width: 100%;
-  margin-top: 0;
-  border-right: 0;
-  border-left: 0;
-  border-radius: 0;
 }.e4s-page-category .e4s-page-hero__image {
-  min-height: 220px;
   background:
     radial-gradient(circle at 16% 24%, rgba(255, 255, 255, 0.28), transparent 20%),
     linear-gradient(135deg, rgba(6, 78, 77, 0.95), rgba(83, 149, 146, 0.86) 54%, rgba(139, 47, 67, 0.64));
 }.e4s-page-category .e4s-page-hero__image img {
-  height: 220px;
   object-fit: cover;
-  object-position: center 45%;
 }.e4s-page-category .e4s-page-intro h1 {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
   overflow: hidden !important;
   clip: rect(0 0 0 0) !important;
-}@media (max-width: 640px) {
-  .e4s-page-category .e4s-page-hero__image {
-    min-height: 150px;
-  }
-
-  .e4s-page-category .e4s-page-hero__image img {
-    height: 150px;
-  }
 }.e4s-page-category .e4s-promo-banners {
   margin-top: 18px;
   margin-bottom: 18px;
