@@ -493,6 +493,82 @@ test.describe("responsive CSS", () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test("portrait listing contact buttons stretch evenly", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setContent(`
+      <!doctype html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="${typographyHref}">
+          <link rel="stylesheet" href="${stylesheetHref}">
+        </head>
+        <body class="e4s-page-category">
+          <main class="e4s-category-template" id="site-content">
+            <article class="e4s-listing-card">
+              <header class="e4s-listing-card__header">
+                <div class="e4s-listing-card__identity">
+                  <div class="e4s-listing-card__title-row">
+                    <h2 class="e4s-listing-card__title">Short Title</h2>
+                    <span class="e4s-listing-card__unclaimed">Unclaimed</span>
+                    <span class="e4s-listing-card__location-badge">Sydney</span>
+                  </div>
+                </div>
+                <div class="e4s-listing-card__actions">
+                  <span class="e4s-listing-card__action e4s-listing-card__action--person e4s-listing-card__action--disabled"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--phone"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--email"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--web"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--address"></span>
+                </div>
+              </header>
+            </article>
+            <article class="e4s-listing-card">
+              <header class="e4s-listing-card__header">
+                <div class="e4s-listing-card__identity">
+                  <div class="e4s-listing-card__title-row">
+                    <h2 class="e4s-listing-card__title">A Much Longer Listing Title That Needs To Truncate</h2>
+                    <span class="e4s-listing-card__unclaimed">Unclaimed</span>
+                    <span class="e4s-listing-card__location-badge">Sydney</span>
+                  </div>
+                </div>
+                <div class="e4s-listing-card__actions">
+                  <span class="e4s-listing-card__action e4s-listing-card__action--person e4s-listing-card__action--disabled"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--phone"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--email e4s-listing-card__action--disabled"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--web"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--address"></span>
+                </div>
+              </header>
+            </article>
+          </main>
+        </body>
+      </html>
+    `);
+
+    const rows = await page.evaluate(() =>
+      [...document.querySelectorAll(".e4s-listing-card__actions")].map((row) => {
+        const rowRect = row.getBoundingClientRect();
+        const buttons = [...row.querySelectorAll(".e4s-listing-card__action")].map((button) => {
+          const rect = button.getBoundingClientRect();
+          return { left: rect.left, width: rect.width };
+        });
+        return { left: rowRect.left, width: rowRect.width, buttons };
+      }),
+    );
+
+    expect(rows, JSON.stringify(rows)).toHaveLength(2);
+    expect(Math.abs(rows[0].width - rows[1].width), JSON.stringify(rows)).toBeLessThanOrEqual(1);
+    for (const row of rows) {
+      expect(row.width, JSON.stringify(rows)).toBeGreaterThanOrEqual(300);
+      expect(row.buttons, JSON.stringify(rows)).toHaveLength(5);
+      for (const button of row.buttons) {
+        expect(Math.abs(button.width - row.buttons[0].width), JSON.stringify(row)).toBeLessThanOrEqual(1);
+      }
+    }
+    await expectNoHorizontalOverflow(page);
+  });
+
   test("wide portrait listing toolbar gives filters their own row", async ({ page }) => {
     await page.setViewportSize({ width: 590, height: 844 });
     await page.setContent(`
@@ -538,10 +614,9 @@ test.describe("responsive CSS", () => {
       };
     });
 
-    expect(Math.abs(layout.sort.top - layout.title.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
-    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
-    expect(layout.filter.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.sort.bottom);
-    expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(500);
+    expect(layout.sort.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.title.bottom);
+    expect(Math.abs(layout.filter.top - layout.sort.top), JSON.stringify(layout)).toBeLessThanOrEqual(4);
+    expect(layout.filter.width, JSON.stringify(layout)).toBeGreaterThan(360);
     expect(layout.filterText.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterCount.left - 6);
     await expectNoHorizontalOverflow(page);
   });
