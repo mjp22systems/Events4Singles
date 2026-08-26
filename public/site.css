@@ -3468,15 +3468,17 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   visibility: visible;
 }
 }@media (max-width: 430px) and (orientation: portrait) {.e4s-listings-toolbar {
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 6px;
   padding: 12px;
 }.e4s-listings-toolbar__title {
   grid-column: 1 / -1;
+  grid-row: 1;
   min-width: 0;
   overflow: hidden;
 }.e4s-listings-sort {
   grid-column: 1;
+  grid-row: 2;
   justify-content: flex-end;
 }.e4s-listings-sort span {
   position: absolute;
@@ -3491,7 +3493,8 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   padding-right: 5px;
   padding-left: 6px;
 }.e4s-listings-filter-group {
-  grid-column: 2;
+  grid-column: 2 / -1;
+  grid-row: 2;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 6px;
   width: 100%;
