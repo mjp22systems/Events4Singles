@@ -1,4 +1,5 @@
 import type { Category, City } from "./types";
+import { getCategoryCardSummary } from "./category-card-assets";
 
 function plural(count: number, singular: string, pluralValue = `${singular}s`): string {
   return `${count} ${count === 1 ? singular : pluralValue}`;
@@ -35,7 +36,7 @@ export function cityHeroSubtext(city: City) {
 }
 
 export function categoryHeroSubtext(category: Category) {
-  return `${category.label} listings for singles`;
+  return getCategoryCardSummary(category.slug, `${category.label} listings for singles`);
 }
 
 export function categoryCityHeroSubtext(category: Category, city: City) {
