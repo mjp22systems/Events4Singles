@@ -8,7 +8,7 @@ import {
   getListingsForCategory,
   getSubcategoriesForCategory,
 } from "@/lib/data";
-import { categoryChildDbSlugCandidates, toDbSlug, toUrlSlug } from "@/lib/constants";
+import { categoryChildDbSlugCandidates, toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
@@ -19,6 +19,7 @@ import PromoBanners from "@/components/promo-banners";
 import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
 import SubcategoryPager from "@/components/subcategory-pager";
+import MobileSidePager from "@/components/mobile-side-pager";
 import SeoSupportSection from "@/components/seo-support-section";
 import DanceStylesGuide from "@/components/dance-styles-guide";
 import {
@@ -118,6 +119,15 @@ export default async function CategoryCityPage({ params }: Props) {
     const styleSubcategories = categoryDbSlug === "dance_classes"
       ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
       : siblingSubcategories;
+    const sortedStyleSubcategories = [...styleSubcategories].sort((a, b) => a.label.localeCompare(b.label));
+    const currentStyleIndex = sortedStyleSubcategories.findIndex((cat) => cat.slug === childMeta.slug);
+    const mobilePreviousStyle = currentStyleIndex >= 0 && sortedStyleSubcategories.length > 1
+      ? sortedStyleSubcategories[(currentStyleIndex - 1 + sortedStyleSubcategories.length) % sortedStyleSubcategories.length]
+      : null;
+    const mobileNextStyle = currentStyleIndex >= 0 && sortedStyleSubcategories.length > 1
+      ? sortedStyleSubcategories[(currentStyleIndex + 1) % sortedStyleSubcategories.length]
+      : null;
+    const stylePathFor = (childSlug: string) => `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}`;
     const intro = categoryIntroCopy(childMeta, cities.length, listings.length);
     const footerCopy = categorySeoFooterCopy(childMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
@@ -156,6 +166,11 @@ export default async function CategoryCityPage({ params }: Props) {
               subcategories={styleSubcategories}
               currentDbSlug={childMeta.slug}
               parentUrlSlug={category}
+            />
+            <MobileSidePager
+              label={`${catMeta.label} style navigation`}
+              previous={mobilePreviousStyle ? { href: stylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label } : null}
+              next={mobileNextStyle ? { href: stylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label } : null}
             />
             <nav
               aria-label={`${childMeta.label} navigation`}
@@ -252,6 +267,15 @@ export default async function CategoryCityPage({ params }: Props) {
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
   const navigableSubcategories = styleSubcategories;
+  const sortedNavigableSubcategories = [...navigableSubcategories].sort((a, b) => a.label.localeCompare(b.label));
+  const mobilePreviousStyle = sortedNavigableSubcategories.length > 1
+    ? sortedNavigableSubcategories[sortedNavigableSubcategories.length - 1]
+    : null;
+  const mobileNextStyle = sortedNavigableSubcategories.length > 1
+    ? sortedNavigableSubcategories[0]
+    : null;
+  const cityStylePathFor = (childSlug: string) =>
+    `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}/${subcategory}`;
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
@@ -283,6 +307,11 @@ export default async function CategoryCityPage({ params }: Props) {
       beforeHero={(
         <>
           <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={category} />
+          <MobileSidePager
+            label={`${catMeta.label} style navigation`}
+            previous={mobilePreviousStyle ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label } : null}
+            next={mobileNextStyle ? { href: cityStylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label } : null}
+          />
           <nav
             aria-label={`${catMeta.label} city navigation`}
             className={`e4s-category-child-nav e4s-category-child-nav--has-sidebar${navigableSubcategories.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
