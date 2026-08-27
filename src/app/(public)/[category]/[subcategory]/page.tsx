@@ -159,18 +159,27 @@ export default async function CategoryCityPage({ params }: Props) {
             />
             <nav
               aria-label={`${childMeta.label} navigation`}
-              className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
+              className={`e4s-category-child-nav e4s-category-child-nav--has-sidebar${styleSubcategories.length > 1 && cities.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
             >
               <Link className="e4s-category-child-nav__back" href={`/${category}`}>
                 Back to {catMeta.label}
               </Link>
               {styleSubcategories.length > 1 ? (
-                <label className="e4s-category-child-nav__control">
+                <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
                   <span>View another style</span>
                   <SubcategoryNavSelect
                     subcategories={styleSubcategories}
                     parentUrlSlug={category}
                     currentSubcategorySlug={childMeta.slug}
+                  />
+                </label>
+              ) : null}
+              {cities.length > 0 ? (
+                <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
+                  <span>View city</span>
+                  <NavSelect
+                    cities={cities}
+                    categoryUrlSlug={subcategoryUrlSlug}
                   />
                 </label>
               ) : null}

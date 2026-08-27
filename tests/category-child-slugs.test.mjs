@@ -41,5 +41,6 @@ test("active child category pages expose a style pager axis", () => {
 test("subcategory mobile selectors land on canonical nested city routes", () => {
   assert.match(subcategoryNavSelectSource, /toCategoryChildUrlSegment\(toDbSlug\(parentUrlSlug\), e\.target\.value\)/);
   assert.match(subcategoryNavSelectSource, /cityUrlSlug \? `\/\$\{parentUrlSlug\}\/\$\{nextSlug\}\/\$\{cityUrlSlug\}`/);
+  assert.match(categoryCitySource, /<NavSelect[\s\S]*categoryUrlSlug=\{subcategoryUrlSlug\}/);
   assert.match(categoryCitySource, /<SubcategoryNavSelect[\s\S]*cityUrlSlug=\{subcategory\}/);
 });
