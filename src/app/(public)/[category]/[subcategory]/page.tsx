@@ -36,7 +36,7 @@ import {
   categorySeoFooterCopy,
 } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
-import { getCategoryCardImage } from "@/lib/category-card-assets";
+import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
 
 interface Props {
@@ -131,16 +131,22 @@ export default async function CategoryCityPage({ params }: Props) {
     const intro = categoryIntroCopy(childMeta, cities.length, listings.length);
     const footerCopy = categorySeoFooterCopy(childMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
-    const parentImage = catMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
+    const parentHeroImage = getCategoryHeroImage(category);
+    const parentImage = parentHeroImage ?? catMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
     const parentImageFallbacks = [
-      ...(catMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
+      ...(parentHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
+      ...(parentHeroImage && parentCardImage ? [parentCardImage] : []),
+      ...(!parentHeroImage && catMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
       `/images/category-hero-${category}.svg`,
     ];
     const childUrlSlug = toUrlSlug(childMeta.slug);
     const childCardImage = getCategoryCardImage(childUrlSlug);
-    const childImage = childMeta.hero_image_url ?? childCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
+    const childHeroImage = getCategoryHeroImage(childUrlSlug);
+    const childImage = childHeroImage ?? childMeta.hero_image_url ?? childCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
     const childImageFallbacks = [
-      ...(childMeta.hero_image_url && childCardImage ? [childCardImage] : []),
+      ...(childHeroImage && childMeta.hero_image_url ? [childMeta.hero_image_url] : []),
+      ...(childHeroImage && childCardImage ? [childCardImage] : []),
+      ...(!childHeroImage && childMeta.hero_image_url && childCardImage ? [childCardImage] : []),
       `/images/category-hero-${childUrlSlug}.svg`,
     ];
     const jsonLd = [
@@ -281,9 +287,12 @@ export default async function CategoryCityPage({ params }: Props) {
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
   const footerCopy = categoryCitySeoFooterCopy(catMeta, cityMeta, listings.length);
   const categoryCardImage = getCategoryCardImage(category);
-  const categoryImage = catMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${category}.svg`;
+  const categoryHeroImage = getCategoryHeroImage(category);
+  const categoryImage = categoryHeroImage ?? catMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${category}.svg`;
   const categoryImageFallbacks = [
-    ...(catMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
+    ...(categoryHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
+    ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
+    ...(!categoryHeroImage && catMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
     `/images/category-hero-${category}.svg`,
   ];
   const cityImage = getCityHeroImage(subcategory);

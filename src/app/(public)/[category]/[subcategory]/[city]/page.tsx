@@ -26,7 +26,7 @@ import {
 } from "@/components/listing-directory-page";
 import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCopy } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
-import { getCategoryCardImage } from "@/lib/category-card-assets";
+import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
 
 interface Props {
@@ -101,16 +101,22 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const intro = categoryCityIntroCopy(childMeta, cityMeta, listings.length);
   const footerCopy = categoryCitySeoFooterCopy(childMeta, cityMeta, listings.length);
   const parentCardImage = getCategoryCardImage(category);
-  const parentImage = parentMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
+  const parentHeroImage = getCategoryHeroImage(category);
+  const parentImage = parentHeroImage ?? parentMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
   const parentImageFallbacks = [
-    ...(parentMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
+    ...(parentHeroImage && parentMeta.hero_image_url ? [parentMeta.hero_image_url] : []),
+    ...(parentHeroImage && parentCardImage ? [parentCardImage] : []),
+    ...(!parentHeroImage && parentMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
     `/images/category-hero-${category}.svg`,
   ];
   const childUrlSlug = toUrlSlug(childMeta.slug);
   const categoryCardImage = getCategoryCardImage(childUrlSlug);
-  const categoryImage = childMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
+  const categoryHeroImage = getCategoryHeroImage(childUrlSlug);
+  const categoryImage = categoryHeroImage ?? childMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
   const categoryImageFallbacks = [
-    ...(childMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
+    ...(categoryHeroImage && childMeta.hero_image_url ? [childMeta.hero_image_url] : []),
+    ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
+    ...(!categoryHeroImage && childMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
     `/images/category-hero-${childUrlSlug}.svg`,
   ];
   const cityImage = getCityHeroImage(city);

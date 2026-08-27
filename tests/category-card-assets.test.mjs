@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
+import sharp from "sharp";
 
 const projectRoot = process.cwd();
 const mappingFile = path.join(projectRoot, "src", "lib", "category-card-assets.ts");
@@ -107,18 +108,26 @@ test("every active category has a card summary", () => {
   assert.deepEqual(missing, [], `Missing summaries for: ${missing.join(", ")}`);
 });
 
-test("category hero-specific images use optimized website assets", () => {
+test("category hero-specific images use optimized website assets", async () => {
   const source = readFileSync(mappingFile, "utf8");
+  const cardImages = parseRecord(source, "CATEGORY_CARD_IMAGES");
   const images = parseRecord(source, "CATEGORY_HERO_IMAGES");
+  const missingHeroMappings = Object.keys(cardImages).filter((slug) => !images[slug]);
+
+  assert.deepEqual(missingHeroMappings, [], `Missing category hero image mappings for: ${missingHeroMappings.join(", ")}`);
 
   for (const [slug, imageUrl] of Object.entries(images)) {
     assert.ok(
       imageUrl.startsWith("/images/categories/hero/"),
       `${slug} should use the website-owned category hero directory`,
     );
+    const imagePath = path.join(projectRoot, "public", imageUrl);
     assert.ok(
-      existsSync(path.join(projectRoot, "public", imageUrl)),
+      existsSync(imagePath),
       `${slug} hero image file does not exist: ${imageUrl}`,
     );
+    const metadata = await sharp(imagePath).metadata();
+    assert.equal(metadata.height, 320, `${slug} hero image should be 320px high`);
+    assert.ok((metadata.width ?? 0) >= 1280, `${slug} hero image should be wide enough for page heroes`);
   }
 });
