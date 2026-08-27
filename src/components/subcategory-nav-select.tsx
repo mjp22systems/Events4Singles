@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { toUrlSlug } from "@/lib/constants";
+import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
 import type { Category } from "@/lib/types";
 
 interface Props {
@@ -25,7 +25,7 @@ export default function SubcategoryNavSelect({
       value={currentSubcategorySlug}
       onChange={(e) => {
         if (!e.target.value) return;
-        const nextSlug = toUrlSlug(e.target.value);
+        const nextSlug = toCategoryChildUrlSegment(toDbSlug(parentUrlSlug), e.target.value);
         router.push(cityUrlSlug ? `/${parentUrlSlug}/${nextSlug}/${cityUrlSlug}` : `/${parentUrlSlug}/${nextSlug}`);
       }}
       aria-label="Choose category"

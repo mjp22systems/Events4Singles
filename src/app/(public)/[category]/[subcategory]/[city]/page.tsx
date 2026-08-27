@@ -72,28 +72,19 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   if (!parentMeta || !childMeta) notFound();
 
   const subcategoryUrlSlug = `${category}/${subcategory}`;
-  const [childCities, siblingSubcategories] = await Promise.all([
+  const [childCities, parentCities, siblingSubcategories] = await Promise.all([
     getCitiesForCategory(childMeta.slug),
+    getCitiesForCategory(parentMeta.slug),
     getSubcategoriesForCategory(parentDbSlug),
   ]);
-  const parentCities = childCities.length > 0 ? [] : await getCitiesForCategory(parentMeta.slug);
-  const cities = childCities.length > 0 ? childCities : parentCities;
+  const citiesBySlug = new Map([...parentCities, ...childCities].map((entry) => [entry.slug, entry]));
+  const cities = Array.from(citiesBySlug.values());
   const cityMeta = cities.find((c) => c.slug === cityDbSlug);
   if (!cityMeta) notFound();
   const styleSubcategories = parentDbSlug === "dance_classes"
     ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
     : siblingSubcategories;
-  const citySubcategoryAvailability = await Promise.all(
-    styleSubcategories.map(async (cat) => ({
-      category: cat,
-      listings: await getListingsForPage(cat.slug, cityDbSlug),
-    })),
-  );
-  const navigableSubcategories = citySubcategoryAvailability
-    .filter(({ category, listings: categoryListings }) => (
-      category.slug === childMeta.slug || categoryListings.length > 0
-    ))
-    .map(({ category }) => category);
+  const navigableSubcategories = styleSubcategories;
 
   const listings = await getListingsForPage(childMeta.slug, cityDbSlug);
   const intro = categoryCityIntroCopy(childMeta, cityMeta, listings.length);

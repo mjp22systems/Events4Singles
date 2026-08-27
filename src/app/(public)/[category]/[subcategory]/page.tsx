@@ -286,6 +286,7 @@ export default async function CategoryCityPage({ params }: Props) {
                 <SubcategoryNavSelect
                   subcategories={navigableSubcategories}
                   parentUrlSlug={category}
+                  cityUrlSlug={subcategory}
                   placeholder="Select style"
                 />
               </label>

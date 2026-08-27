@@ -9,6 +9,7 @@ const categoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(p
 const subcategoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "[subcategory]", "[city]", "page.tsx"), "utf8");
 const pageSidebarSource = readFileSync(path.join(projectRoot, "src", "components", "page-sidebar.tsx"), "utf8");
 const subcategoryPagerSource = readFileSync(path.join(projectRoot, "src", "components", "subcategory-pager.tsx"), "utf8");
+const subcategoryNavSelectSource = readFileSync(path.join(projectRoot, "src", "components", "subcategory-nav-select.tsx"), "utf8");
 
 test("dance child route helpers keep nested style URLs clean", () => {
   assert.match(
@@ -35,4 +36,10 @@ test("active child category pages expose a style pager axis", () => {
   assert.match(categoryCitySource, /<SubcategoryPager[\s\S]*currentDbSlug=\{childMeta\.slug\}/);
   assert.match(subcategoryCitySource, /<SubcategoryPager[\s\S]*currentDbSlug=\{childMeta\.slug\}[\s\S]*variant="secondary"/);
   assert.match(subcategoryCitySource, /<CategoryCityPager[\s\S]*categoryUrlSlug=\{subcategoryUrlSlug\}/);
+});
+
+test("subcategory mobile selectors land on canonical nested city routes", () => {
+  assert.match(subcategoryNavSelectSource, /toCategoryChildUrlSegment\(toDbSlug\(parentUrlSlug\), e\.target\.value\)/);
+  assert.match(subcategoryNavSelectSource, /cityUrlSlug \? `\/\$\{parentUrlSlug\}\/\$\{nextSlug\}\/\$\{cityUrlSlug\}`/);
+  assert.match(categoryCitySource, /<SubcategoryNavSelect[\s\S]*cityUrlSlug=\{subcategory\}/);
 });
