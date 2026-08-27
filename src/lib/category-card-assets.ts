@@ -120,8 +120,16 @@ const CATEGORY_CARD_SUMMARIES: Record<string, string> = {
   "yoga-classes": "Calm, strength and self-connection through practice.",
 };
 
+const CATEGORY_HERO_IMAGES: Record<string, string> = {
+  "online-dating": "/images/categories/hero/online-dating.webp",
+};
+
 export function getCategoryCardImage(slug: string): string | undefined {
   return CATEGORY_CARD_IMAGES[slug.replace(/_/g, "-")];
+}
+
+export function getCategoryHeroImage(slug: string): string | undefined {
+  return CATEGORY_HERO_IMAGES[slug.replace(/_/g, "-")];
 }
 
 export function getCategoryCardSummary(slug: string, fallback?: string | null): string {

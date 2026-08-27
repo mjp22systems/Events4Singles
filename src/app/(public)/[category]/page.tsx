@@ -40,7 +40,7 @@ import {
 } from "@/lib/page-copy";
 import SeoSupportSection from "@/components/seo-support-section";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
-import { getCategoryCardImage } from "@/lib/category-card-assets";
+import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
 
 interface Props {
@@ -169,7 +169,9 @@ export default async function CategoryOrCityPage({ params }: Props) {
   // Category overview page
   const catMeta = await getCategoryMeta(dbSlug);
   if (!catMeta) notFound();
-  const categoryImage = catMeta.hero_image_url ?? getCategoryCardImage(param);
+  const categoryCardImage = getCategoryCardImage(param);
+  const categoryHeroImage = getCategoryHeroImage(param);
+  const categoryImage = categoryHeroImage ?? catMeta.hero_image_url ?? categoryCardImage;
 
   const [cities, listings, allCats] = await Promise.all([
     getCitiesForCategory(dbSlug),
@@ -250,7 +252,11 @@ export default async function CategoryOrCityPage({ params }: Props) {
               <HeroImage
                 alt={catMeta.label}
                 src={categoryImage ?? `/images/category-hero-${param}.svg`}
-                fallbacks={categoryImage ? [`/images/category-hero-${param}.svg`] : []}
+                fallbacks={[
+                  ...(categoryHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
+                  ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
+                  ...(categoryImage ? [`/images/category-hero-${param}.svg`] : []),
+                ]}
               />
             </div>
           )}

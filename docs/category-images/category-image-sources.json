@@ -15,6 +15,17 @@
     "height": 800
   },
   "sourceDirectory": "docs/category-images/source/",
+  "heroOutput": {
+    "directory": "/images/categories/hero/",
+    "format": "webp",
+    "width": 1280,
+    "height": 320
+  },
+  "heroSources": {
+    "hero/online-dating-hero.png": [
+      "online-dating"
+    ]
+  },
   "sourceSheets": {
     "sheet-social-dining.png": [
       "speed-dating",

@@ -106,3 +106,19 @@ test("every active category has a card summary", () => {
 
   assert.deepEqual(missing, [], `Missing summaries for: ${missing.join(", ")}`);
 });
+
+test("category hero-specific images use optimized website assets", () => {
+  const source = readFileSync(mappingFile, "utf8");
+  const images = parseRecord(source, "CATEGORY_HERO_IMAGES");
+
+  for (const [slug, imageUrl] of Object.entries(images)) {
+    assert.ok(
+      imageUrl.startsWith("/images/categories/hero/"),
+      `${slug} should use the website-owned category hero directory`,
+    );
+    assert.ok(
+      existsSync(path.join(projectRoot, "public", imageUrl)),
+      `${slug} hero image file does not exist: ${imageUrl}`,
+    );
+  }
+});
