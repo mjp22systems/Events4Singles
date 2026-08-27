@@ -4,6 +4,7 @@ import { canonicalEventSlug } from "./event-slugs";
 import type { Listing, Category, City, Banner, Business } from "./types";
 
 const SUPPRESSED_CATEGORIES = new Set([
+  "tbc",
   "events",
   "art_galleries",
   "finance_mortgage",
@@ -20,11 +21,13 @@ const SUPPRESSED_CATEGORIES = new Set([
 ]);
 const SUPPRESSED_BANNER_CATEGORIES = new Set(["nightclubs"]);
 const SUPPRESSED_PUBLIC_CITIES = new Set([
+  "tbc",
   "national",
   "online",
   "no_location",
   "international",
 ]);
+const SUPPRESSED_PUBLIC_CITY_SQL = "'tbc','national','online','no_location','international'";
 
 function placeholders(values: unknown[]): string {
   return values.map(() => "?").join(", ");
@@ -70,6 +73,7 @@ export async function getListingsForCategory(categoryDbSlug: string): Promise<Li
              WHERE p2.listing_id = l.id
                AND p2.category_slug IN (${categoryPlaceholders})
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci2.label, p2.city_slug))
@@ -78,6 +82,7 @@ export async function getListingsForCategory(categoryDbSlug: string): Promise<Li
              WHERE p2.listing_id = l.id
                AND p2.category_slug IN (${categoryPlaceholders})
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     JOIN (
@@ -138,6 +143,7 @@ export async function getListingsForPage(
              WHERE p2.listing_id = l.id
                AND p2.category_slug IN (${categoryPlaceholders})
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci2.label, p2.city_slug))
@@ -146,6 +152,7 @@ export async function getListingsForPage(
              WHERE p2.listing_id = l.id
                AND p2.category_slug IN (${categoryPlaceholders})
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     JOIN (
@@ -172,10 +179,10 @@ export async function getFeaturedListings(limit = 6): Promise<Listing[]> {
            l.business_id,
            b.name AS business_name, b.website AS business_website,
            b.advertiser_id AS business_advertiser_id,
-           MAX(p.city_slug) AS city_slug,
-           MAX(p.category_slug) AS category_slug,
-           GROUP_CONCAT(DISTINCT p.city_slug) AS city_slugs,
-           GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs
+           MAX(CASE WHEN p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}) THEN p.city_slug END) AS city_slug,
+           MAX(CASE WHEN p.category_slug NOT IN (${[...SUPPRESSED_CATEGORIES].map((slug) => `'${slug}'`).join(",")}) THEN p.category_slug END) AS category_slug,
+           GROUP_CONCAT(DISTINCT CASE WHEN p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}) THEN p.city_slug END) AS city_slugs,
+           GROUP_CONCAT(DISTINCT CASE WHEN p.category_slug NOT IN (${[...SUPPRESSED_CATEGORIES].map((slug) => `'${slug}'`).join(",")}) THEN p.category_slug END) AS category_slugs
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
     LEFT JOIN listing_placements p ON p.listing_id = l.id
@@ -201,11 +208,11 @@ export async function getAllFeaturedListings(limit = 200): Promise<Listing[]> {
            l.business_id,
            b.name AS business_name, b.website AS business_website,
            b.advertiser_id AS business_advertiser_id,
-           MAX(p.city_slug) AS city_slug,
-           MAX(p.category_slug) AS category_slug,
-           GROUP_CONCAT(DISTINCT p.city_slug) AS city_slugs,
-           GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs,
-           GROUP_CONCAT(DISTINCT COALESCE(ci.label, p.city_slug)) AS city_labels
+           MAX(CASE WHEN p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}) THEN p.city_slug END) AS city_slug,
+           MAX(CASE WHEN p.category_slug NOT IN (${[...SUPPRESSED_CATEGORIES].map((slug) => `'${slug}'`).join(",")}) THEN p.category_slug END) AS category_slug,
+           GROUP_CONCAT(DISTINCT CASE WHEN p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}) THEN p.city_slug END) AS city_slugs,
+           GROUP_CONCAT(DISTINCT CASE WHEN p.category_slug NOT IN (${[...SUPPRESSED_CATEGORIES].map((slug) => `'${slug}'`).join(",")}) THEN p.category_slug END) AS category_slugs,
+           GROUP_CONCAT(DISTINCT CASE WHEN p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}) THEN COALESCE(ci.label, p.city_slug) END) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
     LEFT JOIN listing_placements p ON p.listing_id = l.id
@@ -393,6 +400,8 @@ export async function getCitiesForCategory(categoryDbSlug: string): Promise<City
 }
 
 export async function getListingsForCity(cityDbSlug: string): Promise<Listing[]> {
+  if (SUPPRESSED_PUBLIC_CITIES.has(cityDbSlug)) return [];
+
   const db = await getD1();
   const { results } = await db.prepare(`
     SELECT l.id, l.title, l.tagline, l.description, l.promo,
@@ -468,6 +477,7 @@ export async function getListingById(id: number): Promise<Listing | null> {
              FROM listing_placements p3
              WHERE p3.listing_id = l.id
                AND p3.city_slug IS NOT NULL
+               AND p3.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci3.label, p4.city_slug))
@@ -475,6 +485,7 @@ export async function getListingById(id: number): Promise<Listing | null> {
              LEFT JOIN cities ci3 ON ci3.slug = p4.city_slug
              WHERE p4.listing_id = l.id
                AND p4.city_slug IS NOT NULL
+               AND p4.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
@@ -520,6 +531,7 @@ export async function getListingBySlug(slug: string): Promise<Listing | null> {
              FROM listing_placements p3
              WHERE p3.listing_id = l.id
                AND p3.city_slug IS NOT NULL
+               AND p3.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci3.label, p4.city_slug))
@@ -527,6 +539,7 @@ export async function getListingBySlug(slug: string): Promise<Listing | null> {
              LEFT JOIN cities ci3 ON ci3.slug = p4.city_slug
              WHERE p4.listing_id = l.id
                AND p4.city_slug IS NOT NULL
+               AND p4.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
@@ -558,6 +571,7 @@ export async function getListingPlacements(listingId: number): Promise<ListingPl
     LEFT JOIN cities ci ON ci.slug = p.city_slug
     WHERE p.listing_id = ?
       AND (p.category_slug IS NULL OR p.category_slug NOT IN (${placeholders}))
+      AND (p.city_slug IS NULL OR p.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL}))
     ORDER BY p.category_slug, p.city_slug
   `).bind(listingId, ...suppressed).all<ListingPlacement>();
   return results;
@@ -565,6 +579,8 @@ export async function getListingPlacements(listingId: number): Promise<ListingPl
 
 export async function getBusinessListings(businessId: number, excludeId: number): Promise<Listing[]> {
   const db = await getD1();
+  const suppressed = [...SUPPRESSED_CATEGORIES];
+  const placeholders = suppressed.map(() => "?").join(",");
   const { results } = await db.prepare(`
     SELECT DISTINCT l.id, l.title, l.tagline, l.description, l.promo,
            l.phone, l.mobile, l.email, l.web, l.image_url,
@@ -580,12 +596,14 @@ export async function getBusinessListings(businessId: number, excludeId: number)
              FROM listing_placements p2
              WHERE p2.listing_id = l.id
                AND p2.category_slug IS NOT NULL
+               AND p2.category_slug NOT IN (${placeholders})
            ) AS category_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT p2.city_slug)
              FROM listing_placements p2
              WHERE p2.listing_id = l.id
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci2.label, p2.city_slug))
@@ -593,12 +611,13 @@ export async function getBusinessListings(businessId: number, excludeId: number)
              LEFT JOIN cities ci2 ON ci2.slug = p2.city_slug
              WHERE p2.listing_id = l.id
                AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
     WHERE l.business_id = ? AND l.id != ? AND l.status = 'active'
     ORDER BY l.confidence_score DESC
-  `).bind(businessId, excludeId).all<Listing>();
+  `).bind(...suppressed, businessId, excludeId).all<Listing>();
 
   return results;
 }
@@ -643,6 +662,8 @@ export async function getRelatedListings(categorySlug: string, citySlug: string 
 }
 
 export async function getCityMeta(cityDbSlug: string): Promise<City | null> {
+  if (SUPPRESSED_PUBLIC_CITIES.has(cityDbSlug)) return null;
+
   const db = await getD1();
   const row = await db.prepare(`
     SELECT p.city_slug AS slug, ci.label, ci.state, ci.seo_title, ci.seo_description,
@@ -829,6 +850,8 @@ export interface ProfileBanner extends Banner {
 
 export async function getProfileData(slugOrId: string, eventFilter: ProfileEventFilter = "upcoming"): Promise<ProfileData> {
   const db = await getD1();
+  const suppressed = [...SUPPRESSED_CATEGORIES];
+  const categoryPlaceholders = placeholders(suppressed);
 
   // Resolution order:
   // 1. custom profile_slug (paid upgrade, exact match)
@@ -873,25 +896,31 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
            (
              SELECT GROUP_CONCAT(DISTINCT p2.category_slug)
              FROM listing_placements p2
-             WHERE p2.listing_id = l.id AND p2.category_slug IS NOT NULL
+             WHERE p2.listing_id = l.id
+               AND p2.category_slug IS NOT NULL
+               AND p2.category_slug NOT IN (${categoryPlaceholders})
            ) AS category_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT p2.city_slug)
              FROM listing_placements p2
-             WHERE p2.listing_id = l.id AND p2.city_slug IS NOT NULL
+             WHERE p2.listing_id = l.id
+               AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_slugs,
            (
              SELECT GROUP_CONCAT(DISTINCT COALESCE(ci2.label, p2.city_slug))
              FROM listing_placements p2
              LEFT JOIN cities ci2 ON ci2.slug = p2.city_slug
-             WHERE p2.listing_id = l.id AND p2.city_slug IS NOT NULL
+             WHERE p2.listing_id = l.id
+               AND p2.city_slug IS NOT NULL
+               AND p2.city_slug NOT IN (${SUPPRESSED_PUBLIC_CITY_SQL})
            ) AS city_labels
     FROM listings l
     LEFT JOIN businesses b ON b.id = l.business_id
     WHERE l.business_id = ? AND l.status = 'active'
     ORDER BY l.confidence_score DESC
     LIMIT 50
-  `).bind(businessId).all<Listing>();
+  `).bind(...suppressed, businessId).all<Listing>();
 
   const { results: accountRows } = await db.prepare(`
     SELECT id FROM advertiser_accounts WHERE business_id = ?

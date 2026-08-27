@@ -1668,6 +1668,9 @@ body.e4s-page-location .e4s-page-intro--editorial p,
     radial-gradient(circle at 16% 24%, rgba(255, 255, 255, 0.28), transparent 20%),
     linear-gradient(135deg, rgba(6, 78, 77, 0.95), rgba(83, 149, 146, 0.86) 54%, rgba(139, 47, 67, 0.64));
 }.e4s-page-category .e4s-page-hero__image img {
+  width: calc(100% + 4px);
+  max-width: none;
+  margin-left: -2px;
   object-fit: cover;
 }.e4s-page-category .e4s-page-intro h1 {
   position: absolute !important;
@@ -4457,14 +4460,22 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   height: 24px;
 }.e4s-cal__event-pill {
   display: block;
-  background: var(--e4s-teal-600);
+  color: #ffffff;
+  background: #064e4d;
   border-radius: 3px;
   padding: 2px 5px;
   margin-bottom: 2px;
   overflow: hidden;
   cursor: pointer;
-}.e4s-cal__event-pill:hover {
-  background: var(--e4s-teal-700);
+  text-decoration: none;
+}.e4s-cal__event-pill:visited {
+  color: #ffffff;
+}.e4s-cal__event-pill:hover,
+.e4s-cal__event-pill:focus-visible {
+  color: #ffffff;
+  background: #8b2f43;
+  outline: 2px solid rgba(255, 255, 255, 0.78);
+  outline-offset: 1px;
 }.e4s-cal__event-time {
   opacity: 0.85;
 }.e4s-cal__event-more {
@@ -4519,6 +4530,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   background: #ffffff;
   display: flex;
   flex-direction: column;
+  min-height: 430px;
   transition: box-shadow 0.2s ease;
 }.e4s-home-event-card:hover {
   box-shadow: 0 6px 18px rgba(6,78,75,0.1);
@@ -4546,20 +4558,39 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   flex: 1;
   padding: 18px 16px;
   gap: 8px;
+  min-height: 236px;
 }.e4s-home-event-card__date {
   margin: 0;
 }.e4s-home-event-card__body h3 {
   margin: 0;
+  min-height: 40px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }.e4s-home-event-card__location {
   margin: 0;
+  min-height: 34px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }.e4s-home-event-card__desc {
   margin: 4px 0 0;
   flex: 1;
+  min-height: 56px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
 }.e4s-home-event-card__meta {
   margin: 0;
 }.e4s-home-event-card__link {
   display: block;
-  margin-top: 12px;
+  margin-top: auto;
   padding: 9px 16px;
   border-radius: 999px;
   border: 1.5px solid #1d2533;
@@ -4837,6 +4868,10 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   grid-template-columns: repeat(2, 1fr);
 }.e4s-home-events-grid {
   grid-template-columns: 1fr;
+}.e4s-home-event-card {
+  min-height: 0;
+}.e4s-home-event-card__body {
+  min-height: 220px;
 }.e4s-home-exp-grid {
   grid-template-columns: 1fr;
   grid-template-rows: auto;
@@ -5218,6 +5253,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   padding: 0 12px;
   border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 999px;
+  color: #ffffff;
   background: rgba(6, 78, 77, 0.78);
   backdrop-filter: blur(10px);
   box-shadow: 0 12px 28px rgba(6, 78, 77, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.24);
@@ -5232,6 +5268,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   transform: rotate(45deg);
 }.e4s-event-back-pager:hover,
 .e4s-event-back-pager:focus-visible {
+  color: #ffffff;
   background: rgba(139, 47, 67, 0.92);
   outline: none;
   transform: translateY(-1px);
@@ -5508,13 +5545,15 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-event-back-pager {
   position: static;
   margin-bottom: 14px;
-  border-color: rgba(139, 47, 67, 0.56);
-  background: #ffffff;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(139, 47, 67, 0.92);
   backdrop-filter: none;
   box-shadow: 0 4px 12px rgba(79, 18, 47, 0.1);
 }.e4s-event-back-pager:hover,
   .e4s-event-back-pager:focus-visible {
-  background: var(--e4s-pink);
+  color: #ffffff;
+  background: var(--e4s-teal-700);
 }.e4s-event-detail__layout {
   grid-template-columns: 1fr;
 }.e4s-event-detail__intro {

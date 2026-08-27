@@ -2677,11 +2677,18 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow {
 }
 
 .e4s-cal__event-pill {
-  color: #fff;
+  color: #ffffff;
   font-size: 0.7rem;
   line-height: 1.3;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+.e4s-cal__event-pill:visited,
+.e4s-cal__event-pill:hover,
+.e4s-cal__event-pill:focus-visible {
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -3353,7 +3360,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow {
 
 @media (max-width: 900px) {
   .e4s-event-back-pager {
-    color: #8b2f43;
+    color: #ffffff;
   }
 }
 
