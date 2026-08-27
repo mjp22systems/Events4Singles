@@ -32,6 +32,13 @@ const SORTS = [
   { value: "city_asc", label: "City A-Z" },
 ];
 
+const REVIEW_FILTERS = [
+  { value: "", label: "All Review States" },
+  { value: "needs-review", label: "Needs Review" },
+  { value: "tbc", label: "TBC Placement" },
+  { value: "missing-contact", label: "Missing Contact" },
+];
+
 const BADGE: Record<string, string> = {
   active: "a-badge-active",
   pending: "a-badge-pending",
@@ -56,6 +63,31 @@ function PlacementPill({ slug }: { slug: string }) {
       {slug}
     </span>
   );
+}
+
+function ReviewPill({ label }: { label: string }) {
+  return <span className="a-review-pill">{label}</span>;
+}
+
+function reviewReasons(listing: {
+  image_url: string | null;
+  confidence_score: number | null;
+  placement_categories: string | null;
+  placement_cities: string | null;
+  web: string | null;
+  email: string | null;
+  phone: string | null;
+  mobile: string | null;
+}) {
+  const cats = listing.placement_categories ? listing.placement_categories.split(",") : [];
+  const cities = listing.placement_cities ? listing.placement_cities.split(",") : [];
+  const reasons: string[] = [];
+  if (!cats.length && !cities.length) reasons.push("no placement");
+  if (cats.includes("tbc") || cities.includes("tbc")) reasons.push("TBC");
+  if (!listing.image_url?.trim()) reasons.push("image");
+  if (listing.confidence_score != null && listing.confidence_score < 70) reasons.push("confidence");
+  if (![listing.web, listing.email, listing.phone, listing.mobile].some((value) => value?.trim())) reasons.push("contact");
+  return reasons;
 }
 
 type PageProps = { searchParams: Promise<Record<string, string>> };
@@ -83,6 +115,7 @@ export default async function AdminListings({ searchParams }: PageProps) {
   const q = params.q ?? "";
   const city = params.city ?? "";
   const category = params.category ?? "";
+  const review = params.review ?? "";
   const sort = params.sort ?? "id_desc";
   const businessId = Number(params.business_id ?? "");
   const page = Math.max(1, Number(params.page ?? 1));
@@ -92,11 +125,12 @@ export default async function AdminListings({ searchParams }: PageProps) {
   const filterSearch = q || undefined;
   const filterCity = city || undefined;
   const filterCategory = category || undefined;
+  const filterReview = review || undefined;
   const filterBusinessId = Number.isFinite(businessId) && businessId > 0 ? businessId : undefined;
 
   const [listings, total, categories, cities, businesses] = await Promise.all([
-    listListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId, sort, limit: PAGE_SIZE, offset }),
-    countListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId }),
+    listListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId, review: filterReview, sort, limit: PAGE_SIZE, offset }),
+    countListings({ status: filterStatus, search: filterSearch, city: filterCity, category: filterCategory, businessId: filterBusinessId, review: filterReview }),
     listCategories(),
     listCities(),
     listBusinesses(),
@@ -109,14 +143,15 @@ export default async function AdminListings({ searchParams }: PageProps) {
     if (q) base.q = q;
     if (city) base.city = city;
     if (category) base.category = category;
+    if (review) base.review = review;
     if (filterBusinessId) base.business_id = String(filterBusinessId);
     if (sort !== "id_desc") base.sort = sort;
     const next = new URLSearchParams({ ...base, ...overrides });
     return `/admin/listings?${next}`;
   }
 
-  const currentPath = `/admin/listings?${new URLSearchParams(Object.fromEntries(Object.entries({ status, q, city, category, sort: sort !== "id_desc" ? sort : "", business_id: filterBusinessId ? String(filterBusinessId) : "", page: String(page) }).filter(([, value]) => value)))}`;
-  const hasActiveFilters = q || city || category || filterBusinessId || status !== "all" || sort !== "id_desc";
+  const currentPath = `/admin/listings?${new URLSearchParams(Object.fromEntries(Object.entries({ status, q, city, category, review, sort: sort !== "id_desc" ? sort : "", business_id: filterBusinessId ? String(filterBusinessId) : "", page: String(page) }).filter(([, value]) => value)))}`;
+  const hasActiveFilters = q || city || category || review || filterBusinessId || status !== "all" || sort !== "id_desc";
 
   return (
     <>
@@ -169,6 +204,11 @@ export default async function AdminListings({ searchParams }: PageProps) {
           <input name="q" type="search" defaultValue={q} placeholder="Search title or business…" className="a-input a-inline-ab674353"  />
           <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
             {STATUSES.map((s) => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
+          <select name="review" defaultValue={review} className="a-input a-inline-37a89abe" >
+            {REVIEW_FILTERS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
@@ -265,6 +305,11 @@ export default async function AdminListings({ searchParams }: PageProps) {
                       <td className="a-inline-5d69a8cc" >{l.id}</td>
                       <td title={[l.title, l.tagline].filter(Boolean).join(" · ")}>
                         <span className="a-inline-da6c85ac" >{l.title}</span>
+                        {reviewReasons(l).length > 0 && (
+                          <span className="a-review-pill-row">
+                            {reviewReasons(l).map((reason) => <ReviewPill key={reason} label={reason} />)}
+                          </span>
+                        )}
                       </td>
                       <td className="a-inline-24fc8284"  title={l.business_name ?? (l.business_id ? `#${l.business_id}` : undefined)}>
                         {l.business_name ?? `#${l.business_id}`}

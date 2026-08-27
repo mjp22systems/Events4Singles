@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import AdminActionsMenu from "@/components/admin/actions-menu";
 import AdminBulkSelectAll from "@/components/admin/bulk-select-all";
-import { getNoImageListings, getLowConfidenceListings, getUnplacedListings } from "@/lib/admin-db";
+import { getNeedsReviewListings, getNoImageListings, getLowConfidenceListings, getTbcPlacementListings, getUnplacedListings } from "@/lib/admin-db";
 
 export const metadata: Metadata = { title: "Listing Review" };
 export const dynamic = "force-dynamic";
 
 const TABS = [
+  { id: "needs-review", label: "Needs Review" },
+  { id: "tbc", label: "TBC Placement" },
   { id: "no-image", label: "No Image" },
   { id: "low-confidence", label: "Low Confidence" },
   { id: "unplaced", label: "Unplaced" },
@@ -27,13 +29,24 @@ type PageProps = { searchParams: Promise<Record<string, string>> };
 
 export default async function AdminTools({ searchParams }: PageProps) {
   const params = await searchParams;
-  const tab = params.tab ?? "no-image";
+  const tab = params.tab ?? "needs-review";
 
+  const needsReview = tab === "needs-review" ? await getNeedsReviewListings() : [];
+  const tbc = tab === "tbc" ? await getTbcPlacementListings() : [];
   const noImage = tab === "no-image" ? await getNoImageListings() : [];
   const lowConf = tab === "low-confidence" ? await getLowConfidenceListings(70) : [];
   const unplaced = tab === "unplaced" ? await getUnplacedListings() : [];
 
-  const rows = tab === "no-image" ? noImage : tab === "low-confidence" ? lowConf : unplaced;
+  const rows =
+    tab === "needs-review"
+      ? needsReview
+      : tab === "tbc"
+        ? tbc
+        : tab === "no-image"
+          ? noImage
+          : tab === "low-confidence"
+            ? lowConf
+            : unplaced;
 
   return (
     <>

@@ -72,12 +72,13 @@ export async function listListings(opts: {
   city?: string;
   category?: string;
   businessId?: number;
+  review?: string;
   sort?: string;
   limit?: number;
   offset?: number;
 }): Promise<AdminListing[]> {
   const db = await getD1();
-  const { status, search, city, category, businessId, sort, limit = 50, offset = 0 } = opts;
+  const { status, search, city, category, businessId, review, sort, limit = 50, offset = 0 } = opts;
 
   let where = "WHERE l.deleted_at IS NULL";
   const params: (string | number)[] = [];
@@ -102,6 +103,7 @@ export async function listListings(opts: {
     where += " AND l.business_id = ?";
     params.push(businessId);
   }
+  where += listingReviewWhere(review);
 
   const LISTING_ORDER: Record<string, string> = {
     id_asc: "l.id ASC",
@@ -141,9 +143,10 @@ export async function countListings(opts: {
   city?: string;
   category?: string;
   businessId?: number;
+  review?: string;
 }): Promise<number> {
   const db = await getD1();
-  const { status, search, city, category, businessId } = opts;
+  const { status, search, city, category, businessId, review } = opts;
 
   let where = "WHERE l.deleted_at IS NULL";
   const params: (string | number)[] = [];
@@ -168,6 +171,7 @@ export async function countListings(opts: {
     where += " AND l.business_id = ?";
     params.push(businessId);
   }
+  where += listingReviewWhere(review);
 
   const row = await db
     .prepare(
@@ -178,6 +182,35 @@ export async function countListings(opts: {
     .bind(...params)
     .first<{ n: number }>();
   return row?.n ?? 0;
+}
+
+function listingReviewWhere(review?: string): string {
+  if (!review) return "";
+  if (review === "tbc") {
+    return ` AND EXISTS (
+      SELECT 1 FROM listing_placements lp_tbc
+      WHERE lp_tbc.listing_id = l.id
+        AND (lp_tbc.category_slug = 'tbc' OR lp_tbc.city_slug = 'tbc')
+    )`;
+  }
+  if (review === "missing-contact") {
+    return ` AND COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), '')) IS NULL`;
+  }
+  if (review === "needs-review") {
+    return ` AND (
+      NOT EXISTS (SELECT 1 FROM listing_placements lp_any WHERE lp_any.listing_id = l.id)
+      OR EXISTS (
+        SELECT 1 FROM listing_placements lp_tbc
+        WHERE lp_tbc.listing_id = l.id
+          AND (lp_tbc.category_slug = 'tbc' OR lp_tbc.city_slug = 'tbc')
+      )
+      OR l.image_url IS NULL
+      OR TRIM(l.image_url) = ''
+      OR (l.confidence_score IS NOT NULL AND l.confidence_score < 70)
+      OR COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), '')) IS NULL
+    )`;
+  }
+  return "";
 }
 
 export async function getListingById(id: number): Promise<AdminListing | null> {
@@ -759,6 +792,46 @@ export async function getUnplacedListings(limit = 100): Promise<ToolListing[]> {
        LEFT JOIN businesses b ON b.id = l.business_id
        WHERE l.deleted_at IS NULL
          AND NOT EXISTS (SELECT 1 FROM listing_placements lp WHERE lp.listing_id = l.id)
+       ORDER BY l.id DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all<ToolListing>();
+  return results;
+}
+
+export async function getTbcPlacementListings(limit = 100): Promise<ToolListing[]> {
+  const db = await getD1();
+  const { results } = await db
+    .prepare(
+      `SELECT l.id, l.title, l.image_url, l.confidence_score, l.status,
+              b.name AS business_name
+       FROM listings l
+       LEFT JOIN businesses b ON b.id = l.business_id
+       WHERE l.deleted_at IS NULL
+         AND EXISTS (
+           SELECT 1 FROM listing_placements lp
+           WHERE lp.listing_id = l.id
+             AND (lp.category_slug = 'tbc' OR lp.city_slug = 'tbc')
+         )
+       ORDER BY l.id DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all<ToolListing>();
+  return results;
+}
+
+export async function getNeedsReviewListings(limit = 100): Promise<ToolListing[]> {
+  const db = await getD1();
+  const { results } = await db
+    .prepare(
+      `SELECT l.id, l.title, l.image_url, l.confidence_score, l.status,
+              b.name AS business_name
+       FROM listings l
+       LEFT JOIN businesses b ON b.id = l.business_id
+       WHERE l.deleted_at IS NULL
+         ${listingReviewWhere("needs-review")}
        ORDER BY l.id DESC
        LIMIT ?`
     )
