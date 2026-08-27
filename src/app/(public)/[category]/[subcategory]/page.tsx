@@ -241,6 +241,15 @@ export default async function CategoryCityPage({ params }: Props) {
   const styleSubcategories = categoryDbSlug === "dance_classes"
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
+  const citySubcategoryAvailability = await Promise.all(
+    styleSubcategories.map(async (cat) => ({
+      category: cat,
+      listings: await getListingsForPage(cat.slug, cityDbSlug),
+    })),
+  );
+  const navigableSubcategories = citySubcategoryAvailability
+    .filter(({ listings: categoryListings }) => categoryListings.length > 0)
+    .map(({ category }) => category);
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
@@ -274,12 +283,23 @@ export default async function CategoryCityPage({ params }: Props) {
           <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={category} />
           <nav
             aria-label={`${catMeta.label} city navigation`}
-            className="e4s-category-child-nav e4s-category-child-nav--has-sidebar"
+            className={`e4s-category-child-nav e4s-category-child-nav--has-sidebar${navigableSubcategories.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
           >
             <Link className="e4s-category-child-nav__back" href={`/${category}`}>
               Back to {catMeta.label}
             </Link>
-            <label className="e4s-category-child-nav__control">
+            {navigableSubcategories.length > 0 ? (
+              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
+                <span>View style</span>
+                <SubcategoryNavSelect
+                  subcategories={navigableSubcategories}
+                  parentUrlSlug={category}
+                  cityUrlSlug={subcategory}
+                  placeholder="Select style"
+                />
+              </label>
+            ) : null}
+            <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
               <span>View another city</span>
               <NavSelect
                 cities={cities}
