@@ -38,7 +38,7 @@ import {
 } from "@/lib/page-copy";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
-import { getCityHeroFallbacks, getCityHeroImage } from "@/lib/city-hero-assets";
+import { getCitySourceFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
 
 interface Props {
   params: Promise<{ category: string; subcategory: string }>;
@@ -133,21 +133,19 @@ export default async function CategoryCityPage({ params }: Props) {
     const footerCopy = categorySeoFooterCopy(childMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
     const parentHeroImage = getCategoryHeroImage(category);
-    const parentImage = parentHeroImage ?? catMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
+    const parentImage = parentCardImage ?? catMeta.hero_image_url ?? parentHeroImage ?? `/images/category-hero-${category}.svg`;
     const parentImageFallbacks = [
-      ...(parentHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
-      ...(parentHeroImage && parentCardImage ? [parentCardImage] : []),
-      ...(!parentHeroImage && catMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
+      ...(parentCardImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
+      ...(parentHeroImage ? [parentHeroImage] : []),
       `/images/category-hero-${category}.svg`,
     ];
     const childUrlSlug = toUrlSlug(childMeta.slug);
     const childCardImage = getCategoryCardImage(childUrlSlug);
     const childHeroImage = getCategoryHeroImage(childUrlSlug);
-    const childImage = childHeroImage ?? childMeta.hero_image_url ?? childCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
+    const childImage = childCardImage ?? childMeta.hero_image_url ?? childHeroImage ?? `/images/category-hero-${childUrlSlug}.svg`;
     const childImageFallbacks = [
-      ...(childHeroImage && childMeta.hero_image_url ? [childMeta.hero_image_url] : []),
-      ...(childHeroImage && childCardImage ? [childCardImage] : []),
-      ...(!childHeroImage && childMeta.hero_image_url && childCardImage ? [childCardImage] : []),
+      ...(childCardImage && childMeta.hero_image_url ? [childMeta.hero_image_url] : []),
+      ...(childHeroImage ? [childHeroImage] : []),
       `/images/category-hero-${childUrlSlug}.svg`,
     ];
     const jsonLd = [
@@ -312,14 +310,13 @@ export default async function CategoryCityPage({ params }: Props) {
   const footerCopy = categoryCitySeoFooterCopy(catMeta, cityMeta, listings.length);
   const categoryCardImage = getCategoryCardImage(category);
   const categoryHeroImage = getCategoryHeroImage(category);
-  const categoryImage = categoryHeroImage ?? catMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${category}.svg`;
+  const categoryImage = categoryCardImage ?? catMeta.hero_image_url ?? categoryHeroImage ?? `/images/category-hero-${category}.svg`;
   const categoryImageFallbacks = [
-    ...(categoryHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
-    ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
-    ...(!categoryHeroImage && catMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
+    ...(categoryCardImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
+    ...(categoryHeroImage ? [categoryHeroImage] : []),
     `/images/category-hero-${category}.svg`,
   ];
-  const cityImage = getCityHeroImage(subcategory);
+  const cityImage = getCitySourceImage(subcategory);
   const jsonLd = [
     collectionPageJsonLd({
       name: `${catMeta.label} in ${cityMeta.label}`,
@@ -383,7 +380,7 @@ export default async function CategoryCityPage({ params }: Props) {
               categoryImage={categoryImage}
               categoryFallbacks={categoryImageFallbacks}
               cityImage={cityImage}
-              cityFallbacks={getCityHeroFallbacks(subcategory)}
+              cityFallbacks={getCitySourceFallbacks(subcategory)}
             />
           )}
           title={`${catMeta.label} ${cityMeta.label}`}

@@ -25,16 +25,18 @@ function BlendImageLayer({ className, src, fallbacks = [] }: LayerProps) {
   if (idx >= srcs.length) return null;
 
   return (
-    <img
-      alt=""
-      aria-hidden="true"
-      className={className}
-      decoding="async"
-      fetchPriority="high"
-      loading="eager"
-      src={srcs[idx]}
-      onError={() => setIdx((i) => i + 1)}
-    />
+    <span className={`e4s-page-hero__blend-layer ${className}`}>
+      <img
+        alt=""
+        aria-hidden="true"
+        className="e4s-page-hero__blend-image"
+        decoding="async"
+        fetchPriority="high"
+        loading="eager"
+        src={srcs[idx]}
+        onError={() => setIdx((i) => i + 1)}
+      />
+    </span>
   );
 }
 

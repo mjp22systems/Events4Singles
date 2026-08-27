@@ -564,7 +564,7 @@ body > div > table {
   background:
     linear-gradient(135deg, rgba(0, 102, 102, 0.82), rgba(139, 47, 67, 0.74)),
     linear-gradient(45deg, #d7ecea, #f8ddea);
-}.e4s-page-hero__blend-image,
+}.e4s-page-hero__blend-layer,
 .e4s-page-hero__blend-softener {
   position: absolute;
   inset: 0;
@@ -574,32 +574,42 @@ body > div > table {
   height: 100%;
   object-fit: cover;
   object-position: center center;
+}.e4s-page-hero__blend-layer {
   z-index: 0;
+}.e4s-page-hero__blend-image--category,
+.e4s-page-hero__blend-image--parent-category {
+  inset: 0 38% 0 0;
+}.e4s-page-hero__blend-image--category .e4s-page-hero__blend-image,
+.e4s-page-hero__blend-image--parent-category .e4s-page-hero__blend-image {
+  object-position: center 64%;
 }.e4s-page-hero__blend-image--category {
-  -webkit-mask-image: linear-gradient(98deg, #000000 0%, #000000 34%, rgba(0, 0, 0, 0.82) 41%, rgba(0, 0, 0, 0.34) 51%, rgba(0, 0, 0, 0.08) 62%, transparent 72%);
-  mask-image: linear-gradient(98deg, #000000 0%, #000000 34%, rgba(0, 0, 0, 0.82) 41%, rgba(0, 0, 0, 0.34) 51%, rgba(0, 0, 0, 0.08) 62%, transparent 72%);
+  -webkit-mask-image: linear-gradient(102deg, #000000 0%, #000000 72%, rgba(0, 0, 0, 0.82) 80%, rgba(0, 0, 0, 0.22) 91%, transparent 100%);
+  mask-image: linear-gradient(102deg, #000000 0%, #000000 72%, rgba(0, 0, 0, 0.82) 80%, rgba(0, 0, 0, 0.22) 91%, transparent 100%);
 }.e4s-page-hero__blend-image--city {
-  -webkit-mask-image: linear-gradient(98deg, transparent 28%, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.34) 49%, rgba(0, 0, 0, 0.82) 59%, #000000 66%, #000000 100%);
-  mask-image: linear-gradient(98deg, transparent 28%, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.34) 49%, rgba(0, 0, 0, 0.82) 59%, #000000 66%, #000000 100%);
+  inset: 0 0 0 38%;
+  -webkit-mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.22) 9%, rgba(0, 0, 0, 0.82) 20%, #000000 28%, #000000 100%);
+  mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.22) 9%, rgba(0, 0, 0, 0.82) 20%, #000000 28%, #000000 100%);
   z-index: 1;
 }.e4s-page-hero__blend-softener {
   display: none;
 }
 
 .e4s-page-hero__blend-image--parent-category {
-  -webkit-mask-image: linear-gradient(100deg, #000000 0%, #000000 21%, rgba(0, 0, 0, 0.84) 28%, rgba(0, 0, 0, 0.34) 36%, rgba(0, 0, 0, 0.08) 43%, transparent 51%);
-  mask-image: linear-gradient(100deg, #000000 0%, #000000 21%, rgba(0, 0, 0, 0.84) 28%, rgba(0, 0, 0, 0.34) 36%, rgba(0, 0, 0, 0.08) 43%, transparent 51%);
+  -webkit-mask-image: linear-gradient(102deg, #000000 0%, #000000 70%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.18) 91%, transparent 100%);
+  mask-image: linear-gradient(102deg, #000000 0%, #000000 70%, rgba(0, 0, 0, 0.8) 80%, rgba(0, 0, 0, 0.18) 91%, transparent 100%);
 }
 
 .e4s-page-hero__image--blend-trio .e4s-page-hero__blend-image--category {
-  -webkit-mask-image: linear-gradient(100deg, transparent 16%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.58) 34%, #000000 42%, #000000 56%, rgba(0, 0, 0, 0.58) 64%, rgba(0, 0, 0, 0.1) 73%, transparent 82%);
-  mask-image: linear-gradient(100deg, transparent 16%, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.58) 34%, #000000 42%, #000000 56%, rgba(0, 0, 0, 0.58) 64%, rgba(0, 0, 0, 0.1) 73%, transparent 82%);
+  inset: 0 24% 0 24%;
+  -webkit-mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.18) 13%, rgba(0, 0, 0, 0.86) 26%, #000000 34%, #000000 66%, rgba(0, 0, 0, 0.86) 74%, rgba(0, 0, 0, 0.18) 87%, transparent 100%);
+  mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.18) 13%, rgba(0, 0, 0, 0.86) 26%, #000000 34%, #000000 66%, rgba(0, 0, 0, 0.86) 74%, rgba(0, 0, 0, 0.18) 87%, transparent 100%);
   z-index: 1;
 }
 
 .e4s-page-hero__image--blend-trio .e4s-page-hero__blend-image--city {
-  -webkit-mask-image: linear-gradient(100deg, transparent 49%, rgba(0, 0, 0, 0.08) 57%, rgba(0, 0, 0, 0.34) 64%, rgba(0, 0, 0, 0.84) 72%, #000000 79%, #000000 100%);
-  mask-image: linear-gradient(100deg, transparent 49%, rgba(0, 0, 0, 0.08) 57%, rgba(0, 0, 0, 0.34) 64%, rgba(0, 0, 0, 0.84) 72%, #000000 79%, #000000 100%);
+  inset: 0 0 0 58%;
+  -webkit-mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.18) 18%, rgba(0, 0, 0, 0.8) 36%, #000000 48%, #000000 100%);
+  mask-image: linear-gradient(102deg, transparent 0%, rgba(0, 0, 0, 0.18) 18%, rgba(0, 0, 0, 0.8) 36%, #000000 48%, #000000 100%);
   z-index: 2;
 }
 
