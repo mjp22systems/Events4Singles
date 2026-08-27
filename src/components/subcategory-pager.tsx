@@ -6,6 +6,7 @@ interface Props {
   subcategories: Category[];
   currentDbSlug: string;
   parentUrlSlug: string;
+  cityUrlSlug?: string;
   variant?: "primary" | "secondary";
 }
 
@@ -13,6 +14,7 @@ export default function SubcategoryPager({
   subcategories,
   currentDbSlug,
   parentUrlSlug,
+  cityUrlSlug,
   variant = "primary",
 }: Props) {
   const parentDbSlug = toDbSlug(parentUrlSlug);
@@ -22,7 +24,7 @@ export default function SubcategoryPager({
 
   const pathFor = (cat: Category) => {
     const childSegment = toCategoryChildUrlSegment(parentDbSlug, cat.slug);
-    return `/${parentUrlSlug}/${childSegment}`;
+    return cityUrlSlug ? `/${parentUrlSlug}/${childSegment}/${cityUrlSlug}` : `/${parentUrlSlug}/${childSegment}`;
   };
   const prev = sorted[(idx - 1 + sorted.length) % sorted.length];
   const next = sorted[(idx + 1) % sorted.length];

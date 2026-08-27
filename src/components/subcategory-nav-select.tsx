@@ -7,6 +7,7 @@ interface Props {
   subcategories: Category[];
   parentUrlSlug: string;
   currentSubcategorySlug?: string;
+  cityUrlSlug?: string;
   placeholder?: string;
 }
 
@@ -14,6 +15,7 @@ export default function SubcategoryNavSelect({
   subcategories,
   parentUrlSlug,
   currentSubcategorySlug = "",
+  cityUrlSlug,
   placeholder,
 }: Props) {
   const router = useRouter();
@@ -24,7 +26,7 @@ export default function SubcategoryNavSelect({
       onChange={(e) => {
         if (!e.target.value) return;
         const nextSlug = toCategoryChildUrlSegment(toDbSlug(parentUrlSlug), e.target.value);
-        router.push(`/${parentUrlSlug}/${nextSlug}`);
+        router.push(cityUrlSlug ? `/${parentUrlSlug}/${nextSlug}/${cityUrlSlug}` : `/${parentUrlSlug}/${nextSlug}`);
       }}
       aria-label="Choose category"
     >
