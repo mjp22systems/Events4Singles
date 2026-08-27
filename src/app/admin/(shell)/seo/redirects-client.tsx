@@ -206,17 +206,17 @@ export default function RedirectsClient({
               <tr>
                 <td><code className="a-inline-d4d63c8b" >/locations</code></td>
                 <td><code className="a-inline-d4d63c8b" >/cities</code></td>
-                <td className="a-inline-5d69a8cc" >Permanent</td>
+                <td className="a-muted-small" >Permanent</td>
               </tr>
               <tr>
                 <td><code className="a-inline-d4d63c8b" >/privacy</code></td>
                 <td><code className="a-inline-d4d63c8b" >/privacy-policy</code></td>
-                <td className="a-inline-5d69a8cc" >Permanent</td>
+                <td className="a-muted-small" >Permanent</td>
               </tr>
               <tr>
                 <td><code className="a-inline-d4d63c8b" >/terms</code></td>
                 <td><code className="a-inline-d4d63c8b" >/terms-and-conditions</code></td>
-                <td className="a-inline-5d69a8cc" >Permanent</td>
+                <td className="a-muted-small" >Permanent</td>
               </tr>
             </tbody>
           </table>

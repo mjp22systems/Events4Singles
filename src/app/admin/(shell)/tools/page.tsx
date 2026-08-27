@@ -119,8 +119,8 @@ export default async function AdminTools({ searchParams }: PageProps) {
                     {rows.map((l, index) => (
                       <tr key={l.id}>
                         <td><input type="checkbox" name="ids" value={l.id} className="bulk-check" /></td>
-                        <td className="a-inline-5d69a8cc" >{index + 1}</td>
-                        <td className="a-inline-5d69a8cc" >{l.id}</td>
+                        <td className="a-muted-small" >{index + 1}</td>
+                        <td className="a-muted-small" >{l.id}</td>
                         <td title={l.title} className="a-inline-da6c85ac" >{l.title}</td>
                         <td className="a-inline-24fc8284"  title={l.business_name ?? undefined}>{l.business_name ?? "—"}</td>
                         {tab === "low-confidence" && (

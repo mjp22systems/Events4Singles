@@ -86,7 +86,7 @@ export default async function AdminBusinesses({ searchParams }: PageProps) {
 
       <form method="GET" action="/admin/businesses" className="admin-filter-bar">
         <input name="q" type="search" defaultValue={q} placeholder="Search business name…" className="a-input a-inline-ab674353"  />
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
@@ -136,8 +136,8 @@ export default async function AdminBusinesses({ searchParams }: PageProps) {
                 businesses.map((b, index) => (
                   <tr key={b.id}>
                     <td><input type="checkbox" name="ids" value={b.id} className="bulk-check" /></td>
-                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
-                    <td className="a-inline-5d69a8cc" >{b.id}</td>
+                    <td className="a-muted-small" >{index + 1}</td>
+                    <td className="a-muted-small" >{b.id}</td>
                     <td className="a-inline-da6c85ac" >{b.name}</td>
                     <td>
                       <Link href={`/admin/listings?business_id=${b.id}`} className="a-inline-d862cb1b" >

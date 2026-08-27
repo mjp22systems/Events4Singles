@@ -1,4 +1,4 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 import { ensureEventExternalRefsTable } from "@/lib/event-external-refs";
 import { ensureMediaAssetsTable, listMediaAssetsForAccount, type MediaAsset } from "@/lib/media-assets";
 
@@ -108,8 +108,7 @@ export interface AnalyticsSummary {
 }
 
 async function db() {
-  const { env } = await getCloudflareContext({ async: true });
-  return env.DB;
+  return getD1();
 }
 
 export async function getOrCreateAccount(clerkUserId: string, email?: string): Promise<AdvertiserAccount> {
@@ -366,10 +365,10 @@ export async function upsertPortalIntegration(
 export async function updatePortalIntegration(
   accountId: string,
   id: string,
-  fields: Partial<Pick<PortalIntegration, "auto_approve" | "push_enabled">>,
+  fields: Partial<Pick<PortalIntegration, "push_enabled">>,
 ): Promise<void> {
   const d = await db();
-  const allowed = Object.entries(fields).filter(([key]) => key === "auto_approve" || key === "push_enabled");
+  const allowed = Object.entries(fields).filter(([key]) => key === "push_enabled");
   if (!allowed.length) return;
   const sets = allowed.map(([key]) => `${key} = ?`).join(", ");
   await d

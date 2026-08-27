@@ -29,7 +29,7 @@ export default function ListingsClient({
   return (
     <>
       <div className="p-inline-7cf1efdb" >
-        <h1 className="p-page-title p-inline-b646589c" >Listings</h1>
+        <h1 className="p-page-title p-flush-text" >Listings</h1>
         <button className="p-btn p-btn--primary" onClick={() => setShowModal(true)}>+ Request listing</button>
       </div>
       <p className="p-muted">Your active listings on Events4Singles.</p>
@@ -49,11 +49,11 @@ export default function ListingsClient({
         </form>
       )}
 
-      <div className="p-card p-inline-ba93ebdf" >
+      <div className="p-card p-spaced-block">
         {listings.length === 0 ? (
           <div className="p-empty">
             <p>No listings linked to your account yet.</p>
-            <p className="p-inline-eca1b296" >
+            <p className="p-empty__hint">
               Click <strong>Request listing</strong> above or email{" "}
               <a href="mailto:support@events4singles.com">support@events4singles.com</a>.
             </p>
@@ -61,17 +61,17 @@ export default function ListingsClient({
         ) : (
           <table className="p-inline-3d9ff13f" >
             <thead>
-              <tr className="p-inline-b7e3c804" >
-                <th className="p-label p-inline-29909338" >Title</th>
-                <th className="p-label p-inline-29909338" >Business</th>
-                <th className="p-label p-inline-29909338" >City</th>
-                <th className="p-label p-inline-29909338" >Status</th>
+              <tr className="p-table-row-border" >
+                <th className="p-label p-table-heading-left" >Title</th>
+                <th className="p-label p-table-heading-left" >Business</th>
+                <th className="p-label p-table-heading-left" >City</th>
+                <th className="p-label p-table-heading-left" >Status</th>
                 <th className="p-inline-891409a5"  />
               </tr>
             </thead>
             <tbody>
               {listings.map((l) => (
-                <tr key={l.id} className="p-inline-b7e3c804" >
+                <tr key={l.id} className="p-table-row-border" >
                   <td className="p-inline-3d73efb4" >{l.title}</td>
                   <td className="p-inline-11a67c90" >{l.business_name ?? `#${l.business_id}`}</td>
                   <td className="p-inline-11a67c90" >{l.location_city}</td>

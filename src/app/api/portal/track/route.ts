@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 
 
 const VALID_SURFACES = new Set(["listing", "banner", "event"]);
@@ -24,9 +24,9 @@ export async function POST(req: NextRequest) {
   const ua = req.headers.get("user-agent") ?? "";
   const device = /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop";
 
-  const { env } = await getCloudflareContext({ async: true });
+  const db = await getD1();
 
-  await env.DB.prepare(
+  await db.prepare(
     "INSERT INTO analytics_events (surface, surface_id, event_type, city, device) VALUES (?, ?, ?, ?, ?)"
   )
     .bind(surface, surface_id, event_type, city ?? null, device)

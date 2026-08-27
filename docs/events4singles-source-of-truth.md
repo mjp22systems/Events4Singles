@@ -14,13 +14,27 @@ Last updated: 2026-08-27
 - No `site-clean.events4singles.com` DNS record was present on 2026-08-27.
 - Deploy command: `npm run deploy:dad`.
 - Cache purge command: `npm run cache:purge`.
-- Graphify target: run Graphify from this `website` folder only, not the parent `Events4singles` folder.
-- Graphify output: `website\graphify-out`, ignored by Git.
+- Graphify target: run Graphify from `D:\Projects\Clients\Dad\Events4singles` when the task needs the full project picture, including repo docs and top-level audit notes. Use `.graphifyignore` to exclude generated output, dependency folders, lock/build artifacts, and images unless the task specifically asks for media analysis.
+- Graphify output: `D:\Projects\Clients\Dad\Events4singles\graphify-out`, ignored by Git.
+- Project memory refresh command from `website`: `npm run memory:refresh`.
+- Project memory hook install command from `website`: `npm run memory:hook`.
 - Archive location for old sessions, release folders, local DB snapshots, and moved legacy non-image assets: `D:\Projects\Clients\Dad\Events4singles-archive`.
 
 The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. Do not create release clones, temporary worktrees, one-off deploy copies, scrape outputs, or database backup piles there. If a future release needs a disposable working copy, put it under `D:\Projects\Clients\Dad\Events4singles-archive\scratch` or another clearly named archive/scratch folder outside the active project container.
 
 Current cleanup rule: the active repo should contain source, tracked migrations, tracked tools, tests, public assets needed by live data, and documentation. Generated folders such as `.next`, `.open-next`, `.wrangler`, reports, local SQLite snapshots, and QA screenshots are not source of truth.
+
+## Project Memory Loop
+
+The durable project memory loop is:
+
+1. Update code, tests, docs, or source assets.
+2. Run relevant verification.
+3. Run `npm run memory:refresh` from `website`.
+4. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
+5. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
+
+The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work.
 
 ## Canonical Folder Map
 
@@ -434,6 +448,13 @@ Planned architecture from Claude memory:
 - UI should support list view and calendar grid view.
 - Calendar placement is a paid add-on, ideally sold through Stripe and managed in the advertiser portal.
 - Header `Events Calendar` should remain visually distinct from `Create Listing` / account actions.
+
+Current portal moderation rule:
+
+- Advertiser-created, edited, or imported events must land in `pending` and require admin approval before they appear on the public calendar.
+- The advertiser portal can hide owned events, delete non-approved events, and submit/re-submit events for admin review. It must not mark an event `approved` directly.
+- Integration `auto_approve` is an admin-side control. The advertiser portal should describe imported events as review submissions and should not expose a self-service auto-approve toggle.
+- Eventbrite push behavior for both admin and advertiser portal routes is owned by `src/lib/eventbrite-push-service.ts`. Route files should only handle auth, account scoping, request parsing, redirect/JSON response shaping, and then call `pushEventToEventbrite`.
 
 ## Open Work
 

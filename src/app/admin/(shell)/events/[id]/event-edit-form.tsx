@@ -26,7 +26,7 @@ function TextInput({ value, onChange, placeholder, type = "text" }: { value: str
   return (
     <input
       type={type}
-      className="a-input a-inline-aef14f3c"
+      className="a-input a-w-full"
       
       value={value}
       placeholder={placeholder}
@@ -199,7 +199,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
       )}
 
       {/* Left column */}
-      <div className="a-inline-b55e6460" >
+      <div className="a-stack-sm" >
         <div className="a-card a-inline-d1745038" >
           <SectionHeader>Event Details</SectionHeader>
           <Field label="Title">
@@ -227,7 +227,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
             </Field>
           </div>
           <Field label="Timezone">
-            <select className="a-input a-inline-aef14f3c"  value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+            <select className="a-input a-w-full"  value={timezone} onChange={(e) => setTimezone(e.target.value)}>
               {AU_TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
             </select>
           </Field>
@@ -237,7 +237,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           <SectionHeader>Location</SectionHeader>
           <div className="a-inline-92c0961c" >
             <Field label="City">
-              <select className="a-input a-inline-aef14f3c"  value={city} onChange={(e) => setCity(e.target.value)}>
+              <select className="a-input a-w-full"  value={city} onChange={(e) => setCity(e.target.value)}>
                 <option value="">— select city —</option>
                 {cityOptions.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
               </select>
@@ -265,7 +265,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
             </Field>
           </div>
           <Field label="Registration destination">
-            <select className="a-input a-inline-aef14f3c"  value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
+            <select className="a-input a-w-full"  value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
               {REGISTRATION_MODES.map((mode) => <option key={mode.value} value={mode.value}>{mode.label}</option>)}
             </select>
           </Field>
@@ -280,14 +280,14 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
 
       {/* Right sidebar */}
       <div className="a-inline-69cf3403" >
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Save</SectionHeader>
-          <button className="a-btn a-btn-primary a-inline-aef14f3c"  onClick={save} disabled={saving}>
+          <button className="a-btn a-btn-primary a-w-full"  onClick={save} disabled={saving}>
             {saving ? "Saving…" : "Save Changes"}
           </button>
         </div>
 
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Moderation</SectionHeader>
           <div className="a-inline-2352e462" >
             Status: <strong>{status}</strong>
@@ -302,20 +302,20 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           </div>
         </div>
 
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Category</SectionHeader>
-          <select className="a-input a-inline-aef14f3c"  value={category} onChange={(e) => setCategory(e.target.value)}>
+          <select className="a-input a-w-full"  value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">— uncategorised —</option>
             {CATEGORIES.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
           </select>
         </div>
 
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Image</SectionHeader>
           <EventImagePicker value={imageUrl} onChange={setImageUrl} />
         </div>
 
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Source</SectionHeader>
           <div className="a-inline-691df809" >
             <div>{event.source}</div>
@@ -324,7 +324,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           </div>
         </div>
 
-        <div className="a-card a-inline-96e3c8f1" >
+        <div className="a-card a-card--padded" >
           <SectionHeader>Danger</SectionHeader>
           <button className="a-btn a-btn-ghost a-inline-4017a949"  onClick={del} disabled={deleting}>
             {deleting ? "Deleting…" : "Delete Event"}

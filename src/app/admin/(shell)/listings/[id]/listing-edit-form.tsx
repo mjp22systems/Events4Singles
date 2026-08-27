@@ -250,7 +250,7 @@ export default function ListingEditForm({
 
           {/* Core content */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Content" />
               <Field label="Title">
                 <TextInput name="title" value={title} onChange={setTitle} placeholder="Listing title" />
@@ -269,7 +269,7 @@ export default function ListingEditForm({
 
           {/* Contact */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Contact" />
               <Field label="Contact Name">
                 <TextInput name="contact_name" value={contactName} onChange={setContactName} />
@@ -293,7 +293,7 @@ export default function ListingEditForm({
 
           {/* Location */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Location" />
               <Field label="Address / Suburb">
                 <TextInput name="location" value={location} onChange={setLocation} placeholder="Street, suburb" />
@@ -367,7 +367,7 @@ export default function ListingEditForm({
 
           {/* Social */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Social Links" />
               <div className="a-form-grid a-form-grid--two">
                 <Field label="Facebook">
@@ -391,7 +391,7 @@ export default function ListingEditForm({
 
           {/* Additional */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Additional" />
               <div className="a-form-grid a-form-grid--two">
                 <Field label="ABN">
@@ -417,7 +417,7 @@ export default function ListingEditForm({
           {/* Save / actions */}
           <div className="a-card">
             <div className="a-card-body a-inline-ba80689b" >
-              <button type="submit" className="a-btn a-btn-primary a-inline-aef14f3c" disabled={saving} >
+              <button type="submit" className="a-btn a-btn-primary a-w-full" disabled={saving} >
                 {saving ? "Saving…" : "Save Changes"}
               </button>
               <a
@@ -441,7 +441,7 @@ export default function ListingEditForm({
 
           {/* Status & type */}
           <div className="a-card">
-            <div className="a-card-body a-inline-b55e6460" >
+            <div className="a-card-body a-stack-sm" >
               <SectionHeader title="Settings" />
               <Field label="Status">
                 <select value={status} onChange={(e) => setStatus(e.target.value)} className="a-input a-form-select">

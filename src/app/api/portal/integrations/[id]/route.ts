@@ -16,9 +16,8 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   const account = await requireAccount();
   if (!account) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
-  const body = await req.json() as { auto_approve?: boolean; push_enabled?: boolean };
+  const body = await req.json() as { push_enabled?: boolean };
   await updatePortalIntegration(account.id, id, {
-    ...(body.auto_approve !== undefined ? { auto_approve: body.auto_approve ? 1 : 0 } : {}),
     ...(body.push_enabled !== undefined ? { push_enabled: body.push_enabled ? 1 : 0 } : {}),
   });
   return NextResponse.json({ ok: true });

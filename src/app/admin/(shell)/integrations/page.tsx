@@ -68,19 +68,19 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
 
       <form method="GET" action="/admin/integrations" className="a-inline-8ff7e847" >
         <input name="q" type="search" defaultValue={q} placeholder="Search account or business..." className="a-input a-inline-ab674353"  />
-        <select name="platform" defaultValue={platform} className="a-input a-inline-37a89abe" >
+        <select name="platform" defaultValue={platform} className="a-input a-filter-control" >
           <option value="">All platforms</option>
           {PLATFORMS.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
+        <select name="status" defaultValue={status} className="a-input a-filter-control" >
           <option value="">All statuses</option>
           {STATUSES.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
@@ -149,7 +149,7 @@ export default async function AdminIntegrationsPage({ searchParams }: PageProps)
               ) : integrations.map((row, index) => (
                 <tr key={row.id}>
                   <td><input form={BULK_FORM_ID} type="checkbox" name="ids" value={row.id} className="bulk-check" /></td>
-                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                  <td className="a-muted-small" >{index + 1}</td>
                   <td title={`${accountLabel(row)} (${row.account_id})`}>
                     <span className="a-inline-6c835a8d" >{accountLabel(row)}</span>
                     <div className="a-inline-bb3abc5b" >{row.account_id}</div>

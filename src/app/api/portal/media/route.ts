@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextRequest, NextResponse } from "next/server";
+import { getD1 } from "@/lib/db";
 import { createMediaAsset, listMediaAssetsForAccount } from "@/lib/media-assets";
 import { getAccount } from "@/lib/portal-db";
 
@@ -18,8 +18,8 @@ async function requireAccount() {
 export async function GET() {
   const account = await requireAccount();
   if (!account) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { env } = await getCloudflareContext({ async: true });
-  const assets = await listMediaAssetsForAccount(env.DB, account.id);
+  const db = await getD1();
+  const assets = await listMediaAssetsForAccount(db, account.id);
   return NextResponse.json({ assets });
 }
 
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Images must be 2MB or smaller." }, { status: 422 });
   }
 
-  const { env } = await getCloudflareContext({ async: true });
-  const asset = await createMediaAsset(env.DB, {
+  const db = await getD1();
+  const asset = await createMediaAsset(db, {
     accountId: account.id,
     filename: file.name || "event-image",
     contentType: file.type,

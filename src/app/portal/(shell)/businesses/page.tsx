@@ -59,7 +59,7 @@ export default async function PortalBusinessesPage() {
   return (
     <>
       <div className="p-inline-72c7fa58" >
-        <h1 className="p-page-title p-inline-b646589c" >Businesses</h1>
+        <h1 className="p-page-title p-flush-text" >Businesses</h1>
         <div className="p-inline-306fee7f" >
           <Link href="/portal/listings" className="p-btn">View listings</Link>
           <BusinessRequestForm requestBusiness={requestBusiness} />
@@ -67,11 +67,11 @@ export default async function PortalBusinessesPage() {
       </div>
       <p className="p-muted">Businesses linked to your portal login.</p>
 
-      <div className="p-card p-inline-ba93ebdf" >
+      <div className="p-card p-spaced-block">
         {businesses.length === 0 ? (
           <div className="p-empty">
             <p>No businesses linked to your account yet.</p>
-            <p className="p-inline-eca1b296" >
+            <p className="p-empty__hint">
               Use <strong>Add business</strong> to claim or connect a business.
             </p>
           </div>
@@ -81,7 +81,7 @@ export default async function PortalBusinessesPage() {
               <div key={business.id} className="p-inline-4b0ede5a" >
                 <div className="p-inline-5175b1e6" >
                   <div>
-                    <h2 className="p-section-title p-inline-b646589c" >{business.name}</h2>
+                    <h2 className="p-section-title p-flush-text" >{business.name}</h2>
                     <p className="p-muted p-inline-3b7ea823" >
                       Business ID <code>{business.id}</code> · {business.role}{business.is_primary ? " · primary" : ""}
                     </p>
@@ -97,7 +97,7 @@ export default async function PortalBusinessesPage() {
                     )}
                   </div>
                 </div>
-                {business.description && <p className="p-muted p-inline-b646589c" >{business.description}</p>}
+                {business.description && <p className="p-muted p-flush-text" >{business.description}</p>}
               </div>
             ))}
           </div>

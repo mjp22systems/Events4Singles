@@ -49,7 +49,7 @@ export default function BannerSubmitForm({
           <label className="p-label">Banner title (internal reference)</label>
           <input className="p-input" name="title" placeholder="e.g. Summer 2026 promo" />
         </div>
-        <p className="p-muted p-inline-c0e576d8" >Banners are reviewed within 1 business day before going live.</p>
+        <p className="p-muted p-text-small">Banners are reviewed within 1 business day before going live.</p>
       </div>
       <div className="p-modal__footer">
         <button type="button" className="p-btn" onClick={onDone}>Cancel</button>

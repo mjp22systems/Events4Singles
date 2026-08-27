@@ -152,23 +152,23 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
       <div>
         <form method="GET" action="/admin/events" className="admin-filter-bar">
           <input name="q" type="search" defaultValue={q} placeholder="Search title, venue, category..." className="a-input a-inline-ab674353"  />
-          <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
+          <select name="status" defaultValue={status} className="a-input a-filter-control" >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="city" defaultValue={city} className="a-input a-inline-37a89abe" >
+          <select name="city" defaultValue={city} className="a-input a-filter-control" >
             <option value="">All Cities</option>
             {cities.map((c) => (
               <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <select name="source" defaultValue={source} className="a-input a-inline-37a89abe" >
+          <select name="source" defaultValue={source} className="a-input a-filter-control" >
             {SOURCES.map((s) => (
               <option key={s.value || "all"} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+          <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
             {SORTS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
@@ -236,7 +236,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
                 events.map((ev, index) => (
                   <tr key={ev.id}>
                     <td><input type="checkbox" name="ids" value={ev.id} className="bulk-check" /></td>
-                    <td className="a-inline-5d69a8cc" >{offset + index + 1}</td>
+                    <td className="a-muted-small" >{offset + index + 1}</td>
                     <td className="a-events-title-cell" title={[ev.title, ev.category].filter(Boolean).join(" · ")}>
                       <span className="a-events-title-text">{ev.title}</span>
                       {ev.category && <span className="a-events-category-text">· {ev.category}</span>}

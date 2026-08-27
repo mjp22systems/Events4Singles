@@ -78,7 +78,7 @@ Existing `*-inline-*` classes are migration scaffolding only. Replace them gradu
 2. Move repeated page shells into `src/components/public-page.tsx`.
 3. Move repeated directory scaffolds into `src/components/listing-directory-page.tsx`.
 4. Move listing display variations into reusable listing/card components.
-5. Replace generated `e4s-inline-*`, `a-inline-*`, and `p-inline-*` classes with semantic classes.
+5. Replace generated `e4s-inline-*`, `a-inline-*`, and `p-inline-*` classes with semantic classes. The portal dashboard/shared empty-card slice has started this migration with `p-spaced-block`, `p-card--section-spaced`, `p-dashboard-list`, `p-text-small`, and `p-empty__hint`. The next pass renamed repeated admin/portal utility scaffolding such as `a-w-full`, `a-stack-sm`, `a-card--padded`, `a-form-section`, `a-filter-control`, `a-muted-small`, `p-table-row-border`, `p-table-heading-left`, `p-table-heading-number`, and `p-flush-text`.
 6. Dedupe CSS after the JSX structure is stable.
 
 ## Current Template Coverage

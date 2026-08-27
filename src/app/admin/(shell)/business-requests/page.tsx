@@ -79,12 +79,12 @@ export default async function AdminBusinessRequestsPage({ searchParams }: PagePr
       </div>
 
       <form method="GET" action="/admin/business-requests" className="admin-filter-bar">
-        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
+        <select name="status" defaultValue={status} className="a-input a-filter-control" >
           {STATUSES.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
@@ -132,7 +132,7 @@ export default async function AdminBusinessRequestsPage({ searchParams }: PagePr
               ) : sorted.map((request, index) => (
                 <tr key={request.id}>
                   <td><input form={BULK_FORM_ID} type="checkbox" name="ids" value={request.id} className="bulk-check" /></td>
-                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                  <td className="a-muted-small" >{index + 1}</td>
                   <td>
                     <div className="a-inline-11a836b8" >{request.business_name}</div>
                     <div className="a-inline-8054e521" >
@@ -179,7 +179,7 @@ export default async function AdminBusinessRequestsPage({ searchParams }: PagePr
                         </form>
                       </AdminActionsMenu>
                     ) : (
-                      <span className="a-inline-5d69a8cc" >Resolved</span>
+                      <span className="a-muted-small" >Resolved</span>
                     )}
                   </td>
                 </tr>

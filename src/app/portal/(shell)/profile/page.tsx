@@ -56,7 +56,7 @@ export default async function PortalProfile() {
           {businesses.length > 0 ? (
             <div className="p-inline-caa61160" >
               {businesses.map((business) => (
-                <p key={business.id} className="p-muted p-inline-b646589c" >
+                <p key={business.id} className="p-muted p-flush-text" >
                   <strong className="p-inline-410df61f" >{business.name}</strong>{" "}
                   <code>#{business.id}</code>
                   {business.is_primary ? " · primary" : ""} · {business.role}

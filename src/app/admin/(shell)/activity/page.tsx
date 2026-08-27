@@ -37,12 +37,12 @@ export default async function AdminActivity() {
                         timeStyle: "short",
                       })}
                     </td>
-                    <td className="a-inline-5d69a8cc" >
+                    <td className="a-muted-small" >
                       {row.actor_type}
                       {row.actor_id ? ` (${row.actor_id})` : ""}
                     </td>
                     <td className="a-inline-da6c85ac" >{row.action}</td>
-                    <td className="a-inline-5d69a8cc" >
+                    <td className="a-muted-small" >
                       {row.entity_type} {row.entity_id ? `#${row.entity_id}` : ""}
                     </td>
                     <td className="a-inline-9ef1689b" >

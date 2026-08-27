@@ -82,7 +82,7 @@ export default function NewEventForm({ variant = "card" }: { variant?: "card" | 
     <div className="admin-form-grid admin-form-grid--2">
       <div className="admin-field--wide">
         <Field label="Title *">
-          <input className="a-input a-inline-aef14f3c"  value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
+          <input className="a-input a-w-full"  value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Event title" />
         </Field>
       </div>
       <div className="admin-field--wide">
@@ -91,43 +91,43 @@ export default function NewEventForm({ variant = "card" }: { variant?: "card" | 
         </Field>
       </div>
       <Field label="Starts At *">
-        <input type="datetime-local" className="a-input a-inline-aef14f3c"  value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+        <input type="datetime-local" className="a-input a-w-full"  value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
       </Field>
       <Field label="Ends At">
-        <input type="datetime-local" className="a-input a-inline-aef14f3c"  value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
+        <input type="datetime-local" className="a-input a-w-full"  value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
       </Field>
       <Field label="Timezone">
-        <select className="a-input a-inline-aef14f3c"  value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+        <select className="a-input a-w-full"  value={timezone} onChange={(e) => setTimezone(e.target.value)}>
           {AU_TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
         </select>
       </Field>
       <Field label="City *">
-        <select className="a-input a-inline-aef14f3c"  value={city} onChange={(e) => setCity(e.target.value)}>
+        <select className="a-input a-w-full"  value={city} onChange={(e) => setCity(e.target.value)}>
           {AU_CITIES.map((c) => <option key={c} value={c}>{c.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</option>)}
         </select>
       </Field>
       <Field label="Venue Name">
-        <input className="a-input a-inline-aef14f3c"  value={venueName} onChange={(e) => setVenueName(e.target.value)} placeholder="Venue or establishment name" />
+        <input className="a-input a-w-full"  value={venueName} onChange={(e) => setVenueName(e.target.value)} placeholder="Venue or establishment name" />
       </Field>
       <Field label="Suburb">
-        <input className="a-input a-inline-aef14f3c"  value={suburb} onChange={(e) => setSuburb(e.target.value)} placeholder="Suburb" />
+        <input className="a-input a-w-full"  value={suburb} onChange={(e) => setSuburb(e.target.value)} placeholder="Suburb" />
       </Field>
       <Field label="Category">
-        <select className="a-input a-inline-aef14f3c"  value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select className="a-input a-w-full"  value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">- uncategorised -</option>
           {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</option>)}
         </select>
       </Field>
       <Field label="Price From (AUD, 0 = free)">
-        <input type="number" className="a-input a-inline-aef14f3c"  value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="0" />
+        <input type="number" className="a-input a-w-full"  value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="0" />
       </Field>
       <Field label="Registration destination">
-        <select className="a-input a-inline-aef14f3c"  value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
+        <select className="a-input a-w-full"  value={registrationMode} onChange={(e) => setRegistrationMode(e.target.value)}>
           {REGISTRATION_MODES.map((mode) => <option key={mode.value} value={mode.value}>{mode.label}</option>)}
         </select>
       </Field>
       <Field label="External RSVP / ticket URL">
-        <input className="a-input a-inline-aef14f3c"  value={ticketUrl} onChange={(e) => setTicketUrl(e.target.value)} placeholder="https://..." />
+        <input className="a-input a-w-full"  value={ticketUrl} onChange={(e) => setTicketUrl(e.target.value)} placeholder="https://..." />
       </Field>
       <div className="admin-field--wide">
         <EventImagePicker value={imageUrl} onChange={setImageUrl} />

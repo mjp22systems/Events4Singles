@@ -17,12 +17,12 @@ export default function BannersClient({
   return (
     <>
       <div className="p-inline-7cf1efdb" >
-        <h1 className="p-page-title p-inline-b646589c" >Banners</h1>
+        <h1 className="p-page-title p-flush-text" >Banners</h1>
         <button className="p-btn p-btn--primary" onClick={() => setShowModal(true)}>+ Add banner</button>
       </div>
       <p className="p-muted">Sidebar banners (180×120px) displayed on listing and category pages.</p>
 
-      <div className="p-card p-inline-ba93ebdf" >
+      <div className="p-card p-spaced-block">
         <div className="p-card__section">
           <h2 className="p-section-title">Your banners</h2>
           {banners.length === 0 ? (

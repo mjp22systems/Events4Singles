@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 
 
 export async function GET(req: NextRequest) {
@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 
-  const { env } = await getCloudflareContext({ async: true });
+  const db = await getD1();
 
   const column = type === "phone" ? "phone" : "email";
-  const row = await env.DB.prepare(
+  const row = await db.prepare(
     `SELECT ${column} FROM listings WHERE id = ? AND status = 'active' LIMIT 1`
   )
     .bind(listingId)
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
   const device = /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop";
   const eventType = type === "phone" ? "click_phone" : "click_email";
 
-  await env.DB.prepare(
+  await db.prepare(
     "INSERT INTO analytics_events (surface, surface_id, event_type, device) VALUES ('listing', ?, ?, ?)"
   )
     .bind(listingId, eventType, device)

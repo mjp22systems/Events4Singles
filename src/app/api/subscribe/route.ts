@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 import { buildWelcomeEmail, buildSubscriberNotification, sendViaResend } from "@/lib/email";
 
 async function verifyTurnstile(token: string, secret: string, ip: string) {
@@ -24,7 +25,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Valid email required" }, { status: 400 });
   }
 
-  const { env } = await getCloudflareContext({ async: true });
+  const [{ env }, db] = await Promise.all([
+    getCloudflareContext({ async: true }),
+    getD1(),
+  ]);
 
   // Turnstile verification (only if secret key is configured)
   const turnstileSecret = (env as unknown as Record<string, string>).TURNSTILE_SECRET_KEY;
@@ -37,7 +41,7 @@ export async function POST(req: NextRequest) {
 
   // Insert subscriber
   try {
-    await env.DB.prepare("INSERT INTO subscribers (email, first_name, city) VALUES (?, ?, ?)")
+    await db.prepare("INSERT INTO subscribers (email, first_name, city) VALUES (?, ?, ?)")
       .bind(email, body.firstName?.trim() || null, body.city?.trim() || null)
       .run();
   } catch (err: unknown) {
@@ -53,7 +57,7 @@ export async function POST(req: NextRequest) {
   // Send welcome email via Resend
   const resendKey = (env as unknown as Record<string, string>).RESEND_API_KEY;
   if (resendKey) {
-    const settings = await env.DB.prepare(
+    const settings = await db.prepare(
       "SELECT key, value FROM site_settings WHERE key IN ('subscribe_from_name','subscribe_from_email')"
     ).all();
     const s: Record<string, string> = {};
@@ -69,7 +73,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Admin notification
-    const notifyRow = await env.DB.prepare(
+    const notifyRow = await db.prepare(
       "SELECT value FROM site_settings WHERE key='notification_email'"
     ).first() as { value: string } | null;
     const notifyEmail = notifyRow?.value?.trim();

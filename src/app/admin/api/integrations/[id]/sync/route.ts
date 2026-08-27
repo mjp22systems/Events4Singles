@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 import { getIntegrationById } from "@/lib/admin-db";
 import { requireAdmin } from "@/lib/require-admin";
 import { runSync } from "@/lib/sync-engine";
@@ -14,7 +14,7 @@ export async function POST(req: Request, { params }: Ctx) {
   const { id } = await params;
   const integration = await getIntegrationById(id);
   if (!integration) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  const { env } = await getCloudflareContext({ async: true });
-  await runSync(integration, env.DB);
+  const db = await getD1();
+  await runSync(integration, db);
   return NextResponse.redirect(new URL("/admin/integrations", req.url));
 }

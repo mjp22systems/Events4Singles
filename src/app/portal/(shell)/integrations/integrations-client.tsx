@@ -260,7 +260,7 @@ export default function IntegrationsClient({
 
       <div className="p-section-header p-inline-94d668c2" >
         <div className="p-section-header__text">
-          <h2 className="p-section-title p-inline-b646589c" >Connected integrations</h2>
+          <h2 className="p-section-title p-flush-text" >Connected integrations</h2>
           <p className="p-muted">Only sources you have connected appear here.</p>
         </div>
       </div>
@@ -321,10 +321,7 @@ export default function IntegrationsClient({
               </div>
             )}
             <div className="p-integration-item__toggles">
-              <label className="p-check-label">
-                <input type="checkbox" checked={integration.auto_approve === 1} onChange={(event) => patch(integration.id, { auto_approve: event.target.checked })} />
-                Auto-approve imported events
-              </label>
+              <span className="p-muted">Imported events are submitted for admin review.</span>
               <label className="p-check-label">
                 <input type="checkbox" checked={integration.push_enabled === 1} onChange={(event) => patch(integration.id, { push_enabled: event.target.checked })} />
                 Enable push back

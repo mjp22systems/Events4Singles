@@ -101,7 +101,7 @@ export default async function AdminCategories({ searchParams }: PageProps) {
 
       <form method="GET" action="/admin/categories" className="a-inline-8ff7e847" >
         <input name="q" type="search" defaultValue={q} placeholder="Search label or slug..." className="a-input a-inline-ab674353"  />
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           {SORTS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
         </select>
         <button type="submit" className="a-btn a-btn-ghost a-inline-47390085" >Filter</button>
@@ -140,7 +140,7 @@ export default async function AdminCategories({ searchParams }: PageProps) {
               {categories.map((c, index) => (
                 <tr key={c.slug}>
                   <td><input type="checkbox" name="ids" value={c.slug} className="bulk-check" /></td>
-                  <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                  <td className="a-muted-small" >{index + 1}</td>
                   <td className="a-inline-b4472ba8" >{c.label}</td>
                   <td className="a-inline-8a1c5026" >
                     {c.slug}

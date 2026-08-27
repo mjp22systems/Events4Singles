@@ -33,7 +33,7 @@ export default async function PortalAnalytics({
   return (
     <>
       <div className="p-inline-66703592" >
-        <h1 className="p-page-title p-inline-b646589c" >Analytics</h1>
+        <h1 className="p-page-title p-flush-text" >Analytics</h1>
         {filteredListing && (
           <span className="p-inline-fed45b63" >
             {filteredListing.title}
@@ -51,7 +51,7 @@ export default async function PortalAnalytics({
         ))}
       </div>
 
-      <div className="p-stat-row p-inline-ba93ebdf" >
+      <div className="p-stat-row p-spaced-block">
         {[
           ["impression", "Impressions"],
           ["click_website", "Website Clicks"],
@@ -73,10 +73,10 @@ export default async function PortalAnalytics({
             <h2 className="p-section-title">By listing</h2>
             <table className="p-inline-3d9ff13f" >
               <thead>
-                <tr className="p-inline-b7e3c804" >
-                  <th className="p-label p-inline-29909338" >Listing</th>
-                  <th className="p-label p-inline-cf6e47e1" >Views</th>
-                  <th className="p-label p-inline-cf6e47e1" >Clicks</th>
+                <tr className="p-table-row-border" >
+                  <th className="p-label p-table-heading-left" >Listing</th>
+                  <th className="p-label p-table-heading-number" >Views</th>
+                  <th className="p-label p-table-heading-number" >Clicks</th>
                   <th className="p-inline-c576062a"  />
                 </tr>
               </thead>
@@ -86,7 +86,7 @@ export default async function PortalAnalytics({
                   const views = lStats.filter((s) => s.event_type === "impression").reduce((a, b) => a + b.total, 0);
                   const clicks = lStats.filter((s) => s.event_type !== "impression").reduce((a, b) => a + b.total, 0);
                   return (
-                    <tr key={l.id} className="p-inline-b7e3c804" >
+                    <tr key={l.id} className="p-table-row-border" >
                       <td className="p-inline-3d73efb4" >{l.title}</td>
                       <td className="p-inline-ebe0b1e6" >{views}</td>
                       <td className="p-inline-ebe0b1e6" >{clicks}</td>
@@ -110,15 +110,15 @@ export default async function PortalAnalytics({
             <h2 className="p-section-title">Daily breakdown</h2>
             <table className="p-inline-3d9ff13f" >
               <thead>
-                <tr className="p-inline-b7e3c804" >
-                  <th className="p-label p-inline-29909338" >Date</th>
-                  <th className="p-label p-inline-29909338" >Event</th>
-                  <th className="p-label p-inline-cf6e47e1" >Count</th>
+                <tr className="p-table-row-border" >
+                  <th className="p-label p-table-heading-left" >Date</th>
+                  <th className="p-label p-table-heading-left" >Event</th>
+                  <th className="p-label p-table-heading-number" >Count</th>
                 </tr>
               </thead>
               <tbody>
                 {daily.map((row, i) => (
-                  <tr key={i} className="p-inline-b7e3c804" >
+                  <tr key={i} className="p-table-row-border" >
                     <td className="p-inline-f5f379af" >{row.date}</td>
                     <td className="p-inline-13032d21" >{row.event_type}</td>
                     <td className="p-inline-2d5b0580" >{row.count}</td>

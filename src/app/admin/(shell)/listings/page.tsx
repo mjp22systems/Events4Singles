@@ -202,35 +202,35 @@ export default async function AdminListings({ searchParams }: PageProps) {
       <div>
         <form method="GET" action="/admin/listings" className="admin-filter-bar">
           <input name="q" type="search" defaultValue={q} placeholder="Search title or business…" className="a-input a-inline-ab674353"  />
-          <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
+          <select name="status" defaultValue={status} className="a-input a-filter-control" >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="review" defaultValue={review} className="a-input a-inline-37a89abe" >
+          <select name="review" defaultValue={review} className="a-input a-filter-control" >
             {REVIEW_FILTERS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
-          <select name="city" defaultValue={city} className="a-input a-inline-37a89abe" >
+          <select name="city" defaultValue={city} className="a-input a-filter-control" >
             <option value="">All Cities</option>
             {cities.map((c) => (
               <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <select name="category" defaultValue={category} className="a-input a-inline-37a89abe" >
+          <select name="category" defaultValue={category} className="a-input a-filter-control" >
             <option value="">All Categories</option>
             {categories.map((c) => (
               <option key={c.slug} value={c.slug}>{c.label}</option>
             ))}
           </select>
-          <select name="business_id" defaultValue={filterBusinessId ? String(filterBusinessId) : ""} className="a-input a-inline-37a89abe" >
+          <select name="business_id" defaultValue={filterBusinessId ? String(filterBusinessId) : ""} className="a-input a-filter-control" >
             <option value="">All Businesses</option>
             {businesses.map((b) => (
               <option key={b.id} value={b.id}>#{b.id} {b.name}</option>
             ))}
           </select>
-          <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+          <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
             {SORTS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
@@ -301,8 +301,8 @@ export default async function AdminListings({ searchParams }: PageProps) {
                   return (
                     <tr key={l.id}>
                       <td><input type="checkbox" name="ids" value={l.id} className="bulk-check" /></td>
-                      <td className="a-inline-5d69a8cc" >{offset + index + 1}</td>
-                      <td className="a-inline-5d69a8cc" >{l.id}</td>
+                      <td className="a-muted-small" >{offset + index + 1}</td>
+                      <td className="a-muted-small" >{l.id}</td>
                       <td title={[l.title, l.tagline].filter(Boolean).join(" · ")}>
                         <span className="a-inline-da6c85ac" >{l.title}</span>
                         {reviewReasons(l).length > 0 && (
@@ -323,7 +323,7 @@ export default async function AdminListings({ searchParams }: PageProps) {
                       </td>
                       <td className="a-inline-b7687fbf" >
                         {cats.length === 0 && citySlugs.length === 0 ? (
-                          <span className="a-inline-5d69a8cc" >—</span>
+                          <span className="a-muted-small" >—</span>
                         ) : (
                           <div className="a-inline-abf199b1"  title={[...cats, ...citySlugs].join(", ")}>
                             {cats.slice(0, 2).map((c) => <PlacementPill key={c} slug={c} />)}
@@ -334,7 +334,7 @@ export default async function AdminListings({ searchParams }: PageProps) {
                         )}
                       </td>
                       <td>{badge(l.status, l.unclaimed_flag)}</td>
-                      <td className="a-inline-5d69a8cc" >
+                      <td className="a-muted-small" >
                         {l.confidence_score != null ? `${l.confidence_score}%` : "—"}
                       </td>
                       <td className="a-table__actions-cell">

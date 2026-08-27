@@ -449,7 +449,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           <option value="cancelled">Cancelled</option>
           <option value="paused">Paused</option>
         </select>
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           <option value="name_asc">Name A-Z</option>
           <option value="name_desc">Name Z-A</option>
           <option value="email_asc">Email A-Z</option>
@@ -517,7 +517,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 return (
                   <tr key={account.id}>
                     <td><input type="checkbox" name="ids" value={account.id} className="bulk-check" /></td>
-                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
+                    <td className="a-muted-small" >{index + 1}</td>
                     <td className="a-inline-16a1f861" >
                       <span
                         className="a-inline-aa54abcb" 

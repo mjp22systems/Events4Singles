@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 import { sendViaResend } from "@/lib/email";
 
 const INQUIRY_LABELS: Record<string, string> = {
@@ -130,7 +131,10 @@ export async function POST(req: NextRequest) {
   if (!subject) return NextResponse.json({ error: "Subject is required" }, { status: 400 });
   if (!message) return NextResponse.json({ error: "Message is required" }, { status: 400 });
 
-  const { env } = await getCloudflareContext({ async: true });
+  const [{ env }, db] = await Promise.all([
+    getCloudflareContext({ async: true }),
+    getD1(),
+  ]);
 
   // Turnstile verification
   const turnstileSecret = (env as unknown as Record<string, string>).TURNSTILE_SECRET_KEY;
@@ -147,7 +151,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const rows = await env.DB.prepare(
+  const rows = await db.prepare(
     "SELECT key, value FROM site_settings WHERE key IN ('subscribe_from_name','subscribe_from_email','notification_email')"
   ).all();
   const s: Record<string, string> = {};

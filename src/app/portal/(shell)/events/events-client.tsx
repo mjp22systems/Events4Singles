@@ -50,8 +50,8 @@ export default function EventsClient({
   createEvent,
   updateEvent,
   deleteEvent,
-  approveEvent,
-  approveEvents,
+  submitEventForReview,
+  submitEventsForReview,
   hideEvent,
 }: {
   events: PortalEvent[];
@@ -62,8 +62,8 @@ export default function EventsClient({
   createEvent: (fd: FormData) => Promise<void>;
   updateEvent: (fd: FormData) => Promise<void>;
   deleteEvent: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
-  approveEvent: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
-  approveEvents: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
+  submitEventForReview: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
+  submitEventsForReview: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
   hideEvent: (fd: FormData) => Promise<{ ok: boolean; message: string }>;
 }) {
   const [showModal, setShowModal] = useState(false);
@@ -179,7 +179,7 @@ export default function EventsClient({
   const selectedCount = selectedIds.size;
   const allSelectableSelected = selectable.length > 0 && selectable.every((event) => selectedIds.has(event.id));
   const selectedEvents = useMemo(() => events.filter((event) => selectedIds.has(event.id)), [events, selectedIds]);
-  const selectedApprovableCount = selectedEvents.filter((event) => event.status !== "approved").length;
+  const selectedReviewableCount = selectedEvents.filter((event) => event.status !== "approved").length;
   const selectedPushableEvents = selectedEvents.filter((event) => event.status === "approved");
   const selectedPushableCount = selectedPushableEvents.length;
   const hasFilters = Boolean(query) || cityFilter !== "all" || sourceFilter !== "all" || statusFilter !== "all" || hideApproved;
@@ -206,10 +206,10 @@ export default function EventsClient({
     if (result.ok) window.location.reload();
   }
 
-  async function handleApprove(event: PortalEvent) {
+  async function handleSubmitForReview(event: PortalEvent) {
     const fd = new FormData();
     fd.set("id", event.id);
-    const result = await approveEvent(fd);
+    const result = await submitEventForReview(fd);
     setMessage(result.message);
     if (result.ok) window.location.reload();
   }
@@ -244,8 +244,8 @@ export default function EventsClient({
   }
 
   async function handleRowAction(ev: PortalEvent, action: string) {
-    if (action === "approve") {
-      await handleApprove(ev);
+    if (action === "review") {
+      await handleSubmitForReview(ev);
       return;
     }
     if (action === "hide") {
@@ -269,14 +269,14 @@ export default function EventsClient({
     }
   }
 
-  async function handleBulkApprove() {
-    if (selectedApprovableCount === 0) {
+  async function handleBulkSubmitForReview() {
+    if (selectedReviewableCount === 0) {
       setMessage("Select at least one event that is not already approved.");
       return;
     }
     const fd = new FormData();
     for (const id of selectedIds) fd.append("ids", id);
-    const result = await approveEvents(fd);
+    const result = await submitEventsForReview(fd);
     setMessage(result.message);
     if (result.ok) window.location.reload();
   }
@@ -339,8 +339,8 @@ export default function EventsClient({
       setMessage("Select at least one event first.");
       return;
     }
-    if (action === "approve") {
-      await handleBulkApprove();
+    if (action === "review") {
+      await handleBulkSubmitForReview();
       return;
     }
     if (action === "hide") {
@@ -466,11 +466,11 @@ export default function EventsClient({
         </div>
       )}
 
-      <div className="p-card p-inline-ba93ebdf" >
+      <div className="p-card p-spaced-block">
         {events.length === 0 ? (
           <div className="p-empty">
             <p>No events submitted yet.</p>
-            <p className="p-inline-eca1b296" >Click <strong>Add event</strong> to submit an event for review.</p>
+            <p className="p-empty__hint">Click <strong>Add event</strong> to submit an event for review.</p>
           </div>
         ) : (
           <>
@@ -512,7 +512,7 @@ export default function EventsClient({
                 aria-label="Bulk action"
               >
                 <option value="">Bulk Action...</option>
-                <option value="approve" disabled={selectedCount === 0 || selectedApprovableCount === 0}>Approve Selected</option>
+                <option value="review" disabled={selectedCount === 0 || selectedReviewableCount === 0}>Submit for Review</option>
                 <option value="hide" disabled={selectedCount === 0}>Hide Selected</option>
                 {hasPushIntegration && <option value="push" disabled={selectedCount === 0 || selectedPushableCount === 0}>Push/Update Eventbrite</option>}
                 <option value="clear" disabled={selectedCount === 0}>Clear Selection</option>
@@ -607,7 +607,7 @@ export default function EventsClient({
                       {ev.status === "approved" ? (
                         <option value="hide">Hide</option>
                       ) : (
-                        <option value="approve">{ev.status === "hidden" ? "Show" : "Approve"}</option>
+                        <option value="review">{ev.status === "hidden" ? "Submit for Review" : "Submit for Review"}</option>
                       )}
                       {hasPushIntegration && ev.status === "approved" && (
                         <option value="push">{ev.push_id ? "Update Eventbrite" : "Push Eventbrite"}</option>

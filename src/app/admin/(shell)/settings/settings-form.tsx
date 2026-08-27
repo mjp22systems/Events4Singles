@@ -61,9 +61,9 @@ export default function SettingsForm({ settings }: { settings: Record<string, st
 
       <Section title="Environment variables required">
         <div className="a-inline-032e5c61" >
-          <div><strong className="a-inline-7a608131" >RESEND_API_KEY</strong> — welcome email to subscribers</div>
-          <div><strong className="a-inline-7a608131" >TURNSTILE_SECRET_KEY</strong> — bot protection on subscribe form</div>
-          <div><strong className="a-inline-7a608131" >NEXT_PUBLIC_TURNSTILE_SITE_KEY</strong> — client-side Turnstile widget</div>
+          <div><strong className="a-text-strong" >RESEND_API_KEY</strong> — welcome email to subscribers</div>
+          <div><strong className="a-text-strong" >TURNSTILE_SECRET_KEY</strong> — bot protection on subscribe form</div>
+          <div><strong className="a-text-strong" >NEXT_PUBLIC_TURNSTILE_SITE_KEY</strong> — client-side Turnstile widget</div>
         </div>
         <p className="a-inline-bf86732a" >
           Set these in your Cloudflare Worker environment variables (Dashboard → Workers → events4singles-v2 → Settings → Variables).

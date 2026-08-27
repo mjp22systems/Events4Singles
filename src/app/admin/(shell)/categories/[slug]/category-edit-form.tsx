@@ -64,13 +64,13 @@ export default function CategoryEditForm({ category }: { category: Category }) {
       <div className="a-inline-18d895f9" >
         <form onSubmit={handleSave}>
           <div className="a-card a-inline-e5cf13bb" >
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Category details
             </div>
             <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">Label</label>
-                <input className="a-input a-inline-aef14f3c" value={label} onChange={(e) => setLabel(e.target.value)} required  />
+                <input className="a-input a-w-full" value={label} onChange={(e) => setLabel(e.target.value)} required  />
               </div>
               <div>
                 <label className="a-label">Description</label>
@@ -96,13 +96,13 @@ export default function CategoryEditForm({ category }: { category: Category }) {
           </div>
 
           <div className="a-card a-inline-e5cf13bb" >
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               SEO
             </div>
             <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">SEO title</label>
-                <input className="a-input a-inline-aef14f3c" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
+                <input className="a-input a-w-full" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
                 <div className={`a-char-count${seoTitle.length > 60 ? " is-warning" : ""}`}>
                   {seoTitle.length}/60
                 </div>
@@ -135,9 +135,9 @@ export default function CategoryEditForm({ category }: { category: Category }) {
           </div>
         </form>
 
-        <div className="a-inline-b55e6460" >
+        <div className="a-stack-sm" >
           <div className="a-card">
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Settings
             </div>
             <div className="a-inline-b398b088" >
@@ -149,20 +149,20 @@ export default function CategoryEditForm({ category }: { category: Category }) {
               </div>
               <div>
                 <label className="a-label">Banner rows</label>
-                <select className="a-input a-inline-aef14f3c" value={bannerRows} onChange={(e) => setBannerRows(e.target.value)} >
+                <select className="a-input a-w-full" value={bannerRows} onChange={(e) => setBannerRows(e.target.value)} >
                   <option value="1">1 row</option>
                   <option value="2">2 rows</option>
                 </select>
               </div>
               <div>
                 <label className="a-label">Sort order</label>
-                <input className="a-input a-inline-aef14f3c" type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}  />
+                <input className="a-input a-w-full" type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}  />
               </div>
             </div>
           </div>
 
           <div className="a-card">
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Stats
             </div>
             <div className="a-inline-92f261f0" >

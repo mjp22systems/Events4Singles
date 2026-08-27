@@ -127,18 +127,18 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
 
       <form method="GET" action="/admin/banners" className="admin-filter-bar">
         <input name="q" type="search" defaultValue={q} placeholder="Search title, business, link..." className="a-input a-inline-ab674353"  />
-        <select name="status" defaultValue={status} className="a-input a-inline-37a89abe" >
+        <select name="status" defaultValue={status} className="a-input a-filter-control" >
           {STATUSES.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
         </select>
-        <select name="placement" defaultValue={placement} className="a-input a-inline-37a89abe" >
+        <select name="placement" defaultValue={placement} className="a-input a-filter-control" >
           <option value="">All Placements</option>
           {placements.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="a-input a-inline-37a89abe" >
+        <select name="sort" defaultValue={sort} className="a-input a-filter-control" >
           {SORTS.map((item) => (
             <option key={item.value} value={item.value}>{item.label}</option>
           ))}
@@ -204,8 +204,8 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
                 return (
                   <tr key={banner.id}>
                     <td><input type="checkbox" name="ids" value={banner.id} className="bulk-check" /></td>
-                    <td className="a-inline-5d69a8cc" >{index + 1}</td>
-                    <td className="a-inline-5d69a8cc" >{banner.id}</td>
+                    <td className="a-muted-small" >{index + 1}</td>
+                    <td className="a-muted-small" >{banner.id}</td>
                     <td>
                       <div className="admin-banner-cell">
                         <img
@@ -233,7 +233,7 @@ export default async function AdminBannersPage({ searchParams }: PageProps) {
                           <a href={link} target="_blank" rel="noopener">Visit</a>
                         </AdminActionsMenu>
                       ) : (
-                        <span className="a-inline-5d69a8cc" >—</span>
+                        <span className="a-muted-small" >—</span>
                       )}
                     </td>
                   </tr>

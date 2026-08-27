@@ -48,35 +48,35 @@ export default function CityEditForm({ city }: { city: City }) {
       <div className="a-inline-18d895f9" >
         <form onSubmit={handleSave}>
           <div className="a-card a-inline-e5cf13bb" >
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               City details
             </div>
             <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">Label</label>
-                <input className="a-input a-inline-aef14f3c" value={label} onChange={(e) => setLabel(e.target.value)} required  />
+                <input className="a-input a-w-full" value={label} onChange={(e) => setLabel(e.target.value)} required  />
               </div>
               <div className="a-inline-99cabfbe" >
                 <div>
                   <label className="a-label">State</label>
-                  <input className="a-input a-inline-aef14f3c" value={state} onChange={(e) => setState(e.target.value)} placeholder="NSW"  />
+                  <input className="a-input a-w-full" value={state} onChange={(e) => setState(e.target.value)} placeholder="NSW"  />
                 </div>
                 <div>
                   <label className="a-label">Region</label>
-                  <input className="a-input a-inline-aef14f3c" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Greater Sydney"  />
+                  <input className="a-input a-w-full" value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Greater Sydney"  />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="a-card a-inline-e5cf13bb" >
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               SEO
             </div>
             <div className="a-inline-b398b088" >
               <div>
                 <label className="a-label">SEO title</label>
-                <input className="a-input a-inline-aef14f3c" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
+                <input className="a-input a-w-full" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)}  maxLength={70} />
                 <div className={`a-char-count${seoTitle.length > 60 ? " is-warning" : ""}`}>
                   {seoTitle.length}/60
                 </div>
@@ -99,7 +99,7 @@ export default function CityEditForm({ city }: { city: City }) {
         </form>
 
         <div className="a-card">
-          <div className="a-inline-d84dd62c" >
+          <div className="a-form-section" >
             Info
           </div>
           <div className="a-inline-92f261f0" >

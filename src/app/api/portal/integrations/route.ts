@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const account = await requireAccount();
   if (!account) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const body = await req.json() as { platform?: IntegrationPlatform; group_url?: string; feed_url?: string; auto_approve?: boolean };
+  const body = await req.json() as { platform?: IntegrationPlatform; group_url?: string; feed_url?: string };
   if (!body.platform) return NextResponse.json({ error: "platform is required" }, { status: 400 });
 
   const config =

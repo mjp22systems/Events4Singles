@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getD1 } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +10,8 @@ export async function DELETE(_req: Request, { params }: Ctx) {
   const unauth = await requireAdmin();
   if (unauth) return unauth;
   const { id } = await params;
-  const { env } = await getCloudflareContext({ async: true });
-  await env.DB.prepare("DELETE FROM integrations WHERE id = ?").bind(id).run();
+  const db = await getD1();
+  await db.prepare("DELETE FROM integrations WHERE id = ?").bind(id).run();
   return NextResponse.json({ ok: true });
 }
 
@@ -29,11 +29,11 @@ export async function POST(req: Request, ctx: Ctx) {
 
   if (method === "PATCH") {
     const { id } = await ctx.params;
-    const { env } = await getCloudflareContext({ async: true });
+    const db = await getD1();
     const field = fd.get("field");
     const value = fd.get("value");
     if (field === "auto_approve" || field === "push_enabled") {
-      await env.DB.prepare(
+      await db.prepare(
         `UPDATE integrations SET ${field} = ?, updated_at = datetime('now') WHERE id = ?`
       ).bind(value === "1" ? 1 : 0, id).run();
     }

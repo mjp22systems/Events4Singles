@@ -121,7 +121,7 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
         <div>
           <form onSubmit={handleSave}>
             <div className="a-card a-inline-e5cf13bb" >
-              <div className="a-inline-d84dd62c" >
+              <div className="a-form-section" >
                 Business details
               </div>
               <div className="a-inline-b398b088" >
@@ -132,7 +132,7 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
                       {statusLabel(business.status)}
                     </span>
                   </div>
-                  <input className="a-input a-inline-aef14f3c" value={name} onChange={(e) => setName(e.target.value)} required  />
+                  <input className="a-input a-w-full" value={name} onChange={(e) => setName(e.target.value)} required  />
                 </div>
                 <div>
                   <label className="a-label">Description</label>
@@ -140,11 +140,11 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
                 </div>
                 <div>
                   <label className="a-label">Website</label>
-                  <input className="a-input a-inline-aef14f3c" value={website} onChange={(e) => setWebsite(e.target.value)} type="url" placeholder="https://"  />
+                  <input className="a-input a-w-full" value={website} onChange={(e) => setWebsite(e.target.value)} type="url" placeholder="https://"  />
                 </div>
                 <div>
                   <label className="a-label">Logo URL</label>
-                  <input className="a-input a-inline-aef14f3c" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://"  />
+                  <input className="a-input a-w-full" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://"  />
                 </div>
               </div>
               <div className="a-inline-8f9a8dc2" >
@@ -156,7 +156,7 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
           </form>
 
           <div className="a-card">
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Listings
               <span className="a-inline-3f964057" >{listings.length}</span>
             </div>
@@ -181,7 +181,7 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
                   ) : (
                     listings.map((l) => (
                       <tr key={l.id}>
-                        <td className="a-inline-5d69a8cc" >{l.id}</td>
+                        <td className="a-muted-small" >{l.id}</td>
                         <td className="a-inline-da6c85ac" >{l.title}</td>
                         <td className="a-inline-691df809" >{l.location_city ?? "—"}</td>
                         <td>
@@ -211,9 +211,9 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
           </div>
         </div>
 
-        <div className="a-inline-b55e6460" >
+        <div className="a-stack-sm" >
           <div className="a-card">
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Info
             </div>
             <div className="a-inline-92f261f0" >
@@ -247,7 +247,7 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
           </div>
 
           <div className="a-card">
-            <div className="a-inline-d84dd62c" >
+            <div className="a-form-section" >
               Merge into another
             </div>
             <div className="a-inline-a14dfa31" >
@@ -301,9 +301,9 @@ export default function BusinessEditForm({ business, listings, allBusinesses }: 
           <div className="a-card a-inline-241cea78"  onClick={(e) => e.stopPropagation()}>
             <h2 className="a-inline-b25e3a7f" >Confirm merge</h2>
             <p className="a-inline-33527e7e" >
-              All <strong className="a-inline-7a608131" >{listings.length} listing{listings.length !== 1 ? "s" : ""}</strong> will move from{" "}
-              <strong className="a-inline-7a608131" >{business.name}</strong> to{" "}
-              <strong className="a-inline-7a608131" >{mergeTarget.name}</strong>.
+              All <strong className="a-text-strong" >{listings.length} listing{listings.length !== 1 ? "s" : ""}</strong> will move from{" "}
+              <strong className="a-text-strong" >{business.name}</strong> to{" "}
+              <strong className="a-text-strong" >{mergeTarget.name}</strong>.
             </p>
             <p className="a-inline-81ccf392" >
               The source business will be marked merged and cannot be reused. Cannot be undone.

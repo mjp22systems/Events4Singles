@@ -266,7 +266,7 @@ export default function EventCreateForm({
           <label className="p-label">Description</label>
           <textarea className="p-textarea p-textarea--event-description" name="description" defaultValue={plainDescriptionForEdit(event?.description)} placeholder="Tell attendees what to expect..." />
         </div>
-        <p className="p-muted p-inline-c0e576d8" >Events are reviewed within 1 business day before appearing on the calendar.</p>
+        <p className="p-muted p-text-small">Events are reviewed within 1 business day before appearing on the calendar.</p>
       </div>
       <div className="p-modal__footer">
         <button type="button" className="p-btn" onClick={onCancel}>Cancel</button>

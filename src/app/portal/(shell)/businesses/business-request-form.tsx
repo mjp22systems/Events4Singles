@@ -67,7 +67,7 @@ export default function BusinessRequestForm({
                   <label className="p-label">Notes</label>
                   <textarea className="p-textarea" name="message" placeholder="Tell us whether this is a new business, an existing listing to claim, or another brand you manage." />
                 </div>
-                <p className="p-muted p-inline-c0e576d8" >
+                <p className="p-muted p-text-small">
                   We will verify the request before linking the business to your portal login.
                 </p>
               </div>
