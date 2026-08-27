@@ -1,6 +1,22 @@
 # Events4Singles Source Of Truth
 
-Last updated: 2026-08-21
+Last updated: 2026-08-27
+
+## Operational Source Of Truth
+
+- Canonical repo: `D:\Projects\Clients\Dad\Events4singles\website`.
+- GitHub remote: `https://github.com/mjp22systems/Events4Singles.git`.
+- Production Worker: `events4singles-v2`.
+- Production D1 database: `events4singles`.
+- Deploy command: `npm run deploy:dad`.
+- Cache purge command: `npm run cache:purge`.
+- Graphify target: run Graphify from this `website` folder only, not the parent `Events4singles` folder.
+- Graphify output: `website\graphify-out`, ignored by Git.
+- Archive location for old sessions, release folders, local DB snapshots, and moved legacy non-image assets: `D:\Projects\Clients\Dad\Events4singles-archive`.
+
+The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. Do not create release clones, temporary worktrees, one-off deploy copies, scrape outputs, or database backup piles there. If a future release needs a disposable working copy, put it under `D:\Projects\Clients\Dad\Events4singles-archive\scratch` or another clearly named archive/scratch folder outside the active project container.
+
+Current cleanup rule: the active repo should contain source, tracked migrations, tracked tools, tests, public assets needed by live data, and documentation. Generated folders such as `.next`, `.open-next`, `.wrangler`, reports, local SQLite snapshots, and QA screenshots are not source of truth.
 
 This document is the working project bible for the rebuilt Events4Singles website, staging database, legacy migration, and planned backend/admin console. It captures decisions made during the rebuild so they are not trapped in chat history.
 

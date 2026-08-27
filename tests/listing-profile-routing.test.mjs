@@ -42,7 +42,9 @@ test("homepage featured listings include business ids and only use paid tiers", 
 
   assert.match(featuredQuery, /l\.business_id/);
   assert.match(featuredQuery, /l\.listing_type IN \('featured', 'premium'\)/);
-  assert.match(featuredQuery, /ORDER BY RANDOM\(\)/);
+  assert.match(featuredQuery, /CASE l\.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END/);
+  assert.match(featuredQuery, /l\.confidence_score DESC/);
+  assert.match(featuredQuery, /COALESCE\(b\.name, l\.title\) COLLATE NOCASE ASC/);
   assert.doesNotMatch(featuredQuery, /l\.confidence_score >= 80/);
 });
 

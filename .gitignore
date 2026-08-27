@@ -52,6 +52,8 @@ next-env.d.ts
 /scripts/
 /playwright-report/
 /test-results/
+.tmp-*.png
+/graphify-out/
 
 # D1 migration SQL files — contain business data, generated locally
 /tools/data-d1.sql
