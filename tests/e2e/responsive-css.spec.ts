@@ -537,13 +537,13 @@ test.describe("responsive CSS", () => {
           <link rel="stylesheet" href="${stylesheetHref}">
         </head>
         <body class="e4s-page-category e4s-page-child e4s-page-deep-child" style="--e4s-sticky-top: 84px;">
-          <nav class="e4s-category-child-nav e4s-category-child-nav--has-sidebar e4s-category-child-nav--multi">
+          <nav class="e4s-category-child-nav e4s-category-child-nav--has-sidebar e4s-category-child-nav--multi e4s-category-child-nav--category-has-subcategories">
             <a class="e4s-category-child-nav__back" href="/dance-classes">Back to Dance Classes</a>
-            <label class="e4s-category-child-nav__control">
+            <label class="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
               <span>View another style</span>
               <select><option>Tango</option></select>
             </label>
-            <label class="e4s-category-child-nav__control">
+            <label class="e4s-category-child-nav__control e4s-category-child-nav__control--city">
               <span>View another city</span>
               <select><option>Gold Coast (7)</option></select>
             </label>
@@ -566,6 +566,9 @@ test.describe("responsive CSS", () => {
       window.scrollTo(0, 500);
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const nav = document.querySelector(".e4s-category-child-nav")!.getBoundingClientRect();
+      const back = document.querySelector(".e4s-category-child-nav__back")!.getBoundingClientRect();
+      const subcategory = document.querySelector(".e4s-category-child-nav__control--subcategory select")!.getBoundingClientRect();
+      const city = document.querySelector(".e4s-category-child-nav__control--city select")!.getBoundingClientRect();
       const shield = document.querySelector(".e4s-toolbar-shield")!.getBoundingClientRect();
       const controls = Array.from(document.querySelectorAll(".e4s-category-child-nav__control")).map((node) => {
         const rect = node.getBoundingClientRect();
@@ -573,6 +576,9 @@ test.describe("responsive CSS", () => {
       });
       return {
         nav: { top: Math.round(nav.top), bottom: Math.round(nav.bottom), height: Math.round(nav.height) },
+        back: { top: Math.round(back.top), bottom: Math.round(back.bottom) },
+        subcategory: { top: Math.round(subcategory.top), width: Math.round(subcategory.width) },
+        city: { top: Math.round(city.top), width: Math.round(city.width) },
         shield: { top: Math.round(shield.top) },
         controls,
       };
@@ -580,7 +586,10 @@ test.describe("responsive CSS", () => {
 
     expect(layout.nav.height, JSON.stringify(layout)).toBeGreaterThanOrEqual(100);
     expect(layout.controls, JSON.stringify(layout)).toHaveLength(2);
-    expect(layout.controls[1].top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.controls[0].bottom);
+    expect(Math.abs(layout.subcategory.top - layout.back.top), JSON.stringify(layout)).toBeLessThanOrEqual(2);
+    expect(layout.city.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.back.bottom);
+    expect(layout.subcategory.width, JSON.stringify(layout)).toBeGreaterThanOrEqual(170);
+    expect(layout.city.width, JSON.stringify(layout)).toBeGreaterThanOrEqual(180);
     expect(layout.shield.top, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.nav.bottom - 1);
     await expectNoHorizontalOverflow(page);
   });
