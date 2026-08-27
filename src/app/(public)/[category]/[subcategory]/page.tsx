@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getCategoryMeta,
+  getCategoriesForCity,
   getCitiesForCategory,
   getListingsForPage,
   getListingsForCategory,
@@ -263,9 +264,10 @@ export default async function CategoryCityPage({ params }: Props) {
     );
   }
 
-  const [cities, subcategories] = await Promise.all([
+  const [cities, subcategories, cityCategories] = await Promise.all([
     getCitiesForCategory(categoryDbSlug),
     getSubcategoriesForCategory(categoryDbSlug),
+    getCategoriesForCity(cityDbSlug),
   ]);
   const cityMeta = cities.find((c) => c.slug === cityDbSlug);
   if (!cityMeta) notFound();
@@ -282,6 +284,28 @@ export default async function CategoryCityPage({ params }: Props) {
     : null;
   const cityStylePathFor = (childSlug: string) =>
     `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}/${subcategory}`;
+  const sortedCityCategories = [...cityCategories].sort((a, b) => a.label.localeCompare(b.label));
+  const currentCityCategoryIndex = sortedCityCategories.findIndex((cat) => cat.slug === categoryDbSlug);
+  const mobilePreviousCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
+    ? sortedCityCategories[(currentCityCategoryIndex - 1 + sortedCityCategories.length) % sortedCityCategories.length]
+    : null;
+  const mobileNextCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
+    ? sortedCityCategories[(currentCityCategoryIndex + 1) % sortedCityCategories.length]
+    : null;
+  const cityCategoryPathFor = (categorySlug: string) => `/${toUrlSlug(categorySlug)}/${subcategory}`;
+  const mobilePagerPrevious = mobilePreviousStyle
+    ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label }
+    : mobilePreviousCategory
+      ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label }
+      : null;
+  const mobilePagerNext = mobileNextStyle
+    ? { href: cityStylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label }
+    : mobileNextCategory
+      ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label }
+      : null;
+  const mobilePagerLabel = mobilePreviousStyle || mobileNextStyle
+    ? `${catMeta.label} style navigation`
+    : `${cityMeta.label} category navigation`;
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
@@ -317,9 +341,9 @@ export default async function CategoryCityPage({ params }: Props) {
         <>
           <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={category} />
           <MobileSidePager
-            label={`${catMeta.label} style navigation`}
-            previous={mobilePreviousStyle ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label } : null}
-            next={mobileNextStyle ? { href: cityStylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label } : null}
+            label={mobilePagerLabel}
+            previous={mobilePagerPrevious}
+            next={mobilePagerNext}
           />
           <nav
             aria-label={`${catMeta.label} city navigation`}
