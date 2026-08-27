@@ -24,6 +24,7 @@ import PromoBanners from "@/components/promo-banners";
 import PageSidebar from "@/components/page-sidebar";
 import CityCategorySelect from "@/components/city-category-select";
 import ListingsSection from "@/components/listings-section";
+import DanceClassesHub from "@/components/dance-classes-hub";
 import {
   EditorialIntro,
   ListingDirectoryPage,
@@ -180,6 +181,16 @@ export default async function CategoryOrCityPage({ params }: Props) {
   const mobileSubcategories = dbSlug === "dance_classes"
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
+  if (dbSlug === "dance_classes") {
+    return (
+      <DanceClassesHub
+        category={catMeta}
+        cities={cities}
+        listings={listings}
+        subcategories={subcategories}
+      />
+    );
+  }
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
   const footerCopy = categorySeoFooterCopy(catMeta, cities.length);
   const jsonLd = [

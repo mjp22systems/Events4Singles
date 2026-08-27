@@ -5256,6 +5256,315 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   width: 100%;
 }
 }/* =========================================================
+   DANCE CLASSES HUB
+   ========================================================= */
+.e4s-dance-hub {
+  padding-bottom: 58px;
+  background: #f5faf9;
+}.e4s-dance-hub-hero {
+  position: relative;
+  min-height: clamp(440px, 62vw, 620px);
+  overflow: hidden;
+  display: grid;
+  align-items: end;
+  color: #ffffff;
+}.e4s-dance-hub-hero__media {
+  position: absolute;
+  inset: 0;
+}.e4s-dance-hub-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}.e4s-dance-hub-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(6, 78, 77, 0.88) 0%, rgba(6, 78, 77, 0.68) 40%, rgba(139, 47, 67, 0.42) 100%),
+    linear-gradient(180deg, rgba(6, 78, 77, 0.06) 0%, rgba(6, 78, 77, 0.78) 100%);
+}.e4s-dance-hub-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+  padding-top: clamp(96px, 14vw, 150px);
+  padding-bottom: clamp(34px, 7vw, 72px);
+}.e4s-dance-hub-hero h1 {
+  max-width: 720px;
+  margin: 0;
+  color: #ffffff;
+  text-wrap: balance;
+}.e4s-dance-hub-hero p {
+  max-width: 680px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  text-wrap: pretty;
+}.e4s-dance-hub-hero .e4s-pathway-eyebrow {
+  color: rgba(255, 255, 255, 0.82);
+}.e4s-dance-hub-hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}.e4s-dance-hub-hero__stats span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(9px);
+}.e4s-dance-hub-hero__stats strong {
+  font-variant-numeric: tabular-nums;
+}.e4s-dance-hub-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: -34px;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 3;
+}.e4s-dance-hub-path {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-height: 136px;
+  padding: 22px;
+  border: 1px solid rgba(6, 78, 77, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(6, 78, 77, 0.15);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}.e4s-dance-hub-path:hover,
+.e4s-dance-hub-path:focus-visible {
+  border-color: rgba(139, 47, 67, 0.46);
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 22px 48px rgba(6, 78, 77, 0.18);
+}.e4s-dance-hub-path span {
+  color: var(--e4s-pink);
+}.e4s-dance-hub-path strong {
+  color: var(--e4s-teal-900);
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  line-height: 1.18;
+  text-wrap: balance;
+}.e4s-dance-hub-band {
+  padding: clamp(42px, 6vw, 68px) 0;
+  background: #ffffff;
+}.e4s-dance-hub-band--light {
+  background: #eaf8f7;
+}.e4s-dance-hub-section-head {
+  max-width: 760px;
+  margin-bottom: 24px;
+}.e4s-dance-hub-section-head h2 {
+  margin: 0 0 10px;
+  text-wrap: balance;
+}.e4s-dance-hub-section-head p {
+  margin: 0;
+  text-wrap: pretty;
+}.e4s-dance-style-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}.e4s-dance-style-card {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+  min-height: 168px;
+  padding: 12px;
+  border: 1px solid rgba(6, 78, 77, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(6, 78, 77, 0.08);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}.e4s-dance-style-card:hover,
+.e4s-dance-style-card:focus-visible {
+  border-color: rgba(139, 47, 67, 0.36);
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(6, 78, 77, 0.12);
+}.e4s-dance-style-card__image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #d8eeec;
+}.e4s-dance-style-card__image img {
+  width: 100%;
+  height: 100%;
+  min-height: 144px;
+  object-fit: cover;
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -1px;
+}.e4s-dance-style-card__copy {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-width: 0;
+}.e4s-dance-style-card__title {
+  color: var(--e4s-pink);
+  font-family: var(--e4s-font-display);
+  font-size: 1.24rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-wrap: balance;
+}.e4s-dance-style-card__summary {
+  color: var(--e4s-text);
+  line-height: 1.35;
+  text-wrap: pretty;
+}.e4s-dance-style-card__count {
+  color: var(--e4s-teal-800);
+  font-size: 0.86rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}.e4s-dance-hub-guidance {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: clamp(34px, 5vw, 52px) 0;
+}.e4s-dance-hub-guidance article {
+  padding: 20px;
+  border: 1px solid rgba(6, 78, 77, 0.13);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(6, 78, 77, 0.07);
+}.e4s-dance-hub-guidance h3 {
+  margin: 0 0 8px;
+  color: var(--e4s-teal-900);
+  text-wrap: balance;
+}.e4s-dance-hub-guidance p {
+  margin: 0;
+  text-wrap: pretty;
+}.e4s-dance-city-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}.e4s-dance-city-card {
+  display: grid;
+  gap: 4px;
+  min-height: 86px;
+  padding: 16px;
+  border: 1px solid rgba(6, 78, 77, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(6, 78, 77, 0.08);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}.e4s-dance-city-card:hover,
+.e4s-dance-city-card:focus-visible {
+  border-color: rgba(139, 47, 67, 0.36);
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(6, 78, 77, 0.12);
+}.e4s-dance-city-card span {
+  color: var(--e4s-teal-900);
+  font-weight: 800;
+}.e4s-dance-city-card em {
+  color: var(--e4s-muted);
+  font-style: normal;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}.e4s-dance-hub-editorial {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: clamp(38px, 5vw, 58px) 0;
+}.e4s-dance-hub-editorial article {
+  padding: 24px;
+  border: 1px solid rgba(6, 78, 77, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+}.e4s-dance-hub-editorial h2 {
+  margin: 0 0 10px;
+  text-wrap: balance;
+}.e4s-dance-hub-editorial p {
+  margin: 0;
+  text-wrap: pretty;
+}.e4s-dance-hub-listings {
+  padding-top: 6px;
+}.e4s-dance-hub-listings .e4s-toolbar-shield {
+  margin-top: 0;
+}
+@media (max-width: 1100px) {
+  .e4s-dance-style-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .e4s-dance-hub-guidance,
+  .e4s-dance-city-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .e4s-dance-hub-hero {
+    min-height: 440px;
+  }
+
+  .e4s-dance-hub-hero__inner {
+    padding-top: 112px;
+  }
+
+  .e4s-dance-hub-paths {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: -24px;
+    margin-bottom: 20px;
+  }
+
+  .e4s-dance-hub-path {
+    min-height: 102px;
+    padding: 18px;
+  }
+
+  .e4s-dance-style-grid,
+  .e4s-dance-hub-guidance,
+  .e4s-dance-city-grid,
+  .e4s-dance-hub-editorial {
+    grid-template-columns: 1fr;
+  }
+
+  .e4s-dance-style-card {
+    grid-template-columns: 104px minmax(0, 1fr);
+    min-height: 148px;
+  }
+
+  .e4s-dance-style-card__image img {
+    min-height: 124px;
+  }
+
+  .e4s-dance-city-card {
+    min-height: 72px;
+  }
+}
+@media (max-width: 460px) {
+  .e4s-dance-hub-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .e4s-dance-hub-hero__stats span {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .e4s-dance-style-card {
+    grid-template-columns: 1fr;
+  }
+
+  .e4s-dance-style-card__image {
+    aspect-ratio: 16 / 9;
+  }
+
+  .e4s-dance-style-card__image img {
+    min-height: 0;
+  }
+}/* =========================================================
    FOOTER - span chevrons, master toggle in legal bar
    ========================================================= */
 .e4s-footer .e4s-footer__accordion-btn::after {
