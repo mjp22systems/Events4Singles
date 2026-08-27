@@ -179,7 +179,7 @@ test.describe("responsive CSS", () => {
       };
     });
 
-    expect(bounds.backgroundImage).toContain("/images/optimized/home-cat-mixers.webp");
+    expect(bounds.backgroundImage).toContain("/images/site/home/category-cards/home-cat-mixers.webp");
 
     for (const box of [bounds.page, bounds.hero, bounds.bg]) {
       expect(box?.left, JSON.stringify(bounds)).toBeLessThanOrEqual(1);

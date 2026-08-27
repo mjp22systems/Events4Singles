@@ -9,14 +9,14 @@
     "Images are intended for public category cards only and are stored separately from /media uploads."
   ],
   "output": {
-    "directory": "/images/categories/optimized/",
+    "directory": "/images/categories/cards/",
     "format": "webp",
     "width": 720,
     "height": 800
   },
   "sourceDirectory": "docs/category-images/source/",
   "heroOutput": {
-    "directory": "/images/categories/hero/",
+    "directory": "/images/categories/heroes/",
     "format": "webp",
     "width": 1920,
     "height": 320

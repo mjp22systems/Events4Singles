@@ -36,7 +36,7 @@ export const PATHWAYS: PathwayContent[] = [
       "Matching services built for singles who are actively looking - introductions, curated tables and events designed to end in a conversation.",
     description:
       "For people who are ready to be intentional about dating and want formats where the purpose is clear from the start.",
-    image: "/images/intent-partner.jpg",
+    image: "/images/site/home/intent-cards/intent-partner.jpg",
     seoTitle: "Find a Partner - Singles Dating Events and Introduction Services",
     seoDescription:
       "Explore speed dating, dinner parties, introduction agencies, mature dating events and online dating options for Australian singles ready to meet someone.",
@@ -108,7 +108,7 @@ export const PATHWAYS: PathwayContent[] = [
       "Nights out, classes and clubs where connection happens sideways - through the dance floor, the trail or the table, not an introduction.",
     description:
       "For singles who want a richer social life, more shared experiences, and easier ways to meet people without making dating the whole story.",
-    image: "/images/intent-social.jpg",
+    image: "/images/site/home/intent-cards/intent-social.jpg",
     seoTitle: "Get Out There - Social Events, Activities and Clubs for Singles",
     seoDescription:
       "Find social clubs, dance classes, adventure activities, nightclubs and group experiences for Australian singles who want to meet people naturally.",
@@ -180,7 +180,7 @@ export const PATHWAYS: PathwayContent[] = [
       "Services and programs that help you grow, heal, feel your best and bring a fuller, steadier version of yourself into dating, connection and everyday life.",
     description:
       "For singles who want to strengthen confidence, wellbeing, self-knowledge and the foundations that make connection easier.",
-    image: "/images/intent-growth.jpg",
+    image: "/images/site/home/intent-cards/intent-growth.jpg",
     seoTitle: "Invest in Yourself - Confidence, Wellbeing and Personal Growth for Singles",
     seoDescription:
       "Explore life coaches, psychology, wellbeing, fitness, image, workshops and personal development services for Australian singles.",

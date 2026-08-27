@@ -420,7 +420,7 @@ INSERT OR IGNORE INTO listings (
   id, business_id, title, tagline, description, phone, email, web, image_url,
   location_state, location_city, location, listing_type, status, confidence_score, slug
 ) VALUES
-  (1, 1, 'Smoke Listing', 'Local smoke-test listing', 'Used only for local admin smoke tests.', '0700000000', 'smoke@example.test', 'https://example.test', '/images/categories/optimized/speed-dating.webp', 'QLD', 'Brisbane', 'Brisbane QLD', 'standard', 'active', 100, 'smoke-listing'),
+  (1, 1, 'Smoke Listing', 'Local smoke-test listing', 'Used only for local admin smoke tests.', '0700000000', 'smoke@example.test', 'https://example.test', '/images/categories/cards/speed-dating.webp', 'QLD', 'Brisbane', 'Brisbane QLD', 'standard', 'active', 100, 'smoke-listing'),
   (2, 1, 'Smoke No Image Listing', 'Local smoke-test listing without an image', 'Used only for local admin listing-review smoke tests.', '0700000000', 'smoke@example.test', 'https://example.test', NULL, 'QLD', 'Brisbane', 'Brisbane QLD', 'standard', 'active', 100, 'smoke-no-image-listing');
 
 INSERT OR IGNORE INTO listing_placements (id, listing_id, category_slug, city_slug, sort_order, position_type, is_active) VALUES
@@ -431,7 +431,7 @@ INSERT OR IGNORE INTO banners (
   id, business_id, image_url, click_url, alt_text, page_scope, category_slug, city_slug,
   slot_position, is_active, account_id, title, link_url, status, placement, created_at
 ) VALUES
-  (1, 1, '/images/categories/optimized/speed-dating.webp', 'https://example.test', 'Smoke banner', 'category', 'speed-dating', 'brisbane', 1, 1, 'smoke-admin', 'Smoke Banner', 'https://example.test', 'pending', 'homepage', datetime('now'));
+  (1, 1, '/images/categories/cards/speed-dating.webp', 'https://example.test', 'Smoke banner', 'category', 'speed-dating', 'brisbane', 1, 1, 'smoke-admin', 'Smoke Banner', 'https://example.test', 'pending', 'homepage', datetime('now'));
 
 INSERT OR IGNORE INTO advertiser_accounts (
   id, clerk_user_id, business_id, plan, sub_status, billing_email, display_name, portal_email, account_role
@@ -458,7 +458,7 @@ INSERT OR IGNORE INTO events (
   price_min, price_max, ticket_url, image_url, source, source_id, source_url, category,
   status, submitted_by, account_id, registration_mode
 ) VALUES
-  ('smoke-event', 'Smoke Event', 'smoke-event', 'Used only for local admin smoke tests.', datetime('now', '+7 days'), datetime('now', '+7 days', '+2 hours'), 'Smoke Venue', '1 Test Street', 'Brisbane', 'Brisbane', 'QLD', 0, 0, 'https://example.test/tickets', '/images/categories/optimized/speed-dating.webp', 'admin', 'smoke-event', 'https://example.test/event', 'speed-dating', 'pending', 'smoke-admin', 'smoke-advertiser', 'auto');
+  ('smoke-event', 'Smoke Event', 'smoke-event', 'Used only for local admin smoke tests.', datetime('now', '+7 days'), datetime('now', '+7 days', '+2 hours'), 'Smoke Venue', '1 Test Street', 'Brisbane', 'Brisbane', 'QLD', 0, 0, 'https://example.test/tickets', '/images/categories/cards/speed-dating.webp', 'admin', 'smoke-event', 'https://example.test/event', 'speed-dating', 'pending', 'smoke-admin', 'smoke-advertiser', 'auto');
 
 INSERT OR IGNORE INTO redirects (id, from_path, to_path, entity_type, entity_id) VALUES
   (1, '/old-smoke-page', '/admin/dashboard', 'smoke', 'smoke');

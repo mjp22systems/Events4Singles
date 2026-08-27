@@ -18,19 +18,19 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const FEATURED_CITIES = [
-  { slug: "sydney", label: "Sydney", img: "/images/home-city-sydney.jpg" },
-  { slug: "melbourne", label: "Melbourne", img: "/images/home-city-melbourne.jpg" },
-  { slug: "brisbane", label: "Brisbane", img: "/images/home-city-brisbane.jpg" },
-  { slug: "perth", label: "Perth", img: "/images/home-city-perth.jpg" },
-  { slug: "adelaide", label: "Adelaide", img: "/images/home-city-adelaide.jpg" },
-  { slug: "hobart", label: "Hobart", img: "/images/home-city-hobart.jpg" },
+  { slug: "sydney", label: "Sydney", img: "/images/site/home/city-cards/home-city-sydney.webp" },
+  { slug: "melbourne", label: "Melbourne", img: "/images/site/home/city-cards/home-city-melbourne.webp" },
+  { slug: "brisbane", label: "Brisbane", img: "/images/site/home/city-cards/home-city-brisbane.webp" },
+  { slug: "perth", label: "Perth", img: "/images/site/home/city-cards/home-city-perth.webp" },
+  { slug: "adelaide", label: "Adelaide", img: "/images/site/home/city-cards/home-city-adelaide.webp" },
+  { slug: "hobart", label: "Hobart", img: "/images/site/home/city-cards/home-city-hobart.webp" },
 ];
 
 const FEATURED_CATS = [
-  { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/home-cat-speed-dating.jpg" },
-  { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/home-cat-dinner-parties.jpg" },
-  { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/home-cat-mixers.jpg" },
-  { slug: "dance-classes", label: "Activities", sub: "Hiking, cooking, etc.", img: "/images/home-cat-activities.jpg" },
+  { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/site/home/category-cards/home-cat-speed-dating.webp" },
+  { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/site/home/category-cards/home-cat-dinner-parties.webp" },
+  { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/site/home/category-cards/home-cat-mixers.webp" },
+  { slug: "dance-classes", label: "Activities", sub: "Hiking, cooking, etc.", img: "/images/site/home/category-cards/home-cat-activities.webp" },
 ];
 
 

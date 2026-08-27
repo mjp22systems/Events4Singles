@@ -50,7 +50,7 @@ export default function DanceStylesGuide() {
             </div>
             <div className="e4s-pathway-hero__image">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="Dance Styles" src="/images/categories/optimized/dance-styles.webp" />
+              <img alt="Dance Styles" src="/images/categories/cards/dance-styles.webp" />
               <span>01</span>
             </div>
           </div>

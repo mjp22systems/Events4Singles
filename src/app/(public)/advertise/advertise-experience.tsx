@@ -253,9 +253,9 @@ function SidebarAd() {
       </div>
       <div className="e4s-ad-sidebar-tiles">
         {[
-          ["/images/home-cat-speed-dating.jpg", "Speed Dating", "Featured"],
-          ["/images/home-cat-dinner-parties.jpg", "Dinner Events", "Sponsored"],
-          ["/images/home-city-sydney.jpg", "Sydney Singles", "Ad"],
+          ["/images/site/home/category-cards/home-cat-speed-dating.webp", "Speed Dating", "Featured"],
+          ["/images/site/home/category-cards/home-cat-dinner-parties.webp", "Dinner Events", "Sponsored"],
+          ["/images/site/home/city-cards/home-city-sydney.webp", "Sydney Singles", "Ad"],
         ].map(([src, title, label]) => (
           <article key={title}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -271,10 +271,10 @@ function SidebarAd() {
 
 function WhatsOnList() {
   const events = [
-    ["/images/home-cat-speed-dating.jpg", "Fri, 12 Sep, 6:30 pm", "BEST S25 CHOCOLATE TOUR", "Sydney CBD", "from $45"],
+    ["/images/site/home/category-cards/home-cat-speed-dating.webp", "Fri, 12 Sep, 6:30 pm", "BEST S25 CHOCOLATE TOUR", "Sydney CBD", "from $45"],
     ["/images/businesses/Social8-Dinners.webp", "Fri, 12 Sep, 6:30 pm", "The Bachelors Social Drinks", "The Rocks", "from $35"],
-    ["/images/home-city-sydney.jpg", "Sat, 13 Sep, 10:00 am", "Manly Coastal Walk", "Manly Beach", "free"],
-    ["/images/home-cat-walks.jpg", "Sat, 13 Sep, 10:45 am", "Grand Cliff Top Walk", "Blue Mountains", "from $25"],
+    ["/images/site/home/city-cards/home-city-sydney.webp", "Sat, 13 Sep, 10:00 am", "Manly Coastal Walk", "Manly Beach", "free"],
+    ["/images/site/home/category-cards/home-cat-walks.webp", "Sat, 13 Sep, 10:45 am", "Grand Cliff Top Walk", "Blue Mountains", "from $25"],
   ];
 
   return (

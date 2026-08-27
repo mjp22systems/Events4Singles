@@ -85,8 +85,8 @@ export default async function DanceClassesHub({ category, cities, listings, subc
           <div className="e4s-dance-hub-hero__media">
             <HeroImage
               alt="Dance classes for singles"
-              src={category.hero_image_url ?? getCategoryCardImage("dance-classes") ?? "/images/categories/optimized/dance-classes.webp"}
-              fallbacks={["/images/categories/optimized/dance-classes.webp"]}
+              src={category.hero_image_url ?? getCategoryCardImage("dance-classes") ?? "/images/categories/cards/dance-classes.webp"}
+              fallbacks={["/images/categories/cards/dance-classes.webp"]}
             />
           </div>
           <div className="e4s-shell e4s-dance-hub-hero__inner">
@@ -141,7 +141,7 @@ export default async function DanceClassesHub({ category, cities, listings, subc
                       <img
                         alt={style.label}
                         loading="lazy"
-                        src={style.hero_image_url ?? getCategoryCardImage(styleUrlSlug) ?? "/images/categories/optimized/dance-classes.webp"}
+                        src={style.hero_image_url ?? getCategoryCardImage(styleUrlSlug) ?? "/images/categories/cards/dance-classes.webp"}
                       />
                     </span>
                     <span className="e4s-dance-style-card__copy">

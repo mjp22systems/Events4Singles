@@ -4,10 +4,12 @@ import sharp from "sharp";
 
 const root = process.cwd();
 const imagesDir = path.join(root, "public", "images");
-const categorySourceDir = path.join(imagesDir, "categories", "optimized");
-const categoryHeroDir = path.join(imagesDir, "categories", "hero");
-const citySourceDir = path.join(imagesDir, "cities", "optimized");
-const cityHeroDir = path.join(imagesDir, "cities", "hero");
+const categorySourceDir = path.join(imagesDir, "categories", "cards");
+const categoryHeroDir = path.join(imagesDir, "categories", "heroes");
+const categoryLegacyHeroDir = path.join(imagesDir, "categories", "hero");
+const citySourceDir = path.join(imagesDir, "cities", "source");
+const cityHeroDir = path.join(imagesDir, "cities", "heroes");
+const cityLegacyHeroDir = path.join(imagesDir, "cities", "hero");
 
 const HERO_WIDTH = 1920;
 const HERO_HEIGHT = 320;
@@ -86,7 +88,7 @@ async function softForeground(input, width, height, opacity = 0.96, sourceHeight
     .toBuffer();
 }
 
-async function makeHero({ source, target, type }) {
+async function makeHero({ source, targets, type }) {
   const background = await sharp(source)
     .rotate()
     .resize(HERO_WIDTH, HERO_HEIGHT, { fit: "cover", position: "attention" })
@@ -111,11 +113,18 @@ async function makeHero({ source, target, type }) {
   await sharp(background)
     .composite([{ input: foreground, left, top }])
     .webp({ quality: 78, effort: 6 })
-    .toFile(target);
+    .toBuffer()
+    .then(async (output) => {
+      for (const target of targets) {
+        await fs.mkdir(path.dirname(target), { recursive: true });
+        await fs.writeFile(target, output);
+      }
+    });
 }
 
 async function buildCategories() {
   await fs.mkdir(categoryHeroDir, { recursive: true });
+  await fs.mkdir(categoryLegacyHeroDir, { recursive: true });
   const entries = await fs.readdir(categorySourceDir);
   let count = 0;
 
@@ -123,7 +132,10 @@ async function buildCategories() {
     if (name === "online-dating.webp") continue;
     await makeHero({
       source: path.join(categorySourceDir, name),
-      target: path.join(categoryHeroDir, name),
+      targets: [
+        path.join(categoryHeroDir, name),
+        path.join(categoryLegacyHeroDir, name),
+      ],
       type: "category",
     });
     count += 1;
@@ -134,13 +146,17 @@ async function buildCategories() {
 
 async function buildCities() {
   await fs.mkdir(cityHeroDir, { recursive: true });
+  await fs.mkdir(cityLegacyHeroDir, { recursive: true });
   const entries = await fs.readdir(citySourceDir);
   let count = 0;
 
   for (const name of entries.filter((entry) => entry.endsWith(".webp")).sort()) {
     await makeHero({
       source: path.join(citySourceDir, name),
-      target: path.join(cityHeroDir, name),
+      targets: [
+        path.join(cityHeroDir, name),
+        path.join(cityLegacyHeroDir, name),
+      ],
       type: "city",
     });
     count += 1;

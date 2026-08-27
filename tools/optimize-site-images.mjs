@@ -5,9 +5,34 @@ import sharp from "sharp";
 const root = process.cwd();
 const imagesDir = path.join(root, "public", "images");
 const jobs = [
-  { glob: /^home-city-.+\.jpg$/i, width: 640, height: 960, outputDir: path.join(imagesDir, "optimized") },
-  { glob: /^home-cat-.+\.jpg$/i, width: 720, height: 800, outputDir: path.join(imagesDir, "optimized") },
-  { glob: /^location-photo-.+-photo\.jpg$/i, width: 1600, height: 650, outputDir: path.join(imagesDir, "cities", "optimized") },
+  {
+    glob: /^home-city-.+\.jpg$/i,
+    width: 640,
+    height: 960,
+    outputDirs: [
+      path.join(imagesDir, "site", "home", "city-cards"),
+      path.join(imagesDir, "cities", "cards"),
+      path.join(imagesDir, "optimized"),
+    ],
+  },
+  {
+    glob: /^home-cat-.+\.jpg$/i,
+    width: 720,
+    height: 800,
+    outputDirs: [
+      path.join(imagesDir, "site", "home", "category-cards"),
+      path.join(imagesDir, "optimized"),
+    ],
+  },
+  {
+    glob: /^location-photo-.+-photo\.jpg$/i,
+    width: 1600,
+    height: 650,
+    outputDirs: [
+      path.join(imagesDir, "cities", "source"),
+      path.join(imagesDir, "cities", "optimized"),
+    ],
+  },
 ];
 
 function outputName(filename) {
@@ -31,11 +56,8 @@ let totalAfter = 0;
 for (const name of images) {
   const job = jobs.find((item) => item.glob.test(name));
   const source = path.join(imagesDir, name);
-  await fs.mkdir(job.outputDir, { recursive: true });
-  const target = path.join(job.outputDir, outputName(name));
   const before = await fileSize(source);
-
-  await sharp(source)
+  const optimized = await sharp(source)
     .rotate()
     .resize(job.width, job.height, {
       fit: "cover",
@@ -43,13 +65,21 @@ for (const name of images) {
       withoutEnlargement: true,
     })
     .webp({ quality: 78, effort: 6 })
-    .toFile(target);
+    .toBuffer();
 
-  const after = await fileSize(target);
+  let primaryTarget = "";
+  for (const outputDir of job.outputDirs) {
+    await fs.mkdir(outputDir, { recursive: true });
+    const target = path.join(outputDir, outputName(name));
+    await fs.writeFile(target, optimized);
+    primaryTarget ||= target;
+  }
+
+  const after = optimized.length;
   totalBefore += before;
   totalAfter += after;
   console.log(
-    `${name} -> ${path.relative(imagesDir, target).replaceAll(path.sep, "/")} ` +
+    `${name} -> ${path.relative(imagesDir, primaryTarget).replaceAll(path.sep, "/")} ` +
       `${Math.round(before / 1024)}KB -> ${Math.round(after / 1024)}KB`,
   );
 }

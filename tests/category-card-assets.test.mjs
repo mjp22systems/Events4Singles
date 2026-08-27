@@ -89,7 +89,7 @@ test("every active category has a unique project-owned card image", () => {
 
   for (const [slug, imageUrl] of Object.entries(images)) {
     assert.ok(
-      imageUrl.startsWith("/images/categories/optimized/"),
+      imageUrl.startsWith("/images/categories/cards/"),
       `${slug} should use the website-owned category image directory`,
     );
     assert.ok(
@@ -118,7 +118,7 @@ test("category hero-specific images use optimized website assets", async () => {
 
   for (const [slug, imageUrl] of Object.entries(images)) {
     assert.ok(
-      imageUrl.startsWith("/images/categories/hero/"),
+      imageUrl.startsWith("/images/categories/heroes/"),
       `${slug} should use the website-owned category hero directory`,
     );
     const imagePath = path.join(projectRoot, "public", imageUrl);

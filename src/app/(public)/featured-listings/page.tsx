@@ -154,10 +154,11 @@ export default async function FeaturedListingsPage({ searchParams }: { searchPar
             <div className="e4s-page-hero__image">
               <HeroImage
                 alt="Featured Listings"
-                src="/images/optimized/home-cat-mixers.webp"
+                src="/images/site/home/category-cards/home-cat-mixers.webp"
                 fallbacks={[
+                  "/images/optimized/home-cat-mixers.webp",
                   "/images/home-cat-mixers.jpg",
-                  "/images/optimized/home-cat-speed-dating.webp",
+                  "/images/site/home/category-cards/home-cat-speed-dating.webp",
                 ]}
               />
             </div>
