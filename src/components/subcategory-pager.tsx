@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { Category } from "@/lib/types";
-import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
+import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
 
 interface Props {
   subcategories: Category[];
   currentDbSlug: string;
   parentUrlSlug: string;
-  cityUrlSlug?: string;
   variant?: "primary" | "secondary";
 }
 
@@ -14,7 +13,6 @@ export default function SubcategoryPager({
   subcategories,
   currentDbSlug,
   parentUrlSlug,
-  cityUrlSlug,
   variant = "primary",
 }: Props) {
   const parentDbSlug = toDbSlug(parentUrlSlug);
@@ -24,8 +22,7 @@ export default function SubcategoryPager({
 
   const pathFor = (cat: Category) => {
     const childSegment = toCategoryChildUrlSegment(parentDbSlug, cat.slug);
-    const childPath = `/${parentUrlSlug}/${childSegment}`;
-    return cityUrlSlug ? `${childPath}/${toUrlSlug(cityUrlSlug)}` : childPath;
+    return `/${parentUrlSlug}/${childSegment}`;
   };
   const prev = sorted[(idx - 1 + sorted.length) % sorted.length];
   const next = sorted[(idx + 1) % sorted.length];

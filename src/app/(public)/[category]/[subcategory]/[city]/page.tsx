@@ -132,7 +132,6 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
             subcategories={styleSubcategories}
             currentDbSlug={childMeta.slug}
             parentUrlSlug={category}
-            cityUrlSlug={city}
             variant="secondary"
           />
           <nav
@@ -149,7 +148,6 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
                   subcategories={navigableSubcategories}
                   parentUrlSlug={category}
                   currentSubcategorySlug={childMeta.slug}
-                  cityUrlSlug={city}
                 />
               </label>
             ) : null}
