@@ -180,6 +180,7 @@ export default async function CategoryCityPage({ params }: Props) {
                   <NavSelect
                     cities={cities}
                     categoryUrlSlug={subcategoryUrlSlug}
+                    placeholder="Select city"
                   />
                 </label>
               ) : null}

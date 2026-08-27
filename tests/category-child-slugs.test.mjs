@@ -43,6 +43,6 @@ test("subcategory mobile selectors land on canonical all-city routes before city
   assert.match(subcategoryNavSelectSource, /router\.push\(`\/\$\{parentUrlSlug\}\/\$\{nextSlug\}`\)/);
   assert.doesNotMatch(subcategoryNavSelectSource, /cityUrlSlug/);
   assert.doesNotMatch(subcategoryPagerSource, /cityUrlSlug/);
-  assert.match(categoryCitySource, /<NavSelect[\s\S]*categoryUrlSlug=\{subcategoryUrlSlug\}/);
+  assert.match(categoryCitySource, /<NavSelect[\s\S]*categoryUrlSlug=\{subcategoryUrlSlug\}[\s\S]*placeholder="Select city"/);
   assert.doesNotMatch(categoryCitySource, /<SubcategoryNavSelect[\s\S]*cityUrlSlug=\{subcategory\}/);
 });
