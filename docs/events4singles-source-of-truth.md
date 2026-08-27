@@ -8,6 +8,10 @@ Last updated: 2026-08-27
 - GitHub remote: `https://github.com/mjp22systems/Events4Singles.git`.
 - Production Worker: `events4singles-v2`.
 - Production D1 database: `events4singles`.
+- Current production domain: `https://events4singles.com.au`.
+- Legacy Pages domain: `https://legacy.events4singles.com`, backed by Cloudflare Pages project `events4singles`.
+- Legacy-clean Pages domain: `https://legacy-clean.events4singles.com`, backed by Cloudflare Pages project `events4singles-clean`.
+- No `site-clean.events4singles.com` DNS record was present on 2026-08-27.
 - Deploy command: `npm run deploy:dad`.
 - Cache purge command: `npm run cache:purge`.
 - Graphify target: run Graphify from this `website` folder only, not the parent `Events4singles` folder.
@@ -17,6 +21,22 @@ Last updated: 2026-08-27
 The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. Do not create release clones, temporary worktrees, one-off deploy copies, scrape outputs, or database backup piles there. If a future release needs a disposable working copy, put it under `D:\Projects\Clients\Dad\Events4singles-archive\scratch` or another clearly named archive/scratch folder outside the active project container.
 
 Current cleanup rule: the active repo should contain source, tracked migrations, tracked tools, tests, public assets needed by live data, and documentation. Generated folders such as `.next`, `.open-next`, `.wrangler`, reports, local SQLite snapshots, and QA screenshots are not source of truth.
+
+## Canonical Folder Map
+
+For this Next.js/TSX app, `website` will not look like a classic static HTML folder, but it has the same basic roles:
+
+- `src/app`: route pages and layouts. This is the TSX equivalent of the site's HTML pages.
+- `src/components`: reusable page sections and UI pieces.
+- `src/lib`: shared data access, routing, SEO, and server helpers.
+- `public`: files served directly by the site, including `site.css`, admin/portal CSS, fonts, and `public/images`.
+- `migrations`: versioned Cloudflare D1 schema/data changes.
+- `tools`: repeatable scripts for deploy, cache purge, data import/export, smoke preparation, SEO/image audits, and maintenance.
+- `tests`: focused regression and smoke tests.
+- `docs`: source-of-truth notes, runbooks, and project decisions.
+- Root config files: Next.js, Wrangler, TypeScript, Playwright, ESLint, package lock, and agent instructions.
+
+Files that do not belong in the canonical source tree include release clones, copied live folders, one-off backup folders, local database snapshots, generated build output, browser screenshots, scrape dumps, and old HTML/PDF/SWF assets stored inside `public/images`. Preserve anything uncertain under `D:\Projects\Clients\Dad\Events4singles-archive` instead of leaving it in the active repo.
 
 This document is the working project bible for the rebuilt Events4Singles website, staging database, legacy migration, and planned backend/admin console. It captures decisions made during the rebuild so they are not trapped in chat history.
 
@@ -85,7 +105,7 @@ Original future stack intent from Claude sessions:
 - Stripe for listing packages and paid add-ons.
 - Advertiser portal for self-service listing management.
 - Admin console for category/listing/banner/settings/SEO control.
-- Cloudflare Pages remains the deploy target.
+- Cloudflare Worker `events4singles-v2` is the deploy target for the current rebuilt site. Cloudflare Pages is only retained for the legacy/reference deployments listed above.
 
 The legacy live site should not be disturbed until the new site is approved for launch and redirects/DNS are explicitly ready.
 
