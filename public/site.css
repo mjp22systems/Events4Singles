@@ -3515,6 +3515,23 @@ body.e4s-page-location .e4s-page-intro--editorial p,
     width: 100%;
   }
 
+  .e4s-listing-card__title-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 6px;
+    overflow: visible;
+  }
+
+  .e4s-listing-card__title {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+
+  .e4s-listing-card__title,
+  .e4s-listing-card__title a {
+    max-width: 100%;
+  }
+
   .e4s-listing-card--feature-slot .e4s-listing-card__header {
     display: grid;
     grid-template-columns: 1fr;
@@ -3560,6 +3577,12 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   .e4s-listing-card--feature-slot .e4s-listing-card__body {
     gap: 14px;
     padding: 16px;
+  }
+
+  .e4s-listing-card:not(.e4s-listing-card--feature-slot) .e4s-listing-card__media {
+    width: min(100%, 280px);
+    max-width: 78vw;
+    height: 156px;
   }
 
   .e4s-listing-card--feature-slot .e4s-listing-card__content {

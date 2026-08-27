@@ -739,6 +739,34 @@ test.describe("responsive CSS", () => {
                 </div>
               </header>
             </article>
+            <article class="e4s-listing-card">
+              <header class="e4s-listing-card__header">
+                <div class="e4s-listing-card__identity">
+                  <div class="e4s-listing-card__title-row">
+                    <h2 class="e4s-listing-card__title">A</h2>
+                    <span class="e4s-listing-card__unclaimed">Unclaimed</span>
+                    <span class="e4s-listing-card__location-badge">Brisbane</span>
+                    <span class="e4s-listing-card__location-badge">Central Coast</span>
+                    <span class="e4s-listing-card__location-badge">Melbourne</span>
+                    <span class="e4s-listing-card__location-badge">+3</span>
+                  </div>
+                </div>
+                <div class="e4s-listing-card__actions">
+                  <span class="e4s-listing-card__action e4s-listing-card__action--person e4s-listing-card__action--disabled"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--phone"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--email"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--web"></span>
+                  <span class="e4s-listing-card__action e4s-listing-card__action--address"></span>
+                </div>
+              </header>
+              <div class="e4s-listing-card__body">
+                <span class="e4s-listing-card__media"></span>
+                <div class="e4s-listing-card__content">
+                  <p>A Table for Six sets the benchmark with friendly service and social dinner events for singles.</p>
+                  <div class="e4s-listing-card__foot"><a class="e4s-listing-card__more" href="#">View Profile ›</a></div>
+                </div>
+              </div>
+            </article>
           </main>
         </body>
       </html>
@@ -754,8 +782,22 @@ test.describe("responsive CSS", () => {
         return { left: rowRect.left, width: rowRect.width, buttons };
       }),
     );
+    const crowdedCard = await page.locator(".e4s-listing-card").nth(2).evaluate((card) => {
+      const header = card.querySelector(".e4s-listing-card__header")!.getBoundingClientRect();
+      const title = card.querySelector(".e4s-listing-card__title")!.getBoundingClientRect();
+      const firstBadge = card.querySelector(".e4s-listing-card__unclaimed")!.getBoundingClientRect();
+      const media = card.querySelector(".e4s-listing-card__media")!.getBoundingClientRect();
+      return {
+        headerHeight: Math.round(header.height),
+        titleWidth: Math.round(title.width),
+        firstBadgeTop: Math.round(firstBadge.top),
+        titleBottom: Math.round(title.bottom),
+        mediaWidth: Math.round(media.width),
+        mediaHeight: Math.round(media.height),
+      };
+    });
 
-    expect(rows, JSON.stringify(rows)).toHaveLength(2);
+    expect(rows, JSON.stringify(rows)).toHaveLength(3);
     expect(Math.abs(rows[0].width - rows[1].width), JSON.stringify(rows)).toBeLessThanOrEqual(1);
     for (const row of rows) {
       expect(row.width, JSON.stringify(rows)).toBeGreaterThanOrEqual(300);
@@ -764,6 +806,11 @@ test.describe("responsive CSS", () => {
         expect(Math.abs(button.width - row.buttons[0].width), JSON.stringify(row)).toBeLessThanOrEqual(1);
       }
     }
+    expect(crowdedCard.titleWidth, JSON.stringify(crowdedCard)).toBeGreaterThanOrEqual(300);
+    expect(crowdedCard.firstBadgeTop, JSON.stringify(crowdedCard)).toBeGreaterThanOrEqual(crowdedCard.titleBottom);
+    expect(crowdedCard.headerHeight, JSON.stringify(crowdedCard)).toBeGreaterThanOrEqual(120);
+    expect(crowdedCard.mediaWidth, JSON.stringify(crowdedCard)).toBeGreaterThanOrEqual(260);
+    expect(crowdedCard.mediaHeight, JSON.stringify(crowdedCard)).toBeGreaterThanOrEqual(150);
     await expectNoHorizontalOverflow(page);
   });
 
