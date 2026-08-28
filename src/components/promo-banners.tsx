@@ -4,6 +4,7 @@ import Link from "next/link";
 
 const SLOTS_PER_ROW = 6;
 const MAX_SLOTS = SLOTS_PER_ROW * 2;
+const ADVERTISE_PLACEHOLDERS = 2;
 
 type Props =
   | { mode: "category"; categoryDbSlug: string; cityDbSlug?: string | null }
@@ -21,10 +22,13 @@ export default async function PromoBanners(props: Props) {
     banners = await getBannersForPage(props.categoryDbSlug, props.cityDbSlug);
   }
 
-  const slotCount = banners.length >= MAX_SLOTS ? MAX_SLOTS : SLOTS_PER_ROW;
-  const visibleBanners = banners.slice(0, slotCount);
-  const placeholderCount = Math.max(0, slotCount - visibleBanners.length);
-  const rowClass = slotCount > SLOTS_PER_ROW
+  const visibleBanners = banners.slice(0, MAX_SLOTS);
+  const rowTarget = visibleBanners.length > SLOTS_PER_ROW ? MAX_SLOTS : SLOTS_PER_ROW;
+  const placeholderCount = visibleBanners.length === MAX_SLOTS
+    ? 0
+    : Math.min(ADVERTISE_PLACEHOLDERS, rowTarget - visibleBanners.length);
+  const renderedSlotCount = visibleBanners.length + placeholderCount;
+  const rowClass = renderedSlotCount > SLOTS_PER_ROW
     ? "e4s-promo-banners--two-row"
     : "e4s-promo-banners--one-row";
 

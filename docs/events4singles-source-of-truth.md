@@ -460,6 +460,9 @@ Current portal moderation rule:
 
 - Build a polished homepage based on legacy strengths and current business goals.
 - Create a proper advertising/pricing page with examples of listing card, featured listing, tile banner, sidebar ad, and homepage placement.
+- Wire public promotion analytics end to end. Page-top banner tiles should normally link to the Events4Singles business/profile page first, with direct external click-through reserved for explicit paid campaign URLs. Track banner impressions, banner clicks, listing-card clicks, profile clicks, website clicks, booking clicks, and city/category source context before navigation.
+- Replace publicly exposed phone/email links with reveal controls backed by `/api/portal/reveal`. Split reveal intent from final contact action where possible, for example `reveal_phone` then `click_phone`, so portal stats can distinguish "shown contact details" from "tapped to call/email".
+- Add aggregation or scheduled processing from `analytics_events` into `analytics_daily`, or update portal dashboards to read recent event rows directly until aggregation exists. The current portal analytics page expects `analytics_daily`.
 - Run a missing-image sweep and match likely local image files.
 - Produce manual review reports for ambiguous business/contact merge groups.
 - Document full DB schema in a machine-readable map.

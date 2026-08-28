@@ -46,7 +46,7 @@ function normalizeBanners(rows: Banner[]): Banner[] {
       : null;
     return {
       ...banner,
-      click_url: banner.click_url || profileHref || "/advertise",
+      click_url: profileHref || banner.click_url || "/advertise",
       alt_text: banner.alt_text || banner.business_name || "Advertiser tile",
     };
   });

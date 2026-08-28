@@ -10,6 +10,7 @@ const listingPageFile = path.join(projectRoot, "src", "app", "(public)", "listin
 const listingsPageFile = path.join(projectRoot, "src", "app", "(public)", "listings", "page.tsx");
 const featuredListingsPageFile = path.join(projectRoot, "src", "app", "(public)", "featured-listings", "page.tsx");
 const dataFile = path.join(projectRoot, "src", "lib", "data.ts");
+const promoBannersFile = path.join(projectRoot, "src", "components", "promo-banners.tsx");
 const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
@@ -75,8 +76,17 @@ test("promotional tiles preserve business ownership for profile surfaces", () =>
 
   assert.match(source, /function normalizeBanners/);
   assert.match(source, /toProfileSlug\(banner\.business_id/);
+  assert.match(source, /click_url:\s*profileHref \|\| banner\.click_url \|\| "\/advertise"/);
   assert.match(source, /business_id = \? OR account_id IN/);
   assert.match(source, /LEFT JOIN businesses b ON b\.id = bn\.business_id/);
+});
+
+test("promo banner rows reserve only two advertise placeholders", () => {
+  const source = readFileSync(promoBannersFile, "utf8");
+
+  assert.match(source, /const ADVERTISE_PLACEHOLDERS = 2/);
+  assert.match(source, /Math\.min\(ADVERTISE_PLACEHOLDERS, rowTarget - visibleBanners\.length\)/);
+  assert.doesNotMatch(source, /slotCount = banners\.length >= MAX_SLOTS \? MAX_SLOTS : SLOTS_PER_ROW/);
 });
 
 test("listing detail pages stay accessible but are not indexed", () => {

@@ -14,6 +14,7 @@
     "smoke:admin": "playwright test tests/e2e/admin-console-smoke.spec.ts --workers=1",
     "d1:prepare:local-smoke": "node tools/prepare-local-d1-smoke.mjs",
     "images:optimize-site": "node tools/optimize-site-images.mjs",
+    "audit:banners": "node tools/audit-banner-tiles.mjs --remote",
     "audit:css": "node tools/audit-css.mjs",
     "memory:refresh": "node tools/refresh-project-memory.mjs",
     "memory:hook": "node tools/install-project-memory-hook.mjs",

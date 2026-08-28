@@ -15,6 +15,7 @@ The future admin console should include automated content health checks before l
 - Check listing website links, banner click URLs, email links and phone links.
 - Flag empty, malformed, dead or insecure legacy URLs.
 - Keep the check non-destructive: report issues first, then let an admin approve replacements.
+- Run `npm run audit:banners` to review active banner tile ownership, page scopes, local image paths and legacy external URLs. Linked banner tiles should default to their Events4Singles profile page; direct external URLs are campaign-specific exceptions.
 
 ## Import Checks
 
