@@ -46,7 +46,7 @@ function normalizeBanners(rows: Banner[]): Banner[] {
       : null;
     return {
       ...banner,
-      click_url: profileHref || banner.click_url || "/advertise",
+      click_url: profileHref || "/advertise",
       alt_text: banner.alt_text || banner.business_name || "Advertiser tile",
     };
   });
@@ -1059,7 +1059,6 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
     FROM banners
     WHERE (${bannerAccountFilter})
       AND COALESCE(is_active, 1) = 1
-      AND COALESCE(status, 'active') IN ('active', 'approved')
       AND image_url IS NOT NULL
       AND image_url != ''
     ORDER BY COALESCE(slot_position, 999), COALESCE(created_at, '') DESC, id DESC

@@ -5,7 +5,7 @@ import sharp from "sharp";
 const root = process.cwd();
 const imagesDir = path.join(root, "public", "images");
 const sourceImagesDir = path.join(root, "assets", "images");
-const categorySourceDir = path.join(imagesDir, "categories", "cards");
+const categorySourceDir = path.join(sourceImagesDir, "categories", "source");
 const categoryHeroDir = path.join(imagesDir, "categories", "heroes");
 const citySourceDir = path.join(sourceImagesDir, "cities", "source");
 const cityHeroDir = path.join(imagesDir, "cities", "heroes");
@@ -39,15 +39,21 @@ async function makeHero({ source, targets, type }) {
 }
 
 async function buildCategories() {
+  if (!(await fileExists(categorySourceDir))) {
+    console.log("Skipped category hero assets: assets/images/categories/source does not exist.");
+    return 0;
+  }
+
   await fs.mkdir(categoryHeroDir, { recursive: true });
   const entries = await fs.readdir(categorySourceDir);
   let count = 0;
 
-  for (const name of entries.filter((entry) => entry.endsWith(".webp")).sort()) {
+  for (const name of entries.filter((entry) => /\.(avif|jpe?g|png|webp)$/i.test(entry)).sort()) {
     if (name === "online-dating.webp") continue;
+    const slug = name.replace(/\.(avif|jpe?g|png|webp)$/i, ".webp");
     await makeHero({
       source: path.join(categorySourceDir, name),
-      targets: [path.join(categoryHeroDir, name)],
+      targets: [path.join(categoryHeroDir, slug)],
       type: "category",
     });
     count += 1;

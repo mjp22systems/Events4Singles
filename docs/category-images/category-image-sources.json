@@ -24,7 +24,7 @@
   "heroGeneration": {
     "script": "tools/generate-hero-frame-assets.mjs",
     "notes": [
-      "Category hero assets are generated from the optimized category card artwork using a wide blurred frame and a larger readable foreground crop.",
+      "Category hero assets are generated from separate wide source images in assets/images/categories/source/; category card artwork is never used as a hero source.",
       "City hero assets are generated from optimized city photography using a wider frame that keeps more vertical context visible in the desktop hero.",
       "online-dating.webp is the existing hand-shaped hero asset and remains 1280x320."
     ]

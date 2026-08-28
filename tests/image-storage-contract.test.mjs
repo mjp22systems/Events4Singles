@@ -64,3 +64,14 @@ test("city hero source photos are non-public generator inputs", () => {
   const sourceDir = path.join(projectRoot, "assets", "images", "cities", "source");
   assert.equal(existsSync(sourceDir), true, "city hero source folder should live outside public");
 });
+
+test("category hero source photos are separate from category card artwork", () => {
+  const sourceDir = path.join(projectRoot, "assets", "images", "categories", "source");
+  const generator = readFileSync(path.join(projectRoot, "tools", "generate-hero-frame-assets.mjs"), "utf8");
+  const docs = readFileSync(path.join(projectRoot, "docs", "image-storage.md"), "utf8");
+
+  assert.equal(existsSync(sourceDir), true, "category hero source folder should live outside public");
+  assert.match(generator, /assets.*images.*categories.*source|sourceImagesDir[\s\S]*categories"[\s\S]*"source"/);
+  assert.doesNotMatch(generator, /imagesDir[\s\S]*"categories"[\s\S]*"cards"/);
+  assert.match(docs, /Category card artwork is not a hero-image source/);
+});
