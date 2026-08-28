@@ -24,7 +24,7 @@ INSERT INTO categories (
     1,
     'Singles Mixers Australia | Events4Singles',
     'Find singles mixers and relaxed social events for Australian singles.',
-    '/images/categories/hero/singles-mixers.webp',
+    '/images/categories/heroes/singles-mixers.webp',
     'active'
   ),
   (
@@ -37,7 +37,7 @@ INSERT INTO categories (
     1,
     'Christian Singles Australia | Events4Singles',
     'Explore Christian singles events, groups and dating services in Australia.',
-    '/images/categories/hero/christian-singles.webp',
+    '/images/categories/heroes/christian-singles.webp',
     'active'
   ),
   (
@@ -50,7 +50,7 @@ INSERT INTO categories (
     1,
     'LGBTQIA+ Singles Events Australia | Events4Singles',
     'Find inclusive LGBTQIA+ singles events and social spaces around Australia.',
-    '/images/categories/hero/lgbtqia-singles-events.webp',
+    '/images/categories/heroes/lgbtqia-singles-events.webp',
     'active'
   ),
   (
@@ -63,7 +63,7 @@ INSERT INTO categories (
     1,
     'Solo Travel for Singles Australia | Events4Singles',
     'Find solo travel, tours and getaway options for Australian singles.',
-    '/images/categories/hero/solo-travel.webp',
+    '/images/categories/heroes/solo-travel.webp',
     'active'
   ),
   (
@@ -76,7 +76,7 @@ INSERT INTO categories (
     1,
     'Social Walks for Singles Australia | Events4Singles',
     'Find social walks, walking groups and low-pressure outdoor events for singles.',
-    '/images/categories/hero/social-walks.webp',
+    '/images/categories/heroes/social-walks.webp',
     'active'
   ),
   (
@@ -89,7 +89,7 @@ INSERT INTO categories (
     1,
     'Dating Coaches Australia | Events4Singles',
     'Find dating coaches and dating confidence support for Australian singles.',
-    '/images/categories/hero/dating-coaches.webp',
+    '/images/categories/heroes/dating-coaches.webp',
     'active'
   ),
   (
@@ -102,7 +102,7 @@ INSERT INTO categories (
     1,
     'Dating Profile Photography Australia | Events4Singles',
     'Find dating profile photography and portrait services for Australian singles.',
-    '/images/categories/hero/dating-profile-photography.webp',
+    '/images/categories/heroes/dating-profile-photography.webp',
     'active'
   )
 ON CONFLICT(slug) DO UPDATE SET

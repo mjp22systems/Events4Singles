@@ -156,7 +156,6 @@ export default async function FeaturedListingsPage({ searchParams }: { searchPar
                 alt="Featured Listings"
                 src="/images/site/home/category-cards/home-cat-mixers.webp"
                 fallbacks={[
-                  "/images/optimized/home-cat-mixers.webp",
                   "/images/home-cat-mixers.jpg",
                   "/images/site/home/category-cards/home-cat-speed-dating.webp",
                 ]}

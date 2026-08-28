@@ -70,6 +70,15 @@ test("featured listings directory is wired as the homepage view-all target", () 
   assert.match(homeFeaturedSource, /Featured Business Spot/);
 });
 
+test("promotional tiles preserve business ownership for profile surfaces", () => {
+  const source = readFileSync(dataFile, "utf8");
+
+  assert.match(source, /function normalizeBanners/);
+  assert.match(source, /toProfileSlug\(banner\.business_id/);
+  assert.match(source, /business_id = \? OR account_id IN/);
+  assert.match(source, /LEFT JOIN businesses b ON b\.id = bn\.business_id/);
+});
+
 test("listing detail pages stay accessible but are not indexed", () => {
   const source = readFileSync(listingPageFile, "utf8");
 

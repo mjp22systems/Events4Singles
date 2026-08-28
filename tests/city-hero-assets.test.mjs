@@ -34,7 +34,7 @@ test("every active city has an optimized wide hero image", async () => {
       "public",
       "images",
       "cities",
-      "hero",
+      "heroes",
       `location-photo-${slug}-photo.webp`,
     );
 

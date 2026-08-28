@@ -74,6 +74,9 @@ export interface Banner {
   click_url: string;
   alt_text: string;
   placement?: string | null;
+  business_id?: number | null;
+  business_name?: string | null;
+  business_profile_slug?: string | null;
 }
 
 export interface Business {

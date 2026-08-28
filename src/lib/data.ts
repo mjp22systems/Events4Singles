@@ -1,5 +1,5 @@
 import { getD1 } from "./db";
-import { slugToLabel, toCategoryChildUrlSegment, toUrlSlug, toListingSlug, idFromProfileSlug } from "./constants";
+import { slugToLabel, toCategoryChildUrlSegment, toUrlSlug, toListingSlug, toProfileSlug, idFromProfileSlug } from "./constants";
 import { canonicalEventSlug } from "./event-slugs";
 import type { Listing, Category, City, Banner, Business } from "./types";
 import {
@@ -37,6 +37,19 @@ const SUPPRESSED_PUBLIC_CITY_SQL = "'tbc','national','online','no_location','int
 
 function placeholders(values: unknown[]): string {
   return values.map(() => "?").join(", ");
+}
+
+function normalizeBanners(rows: Banner[]): Banner[] {
+  return rows.map((banner) => {
+    const profileHref = banner.business_id
+      ? `/profile/${banner.business_profile_slug || toProfileSlug(banner.business_id, banner.business_name || banner.alt_text || "profile")}`
+      : null;
+    return {
+      ...banner,
+      click_url: banner.click_url || profileHref || "/advertise",
+      alt_text: banner.alt_text || banner.business_name || "Advertiser tile",
+    };
+  });
 }
 
 async function getCategoryScopeSlugs(categoryDbSlug: string): Promise<string[]> {
@@ -794,20 +807,38 @@ export async function getBannersForPage(
 
   if (cityDbSlug) {
     const { results } = await db.prepare(`
-      SELECT id, image_url, click_url, alt_text FROM banners
-      WHERE page_scope = 'category' AND category_slug = ? AND city_slug = ? AND is_active = 1
-      ORDER BY slot_position LIMIT ?
+      SELECT bn.id,
+             bn.image_url,
+             COALESCE(NULLIF(bn.link_url, ''), NULLIF(bn.click_url, '')) AS click_url,
+             COALESCE(NULLIF(bn.alt_text, ''), NULLIF(bn.title, ''), b.name, 'Advertiser tile') AS alt_text,
+             bn.placement,
+             bn.business_id,
+             b.name AS business_name,
+             b.profile_slug AS business_profile_slug
+      FROM banners bn
+      LEFT JOIN businesses b ON b.id = bn.business_id
+      WHERE bn.page_scope = 'category' AND bn.category_slug = ? AND bn.city_slug = ? AND bn.is_active = 1
+      ORDER BY bn.slot_position LIMIT ?
     `).bind(categoryDbSlug, cityDbSlug, SLOTS).all<Banner>();
-    addRows(results);
+    addRows(normalizeBanners(results));
     return banners;
   }
 
   const { results } = await db.prepare(`
-    SELECT id, image_url, click_url, alt_text FROM banners
-    WHERE page_scope = 'category' AND category_slug = ? AND city_slug IS NULL AND is_active = 1
-    ORDER BY slot_position LIMIT ?
+    SELECT bn.id,
+           bn.image_url,
+           COALESCE(NULLIF(bn.link_url, ''), NULLIF(bn.click_url, '')) AS click_url,
+           COALESCE(NULLIF(bn.alt_text, ''), NULLIF(bn.title, ''), b.name, 'Advertiser tile') AS alt_text,
+           bn.placement,
+           bn.business_id,
+           b.name AS business_name,
+           b.profile_slug AS business_profile_slug
+    FROM banners bn
+    LEFT JOIN businesses b ON b.id = bn.business_id
+    WHERE bn.page_scope = 'category' AND bn.category_slug = ? AND bn.city_slug IS NULL AND bn.is_active = 1
+    ORDER BY bn.slot_position LIMIT ?
   `).bind(categoryDbSlug, SLOTS).all<Banner>();
-  addRows(results);
+  addRows(normalizeBanners(results));
   return banners;
 }
 
@@ -818,11 +849,20 @@ export async function getBannersForCity(cityDbSlug: string): Promise<Banner[]> {
   const seen = new Set<number>();
 
   const { results } = await db.prepare(`
-    SELECT id, image_url, click_url, alt_text FROM banners
-    WHERE page_scope = 'city' AND city_slug = ? AND is_active = 1
-    ORDER BY slot_position LIMIT ?
+    SELECT bn.id,
+           bn.image_url,
+           COALESCE(NULLIF(bn.link_url, ''), NULLIF(bn.click_url, '')) AS click_url,
+           COALESCE(NULLIF(bn.alt_text, ''), NULLIF(bn.title, ''), b.name, 'Advertiser tile') AS alt_text,
+           bn.placement,
+           bn.business_id,
+           b.name AS business_name,
+           b.profile_slug AS business_profile_slug
+    FROM banners bn
+    LEFT JOIN businesses b ON b.id = bn.business_id
+    WHERE bn.page_scope = 'city' AND bn.city_slug = ? AND bn.is_active = 1
+    ORDER BY bn.slot_position LIMIT ?
   `).bind(cityDbSlug, SLOTS).all<Banner>();
-  for (const b of results) {
+  for (const b of normalizeBanners(results)) {
     if (!seen.has(b.id) && banners.length < SLOTS) {
       seen.add(b.id);
       banners.push(b);
@@ -834,27 +874,36 @@ export async function getBannersForCity(cityDbSlug: string): Promise<Banner[]> {
 export async function getFeaturedDirectoryBanners(): Promise<Banner[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
-    SELECT id, image_url, click_url, alt_text FROM banners
-    WHERE is_active = 1
-      AND image_url IS NOT NULL
-      AND image_url != ''
+    SELECT bn.id,
+           bn.image_url,
+           COALESCE(NULLIF(bn.link_url, ''), NULLIF(bn.click_url, '')) AS click_url,
+           COALESCE(NULLIF(bn.alt_text, ''), NULLIF(bn.title, ''), b.name, 'Advertiser tile') AS alt_text,
+           bn.placement,
+           bn.business_id,
+           b.name AS business_name,
+           b.profile_slug AS business_profile_slug
+    FROM banners bn
+    LEFT JOIN businesses b ON b.id = bn.business_id
+    WHERE bn.is_active = 1
+      AND bn.image_url IS NOT NULL
+      AND bn.image_url != ''
       AND (
-        page_scope IN ('listings', 'homepage', 'site', 'global')
-        OR (category_slug IS NULL AND city_slug IS NULL)
+        bn.page_scope IN ('listings', 'homepage', 'site', 'global')
+        OR (bn.category_slug IS NULL AND bn.city_slug IS NULL)
       )
     ORDER BY
-      CASE page_scope
+      CASE bn.page_scope
         WHEN 'listings' THEN 0
         WHEN 'homepage' THEN 1
         WHEN 'site' THEN 2
         WHEN 'global' THEN 3
         ELSE 4
       END,
-      COALESCE(slot_position, 999),
-      id DESC
+      COALESCE(bn.slot_position, 999),
+      bn.id DESC
     LIMIT 12
   `).all<Banner>();
-  return results;
+  return normalizeBanners(results);
 }
 
 // ── Static params for SSG ─────────────────────────────────────────────────────
@@ -996,26 +1045,30 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
   let nextEvent: PublicEvent | null = null;
   let totalEvents = 0;
 
+  const bannerAccountFilter = accountIds.length > 0
+    ? `business_id = ? OR account_id IN (${accountIds.map(() => "?").join(",")})`
+    : "business_id = ?";
+  const bannerBindParams = accountIds.length > 0 ? [businessId, ...accountIds] : [businessId];
+  const { results: bannerRows } = await db.prepare(`
+    SELECT id,
+           image_url,
+           COALESCE(NULLIF(link_url, ''), NULLIF(click_url, ''), '/advertise') AS click_url,
+           COALESCE(NULLIF(alt_text, ''), NULLIF(title, ''), 'Advertiser banner') AS alt_text,
+           title,
+           placement
+    FROM banners
+    WHERE (${bannerAccountFilter})
+      AND COALESCE(is_active, 1) = 1
+      AND COALESCE(status, 'active') IN ('active', 'approved')
+      AND image_url IS NOT NULL
+      AND image_url != ''
+    ORDER BY COALESCE(slot_position, 999), COALESCE(created_at, '') DESC, id DESC
+    LIMIT 12
+  `).bind(...bannerBindParams).all<ProfileBanner>();
+  banners = bannerRows;
+
   if (accountIds.length > 0) {
     const accountPlaceholders = accountIds.map(() => "?").join(",");
-
-    const { results: bannerRows } = await db.prepare(`
-      SELECT id,
-             image_url,
-             COALESCE(NULLIF(link_url, ''), NULLIF(click_url, ''), '/advertise') AS click_url,
-             COALESCE(NULLIF(alt_text, ''), NULLIF(title, ''), 'Advertiser banner') AS alt_text,
-             title,
-             placement
-      FROM banners
-      WHERE account_id IN (${accountPlaceholders})
-        AND COALESCE(is_active, 1) = 1
-        AND COALESCE(status, 'active') IN ('active', 'approved')
-        AND image_url IS NOT NULL
-        AND image_url != ''
-      ORDER BY COALESCE(slot_position, 999), COALESCE(created_at, '') DESC, id DESC
-      LIMIT 12
-    `).bind(...accountIds).all<ProfileBanner>();
-    banners = bannerRows;
 
     const now = new Date().toISOString();
     const countRow = await db.prepare(`

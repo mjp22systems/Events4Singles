@@ -15,7 +15,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Singles mixers are a simple way to meet new people in a hosted social setting where conversation is expected and the pressure stays low.",
     seo_title: "Singles Mixers Australia | Events4Singles",
     seo_description: "Find singles mixers and relaxed social events for Australian singles.",
-    hero_image_url: "/images/categories/hero/singles-mixers.webp",
+    hero_image_url: "/images/categories/heroes/singles-mixers.webp",
   },
   {
     slug: "christian_singles",
@@ -26,7 +26,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Christian singles listings bring together social events, dating services and community-minded ways to meet people who share similar values.",
     seo_title: "Christian Singles Australia | Events4Singles",
     seo_description: "Explore Christian singles events, groups and dating services in Australia.",
-    hero_image_url: "/images/categories/hero/christian-singles.webp",
+    hero_image_url: "/images/categories/heroes/christian-singles.webp",
   },
   {
     slug: "lgbtqia_singles_events",
@@ -37,7 +37,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "LGBTQIA+ singles events make it easier to find inclusive social nights, mixers and community spaces where singles can connect comfortably.",
     seo_title: "LGBTQIA+ Singles Events Australia | Events4Singles",
     seo_description: "Find inclusive LGBTQIA+ singles events and social spaces around Australia.",
-    hero_image_url: "/images/categories/hero/lgbtqia-singles-events.webp",
+    hero_image_url: "/images/categories/heroes/lgbtqia-singles-events.webp",
   },
   {
     slug: "solo_travel",
@@ -48,7 +48,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Solo travel listings help independent singles find trips, tours and getaways designed to be comfortable for people travelling on their own.",
     seo_title: "Solo Travel for Singles Australia | Events4Singles",
     seo_description: "Find solo travel, tours and getaway options for Australian singles.",
-    hero_image_url: "/images/categories/hero/solo-travel.webp",
+    hero_image_url: "/images/categories/heroes/solo-travel.webp",
     aliases: ["travel_for_singles"],
   },
   {
@@ -60,7 +60,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Social walks give singles a relaxed way to meet people while getting outside and doing something simple together.",
     seo_title: "Social Walks for Singles Australia | Events4Singles",
     seo_description: "Find social walks, walking groups and low-pressure outdoor events for singles.",
-    hero_image_url: "/images/categories/hero/social-walks.webp",
+    hero_image_url: "/images/categories/heroes/social-walks.webp",
     aliases: ["walks4singles"],
   },
   {
@@ -72,7 +72,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Dating coaches can help singles improve confidence, communication, profile strategy and the way they approach modern dating.",
     seo_title: "Dating Coaches Australia | Events4Singles",
     seo_description: "Find dating coaches and dating confidence support for Australian singles.",
-    hero_image_url: "/images/categories/hero/dating-coaches.webp",
+    hero_image_url: "/images/categories/heroes/dating-coaches.webp",
   },
   {
     slug: "dating_profile_photography",
@@ -83,7 +83,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_intro: "Dating profile photography is for singles who want current, natural portraits for dating apps, profiles and first impressions.",
     seo_title: "Dating Profile Photography Australia | Events4Singles",
     seo_description: "Find dating profile photography and portrait services for Australian singles.",
-    hero_image_url: "/images/categories/hero/dating-profile-photography.webp",
+    hero_image_url: "/images/categories/heroes/dating-profile-photography.webp",
   },
 ];
 

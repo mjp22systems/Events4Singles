@@ -32,12 +32,15 @@ export default async function PromoBanners(props: Props) {
 
   return (
     <section aria-label="Featured advertisers" className={`e4s-promo-banners ${rowClass}`}>
-      {visibleBanners.map((b) => (
-        <a key={b.id} href={b.click_url} rel="noopener" target="_blank" title={b.alt_text}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt={`${b.alt_text} advertiser tile`} loading="lazy" src={b.image_url} title={b.alt_text} />
-        </a>
-      ))}
+      {visibleBanners.map((b) => {
+        const isExternal = /^https?:\/\//i.test(b.click_url);
+        return (
+          <a key={b.id} href={b.click_url} rel={isExternal ? "noopener" : undefined} target={isExternal ? "_blank" : undefined} title={b.alt_text}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt={`${b.alt_text} advertiser tile`} loading="lazy" src={b.image_url} title={b.alt_text} />
+          </a>
+        );
+      })}
       {Array.from({ length: placeholderCount }).map((_, i) => (
         <Link key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" title="Advertise on Events4Singles">
           {/* eslint-disable-next-line @next/next/no-img-element */}

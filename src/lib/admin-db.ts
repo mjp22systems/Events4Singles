@@ -1536,6 +1536,7 @@ export async function listAdminIntegrations(opts: {
 export interface AdminBanner {
   id: string;
   account_id: string | null;
+  business_id: number | null;
   title: string | null;
   image_url: string;
   link_url: string | null;
@@ -1585,14 +1586,14 @@ export async function listAdminBanners(opts: {
   }[opts.sort ?? "newest"] ?? "COALESCE(bn.created_at, '') DESC, bn.id DESC";
   const { results } = await db
     .prepare(
-      `SELECT bn.id, bn.account_id, bn.title, bn.image_url, bn.link_url, bn.click_url, bn.alt_text,
+      `SELECT bn.id, bn.account_id, bn.business_id, bn.title, bn.image_url, bn.link_url, bn.click_url, bn.alt_text,
               COALESCE(bn.status, 'active') AS status,
               bn.placement, bn.created_at,
               a.billing_email,
               b.name AS business_name
        FROM banners bn
        LEFT JOIN advertiser_accounts a ON a.id = bn.account_id
-       LEFT JOIN businesses b ON b.id = a.business_id
+       LEFT JOIN businesses b ON b.id = COALESCE(bn.business_id, a.business_id)
        ${where}
        ORDER BY ${orderBy}`
     )
