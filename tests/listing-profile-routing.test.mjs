@@ -81,11 +81,13 @@ test("promotional tiles preserve business ownership for profile surfaces", () =>
   assert.match(source, /LEFT JOIN businesses b ON b\.id = bn\.business_id/);
 });
 
-test("promo banner rows reserve only two advertise placeholders", () => {
+test("promo banner rows always complete one or two full rows", () => {
   const source = readFileSync(promoBannersFile, "utf8");
 
-  assert.match(source, /const ADVERTISE_PLACEHOLDERS = 2/);
-  assert.match(source, /Math\.min\(ADVERTISE_PLACEHOLDERS, rowTarget - visibleBanners\.length\)/);
+  assert.match(source, /const SLOTS_PER_ROW = 6/);
+  assert.match(source, /const MAX_SLOTS = SLOTS_PER_ROW \* 2/);
+  assert.match(source, /rowTarget - visibleBanners\.length/);
+  assert.doesNotMatch(source, /ADVERTISE_PLACEHOLDERS/);
   assert.doesNotMatch(source, /slotCount = banners\.length >= MAX_SLOTS \? MAX_SLOTS : SLOTS_PER_ROW/);
 });
 

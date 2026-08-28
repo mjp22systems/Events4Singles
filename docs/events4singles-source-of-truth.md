@@ -338,8 +338,8 @@ Filters:
 - `banners.page_scope` controls city/category scope.
 - Nightclubs banners are suppressed because legacy nightclubs pages did not have banners.
 - Child pages should not inherit parent category banner tiles unless explicitly intended.
-- If there are not enough banners to fill two rows, show one row only.
-- Placeholder advertise tiles should appear where needed and link to `/advertise`.
+- Banner rows must always render as complete rows: 6 slots for one row or 12 slots for two rows.
+- If there are not enough real banners to complete the selected row count, fill the remaining slots with placeholder advertise tiles linking to `/advertise`.
 - Tile banners need exact legacy-scope matching wherever possible: city, category, or category+city.
 - Banner gaps should be solved with placeholder ad slots, not by borrowing from unrelated parent/child pages.
 
