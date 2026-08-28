@@ -117,6 +117,9 @@ test("online cards render as flat profile-first rows without listing images", ()
   assert.doesNotMatch(css, /e4s-online-card__logo/);
   assert.doesNotMatch(typography, /e4s-online-card__domain/);
   assert.match(sidebar, /\(items\.length > 0 \|\| topItem\)/);
+  assert.match(sidebar, /emptySidebarHeading/);
+  assert.match(css, /e4s-sidebar-block--empty/);
+  assert.match(css, /e4s-sidebar:has\(\.e4s-sidebar-block--empty\) \.e4s-sidebar-ad/);
 });
 
 test("promo banner rows always complete one or two full rows", () => {

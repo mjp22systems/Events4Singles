@@ -721,7 +721,7 @@ body {
 }
 
 .e4s-online-card__title {
-  font-size: var(--e4s-listing-title-size);
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -749,7 +749,7 @@ body {
 }
 
 .e4s-online-card__tagline {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--e4s-muted);
 }
 
@@ -761,7 +761,7 @@ body {
 
 .e4s-online-card__visit-btn {
   color: #ffffff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;

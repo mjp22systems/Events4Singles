@@ -134,6 +134,7 @@ export default function PageSidebar(props: Props) {
         isActive: props.currentSubcategoryDbSlug === "dance_styles",
       }
     : undefined;
+  const emptySidebarHeading = props.categoryUrlSlug === "online-dating" ? "Online Dating" : null;
 
   return (
     <aside className="e4s-sidebar">
@@ -155,6 +156,11 @@ export default function PageSidebar(props: Props) {
           items={items}
           topItem={topItem}
         />
+      )}
+      {subcategoryItems.length === 0 && items.length === 0 && emptySidebarHeading && (
+        <div className="e4s-sidebar-block e4s-sidebar-block--empty">
+          <p className="e4s-sidebar-block__heading">{emptySidebarHeading}</p>
+        </div>
       )}
       <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
         {/* eslint-disable-next-line @next/next/no-img-element */}
