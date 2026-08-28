@@ -233,7 +233,6 @@ export default async function CategoryOrCityPage({ params }: Props) {
             ) : null}
             {cities.length > 0 ? (
               <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
-                <span>View city</span>
                 <NavSelect
                   cities={cities}
                   categoryUrlSlug={param}

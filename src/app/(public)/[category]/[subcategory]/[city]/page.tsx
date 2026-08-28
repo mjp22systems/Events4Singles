@@ -176,7 +176,6 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
               </label>
             ) : null}
             <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
-              <span>View another city</span>
               <NavSelect
                 cities={cities}
                 categoryUrlSlug={subcategoryUrlSlug}

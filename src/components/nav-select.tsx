@@ -12,14 +12,21 @@ interface Props {
 
 export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug = "", placeholder }: Props) {
   const router = useRouter();
+  const closeHeaderMenu = () => {
+    window.dispatchEvent(new Event("e4s:close-nav"));
+  };
 
   return (
     <select
       value={currentCitySlug}
+      onClick={closeHeaderMenu}
       onChange={(e) => {
         if (!e.target.value) return;
+        closeHeaderMenu();
         router.push(`/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`);
       }}
+      onFocus={closeHeaderMenu}
+      onPointerDown={closeHeaderMenu}
       aria-label="Choose city"
     >
       {placeholder ? (
