@@ -28,7 +28,7 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
     const slug = toUrlSlug(cat.slug);
     return {
       href: `/${slug}`,
-      imageUrl: cat.hero_image_url ?? getCategoryCardImage(slug) ?? null,
+      imageUrl: getCategoryCardImage(slug) ?? null,
       label: cat.label,
       listingCount: cat.listing_count,
       slug: cat.slug,

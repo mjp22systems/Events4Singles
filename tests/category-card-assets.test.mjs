@@ -6,6 +6,8 @@ import sharp from "sharp";
 
 const projectRoot = process.cwd();
 const mappingFile = path.join(projectRoot, "src", "lib", "category-card-assets.ts");
+const categoriesPageFile = path.join(projectRoot, "src", "app", "(public)", "categories", "page.tsx");
+const danceHubFile = path.join(projectRoot, "src", "components", "dance-classes-hub.tsx");
 
 const ACTIVE_CATEGORY_SLUGS = [
   "adventure-for-singles",
@@ -130,4 +132,23 @@ test("category hero-specific images use optimized website assets", async () => {
     assert.equal(metadata.height, 320, `${slug} hero image should be 320px high`);
     assert.ok((metadata.width ?? 0) >= 1280, `${slug} hero image should be wide enough for page heroes`);
   }
+});
+
+test("category card surfaces do not render hero images", () => {
+  const categoriesPage = readFileSync(categoriesPageFile, "utf8");
+  const danceHub = readFileSync(danceHubFile, "utf8");
+
+  const categoryTileBlock = categoriesPage.slice(
+    categoriesPage.indexOf("const categoryTiles"),
+    categoriesPage.indexOf("return ("),
+  );
+  const danceStyleBlock = danceHub.slice(
+    danceHub.indexOf("sortedStyles.map"),
+    danceHub.indexOf("<span className=\"e4s-dance-style-card__copy\">"),
+  );
+
+  assert.match(categoryTileBlock, /imageUrl:\s*getCategoryCardImage\(slug\) \?\? null/);
+  assert.doesNotMatch(categoryTileBlock, /hero_image_url/);
+  assert.match(danceStyleBlock, /src=\{getCategoryCardImage\(styleUrlSlug\) \?\? "\/images\/categories\/cards\/dance-classes\.webp"\}/);
+  assert.doesNotMatch(danceStyleBlock, /hero_image_url/);
 });

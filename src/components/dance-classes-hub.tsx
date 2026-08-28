@@ -141,7 +141,7 @@ export default async function DanceClassesHub({ category, cities, listings, subc
                       <img
                         alt={style.label}
                         loading="lazy"
-                        src={style.hero_image_url ?? getCategoryCardImage(styleUrlSlug) ?? "/images/categories/cards/dance-classes.webp"}
+                        src={getCategoryCardImage(styleUrlSlug) ?? "/images/categories/cards/dance-classes.webp"}
                       />
                     </span>
                     <span className="e4s-dance-style-card__copy">
