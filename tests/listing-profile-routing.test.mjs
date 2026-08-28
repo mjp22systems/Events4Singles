@@ -11,6 +11,8 @@ const listingsPageFile = path.join(projectRoot, "src", "app", "(public)", "listi
 const featuredListingsPageFile = path.join(projectRoot, "src", "app", "(public)", "featured-listings", "page.tsx");
 const dataFile = path.join(projectRoot, "src", "lib", "data.ts");
 const promoBannersFile = path.join(projectRoot, "src", "components", "promo-banners.tsx");
+const onlineCardFile = path.join(projectRoot, "src", "components", "online-card.tsx");
+const pageSidebarFile = path.join(projectRoot, "src", "components", "page-sidebar.tsx");
 const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
@@ -76,9 +78,45 @@ test("promotional tiles preserve business ownership for profile surfaces", () =>
 
   assert.match(source, /function normalizeBanners/);
   assert.match(source, /toProfileSlug\(banner\.business_id/);
-  assert.match(source, /click_url:\s*profileHref \|\| banner\.click_url \|\| "\/advertise"/);
+  assert.match(source, /click_url:\s*profileHref \|\| "\/advertise"/);
   assert.match(source, /business_id = \? OR account_id IN/);
   assert.match(source, /LEFT JOIN businesses b ON b\.id = bn\.business_id/);
+});
+
+test("online dating listings stay online-only on public category routes", () => {
+  const source = readFileSync(dataFile, "utf8");
+  const citiesForCategory = source.slice(
+    source.indexOf("export async function getCitiesForCategory"),
+    source.indexOf("export async function getListingsForCity"),
+  );
+  const listingsForCategory = source.slice(
+    source.indexOf("export async function getListingsForCategory"),
+    source.indexOf("export async function getListingsForPage"),
+  );
+
+  assert.match(source, /const ONLINE_DATING_CATEGORY = "online_dating"/);
+  assert.match(source, /function listingTypeClauseForCategory/);
+  assert.match(listingsForCategory, /listingTypeClauseForCategory\(categoryDbSlug\)/);
+  assert.match(source, /categoryDbSlug === ONLINE_DATING_CATEGORY[\s\S]*l\.listing_type = 'online'/);
+  assert.match(source, /COALESCE\(l\.listing_type, ''\) != 'online'/);
+  assert.match(citiesForCategory, /if \(categoryDbSlug === ONLINE_DATING_CATEGORY\) return \[\]/);
+});
+
+test("online cards render as flat profile-first rows without listing images", () => {
+  const source = readFileSync(onlineCardFile, "utf8");
+  const css = readFileSync(path.join(projectRoot, "public", "site.css"), "utf8");
+  const typography = readFileSync(path.join(projectRoot, "public", "typography.css"), "utf8");
+  const sidebar = readFileSync(pageSidebarFile, "utf8");
+
+  assert.match(source, /toProfileSlug/);
+  assert.match(source, /View Profile/);
+  assert.match(source, /Visit Site/);
+  assert.doesNotMatch(source, /listing\.image_url/);
+  assert.doesNotMatch(source, /e4s-online-card__logo/);
+  assert.doesNotMatch(source, /e4s-online-card__domain/);
+  assert.doesNotMatch(css, /e4s-online-card__logo/);
+  assert.doesNotMatch(typography, /e4s-online-card__domain/);
+  assert.match(sidebar, /\(items\.length > 0 \|\| topItem\)/);
 });
 
 test("promo banner rows always complete one or two full rows", () => {
@@ -128,6 +166,21 @@ test("public edit drawers keep profile and listing fields distinct", () => {
   assert.match(profileDrawer, /Business Name/);
   assert.match(profileDrawer, /Profile Contact/);
   assert.match(profileDrawer, /Facebook URL/);
+});
+
+test("business directory dedupes public names and profiles expose directory pager", () => {
+  const dataSource = readFileSync(dataFile, "utf8");
+  const profileSource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "profile", "[id]", "page.tsx"), "utf8");
+
+  assert.match(dataSource, /ROW_NUMBER\(\) OVER \(\s*PARTITION BY lower\(trim\(b\.name\)\)/);
+  assert.match(dataSource, /WHERE duplicate_rank = 1/);
+  assert.match(dataSource, /export async function getBusinessDirectoryPager/);
+  assert.match(dataSource, /directoryPager: BusinessDirectoryPager/);
+
+  assert.match(profileSource, /directoryPager\.previous/);
+  assert.match(profileSource, /Previous business/);
+  assert.match(profileSource, /directoryPager\.next/);
+  assert.match(profileSource, /Next business/);
 });
 
 test("sidebar refine links update in place without resetting scroll", () => {

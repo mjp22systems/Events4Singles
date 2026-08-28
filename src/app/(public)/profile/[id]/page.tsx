@@ -121,6 +121,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const events = profileData.events ?? [];
   const nextEvent = profileData.nextEvent ?? null;
   const totalEvents = profileData.totalEvents ?? events.length;
+  const directoryPager = profileData.directoryPager;
   if (!business && listings.length === 0) notFound();
 
   const cookieStore = await cookies();
@@ -162,6 +163,8 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const mapsUrl = address
     ? `https://maps.google.com/?q=${encodeURIComponent(address)}`
     : null;
+  const profileHref = (profile: { id: number; name: string; profile_slug: string | null }) =>
+    `/profile/${profile.profile_slug ?? toProfileSlug(profile.id, profile.name)}`;
 
   return (
     <PublicMain>
@@ -170,6 +173,26 @@ export default async function ProfilePage({ params, searchParams }: Props) {
         <ProfileEditDrawer business={business} />
       )}
       <div className="e4s-shell">
+        {directoryPager.previous && (
+          <Link
+            aria-label={`Previous business: ${directoryPager.previous.name}`}
+            className="e4s-location-pager e4s-location-pager--prev e4s-event-side-pager"
+            href={profileHref(directoryPager.previous)}
+          >
+            <span className="e4s-location-pager__icon" />
+            <span className="e4s-location-pager__label">Previous business</span>
+          </Link>
+        )}
+        {directoryPager.next && (
+          <Link
+            aria-label={`Next business: ${directoryPager.next.name}`}
+            className="e4s-location-pager e4s-location-pager--next e4s-event-side-pager"
+            href={profileHref(directoryPager.next)}
+          >
+            <span className="e4s-location-pager__icon" />
+            <span className="e4s-location-pager__label">Next business</span>
+          </Link>
+        )}
 
         {/* Nav */}
         <div className="e4s-profile-nav">

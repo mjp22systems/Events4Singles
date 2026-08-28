@@ -95,12 +95,21 @@ async function countActiveListingsForCategorySlugs(categorySlugs: string[]): Pro
 
 // ── Listings ─────────────────────────────────────────────────────────────────
 
+const ONLINE_DATING_CATEGORY = "online_dating";
+
+function listingTypeClauseForCategory(categoryDbSlug: string) {
+  return categoryDbSlug === ONLINE_DATING_CATEGORY
+    ? "AND l.listing_type = 'online'"
+    : "AND COALESCE(l.listing_type, '') != 'online'";
+}
+
 export async function getListingsForCategory(categoryDbSlug: string): Promise<Listing[]> {
   const categorySlugs = await getCategoryScopeSlugs(categoryDbSlug);
   if (categorySlugs.length === 0) return [];
 
   const db = await getD1();
   const categoryPlaceholders = placeholders(categorySlugs);
+  const listingTypeClause = listingTypeClauseForCategory(categoryDbSlug);
   const { results } = await db.prepare(`
     SELECT l.id, l.title, l.tagline, l.description, l.promo,
            l.phone, l.mobile, l.email, l.web, l.image_url,
@@ -134,6 +143,7 @@ export async function getListingsForCategory(categoryDbSlug: string): Promise<Li
     ) p ON p.listing_id = l.id
     LEFT JOIN businesses b ON b.id = l.business_id
     WHERE l.status = 'active'
+      ${listingTypeClause}
     ORDER BY
       CASE l.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END,
       l.confidence_score DESC
@@ -152,6 +162,7 @@ export async function getListingsForPage(
   const db = await getD1();
   const categoryPlaceholders = placeholders(categorySlugs);
   const cityClause = cityDbSlug ? "AND city_slug = ?" : "AND city_slug IS NULL";
+  const listingTypeClause = listingTypeClauseForCategory(categoryDbSlug);
   const baseArgs: (string | null)[] = [
     categoryDbSlug,
     cityDbSlug,
@@ -204,6 +215,7 @@ export async function getListingsForPage(
     ) p ON p.listing_id = l.id
     LEFT JOIN businesses b ON b.id = l.business_id
     WHERE l.status = 'active'
+      ${listingTypeClause}
     ORDER BY
       CASE l.listing_type WHEN 'premium' THEN 0 WHEN 'featured' THEN 1 ELSE 2 END,
       l.confidence_score DESC
@@ -318,16 +330,111 @@ export async function getFeaturedListingCities(): Promise<City[]> {
 export async function getAllBusinessesForDirectory(): Promise<{ id: number; name: string; profile_slug: string | null }[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
-    SELECT b.id, b.name, b.profile_slug
-    FROM businesses b
-    WHERE b.name IS NOT NULL
-      AND TRIM(b.name) != ''
-      AND COALESCE(b.status, 'active') = 'active'
-      AND b.merged_into_business_id IS NULL
-    GROUP BY b.id
-    ORDER BY b.name COLLATE NOCASE ASC
+    WITH directory_candidates AS (
+      SELECT
+        b.id,
+        b.name,
+        b.profile_slug,
+        lower(trim(b.name)) AS normalized_name,
+        ROW_NUMBER() OVER (
+          PARTITION BY lower(trim(b.name))
+          ORDER BY
+            CASE WHEN b.profile_slug IS NOT NULL AND trim(b.profile_slug) != '' THEN 0 ELSE 1 END,
+            CASE WHEN b.advertiser_id IS NOT NULL THEN 0 ELSE 1 END,
+            (
+              SELECT COUNT(*)
+              FROM listings l
+              WHERE l.business_id = b.id AND l.status = 'active'
+            ) DESC,
+            b.id ASC
+        ) AS duplicate_rank
+      FROM businesses b
+      WHERE b.name IS NOT NULL
+        AND TRIM(b.name) != ''
+        AND COALESCE(b.status, 'active') = 'active'
+        AND b.merged_into_business_id IS NULL
+    )
+    SELECT id, name, profile_slug
+    FROM directory_candidates
+    WHERE duplicate_rank = 1
+    ORDER BY name COLLATE NOCASE ASC, id ASC
   `).all<{ id: number; name: string; profile_slug: string | null }>();
   return results;
+}
+
+export interface BusinessDirectoryNeighbor {
+  id: number;
+  name: string;
+  profile_slug: string | null;
+}
+
+export interface BusinessDirectoryPager {
+  previous: BusinessDirectoryNeighbor | null;
+  next: BusinessDirectoryNeighbor | null;
+}
+
+export async function getBusinessDirectoryPager(businessId: number): Promise<BusinessDirectoryPager> {
+  const db = await getD1();
+  const { results } = await db.prepare(`
+    WITH directory_candidates AS (
+      SELECT
+        b.id,
+        b.name,
+        b.profile_slug,
+        lower(trim(b.name)) AS normalized_name,
+        ROW_NUMBER() OVER (
+          PARTITION BY lower(trim(b.name))
+          ORDER BY
+            CASE WHEN b.profile_slug IS NOT NULL AND trim(b.profile_slug) != '' THEN 0 ELSE 1 END,
+            CASE WHEN b.advertiser_id IS NOT NULL THEN 0 ELSE 1 END,
+            (
+              SELECT COUNT(*)
+              FROM listings l
+              WHERE l.business_id = b.id AND l.status = 'active'
+            ) DESC,
+            b.id ASC
+        ) AS duplicate_rank
+      FROM businesses b
+      WHERE b.name IS NOT NULL
+        AND trim(b.name) != ''
+        AND COALESCE(b.status, 'active') = 'active'
+        AND b.merged_into_business_id IS NULL
+    ),
+    directory AS (
+      SELECT
+        id,
+        name,
+        profile_slug,
+        normalized_name,
+        ROW_NUMBER() OVER (ORDER BY name COLLATE NOCASE ASC, id ASC) AS directory_position
+      FROM directory_candidates
+      WHERE duplicate_rank = 1
+    ),
+    current_position AS (
+      SELECT d.directory_position
+      FROM directory d
+      WHERE d.id = (
+        SELECT COALESCE(canonical.id, current_business.id)
+        FROM businesses current_business
+        LEFT JOIN directory canonical
+          ON canonical.normalized_name = lower(trim(current_business.name))
+        WHERE current_business.id = ?
+        LIMIT 1
+      )
+    )
+    SELECT 'previous' AS direction, d.id, d.name, d.profile_slug
+    FROM directory d, current_position cp
+    WHERE d.directory_position = cp.directory_position - 1
+    UNION ALL
+    SELECT 'next' AS direction, d.id, d.name, d.profile_slug
+    FROM directory d, current_position cp
+    WHERE d.directory_position = cp.directory_position + 1
+  `).bind(businessId).all<BusinessDirectoryNeighbor & { direction: "previous" | "next" }>();
+
+  return {
+    previous: results.find((row) => row.direction === "previous") ?? null,
+    next: results.find((row) => row.direction === "next") ?? null,
+  };
 }
 
 // ── Categories ────────────────────────────────────────────────────────────────
@@ -452,6 +559,8 @@ export async function getAllCities(): Promise<City[]> {
 }
 
 export async function getCitiesForCategory(categoryDbSlug: string): Promise<City[]> {
+  if (categoryDbSlug === ONLINE_DATING_CATEGORY) return [];
+
   const categorySlugs = await getCategoryScopeSlugs(categoryDbSlug);
   if (categorySlugs.length === 0) return [];
 
@@ -464,6 +573,7 @@ export async function getCitiesForCategory(categoryDbSlug: string): Promise<City
     LEFT JOIN cities ci ON ci.slug = p.city_slug
     JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.category_slug IN (${categoryPlaceholders}) AND p.city_slug IS NOT NULL
+      AND COALESCE(l.listing_type, '') != 'online'
     GROUP BY p.city_slug
     ORDER BY listing_count DESC
   `).bind(...categorySlugs).all<{ slug: string; label: string | null; state: string | null; seo_title: string | null; seo_description: string | null; listing_count: number }>();
@@ -769,6 +879,7 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
     JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
     WHERE p.city_slug = ?
       AND p.category_slug IS NOT NULL
+      AND COALESCE(l.listing_type, '') != 'online'
       AND COALESCE(c.status, 'active') = 'active'
       AND COALESCE(display.status, 'active') = 'active'
     GROUP BY COALESCE(c.parent_slug, c.slug)
@@ -948,6 +1059,7 @@ export interface ProfileData {
   events: PublicEvent[];
   nextEvent: PublicEvent | null;
   totalEvents: number;
+  directoryPager: BusinessDirectoryPager;
 }
 
 export type ProfileEventFilter = "upcoming" | "past";
@@ -977,7 +1089,15 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
   }
 
   if (businessId === null) {
-    return { business: null, listings: [], banners: [], events: [], nextEvent: null, totalEvents: 0 };
+    return {
+      business: null,
+      listings: [],
+      banners: [],
+      events: [],
+      nextEvent: null,
+      totalEvents: 0,
+      directoryPager: { previous: null, next: null },
+    };
   }
 
   const business = await db.prepare(`
@@ -1105,7 +1225,9 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
     events = eventRows;
   }
 
-  return { business, listings, banners, events, nextEvent, totalEvents };
+  const directoryPager = business ? await getBusinessDirectoryPager(business.id) : { previous: null, next: null };
+
+  return { business, listings, banners, events, nextEvent, totalEvents, directoryPager };
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────

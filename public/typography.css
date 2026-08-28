@@ -767,12 +767,6 @@ body {
   white-space: nowrap;
 }
 
-.e4s-online-card__domain {
-  font-size: 11px;
-  color: var(--e4s-muted);
-  text-align: center;
-}
-
 .e4s-online-card__more {
   font-size: 13px;
   font-weight: 500;

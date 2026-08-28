@@ -109,7 +109,7 @@ export default function PageSidebar(props: Props) {
     isActive: city.slug === props.currentCityDbSlug,
   }));
 
-  const topItem = !props.currentCityDbSlug
+  const topItem = !props.currentCityDbSlug && items.length > 0
     ? { label: "All cities", href: `/${props.categoryUrlSlug}`, isActive: true }
     : undefined;
   const subcategoryBaseUrlSlug = props.subcategoryBaseUrlSlug ?? props.categoryUrlSlug;
@@ -149,11 +149,13 @@ export default function PageSidebar(props: Props) {
           topItem={subcategoryTopItem}
         />
       )}
-      <SidebarNav
-        heading="Other Cities"
-        items={items}
-        topItem={topItem}
-      />
+      {(items.length > 0 || topItem) && (
+        <SidebarNav
+          heading="Other Cities"
+          items={items}
+          topItem={topItem}
+        />
+      )}
       <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />

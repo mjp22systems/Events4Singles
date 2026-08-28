@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Listing } from "@/lib/types";
-import { toListingSlug } from "@/lib/constants";
+import { toListingSlug, toProfileSlug } from "@/lib/constants";
 
 interface Props {
   listing: Listing;
@@ -12,18 +12,14 @@ export default function OnlineCard({ listing, context = "directory", isAdmin = f
   const title = listing.business_name || listing.title;
   const web = listing.web || listing.business_website;
   const webHref = web ? (web.startsWith("http") ? web : `https://${web}`) : null;
-  const imageUrl = listing.image_url
-    ? listing.image_url.startsWith("http") || listing.image_url.startsWith("/")
-      ? listing.image_url
-      : `/${listing.image_url}`
-    : null;
-  const domain = web
-    ? web.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]
-    : null;
-  const cardHref = `/listing/${toListingSlug(listing.id, title)}`;
-  const listingLabel = context === "profile"
-    ? isAdmin ? "Edit Listing ›" : "View Listing ›"
-    : "More info ›";
+  const listingHref = `/listing/${toListingSlug(listing.id, title)}`;
+  const profileHref = listing.business_id
+    ? `/profile/${toProfileSlug(listing.business_id, title)}`
+    : listingHref;
+  const cardHref = context === "profile" ? listingHref : profileHref;
+  const secondaryLabel = context === "profile"
+    ? isAdmin ? "Edit Listing" : "View Listing"
+    : "View Profile";
 
   return (
     <article
@@ -37,13 +33,6 @@ export default function OnlineCard({ listing, context = "directory", isAdmin = f
         aria-hidden="true"
         tabIndex={-1}
       />
-      <div className="e4s-online-card__logo">
-        {imageUrl ? (
-          <img src={imageUrl} alt={title} loading="lazy" />
-        ) : (
-          <div className="e4s-online-card__logo--empty" />
-        )}
-      </div>
       <div className="e4s-online-card__body">
         <div className="e4s-online-card__title-row">
           <h2 className="e4s-online-card__title">
@@ -76,19 +65,16 @@ export default function OnlineCard({ listing, context = "directory", isAdmin = f
             target="_blank"
             aria-label={`Visit ${title} website`}
           >
-            Visit Site ›
+            Visit Site
           </a>
-          {context === "profile" && (
-            <Link href={cardHref} className="e4s-online-card__more">
-              {listingLabel}
-            </Link>
-          )}
-          {domain && <span className="e4s-online-card__domain">{domain}</span>}
+          <Link href={cardHref} className="e4s-online-card__more">
+            {secondaryLabel}
+          </Link>
         </div>
       ) : (
         <div className="e4s-online-card__cta">
           <Link href={cardHref} className="e4s-online-card__more">
-            {listingLabel}
+            {secondaryLabel}
           </Link>
         </div>
       )}
