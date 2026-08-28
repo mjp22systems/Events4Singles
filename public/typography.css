@@ -582,6 +582,10 @@ body {
     line-height: 1.05;
     white-space: normal;
   }
+
+  .e4s-footer__brand .e4s-footer__accordion-btn {
+    letter-spacing: 0.08em;
+  }
 }
 
 /* 09. Listing cards */

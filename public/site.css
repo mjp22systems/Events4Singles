@@ -1008,6 +1008,16 @@ body > div > table {
 }.e4s-footer__grid {
   grid-template-columns: 1fr;
   display: grid;
+}.e4s-footer__brand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 54%);
+  gap: 6px;
+  align-items: start;
+}.e4s-footer__brand .e4s-footer__accordion-btn {
+  gap: 8px;
+  white-space: nowrap;
+}.e4s-footer__advertise-nav a {
+  white-space: nowrap;
 }.e4s-nav {
   grid-template-columns: 1fr;
   width: min(var(--e4s-shell), calc(100% - 20px));
