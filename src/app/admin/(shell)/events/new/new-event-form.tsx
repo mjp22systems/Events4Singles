@@ -4,10 +4,10 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import EventImagePicker from "@/components/admin/event-image-picker";
+import { EVENT_CATEGORY_OPTIONS } from "@/lib/category-taxonomy";
 
 const AU_CITIES = ["sydney", "melbourne", "brisbane", "perth", "adelaide", "gold_coast", "canberra", "hobart", "newcastle", "sunshine_coast"];
 const AU_TIMEZONES = ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth", "Australia/Adelaide", "Australia/Darwin", "Australia/Hobart"];
-const CATEGORIES = ["speed_dating", "singles_mixers", "dinner_parties", "christian_singles", "lgbtqia_singles_events", "dance_classes", "social_clubs", "social_walks", "adventure", "life_coaches", "dating_coaches", "online_dating", "solo_travel"];
 const REGISTRATION_MODES = [
   { value: "auto", label: "Auto - paid uses Eventbrite" },
   { value: "eventbrite", label: "Eventbrite" },
@@ -115,7 +115,7 @@ export default function NewEventForm({ variant = "card" }: { variant?: "card" | 
       <Field label="Category">
         <select className="a-input a-w-full"  value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">- uncategorised -</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</option>)}
+          {EVENT_CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</option>)}
         </select>
       </Field>
       <Field label="Price From (AUD, 0 = free)">

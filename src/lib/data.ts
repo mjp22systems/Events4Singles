@@ -2,6 +2,12 @@ import { getD1 } from "./db";
 import { slugToLabel, toCategoryChildUrlSegment, toUrlSlug, toListingSlug, idFromProfileSlug } from "./constants";
 import { canonicalEventSlug } from "./event-slugs";
 import type { Listing, Category, City, Banner, Business } from "./types";
+import {
+  CANONICAL_CATEGORY_BY_SLUG,
+  CANONICAL_CATEGORY_REPAIRS,
+  canonicalCategoryToCategory,
+  categoryScopeAliases,
+} from "./category-taxonomy";
 
 const SUPPRESSED_CATEGORIES = new Set([
   "tbc",
@@ -34,7 +40,8 @@ function placeholders(values: unknown[]): string {
 }
 
 async function getCategoryScopeSlugs(categoryDbSlug: string): Promise<string[]> {
-  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug)) return [];
+  const canonicalCategory = CANONICAL_CATEGORY_BY_SLUG.get(categoryDbSlug);
+  if (SUPPRESSED_CATEGORIES.has(categoryDbSlug) && !canonicalCategory) return [];
 
   const db = await getD1();
   const { results } = await db.prepare(`
@@ -45,9 +52,32 @@ async function getCategoryScopeSlugs(categoryDbSlug: string): Promise<string[]> 
     ORDER BY CASE WHEN slug = ? THEN 0 ELSE 1 END, COALESCE(sort_order, 999), label COLLATE NOCASE ASC
   `).bind(categoryDbSlug, categoryDbSlug, categoryDbSlug).all<{ slug: string }>();
 
-  return results
-    .map((row) => row.slug)
-    .filter((slug) => !SUPPRESSED_CATEGORIES.has(slug));
+  const aliases = categoryScopeAliases(categoryDbSlug);
+  const slugs = new Set([
+    ...results.map((row) => row.slug),
+    ...(canonicalCategory ? [categoryDbSlug] : []),
+    ...aliases,
+  ]);
+
+  return [...slugs].filter(
+    (slug) => slug === categoryDbSlug || aliases.includes(slug) || !SUPPRESSED_CATEGORIES.has(slug),
+  );
+}
+
+async function countActiveListingsForCategorySlugs(categorySlugs: string[]): Promise<number> {
+  if (categorySlugs.length === 0) return 0;
+
+  const db = await getD1();
+  const categoryPlaceholders = placeholders(categorySlugs);
+  const row = await db.prepare(`
+    SELECT COUNT(DISTINCT l.id) AS listing_count
+    FROM listing_placements p
+    JOIN listings l ON l.id = p.listing_id AND l.status = 'active'
+    WHERE p.category_slug IN (${categoryPlaceholders})
+      AND COALESCE(p.is_active, 1) = 1
+  `).bind(...categorySlugs).first<{ listing_count: number }>();
+
+  return row?.listing_count ?? 0;
 }
 
 // ── Listings ─────────────────────────────────────────────────────────────────
@@ -307,9 +337,30 @@ export async function getAllCategories(): Promise<Category[]> {
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
-  return results
+
+  const categories = results
     .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug) && !r.parent_slug && r.listing_count > 0)
     .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
+
+  const present = new Set(categories.map((category) => category.slug));
+  for (const canonicalCategory of CANONICAL_CATEGORY_REPAIRS) {
+    if (present.has(canonicalCategory.slug) || canonicalCategory.parent_slug) continue;
+
+    const listingCount = await countActiveListingsForCategorySlugs([
+      canonicalCategory.slug,
+      ...categoryScopeAliases(canonicalCategory.slug),
+    ]);
+    categories.push(canonicalCategoryToCategory(canonicalCategory, listingCount));
+    present.add(canonicalCategory.slug);
+  }
+
+  return categories.sort((a, b) => {
+    const aOrder = CANONICAL_CATEGORY_BY_SLUG.get(a.slug)?.sort_order ?? 999;
+    const bOrder = CANONICAL_CATEGORY_BY_SLUG.get(b.slug)?.sort_order ?? 999;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    if (b.listing_count !== a.listing_count) return b.listing_count - a.listing_count;
+    return a.label.localeCompare(b.label);
+  });
 }
 
 export async function getCategoryMeta(dbSlug: string): Promise<Category | null> {
@@ -331,7 +382,16 @@ export async function getCategoryMeta(dbSlug: string): Promise<Category | null> 
     slug: string; label: string | null; parent_slug: string | null;
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
-  if (!row) return null;
+  if (!row) {
+    const canonicalCategory = CANONICAL_CATEGORY_BY_SLUG.get(dbSlug);
+    if (!canonicalCategory) return null;
+
+    const listingCount = await countActiveListingsForCategorySlugs([
+      canonicalCategory.slug,
+      ...categoryScopeAliases(canonicalCategory.slug),
+    ]);
+    return canonicalCategoryToCategory(canonicalCategory, listingCount);
+  }
   return { ...row, label: row.label || slugToLabel(row.slug) };
 }
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminEvent } from "@/lib/admin-db";
 import EventImagePicker from "@/components/admin/event-image-picker";
+import { EVENT_CATEGORY_OPTIONS } from "@/lib/category-taxonomy";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -49,7 +50,6 @@ function TextArea({ value, onChange, rows = 4 }: { value: string; onChange: (v: 
 
 const AU_CITIES = ["sydney", "melbourne", "brisbane", "perth", "adelaide", "gold_coast", "canberra", "hobart", "newcastle", "sunshine_coast"];
 const AU_TIMEZONES = ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth", "Australia/Adelaide", "Australia/Darwin", "Australia/Hobart"];
-const CATEGORIES = ["speed_dating", "singles_mixers", "dinner_parties", "christian_singles", "lgbtqia_singles_events", "dance_classes", "social_clubs", "social_walks", "adventure", "life_coaches", "dating_coaches", "online_dating", "solo_travel"];
 const REGISTRATION_MODES = [
   { value: "auto", label: "Auto - paid uses Eventbrite" },
   { value: "eventbrite", label: "Eventbrite" },
@@ -306,7 +306,7 @@ export default function EventEditForm({ event }: { event: AdminEvent }) {
           <SectionHeader>Category</SectionHeader>
           <select className="a-input a-w-full"  value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">— uncategorised —</option>
-            {CATEGORIES.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
+            {EVENT_CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{humanLabel(c)}</option>)}
           </select>
         </div>
 
