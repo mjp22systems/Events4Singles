@@ -2,6 +2,7 @@
 
 const NAV_OPEN_STORAGE_KEY = "e4s-nav-open";
 const CLOSE_NAV_EVENT = "e4s:close-nav";
+const SCROLL_TOP_AFTER_NAV_KEY = "e4s_scroll_top_after_nav";
 
 export function closeHeaderMenu() {
   if (typeof window === "undefined") return;
@@ -9,4 +10,21 @@ export function closeHeaderMenu() {
   window.localStorage.setItem(NAV_OPEN_STORAGE_KEY, "0");
   document.body.classList.remove("e4s-nav-open");
   window.dispatchEvent(new Event(CLOSE_NAV_EVENT));
+}
+
+export function markScrollTopAfterNavigation(href: string) {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(href, window.location.href);
+  window.sessionStorage.setItem(SCROLL_TOP_AFTER_NAV_KEY, url.pathname);
+}
+
+export function consumeScrollTopAfterNavigation(pathname: string) {
+  if (typeof window === "undefined") return false;
+
+  const target = window.sessionStorage.getItem(SCROLL_TOP_AFTER_NAV_KEY);
+  if (target !== pathname) return false;
+
+  window.sessionStorage.removeItem(SCROLL_TOP_AFTER_NAV_KEY);
+  return true;
 }

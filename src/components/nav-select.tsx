@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import type { City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
-import { closeHeaderMenu } from "@/lib/client-nav";
+import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -19,8 +19,10 @@ export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug = "
       value={currentCitySlug}
       onChange={(e) => {
         if (!e.target.value) return;
+        const href = `/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`;
         closeHeaderMenu();
-        router.push(`/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`);
+        markScrollTopAfterNavigation(href);
+        router.push(href, { scroll: false });
       }}
       aria-label="Choose city"
     >

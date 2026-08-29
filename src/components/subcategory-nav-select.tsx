@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
-import { closeHeaderMenu } from "@/lib/client-nav";
+import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
 import type { Category } from "@/lib/types";
 
 interface Props {
@@ -28,7 +28,9 @@ export default function SubcategoryNavSelect({
         if (!e.target.value) return;
         closeHeaderMenu();
         const nextSlug = toCategoryChildUrlSegment(toDbSlug(parentUrlSlug), e.target.value);
-        router.push(cityUrlSlug ? `/${parentUrlSlug}/${nextSlug}/${cityUrlSlug}` : `/${parentUrlSlug}/${nextSlug}`);
+        const href = cityUrlSlug ? `/${parentUrlSlug}/${nextSlug}/${cityUrlSlug}` : `/${parentUrlSlug}/${nextSlug}`;
+        markScrollTopAfterNavigation(href);
+        router.push(href, { scroll: false });
       }}
       aria-label="Choose category"
     >

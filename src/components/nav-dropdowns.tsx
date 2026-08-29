@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import type { Category, City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
-import { closeHeaderMenu } from "@/lib/client-nav";
+import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -60,6 +60,11 @@ export default function NavDropdowns({ cities, categories }: Props) {
 
   const sortedCities = [...cities].sort((a, b) => a.label.localeCompare(b.label));
   const sortedCats = [...filteredCats].sort((a, b) => a.label.localeCompare(b.label));
+  const navigateFromSelect = (href: string) => {
+    closeHeaderMenu();
+    markScrollTopAfterNavigation(href);
+    router.push(href, { scroll: false });
+  };
 
   return (
     <nav aria-label="Site navigation" className="e4s-shell e4s-nav">
@@ -69,9 +74,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
           value=""
           onChange={(e) => {
             const val = e.target.value;
-            closeHeaderMenu();
-            if (val === "__all__") router.push("/cities");
-            else if (val) router.push(`/${toUrlSlug(val)}`);
+            if (val === "__all__") navigateFromSelect("/cities");
+            else if (val) navigateFromSelect(`/${toUrlSlug(val)}`);
           }}
         >
           <option value="" disabled>
@@ -93,9 +97,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
           value=""
           onChange={(e) => {
             const val = e.target.value;
-            closeHeaderMenu();
-            if (val === "__all__") router.push("/categories");
-            else if (val) router.push(`/${val}`);
+            if (val === "__all__") navigateFromSelect("/categories");
+            else if (val) navigateFromSelect(`/${val}`);
           }}
         >
           <option value="" disabled>
@@ -116,8 +119,7 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <select
           value=""
           onChange={(e) => {
-            closeHeaderMenu();
-            if (e.target.value) router.push(e.target.value);
+            if (e.target.value) navigateFromSelect(e.target.value);
           }}
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>

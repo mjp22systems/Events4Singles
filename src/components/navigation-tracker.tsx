@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { consumeScrollTopAfterNavigation } from "@/lib/client-nav";
 
 export default function NavigationTracker() {
   const pathname = usePathname();
@@ -30,6 +31,16 @@ export default function NavigationTracker() {
     if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
 
     sessionStorage.setItem("e4s_prev_path", pathname);
+
+    if (consumeScrollTopAfterNavigation(pathname)) {
+      const restoreTop = () => window.scrollTo({ top: 0, behavior: "auto" });
+      requestAnimationFrame(() => {
+        restoreTop();
+        requestAnimationFrame(restoreTop);
+        window.setTimeout(restoreTop, 120);
+      });
+      return;
+    }
 
     const listingSourcePath = sessionStorage.getItem("e4s_listing_source_path");
     const listingSourceCard = sessionStorage.getItem("e4s_listing_source_card");
