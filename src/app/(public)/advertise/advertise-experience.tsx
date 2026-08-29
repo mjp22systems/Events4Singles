@@ -353,12 +353,12 @@ function HomepageTile() {
         </article>
         <article>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" src="/images/home-exp-dance-classes.jpg" />
+          <img alt="" src="/images/site/home/experience-cards/home-exp-dance-classes.jpg" />
           <strong>Dance & Connect</strong>
         </article>
         <article>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" src="/images/home-exp-travel.jpg" />
+          <img alt="" src="/images/site/home/experience-cards/home-exp-travel.jpg" />
           <strong>Singles Travel</strong>
         </article>
       </div>

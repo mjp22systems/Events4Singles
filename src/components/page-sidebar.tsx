@@ -77,7 +77,7 @@ export default function PageSidebar(props: Props) {
         <SidebarNav heading="Refine by city" items={cityItems} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
         </Link>
       </aside>
     );
@@ -96,7 +96,7 @@ export default function PageSidebar(props: Props) {
         <SidebarNav heading="Other Categories" items={items} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
         </Link>
       </aside>
     );
@@ -165,7 +165,7 @@ export default function PageSidebar(props: Props) {
       )}
       <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="Advertise on Events4Singles" loading="lazy" src="/images/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+        <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
       </Link>
     </aside>
   );

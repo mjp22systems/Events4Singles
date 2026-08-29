@@ -250,11 +250,11 @@ export default async function CategoryOrCityPage({ params }: Props) {
             <div className="e4s-page-hero__image">
               <HeroImage
                 alt={catMeta.label}
-                src={categoryImage ?? `/images/category-hero-${param}.svg`}
+                src={categoryImage ?? `/images/site/category-heroes/category-hero-${param}.svg`}
                 fallbacks={[
                   ...(categoryHeroImage && catMeta.hero_image_url ? [catMeta.hero_image_url] : []),
                   ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
-                  ...(categoryImage ? [`/images/category-hero-${param}.svg`] : []),
+                  ...(categoryImage ? [`/images/site/category-heroes/category-hero-${param}.svg`] : []),
                 ]}
               />
             </div>

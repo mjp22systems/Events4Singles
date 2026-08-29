@@ -6,9 +6,9 @@ export function getCityHeroImage(slug: string): string {
 export function getCityHeroFallbacks(slug: string): string[] {
   const imageSlug = slug === "tasmania" ? "hobart" : slug;
   return [
-    `/images/location-photo-${imageSlug}-photo.jpg`,
-    `/images/location-photo-${imageSlug}-v2.png`,
-    `/images/location-hero-${imageSlug}.svg`,
+    `/images/site/location-photos/location-photo-${imageSlug}-photo.jpg`,
+    `/images/site/location-photos/location-photo-${imageSlug}-v2.png`,
+    `/images/site/location-heroes/location-hero-${imageSlug}.svg`,
   ];
 }
 

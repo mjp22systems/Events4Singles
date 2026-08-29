@@ -35,15 +35,15 @@ const FEATURED_CATS = [
 
 
 const EXPERIENCES = [
-  { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/home-exp-dinner-parties.jpg", href: "/dinner-parties", badge: "PREMIUM" },
-  { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/home-exp-dance-classes.jpg", href: "/dance-classes", badge: null },
-  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/home-exp-travel.jpg", href: "/solo-travel", badge: null },
+  { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/site/home/experience-cards/home-exp-dinner-parties.jpg", href: "/dinner-parties", badge: "PREMIUM" },
+  { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/site/home/experience-cards/home-exp-dance-classes.jpg", href: "/dance-classes", badge: null },
+  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/site/home/experience-cards/home-exp-travel.jpg", href: "/solo-travel", badge: null },
 ];
 
 const RESOURCES = [
-  { badge: "TIPS", img: "/images/home-blog-tips.jpg", title: "5 Icebreakers for Your Next Speed Dating Event", desc: "Nervous about what to say? These proven icebreakers will help you start meaningful conversations.", href: "/dating-resources" },
-  { badge: "SUCCESS STORIES", img: "/images/home-blog-success.jpg", title: "How Sarah and Mark Met at a Melbourne Mixer", desc: "How a casual Thursday night mixer led to a lasting connection.", href: "/dating-resources" },
-  { badge: "CALENDAR", img: "/images/home-blog-calendar.jpg", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
+  { badge: "TIPS", img: "/images/site/home/resource-cards/home-blog-tips.jpg", title: "5 Icebreakers for Your Next Speed Dating Event", desc: "Nervous about what to say? These proven icebreakers will help you start meaningful conversations.", href: "/dating-resources" },
+  { badge: "SUCCESS STORIES", img: "/images/site/home/resource-cards/home-blog-success.jpg", title: "How Sarah and Mark Met at a Melbourne Mixer", desc: "How a casual Thursday night mixer led to a lasting connection.", href: "/dating-resources" },
+  { badge: "CALENDAR", img: "/images/site/home/resource-cards/home-blog-calendar.jpg", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
 ];
 
 const HOMEPAGE_FEATURED_LISTING_LIMIT = 5;

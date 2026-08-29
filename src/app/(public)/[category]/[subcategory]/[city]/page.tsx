@@ -112,22 +112,22 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const footerCopy = categoryCitySeoFooterCopy(childDisplayMeta, cityMeta, listings.length);
   const parentCardImage = getCategoryCardImage(category);
   const parentHeroImage = getCategoryHeroImage(category);
-  const parentImage = parentHeroImage ?? parentMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
+  const parentImage = parentHeroImage ?? parentMeta.hero_image_url ?? parentCardImage ?? `/images/site/category-heroes/category-hero-${category}.svg`;
   const parentImageFallbacks = [
     ...(parentHeroImage && parentMeta.hero_image_url ? [parentMeta.hero_image_url] : []),
     ...(parentHeroImage && parentCardImage ? [parentCardImage] : []),
     ...(!parentHeroImage && parentMeta.hero_image_url && parentCardImage ? [parentCardImage] : []),
-    `/images/category-hero-${category}.svg`,
+    `/images/site/category-heroes/category-hero-${category}.svg`,
   ];
   const childUrlSlug = toUrlSlug(childMeta.slug);
   const categoryCardImage = getCategoryCardImage(childUrlSlug);
   const categoryHeroImage = getCategoryHeroImage(childUrlSlug);
-  const categoryImage = categoryHeroImage ?? childMeta.hero_image_url ?? categoryCardImage ?? `/images/category-hero-${childUrlSlug}.svg`;
+  const categoryImage = categoryHeroImage ?? childMeta.hero_image_url ?? categoryCardImage ?? `/images/site/category-heroes/category-hero-${childUrlSlug}.svg`;
   const categoryImageFallbacks = [
     ...(categoryHeroImage && childMeta.hero_image_url ? [childMeta.hero_image_url] : []),
     ...(categoryHeroImage && categoryCardImage ? [categoryCardImage] : []),
     ...(!categoryHeroImage && childMeta.hero_image_url && categoryCardImage ? [categoryCardImage] : []),
-    `/images/category-hero-${childUrlSlug}.svg`,
+    `/images/site/category-heroes/category-hero-${childUrlSlug}.svg`,
   ];
   const cityImage = getCitySourceImage(city);
   const jsonLd = [
