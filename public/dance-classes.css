@@ -3,14 +3,14 @@
   --dance-fg: var(--e4s-ink, #14313f);
   --dance-muted: var(--e4s-muted, #5f7180);
   --dance-card: #ffffff;
-  --dance-border: var(--e4s-border, #bddedb);
-  --dance-surface: var(--e4s-page-bg, #f5faf9);
+  --dance-border: #eadfe7;
+  --dance-surface: #fcf8fb;
   --dance-primary: var(--e4s-pink, #8b2f43);
   --dance-primary-deep: #6b2033;
-  --dance-primary-soft: #f7eaec;
+  --dance-primary-soft: #fce8f2;
   --dance-accent: var(--e4s-teal-700, #087271);
   --dance-accent-deep: var(--e4s-teal-900, #064e4d);
-  --dance-accent-soft: var(--e4s-teal-50, #f0fbfa);
+  --dance-accent-soft: #e7f5f6;
   --dance-shadow: 0 18px 44px rgba(20, 49, 63, 0.12);
   background: var(--dance-bg);
   color: var(--dance-fg);
