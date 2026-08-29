@@ -463,21 +463,40 @@ export default function AdvertiseExperience() {
         </div>
       </Section>
 
-      <Section id="inventory" eyebrow="Inventory" title="Every sellable unit, rendered at real proportions." intro="No old screenshots, no mystery. This is what paid visibility buys on the page." tone="mint">
-        <div className="e4s-love-inventory">
-          {[
-            ["Standard listing card", "Free · city + category", <StandardListing key="standard" />],
-            ["Featured listing", "from $39/mo", <FeaturedListing key="featured" />],
-            ["Sticky listing position", "from $49/mo", <PriorityListing key="priority" />],
-            ["Page-top banner strip", "from $79/mo", <BannerStrip key="banner" />],
-            ["City/category sidebar", "from $69/mo", <SidebarAd key="sidebar" />],
-            ["What's On calendar", "from $29/event", <WhatsOnList key="whatson" />],
-            ["Promoted second row on event pages", "from $149/mo", <PromotedEventRow key="promoted" />],
-            ["Homepage featured listing", "from $99/mo", <HomepageFeaturedListing key="home-listing" />],
-            ["Homepage featured tile", "from $99/mo", <HomepageTile key="tile" />],
-          ].map(([title, price, mockup]) => (
-            <figure key={title as string} className="e4s-love-inventory-card"><figcaption><strong>{title}</strong><span>{price}</span></figcaption>{mockup}</figure>
-          ))}
+      <Section id="inventory" eyebrow="Available positions" title="Where your promotion appears on the site." intro="These are grouped by page context so the visuals can show the surrounding page, not isolated snippets squeezed into the wrong shape." tone="mint">
+        <div className="e4s-love-inventory e4s-love-inventory--grouped">
+          <article className="e4s-love-inventory-group">
+            <header><span>Listing results</span><h3>City and category listing pages</h3><p>Use full-width listing rows so standard, featured and sticky positions keep the same proportions advertisers will see on the site.</p></header>
+            <div className="e4s-love-inventory-group__items">
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Standard listing card</strong><span>Free · city + category</span></figcaption><StandardListing /></figure>
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Featured listing</strong><span>from $39/mo</span></figcaption><FeaturedListing /></figure>
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Sticky listing position</strong><span>from $49/mo</span></figcaption><PriorityListing /></figure>
+            </div>
+          </article>
+
+          <article className="e4s-love-inventory-group">
+            <header><span>Page furniture</span><h3>Top banner and right column</h3><p>Show these inside the page frame with listing content beside them, so the relationship between banner, sidebar and results is obvious.</p></header>
+            <div className="e4s-love-inventory-group__context">
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Page-top banner strip</strong><span>from $79/mo</span></figcaption><SiteChrome page="events4singles.com/sydney" /><BannerStrip /></figure>
+              <figure className="e4s-love-inventory-card"><figcaption><strong>Right column sidebar</strong><span>from $69/mo</span></figcaption><SidebarAd /></figure>
+            </div>
+          </article>
+
+          <article className="e4s-love-inventory-group">
+            <header><span>Event pages</span><h3>What&apos;s On and promoted event rows</h3><p>Use the real event grid proportions from the site: filter bar, card rows, and the promoted second-row position in context.</p></header>
+            <div className="e4s-love-inventory-group__items">
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>What&apos;s On event cards</strong><span>from $29/event</span></figcaption><WhatsOnList /></figure>
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Promoted second row</strong><span>from $149/mo</span></figcaption><PromotedEventRow /></figure>
+            </div>
+          </article>
+
+          <article className="e4s-love-inventory-group">
+            <header><span>Homepage</span><h3>Homepage discovery surfaces</h3><p>Keep normal navigation tiles separate from paid units. Only label a tile as sponsored if it is a real sellable placement.</p></header>
+            <div className="e4s-love-inventory-group__context">
+              <figure className="e4s-love-inventory-card is-wide"><figcaption><strong>Homepage featured listing</strong><span>from $99/mo</span></figcaption><HomepageFeaturedListing /></figure>
+              <figure className="e4s-love-inventory-card"><figcaption><strong>Sponsored homepage tile</strong><span>from $99/mo</span></figcaption><HomepageTile /></figure>
+            </div>
+          </article>
         </div>
       </Section>
 
