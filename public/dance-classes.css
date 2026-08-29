@@ -406,6 +406,14 @@
   width: 100%;
 }
 
+.e4s-dance-lovable-promoted .e4s-promo-banners > * {
+  animation: none !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 .e4s-dance-lovable-promoted .e4s-promo-banners a:hover,
 .e4s-dance-lovable-promoted .e4s-promo-banners__placeholder:hover {
   border-color: var(--dance-primary);
