@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import type { City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
-import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
+import { closeHeaderMenu } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -21,9 +21,8 @@ export default function CategoryCitySelect({ cities, categoryUrlSlug, currentCit
         onChange={(e) => {
           closeHeaderMenu();
           const val = e.target.value;
-          const href = val ? `/${categoryUrlSlug}/${val}` : `/${categoryUrlSlug}`;
-          markScrollTopAfterNavigation(href);
-          router.push(href, { scroll: false });
+          if (val) router.push(`/${categoryUrlSlug}/${val}`);
+          else router.push(`/${categoryUrlSlug}`);
         }}
       >
         <option value="">All Cities</option>

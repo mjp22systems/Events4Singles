@@ -358,10 +358,7 @@ Filters:
 Current decision:
 
 - Canonical city/category URLs should use clean hyphenated slugs.
-- Canonical child category URLs should not repeat parent context. For example, the dance child page is `/dance-classes/tango`, not `/dance-classes/dance-tango`.
 - Old underscore URLs should redirect as legacy fallbacks.
-- Fix structural, taxonomy, URL, and CSS problems at the canonical source first. Redirects are compatibility bridges for old/indexed URLs, not a reason to keep parallel valid endpoints or stack band-aid patches.
-- Cityless categories such as `/online-dating` stay canonical without city path variants and are excluded from city-filtered category menus and previous/next paging. A city-selected category flow should only rotate through categories that have active listings for that city.
 - Use `Events4Singles` for brand identity, but plain-language metadata should include `Events for Singles` where useful.
 - Browser favicon/icon should use legacy Events4Singles identity, not generic Next icons.
 - Images should have business/listing-based alt/title text rather than filename-only text.

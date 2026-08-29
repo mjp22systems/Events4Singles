@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import type { Category } from "@/lib/types";
-import { categoryPathWithOptionalCity } from "@/lib/category-routing";
+import { toUrlSlug } from "@/lib/constants";
 
 interface Props {
   categories: Category[];
@@ -26,7 +26,7 @@ export default function CityCategorySelect({ categories, cityUrlSlug, cityLabel 
       >
         <option value="">Choose a Category</option>
         {categories.map((cat) => (
-          <option key={cat.slug} value={categoryPathWithOptionalCity(cat.slug, cityUrlSlug)}>
+          <option key={cat.slug} value={`/${toUrlSlug(cat.slug)}/${cityUrlSlug}`}>
             {cat.label}
           </option>
         ))}
