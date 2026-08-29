@@ -90,7 +90,7 @@
 .e4s-dance-lovable-hero h1 {
   color: var(--dance-fg);
   font-family: var(--font-display, Georgia, serif);
-  font-size: clamp(34px, 3.7vw, 48px);
+  font-size: clamp(34px, 3.4vw, 44px);
   font-weight: 650;
   letter-spacing: 0;
   line-height: 1.08;
@@ -105,17 +105,17 @@
 
 .e4s-dance-lovable-hero__copy > p {
   color: var(--dance-muted);
-  font-size: 16px;
-  line-height: 1.75;
-  margin: 18px 0 0;
-  max-width: 610px;
+  font-size: 15px;
+  line-height: 1.62;
+  margin: 16px 0 0;
+  max-width: 640px;
 }
 
 .e4s-dance-lovable-hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 22px;
 }
 
 .e4s-dance-lovable-button {
@@ -175,7 +175,7 @@
   display: grid;
   gap: 1px;
   grid-template-columns: repeat(4, 1fr);
-  margin: 28px 0 0;
+  margin: 22px 0 0;
   overflow: hidden;
 }
 
@@ -201,9 +201,9 @@
 .e4s-dance-lovable-hero__media {
   border: 1px solid var(--dance-border);
   border-radius: 8px;
-  height: clamp(320px, 28vw, 376px);
+  height: clamp(340px, 32vw, 430px);
   max-width: 100%;
-  min-height: 320px;
+  min-height: 340px;
   min-width: 0;
   overflow: hidden;
   position: relative;
