@@ -195,13 +195,15 @@
 }
 
 .e4s-dance-lovable-hero__media {
-  aspect-ratio: 1.35 / 1;
   border: 1px solid var(--dance-border);
   border-radius: 8px;
-  max-height: 470px;
+  height: min(32vw, 430px);
+  max-width: 100%;
   min-height: 320px;
+  min-width: 0;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 .e4s-dance-lovable-hero__media img {
@@ -811,6 +813,7 @@
   }
 
   .e4s-dance-lovable-hero__media {
+    height: min(48vw, 420px);
     min-height: 320px;
   }
 
@@ -910,6 +913,7 @@
 
   .e4s-dance-lovable-hero__media {
     aspect-ratio: 4 / 3;
+    height: auto;
     min-height: 0;
   }
 
