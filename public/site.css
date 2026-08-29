@@ -247,36 +247,16 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
   min-width: 0;
   flex: 0 1 auto;
   color: #064e4d;
   text-decoration: none;
-}.e4s-brand__mark {
-  display: inline-grid;
-  place-items: center;
-  width: 74px;
-  height: 48px;
-  color: #064e4d;
-  font-family: var(--e4s-serif);
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0;
-}.e4s-brand__copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  line-height: 1.05;
-}.e4s-brand__name {
-  color: #064e4d;
-  font-family: var(--e4s-serif);
-  font-size: clamp(30px, 3vw, 46px);
-  font-weight: 700;
-}.e4s-brand__tagline {
-  color: #245052;
-  font-size: 15px;
-  font-weight: 500;
+}.e4s-brand__logo {
+  display: block;
+  width: clamp(260px, 32vw, 430px);
+  height: auto;
+  max-height: 72px;
+  object-fit: contain;
 }.e4s-header-cta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -773,21 +753,11 @@ body > div > table {
 
   .e4s-brand {
     flex: 1 1 auto;
-    gap: 8px;
   }
 
-  .e4s-brand__mark {
-    width: 44px;
-    height: 32px;
-    font-size: 24px;
-  }
-
-  .e4s-brand__name {
-    font-size: 22px;
-  }
-
-  .e4s-brand__tagline {
-    display: none;
+  .e4s-brand__logo {
+    width: clamp(190px, 55vw, 280px);
+    max-height: 50px;
   }
 
   .e4s-header-cta {
@@ -996,14 +966,9 @@ body > div > table {
   width: auto;
   min-width: 0;
   overflow: hidden;
-}.e4s-brand__mark {
-  width: 48px;
-  height: 34px;
-  font-size: 26px;
-}.e4s-brand__name {
-  font-size: 24px;
-}.e4s-brand__tagline {
-  font-size: 11px;
+}.e4s-brand__logo {
+  width: clamp(190px, 58vw, 310px);
+  max-height: 52px;
 }.e4s-header-cta {
   display: grid;
   position: fixed;
@@ -4332,7 +4297,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-home-hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/categories/cards/singles-mixers.webp');
+  background-image: url('/images/site/home/hero/home-hero-mixers.webp');
   background-size: cover;
   background-position: right center;
   z-index: 0;

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import BodyClass from "@/components/body-class";
 import HeroImage from "@/components/hero-image";
-import ListingsSection from "@/components/listings-section";
 import PromoBanners from "@/components/promo-banners";
 import { danceStyleDecisionPaths, danceStyleLinks } from "@/content/dance-styles";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
@@ -27,6 +26,26 @@ const featuredCitySlugs = [
   "newcastle",
 ];
 
+const cityImageBySlug: Record<string, string> = {
+  adelaide: "/images/cities/cards/home-city-adelaide.webp",
+  brisbane: "/images/cities/cards/home-city-brisbane.webp",
+  "byron-bay": "/images/cities/cards/home-city-byron-bay.webp",
+  cairns: "/images/cities/cards/home-city-cairns.webp",
+  canberra: "/images/cities/cards/home-city-canberra.webp",
+  "central-coast": "/images/cities/cards/home-city-central-coast.webp",
+  darwin: "/images/cities/cards/home-city-darwin.webp",
+  geelong: "/images/cities/cards/home-city-geelong.webp",
+  "gold-coast": "/images/cities/cards/home-city-gold-coast.webp",
+  hobart: "/images/cities/cards/home-city-hobart.webp",
+  melbourne: "/images/cities/cards/home-city-melbourne.webp",
+  newcastle: "/images/cities/cards/home-city-newcastle.webp",
+  perth: "/images/cities/cards/home-city-perth.webp",
+  "sunshine-coast": "/images/cities/cards/home-city-sunshine-coast.webp",
+  sydney: "/images/cities/cards/home-city-sydney.webp",
+  toowoomba: "/images/cities/cards/home-city-toowoomba.webp",
+  wollongong: "/images/cities/cards/home-city-wollongong.webp",
+};
+
 const styleCopyByHref = new Map(danceStyleLinks.map((style) => [style.href, style.summary]));
 
 function danceStyleHref(style: Category) {
@@ -40,7 +59,11 @@ function styleSummary(style: Category) {
 
 function citySummary(city: City) {
   const state = city.state ? `, ${city.state}` : "";
-  return `${city.listing_count} dance ${city.listing_count === 1 ? "listing" : "listings"}${state}`;
+  return `${city.listing_count} dance ${city.listing_count === 1 ? "option" : "options"}${state}`;
+}
+
+function cityImage(city: City) {
+  return cityImageBySlug[toUrlSlug(city.slug)] ?? "/images/categories/cards/dance-classes.webp";
 }
 
 export default async function DanceClassesHub({ category, cities, listings, subcategories }: Props) {
@@ -85,8 +108,11 @@ export default async function DanceClassesHub({ category, cities, listings, subc
           <div className="e4s-dance-hub-hero__media">
             <HeroImage
               alt="Dance classes for singles"
-              src={category.hero_image_url ?? getCategoryCardImage("dance-classes") ?? "/images/categories/cards/dance-classes.webp"}
-              fallbacks={["/images/categories/cards/dance-classes.webp"]}
+              src="/images/categories/heroes/dance-classes-hub.webp"
+              fallbacks={[
+                category.hero_image_url ?? "/images/categories/heroes/dance-classes.webp",
+                getCategoryCardImage("dance-classes") ?? "/images/categories/cards/dance-classes.webp",
+              ]}
             />
           </div>
           <div className="e4s-shell e4s-dance-hub-hero__inner">
@@ -96,10 +122,15 @@ export default async function DanceClassesHub({ category, cities, listings, subc
               Browse dance classes for singles by style, city or social comfort level, then compare
               studios, social dance groups and beginner-friendly providers across Australia.
             </p>
+            <div className="e4s-dance-hub-hero__actions">
+              <Link href="#dance-styles">Browse Styles</Link>
+              <Link href="#dance-cities">Find Your City</Link>
+              <Link href="/dance-classes/styles">Style Guide</Link>
+            </div>
             <div className="e4s-dance-hub-hero__stats" aria-label="Dance classes directory summary">
-              <span><strong>{styleCount}</strong> styles</span>
+              <span><strong>{styleCount}</strong> class styles</span>
               <span><strong>{cityCount}</strong> cities</span>
-              <span><strong>{listingCount}</strong> listings</span>
+              <span><strong>{listingCount}</strong> providers indexed</span>
             </div>
           </div>
         </section>
@@ -119,7 +150,16 @@ export default async function DanceClassesHub({ category, cities, listings, subc
           </Link>
         </section>
 
-        <PromoBanners mode="category" categoryDbSlug="dance_classes" />
+        <section className="e4s-dance-hub-promoted" aria-labelledby="dance-promoted-title">
+          <div className="e4s-shell e4s-dance-hub-promoted__head">
+            <div>
+              <p className="e4s-pathway-eyebrow">Featured dance providers</p>
+              <h2 id="dance-promoted-title">Promoted classes and studios</h2>
+            </div>
+            <Link href="/advertise">Reserve a dance class tile</Link>
+          </div>
+          <PromoBanners mode="category" categoryDbSlug="dance_classes" rows={2} />
+        </section>
 
         <section className="e4s-dance-hub-band" id="dance-styles">
           <div className="e4s-shell">
@@ -136,18 +176,18 @@ export default async function DanceClassesHub({ category, cities, listings, subc
                 const styleUrlSlug = toUrlSlug(style.slug);
                 return (
                   <Link key={style.slug} className="e4s-dance-style-card" href={danceStyleHref(style)}>
-                    <span className="e4s-dance-style-card__image">
+                    <span className="e4s-dance-style-card__media">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         alt={style.label}
                         loading="lazy"
                         src={getCategoryCardImage(styleUrlSlug) ?? "/images/categories/cards/dance-classes.webp"}
                       />
+                      <span className="e4s-dance-style-card__count">{style.listing_count} options</span>
                     </span>
                     <span className="e4s-dance-style-card__copy">
                       <span className="e4s-dance-style-card__title">{style.label}</span>
                       <span className="e4s-dance-style-card__summary">{styleSummary(style)}</span>
-                      <span className="e4s-dance-style-card__count">{style.listing_count} listings</span>
                     </span>
                   </Link>
                 );
@@ -178,8 +218,12 @@ export default async function DanceClassesHub({ category, cities, listings, subc
             <div className="e4s-dance-city-grid">
               {sortedCities.map((city) => (
                 <Link key={city.slug} className="e4s-dance-city-card" href={`/dance-classes/${toUrlSlug(city.slug)}`}>
-                  <span>{city.label}</span>
-                  <em>{citySummary(city)}</em>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img alt="" loading="lazy" src={cityImage(city)} />
+                  <span className="e4s-dance-city-card__overlay">
+                    <span>{city.label}</span>
+                    <em>{citySummary(city)}</em>
+                  </span>
                 </Link>
               ))}
             </div>
@@ -194,27 +238,17 @@ export default async function DanceClassesHub({ category, cities, listings, subc
               Many social dance classes rotate partners, welcome solo beginners and build the night
               around a shared lesson before any social dancing starts.
             </p>
+            <Link href="/dance-classes/styles">Read the beginner style guide</Link>
           </article>
           <article>
-            <p className="e4s-pathway-eyebrow">Better browsing</p>
-            <h2>Use the full list only when you want the whole directory</h2>
+            <p className="e4s-pathway-eyebrow">For studios and promoters</p>
+            <h2>Reach singles by the way they actually choose a class</h2>
             <p>
-              The complete directory is still here for comparison and filtering, but the style and
-              city paths are the cleaner way to find something useful quickly.
+              Dance pages create focused advertising surfaces around style, city and beginner intent,
+              from Salsa in Sydney to low-pressure dance fitness options nationwide.
             </p>
+            <Link href="/advertise">View advertising options</Link>
           </article>
-        </section>
-
-        <section className="e4s-shell e4s-dance-hub-listings" id="all-dance-listings">
-          <div className="e4s-dance-hub-section-head">
-            <p className="e4s-pathway-eyebrow">Full directory</p>
-            <h2>All Dance Class Listings</h2>
-          </div>
-          <ListingsSection
-            listings={listings}
-            title="Dance Classes"
-            filterCities={cities}
-          />
         </section>
       </main>
     </>

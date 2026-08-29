@@ -20,7 +20,7 @@ const jobs = [
     width: 720,
     height: 800,
     outputDirs: [
-      path.join(imagesDir, "site", "home", "category-cards"),
+      path.join(imagesDir, "site", "home", "browse-category-tiles"),
       path.join(imagesDir, "optimized"),
     ],
   },

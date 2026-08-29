@@ -47,7 +47,8 @@ export default async function PromoBanners(props: Props) {
       })}
       {Array.from({ length: placeholderCount }).map((_, i) => (
         <Link key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" title="Advertise on Events4Singles">
-          <span>Advertise here</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img alt="Advertise here" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" />
         </Link>
       ))}
     </section>
