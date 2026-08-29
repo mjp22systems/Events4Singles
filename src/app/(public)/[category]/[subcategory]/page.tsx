@@ -39,6 +39,7 @@ import {
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCitySourceFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
+import { categoryPathWithOptionalCity } from "@/lib/category-routing";
 
 interface Props {
   params: Promise<{ category: string; subcategory: string }>;
@@ -291,7 +292,7 @@ export default async function CategoryCityPage({ params }: Props) {
   const mobileNextCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
     ? sortedCityCategories[(currentCityCategoryIndex + 1) % sortedCityCategories.length]
     : null;
-  const cityCategoryPathFor = (categorySlug: string) => `/${toUrlSlug(categorySlug)}/${subcategory}`;
+  const cityCategoryPathFor = (categorySlug: string) => categoryPathWithOptionalCity(categorySlug, subcategory);
   const mobilePagerPrevious = mobilePreviousStyle
     ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label }
     : mobilePreviousCategory

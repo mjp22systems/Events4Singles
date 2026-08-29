@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Category, City } from "@/lib/types";
 import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
+import { categoryPathWithOptionalCity } from "@/lib/category-routing";
 import SidebarNav from "@/components/sidebar-nav";
 
 type Props =
@@ -86,7 +87,7 @@ export default function PageSidebar(props: Props) {
     const items = props.categories.map((cat) => ({
       key: cat.slug,
       label: cat.label,
-      href: `/${toUrlSlug(cat.slug)}/${props.cityUrlSlug}`,
+      href: categoryPathWithOptionalCity(cat.slug, props.cityUrlSlug),
       count: cat.listing_count,
     }));
 
