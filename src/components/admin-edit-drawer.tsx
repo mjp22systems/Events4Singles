@@ -1,20 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { Listing } from "@/lib/types";
+import { LISTING_TYPE_OPTIONS, normalizeListingType } from "@/lib/listing-types";
 
 interface Props {
   listing: Listing;
   onSaved?: () => void;
 }
 
-const LISTING_TYPES: { value: string; label: string }[] = [
-  { value: "standard", label: "Standard" },
-  { value: "event_organizer", label: "Event Organizer" },
-  { value: "venue", label: "Venue" },
-  { value: "service", label: "Service" },
-  { value: "practitioner", label: "Practitioner" },
-  { value: "online", label: "Online" },
-];
 const STATUSES: { value: string; label: string }[] = [
   { value: "active", label: "Active" },
   { value: "inactive", label: "Inactive" },
@@ -40,7 +33,7 @@ export default function AdminEditDrawer({ listing, onSaved }: Props) {
     location: listing.location ?? "",
     location_city: listing.location_city ?? "",
     location_state: listing.location_state ?? "",
-    listing_type: listing.listing_type ?? "standard",
+    listing_type: normalizeListingType(listing.listing_type),
     status: listing.status ?? "active",
     hide_contact: listing.hide_contact === 1,
     unclaimed_flag: listing.unclaimed_flag === 1,
@@ -168,7 +161,7 @@ export default function AdminEditDrawer({ listing, onSaved }: Props) {
             <div className="e4s-edit-drawer__section">Admin</div>
             <Field label="Listing Type">
               <select value={fields.listing_type} onChange={set("listing_type")}>
-                {LISTING_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                {LISTING_TYPE_OPTIONS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </Field>
             <Field label="Status">

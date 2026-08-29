@@ -6167,6 +6167,12 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-type-badge--online {
   background: #dbeafe;
   border: 1px solid #bfdbfe;
+}.e4s-type-badge--featured {
+  background: #ffe4f1;
+  border: 1px solid #f9a8d4;
+}.e4s-type-badge--premium {
+  background: #dcfce7;
+  border: 1px solid #86efac;
 }.e4s-type-badge--std {
   background: var(--e4s-teal-100);
   border: 1px solid var(--e4s-border);
@@ -6290,6 +6296,9 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   border-style: dashed;
 }.e4s-profile-placed__tag--city:hover {
   border-color: var(--e4s-border);
+}.e4s-profile-placed__tag--location {
+  background: #f8fafc;
+  border-color: #cbd5e1;
 }.e4s-profile-under-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 200px;

@@ -14,6 +14,7 @@ import { toUrlSlug, toProfileSlug, slugToLabel } from "@/lib/constants";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
 import { eventPath } from "@/lib/event-slugs";
 import { eventDescriptionExcerpt } from "@/lib/event-text";
+import { LISTING_TYPE_CONFIG, normalizeListingType } from "@/lib/listing-types";
 import type { Listing } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -31,17 +32,53 @@ const SOCIAL_PLATFORMS = [
   { key: "linkedin_url" as const, label: "LinkedIn", icon: "in" },
 ];
 
-const TYPE_CONFIG: Record<string, { label: string; cls: string; icon: string }> = {
-  event_organizer:    { label: "Activities & Events", cls: "e4s-type-badge--eo",     icon: "⚡" },
-  venue:        { label: "Venue",           cls: "e4s-type-badge--venue",  icon: "🏛" },
-  service:      { label: "Service",         cls: "e4s-type-badge--svc",    icon: "🛠" },
-  practitioner: { label: "Practitioner",    cls: "e4s-type-badge--prac",   icon: "👤" },
-  online:       { label: "Online Service",  cls: "e4s-type-badge--online", icon: "🌐" },
-  standard:     { label: "Listed",          cls: "e4s-type-badge--std",    icon: "" },
-};
-
 function splitList(v: string | null | undefined) {
   return (v || "").split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+function cleanLocationPart(value: string | null | undefined) {
+  return (value || "").replace(/\s+/g, " ").trim();
+}
+
+function locationKey(value: string | null | undefined) {
+  return cleanLocationPart(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function isInternalLocation(value: string | null | undefined) {
+  return ["", "online", "national", "international", "to be confirmed", "tbc", "no location review"].includes(locationKey(value));
+}
+
+function isCityOnlyLocation(listing: Listing) {
+  const location = locationKey(listing.location);
+  if (!location) return true;
+  const city = locationKey(listing.location_city);
+  const state = locationKey(listing.location_state);
+  const cityLabels = splitList(listing.city_labels).map(locationKey);
+  return location === city || location === state || cityLabels.includes(location) || isInternalLocation(listing.location);
+}
+
+function collectLocationLabels(listings: Listing[], max = 8): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const listing of listings) {
+    const location = cleanLocationPart(listing.location);
+    if (!location || isCityOnlyLocation(listing)) continue;
+    const key = locationKey(location);
+    if (!seen.has(key)) {
+      seen.add(key);
+      out.push(location);
+    }
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+function profileAddress(listing: Listing | null) {
+  if (!listing || isCityOnlyLocation(listing)) return null;
+  const parts = [listing.location, listing.location_city, listing.location_state]
+    .map(cleanLocationPart)
+    .filter((part) => part && !isInternalLocation(part));
+  return parts.length ? [...new Set(parts)].join(", ") : null;
 }
 
 function collectCityLinks(listings: Listing[], max = 5): { slug: string; label: string }[] {
@@ -144,22 +181,21 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const showAdminEditor = isAdmin && business !== null;
 
   const isVerified = !!business?.advertiser_id;
-  const ltype = primary?.listing_type ?? "standard";
-  const typeConf = TYPE_CONFIG[ltype] ?? TYPE_CONFIG.standard;
+  const ltype = normalizeListingType(primary?.listing_type);
+  const typeConf = LISTING_TYPE_CONFIG[ltype] ?? LISTING_TYPE_CONFIG.standard;
   const isVenue = ltype === "venue";
   const isPractitioner = ltype === "practitioner";
   const isOnline = ltype === "online";
 
   const cityLinks = collectCityLinks(listings, 20);
+  const locationLabels = collectLocationLabels(listings);
   const categoryLinks = collectCategorySlugs(listings).map((s) => ({
     slug: s,
     label: slugToLabel(s),
     href: `/${toUrlSlug(s)}`,
   }));
 
-  const address = primary
-    ? [primary.location, primary.location_city, primary.location_state].filter(Boolean).join(", ")
-    : null;
+  const address = profileAddress(primary);
   const mapsUrl = address
     ? `https://maps.google.com/?q=${encodeURIComponent(address)}`
     : null;
@@ -274,7 +310,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
               )}
 
               {/* Listed under */}
-              {(categoryLinks.length > 0 || cityLinks.length > 0) && (
+              {(categoryLinks.length > 0 || locationLabels.length > 0 || cityLinks.length > 0) && (
                 <div className="e4s-profile-sec">
                   <div className="e4s-profile-sec__label">Listed under</div>
                   <div className="e4s-profile-under-body">
@@ -287,6 +323,18 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                               <Link key={c.slug} href={c.href} className="e4s-profile-placed__tag">
                                 {c.label}
                               </Link>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      {locationLabels.length > 0 && (
+                        <>
+                          <div className="e4s-profile-placed__sub-label">Locations</div>
+                          <div className="e4s-profile-placed">
+                            {locationLabels.map((location) => (
+                              <span key={location} className="e4s-profile-placed__tag e4s-profile-placed__tag--location">
+                                {location}
+                              </span>
                             ))}
                           </div>
                         </>

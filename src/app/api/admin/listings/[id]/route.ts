@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth-edge";
 import { getD1 } from "@/lib/db";
+import { VALID_LISTING_TYPES, normalizeListingType } from "@/lib/listing-types";
 
 const ALLOWED_FIELDS = [
   "business_name", "title", "tagline", "description", "phone", "mobile", "email",
@@ -11,7 +12,6 @@ const ALLOWED_FIELDS = [
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number];
 
-const VALID_LISTING_TYPES = new Set(["standard", "event_organizer", "venue", "service", "practitioner", "online"]);
 const VALID_STATUSES = new Set(["active", "inactive", "pending"]);
 
 function isValidUrl(val: unknown): boolean {
@@ -49,6 +49,7 @@ export async function PATCH(
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
   }
 
+  if ("listing_type" in updates) updates.listing_type = normalizeListingType(updates.listing_type as string);
   if ("listing_type" in updates && !VALID_LISTING_TYPES.has(updates.listing_type as string)) {
     return NextResponse.json({ error: "Invalid listing_type" }, { status: 400 });
   }

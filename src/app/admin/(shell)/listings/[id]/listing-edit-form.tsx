@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminCategory, AdminCity, AdminListing, AdminListingPlacement } from "@/lib/admin-db";
+import { LISTING_TYPE_OPTIONS, normalizeListingType } from "@/lib/listing-types";
 
 const STATUSES = ["active", "pending", "unclaimed", "paused", "expired", "archived", "deleted"];
-const TYPES = ["standard", "featured", "premium"];
 
 function Field({
   label,
@@ -151,7 +151,7 @@ export default function ListingEditForm({
   const [linkedinUrl, setLinkedinUrl] = useState(s(listing.linkedin_url));
 
   const [status, setStatus] = useState(listing.status ?? "active");
-  const [listingType, setListingType] = useState(listing.listing_type ?? "standard");
+  const [listingType, setListingType] = useState(normalizeListingType(listing.listing_type));
   const [unclaimed, setUnclaimed] = useState(!!listing.unclaimed_flag);
 
   const [abn, setAbn] = useState(s(listing.abn));
@@ -451,9 +451,9 @@ export default function ListingEditForm({
                 </select>
               </Field>
               <Field label="Listing Type">
-                <select value={listingType} onChange={(e) => setListingType(e.target.value)} className="a-input a-form-select">
-                  {TYPES.map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                <select value={listingType} onChange={(e) => setListingType(normalizeListingType(e.target.value))} className="a-input a-form-select">
+                  {LISTING_TYPE_OPTIONS.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
                 </select>
               </Field>
