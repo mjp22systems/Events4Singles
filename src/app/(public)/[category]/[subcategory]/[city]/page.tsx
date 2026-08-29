@@ -120,6 +120,13 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
     `/images/site/category-heroes/category-hero-${childUrlSlug}.svg`,
   ];
   const cityImage = getCitySourceImage(city);
+  const cityHeroSlug = city.replace(/-/g, "");
+  const compositeHeroImage = `/images/site/category-heroes/category-hero-${childUrlSlug}-${cityHeroSlug}.svg`;
+  const compositeHeroFallbacks = [
+    `/images/site/category-heroes/category-hero-${childUrlSlug}-${city}.svg`,
+    `/images/site/category-heroes/category-hero-${category}-${cityHeroSlug}.svg`,
+    `/images/site/category-heroes/category-hero-${category}-${city}.svg`,
+  ];
   const jsonLd = [
     collectionPageJsonLd({
       name: `${childMeta.label} in ${cityMeta.label}`,
@@ -191,6 +198,8 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           media={(
             <CategoryCityHeroImage
               alt={`${childMeta.label} ${cityMeta.label}`}
+              compositeImage={compositeHeroImage}
+              compositeFallbacks={compositeHeroFallbacks}
               parentCategoryImage={parentImage}
               parentCategoryFallbacks={parentImageFallbacks}
               categoryImage={categoryImage}

@@ -1817,12 +1817,13 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: calc(100vh - var(--e4s-sticky-top, var(--e4s-header-height, 143px)) - 16px);
-  min-height: 420px;
+  height: auto;
+  max-height: calc(100vh - var(--e4s-sticky-top, var(--e4s-header-height, 143px)) - 16px);
+  min-height: 0;
 }.e4s-sidebar-block {
   position: relative;
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   flex-direction: column;
   min-height: 0;
   border: 1px solid var(--e4s-border);
@@ -1853,9 +1854,9 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-sidebar-nav {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   height: auto;
-  max-height: none;
+  max-height: min(56vh, 520px);
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1891,32 +1892,25 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-sidebar-nav__count {
   flex: 0 0 auto;
 }.e4s-sidebar-ad {
-  display: grid;
-  place-items: center;
-  flex: 0 0 var(--e4s-image-height);
-  width: var(--e4s-image-width);
-  height: var(--e4s-image-height);
-  margin: auto auto 0;
-  padding: 12px;
-  border: 1px dashed rgba(6, 78, 77, 0.35);
+  display: block;
+  flex: 0 0 auto;
+  width: 160px;
+  height: 120px;
+  margin: 0 auto;
+  border: 1px solid var(--e4s-border);
   border-radius: 8px;
-  background: linear-gradient(135deg, #f8fbfa 0%, #e9f6f4 100%);
-  color: #064e4d;
-  text-align: center;
-  text-decoration: none;
+  background: transparent;
   overflow: hidden;
-}.e4s-sidebar-ad span {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}.e4s-sidebar-ad small {
-  color: #547173;
-  font-size: 12px;
+}.e4s-sidebar-ad img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }.e4s-sidebar:has(.e4s-sidebar-block--empty) .e4s-sidebar-ad {
   margin: 0 auto;
 }.e4s-sidebar:has(.e4s-sidebar-back) .e4s-sidebar-nav {
   height: auto;
-  max-height: none;
+  max-height: min(48vh, 440px);
 }@media (max-width: 1100px) {.e4s-page-with-sidebar {
   grid-template-columns: 1fr;
 }.e4s-sidebar {
@@ -4297,7 +4291,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-home-hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/site/home/hero/home-hero-mixers.webp');
+  background-image: url('/images/site/home/hero/home-hero-mixers-wide.webp');
   background-size: cover;
   background-position: right center;
   z-index: 0;

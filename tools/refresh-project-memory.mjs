@@ -18,8 +18,13 @@ const requiredIgnoreRules = [
   "/.codex-backups/",
   "/.impeccable/",
   "/graphify-out/",
+  "/repo-state-backups/",
   "/website-hero-deploy/",
   "/website-hero-release/",
+  "/website-image-classify/",
+  "/website-image-clean-deploy/",
+  "/website-image-source-clean-deploy/",
+  "/website-push-audit-sweep3/",
   "**/node_modules/",
   "**/.next/",
   "**/.wrangler/",
@@ -50,6 +55,7 @@ const requiredIgnoreRules = [
   "**/*.avif",
   "**/*.AVIF",
   "/website/public/images/",
+  "/website/tmp/",
 ];
 
 function log(message) {

@@ -31,6 +31,8 @@ The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. 
 
 Current cleanup rule: the active repo should contain source, tracked migrations, tracked tools, tests, public assets needed by live data, and documentation. Generated folders such as `.next`, `.open-next`, `.wrangler`, reports, local SQLite snapshots, and QA screenshots are not source of truth.
 
+Backup and scratch folders in the parent project container, including `repo-state-backups`, `website-hero-release`, `website-image-classify`, `website-image-clean-deploy`, `website-image-source-clean-deploy`, and `website-push-audit-sweep3`, are not source-of-truth inputs. Neither is `website/tmp`, which holds local DB backups and audit output. These paths must be excluded from `.graphifyignore` and should be moved to `D:\Projects\Clients\Dad\Events4singles-archive` when no longer needed.
+
 ## Project Memory Loop
 
 The durable project memory loop is:
@@ -41,6 +43,8 @@ The durable project memory loop is:
 4. Run `npm run memory:status` from `website` when checking whether the graph, hook, and refresh log are healthy.
 5. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
 6. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
+
+The loop must fail closed on governance drift. `npm run memory:refresh` runs `npm run config:audit` first. The audit checks that agent instruction files point at this document, do not reference retired project briefs, and that the current graph is not carrying nodes sourced from backup or scratch folders. If those checks fail, fix the source boundary or documentation pointer first, then rebuild or refresh Graphify.
 
 The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. Hook failures are non-blocking for Git commits, but they are recorded in `graphify-out\refresh-log.jsonl` and `graphify-out\refresh-errors.log` so later sessions can audit them. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work.
 
@@ -66,7 +70,7 @@ This document is the working project bible for the rebuilt Events4Singles websit
 
 ## Source Coverage
 
-This document has now been seeded from:
+This document was seeded from historical notes and prior audit outputs. Some original seed paths have since been archived or removed from the active project tree; do not treat a listed seed path as live source unless it still exists.
 
 - The current Codex task conversation through 2026-08-13.
 - Cortex memories for Events4Singles decisions and session checkpoints.
@@ -74,11 +78,11 @@ This document has now been seeded from:
 - Claude Code transcript files:
   - `C:\Users\Matt\.claude\projects\D--Projects-Clients-Dad-Events4singles\a4d3da05-e78b-4bb7-af8c-ca0d6995e62f.jsonl`
   - `C:\Users\Matt\.claude\projects\D--Projects-Clients-Dad-Events4singles\8446afb3-daa6-49ca-93b8-96ebc47d7441.jsonl`
-- Project-root audit/render docs:
+- Historical project-root audit/render docs that may now be archived:
   - `D:\Projects\Clients\Dad\Events4singles\docs\data-model-and-render-contract.md`
   - `D:\Projects\Clients\Dad\Events4singles\docs\render-cross-reference.md`
   - `D:\Projects\Clients\Dad\Events4singles\docs\render-field-map.csv`
-- Rich scrape audit outputs in `D:\Projects\Clients\Dad\Events4singles\scrape-audit`.
+- Historical rich scrape audit outputs that may now be archived from `D:\Projects\Clients\Dad\Events4singles\scrape-audit`.
 
 Treat this file as the human-readable decision source. Treat the render/data docs and CSV as technical appendices.
 

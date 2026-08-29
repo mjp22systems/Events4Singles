@@ -319,6 +319,9 @@ export default async function CategoryCityPage({ params }: Props) {
     `/images/site/category-heroes/category-hero-${category}.svg`,
   ];
   const cityImage = getCitySourceImage(subcategory);
+  const cityHeroSlug = subcategory.replace(/-/g, "");
+  const compositeHeroImage = `/images/site/category-heroes/category-hero-${category}-${cityHeroSlug}.svg`;
+  const compositeHeroFallbacks = [`/images/site/category-heroes/category-hero-${category}-${subcategory}.svg`];
   const jsonLd = [
     collectionPageJsonLd({
       name: `${catMeta.label} in ${cityMeta.label}`,
@@ -378,6 +381,8 @@ export default async function CategoryCityPage({ params }: Props) {
           media={(
             <CategoryCityHeroImage
               alt={`${catMeta.label} ${cityMeta.label}`}
+              compositeImage={compositeHeroImage}
+              compositeFallbacks={compositeHeroFallbacks}
               categoryImage={categoryImage}
               categoryFallbacks={categoryImageFallbacks}
               cityImage={cityImage}

@@ -36,9 +36,11 @@ The `memory:refresh` script is intentionally wired to run `config:audit` first. 
 - `wrangler.toml` matches the registered Worker and D1 values
 - deploy/cache scripts reference the Dad API-token env vars
 - source-of-truth docs mention the important project facts
+- agent instruction files point at the registered source-of-truth doc and do not reference retired project briefs
+- `graphify-out/graph.json` is not contaminated by backup/scratch source folders
 - generated folders remain identified as generated output
 
-Critical drift fails the command. Documentation drift is reported as a warning unless it would make automation unsafe.
+Critical drift fails the command. Documentation drift is reported as a warning unless it would make automation unsafe. Agent-entrypoint drift and Graphify corpus contamination are critical failures because they can make later sessions reason from stale or duplicate project history.
 
 ## Simple Rule
 

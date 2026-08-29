@@ -187,6 +187,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
         cities={cities}
         listings={listings}
         subcategories={subcategories}
+        parentCategories={parentCats}
       />
     );
   }

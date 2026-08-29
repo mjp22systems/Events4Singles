@@ -31,6 +31,41 @@ test("refresh command records auditable successes and non-blocking hook failures
   assert.match(source, /process\.exitCode = 1/);
 });
 
+test("refresh command excludes backup and scratch folders from graphify corpus", () => {
+  const source = read("tools/refresh-project-memory.mjs");
+
+  for (const folder of [
+    "repo-state-backups",
+    "website-image-classify",
+    "website-image-clean-deploy",
+    "website-image-source-clean-deploy",
+    "website-push-audit-sweep3",
+    "website/tmp",
+  ]) {
+    assert.match(source, new RegExp(folder));
+  }
+});
+
+test("project audit fails closed on source-of-truth and graph corpus drift", () => {
+  const source = read("tools/audit-project-config.mjs");
+
+  assert.match(source, /requireGraphDoesNotContainForbiddenSources/);
+  assert.match(source, /forbidden backup\/scratch sources/);
+  assert.match(source, /retired source-of-truth path/);
+  assert.match(source, /memory:refresh/);
+});
+
+test("agent instructions point at the registered source-of-truth document", () => {
+  const config = JSON.parse(read("project.config.json"));
+  const sourceOfTruthDoc = config.governance.sourceOfTruthDoc;
+
+  for (const relativePath of ["CLAUDE.md", "AGENTS.md", "../AGENTS.md", "../CLAUDE.md"]) {
+    const source = read(relativePath);
+    assert.match(source, new RegExp(sourceOfTruthDoc.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.doesNotMatch(source, /project-brief\.md/);
+  }
+});
+
 test("status command reports graph freshness and hook state from durable files", () => {
   const source = read("tools/project-memory-status.mjs");
 

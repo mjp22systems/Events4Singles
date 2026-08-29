@@ -77,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/fonts/source-serif-4-normal-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
           <link rel="preload" href="/fonts/source-serif-4-italic-latin.woff2" as="font" type="font/woff2" crossOrigin="" />
-          <link rel="preload" href="/images/site/home/hero/home-hero-mixers.webp" as="image" fetchPriority="high" />
+          <link rel="preload" href="/images/site/home/hero/home-hero-mixers-wide.webp" as="image" fetchPriority="high" />
           <link rel="stylesheet" href="/typography.css" />
           {process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN && (
             <script

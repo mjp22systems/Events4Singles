@@ -3,6 +3,14 @@ import type { Category, City } from "@/lib/types";
 import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import SidebarNav from "@/components/sidebar-nav";
 
+function SidebarAdvertiseLink() {
+  return (
+    <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
+      <img alt="Advertise here" loading="lazy" src="/images/site/placeholders/advertise-here-160x120.svg" />
+    </Link>
+  );
+}
+
 type Props =
   | {
       mode: "category";
@@ -74,10 +82,7 @@ export default function PageSidebar(props: Props) {
           topItem={hasActiveFilter ? { label: "All featured", href: "/featured-listings" } : undefined}
         />
         <SidebarNav heading="Refine by city" items={cityItems} />
-        <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-          <span>Advertise here</span>
-          <small>Promote your listing</small>
-        </Link>
+        <SidebarAdvertiseLink />
       </aside>
     );
   }
@@ -93,10 +98,7 @@ export default function PageSidebar(props: Props) {
     return (
       <aside className="e4s-sidebar">
         <SidebarNav heading="Other Categories" items={items} />
-        <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-          <span>Advertise here</span>
-          <small>Promote your listing</small>
-        </Link>
+        <SidebarAdvertiseLink />
       </aside>
     );
   }
@@ -162,10 +164,7 @@ export default function PageSidebar(props: Props) {
           <p className="e4s-sidebar-block__heading">{emptySidebarHeading}</p>
         </div>
       )}
-      <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-        <span>Advertise here</span>
-        <small>Promote your listing</small>
-      </Link>
+      <SidebarAdvertiseLink />
     </aside>
   );
 }

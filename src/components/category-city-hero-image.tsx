@@ -4,6 +4,8 @@ import { useState } from "react";
 
 type Props = {
   alt: string;
+  compositeImage?: string;
+  compositeFallbacks?: string[];
   parentCategoryImage?: string;
   parentCategoryFallbacks?: string[];
   categoryImage: string;
@@ -14,6 +16,8 @@ type Props = {
 
 export default function CategoryCityHeroImage({
   alt,
+  compositeImage,
+  compositeFallbacks = [],
   parentCategoryImage,
   parentCategoryFallbacks = [],
   categoryImage,
@@ -22,6 +26,7 @@ export default function CategoryCityHeroImage({
   cityFallbacks = [],
 }: Props) {
   const srcs = [
+    ...(compositeImage ? [compositeImage, ...compositeFallbacks] : []),
     cityImage,
     ...cityFallbacks,
     categoryImage,

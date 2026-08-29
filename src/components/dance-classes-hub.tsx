@@ -1,6 +1,8 @@
 import Link from "next/link";
 import BodyClass from "@/components/body-class";
 import HeroImage from "@/components/hero-image";
+import CategoryPager from "@/components/category-pager";
+import MobileSidePager from "@/components/mobile-side-pager";
 import PromoBanners from "@/components/promo-banners";
 import { danceStyleDecisionPaths, danceStyleLinks } from "@/content/dance-styles";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
@@ -13,6 +15,7 @@ interface Props {
   cities: City[];
   listings: Listing[];
   subcategories: Category[];
+  parentCategories: Category[];
 }
 
 const featuredCitySlugs = [
@@ -66,7 +69,7 @@ function cityImage(city: City) {
   return cityImageBySlug[toUrlSlug(city.slug)] ?? "/images/categories/cards/dance-classes.webp";
 }
 
-export default async function DanceClassesHub({ category, cities, listings, subcategories }: Props) {
+export default async function DanceClassesHub({ category, cities, listings, subcategories, parentCategories }: Props) {
   const styles = subcategories.filter((cat) => cat.slug !== "dance_styles" && cat.listing_count > 0);
   const sortedStyles = [...styles].sort((a, b) => b.listing_count - a.listing_count || a.label.localeCompare(b.label));
   const sortedCities = [...cities].sort((a, b) => {
@@ -82,6 +85,14 @@ export default async function DanceClassesHub({ category, cities, listings, subc
   const cityCount = cities.length;
   const listingCount = listings.length;
   const styleCount = styles.length;
+  const sortedParentCategories = [...parentCategories].sort((a, b) => a.label.localeCompare(b.label));
+  const currentParentIndex = sortedParentCategories.findIndex((cat) => cat.slug === category.slug);
+  const mobilePreviousCategory = currentParentIndex >= 0 && sortedParentCategories.length > 1
+    ? sortedParentCategories[(currentParentIndex - 1 + sortedParentCategories.length) % sortedParentCategories.length]
+    : null;
+  const mobileNextCategory = currentParentIndex >= 0 && sortedParentCategories.length > 1
+    ? sortedParentCategories[(currentParentIndex + 1) % sortedParentCategories.length]
+    : null;
   const jsonLd = [
     collectionPageJsonLd({
       name: "Dance Classes for Singles",
@@ -103,6 +114,12 @@ export default async function DanceClassesHub({ category, cities, listings, subc
       />
       <BodyClass add="e4s-page-category" />
       <BodyClass add="e4s-page-dance-hub" />
+      <CategoryPager categories={parentCategories} currentDbSlug={category.slug} />
+      <MobileSidePager
+        label="Category navigation"
+        previous={mobilePreviousCategory ? { href: `/${toUrlSlug(mobilePreviousCategory.slug)}`, label: mobilePreviousCategory.label } : null}
+        next={mobileNextCategory ? { href: `/${toUrlSlug(mobileNextCategory.slug)}`, label: mobileNextCategory.label } : null}
+      />
       <main className="e4s-dance-hub" id="site-content">
         <section className="e4s-dance-hub-hero" aria-label="Dance Classes for Singles">
           <div className="e4s-dance-hub-hero__media">

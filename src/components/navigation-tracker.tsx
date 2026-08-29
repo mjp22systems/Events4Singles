@@ -1,9 +1,21 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { consumeScrollTopAfterNavigation } from "@/lib/client-nav";
+
+const RESTORE_ON_POP_KEY = "e4s_restore_scroll_on_next_route";
 
 export default function NavigationTracker() {
   const pathname = usePathname();
+
+  useEffect(() => {
+    const onPopState = () => {
+      sessionStorage.setItem(RESTORE_ON_POP_KEY, "1");
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
@@ -31,6 +43,11 @@ export default function NavigationTracker() {
 
     sessionStorage.setItem("e4s_prev_path", pathname);
 
+    if (consumeScrollTopAfterNavigation(pathname)) {
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
+      return;
+    }
+
     const listingSourcePath = sessionStorage.getItem("e4s_listing_source_path");
     const listingSourceCard = sessionStorage.getItem("e4s_listing_source_card");
     if (listingSourcePath === pathname && listingSourceCard) {
@@ -53,11 +70,17 @@ export default function NavigationTracker() {
     }
 
     const backTarget = sessionStorage.getItem("e4s_back_nav");
-    if (backTarget === pathname) {
+    const shouldRestorePopScroll = sessionStorage.getItem(RESTORE_ON_POP_KEY) === "1";
+    if (backTarget === pathname || shouldRestorePopScroll) {
       sessionStorage.removeItem("e4s_back_nav");
+      sessionStorage.removeItem(RESTORE_ON_POP_KEY);
       const savedY = sessionStorage.getItem(`e4s_scroll_${pathname}`);
       if (savedY) {
-        requestAnimationFrame(() => window.scrollTo(0, parseInt(savedY, 10)));
+        const restore = () => window.scrollTo(0, parseInt(savedY, 10));
+        requestAnimationFrame(() => {
+          restore();
+          window.setTimeout(restore, 120);
+        });
       }
     }
   }, [pathname]);

@@ -45,6 +45,61 @@ function warnIfMissingText(filePath, needles, label) {
   }
 }
 
+function requireText(filePath, needles, label) {
+  if (!existsSync(filePath)) {
+    critical.push(`${label} is missing, so source-of-truth drift could not be checked.`);
+    return;
+  }
+
+  const text = readFileSync(filePath, "utf8");
+  for (const needle of needles.filter(Boolean)) {
+    if (!text.includes(needle)) {
+      critical.push(`${label} must mention '${needle}'.`);
+    }
+  }
+}
+
+function forbidText(filePath, forbiddenNeedles, label) {
+  if (!existsSync(filePath)) return;
+
+  const text = readFileSync(filePath, "utf8");
+  for (const needle of forbiddenNeedles.filter(Boolean)) {
+    if (text.includes(needle)) {
+      critical.push(`${label} still references retired source-of-truth path '${needle}'.`);
+    }
+  }
+}
+
+function requireGraphDoesNotContainForbiddenSources(projectRoot) {
+  const graphPath = path.join(projectRoot, "graphify-out", "graph.json");
+  if (!existsSync(graphPath)) return;
+
+  const graph = readJson(graphPath);
+  const forbiddenPrefixes = [
+    "repo-state-backups/",
+    "website-hero-deploy/",
+    "website-hero-release/",
+    "website-image-classify/",
+    "website-image-clean-deploy/",
+    "website-image-source-clean-deploy/",
+    "website-push-audit-sweep3/",
+    "website/tmp/",
+  ];
+  const offenders = new Set();
+
+  for (const node of graph.nodes ?? []) {
+    const sourceFile = normalize(node.source_file ?? node.src ?? "");
+    const offender = forbiddenPrefixes.find((prefix) => sourceFile.startsWith(prefix));
+    if (offender) offenders.add(offender);
+  }
+
+  if (offenders.size > 0) {
+    critical.push(
+      `graphify-out/graph.json contains forbidden backup/scratch sources: ${Array.from(offenders).join(", ")}. Rebuild project memory after fixing .graphifyignore.`,
+    );
+  }
+}
+
 if (!existsSync(configPath)) {
   console.error("Missing project.config.json. This file is the Events4Singles project registry.");
   process.exit(1);
@@ -53,6 +108,8 @@ if (!existsSync(configPath)) {
 const config = readJson(configPath);
 const packageJson = readJson(path.join(websiteRoot, "package.json"));
 const packageScripts = packageJson.scripts ?? {};
+const projectRoot = path.resolve(websiteRoot, "..");
+const sourceOfTruthDoc = config.governance?.sourceOfTruthDoc ?? "docs/events4singles-source-of-truth.md";
 
 if (normalize(websiteRoot) !== normalize(config.project?.canonicalRepo)) {
   warnings.push(`Current folder is ${websiteRoot}, but config canonicalRepo is ${config.project?.canonicalRepo}.`);
@@ -83,7 +140,7 @@ for (const [script, expected] of Object.entries(expectedScripts)) {
   }
 }
 
-requireFile(config.governance?.sourceOfTruthDoc ?? "docs/events4singles-source-of-truth.md", "source-of-truth doc");
+requireFile(sourceOfTruthDoc, "source-of-truth doc");
 requireFile(config.governance?.deploymentRunbook ?? "docs/deployment-runbook.md", "deployment runbook");
 requireFile(config.governance?.agentLocalInstructions ?? "CLAUDE.md", "local agent instructions");
 requireFile(config.governance?.configDoc ?? "docs/project-config-registry.md", "project config registry doc");
@@ -117,13 +174,25 @@ warnIfMissingText(cacheScript, [
   config.cloudflare?.zoneId,
 ], "cache purge script");
 
-const sourceDocPath = path.join(websiteRoot, config.governance?.sourceOfTruthDoc ?? "");
+const sourceDocPath = path.join(websiteRoot, sourceOfTruthDoc);
 warnIfMissingText(sourceDocPath, [
   config.project?.canonicalRepo,
   config.cloudflare?.databaseName,
   config.cloudflare?.workerName,
   config.commands?.configAudit,
 ], "source-of-truth doc");
+
+const agentInstructionFiles = [
+  path.join(websiteRoot, config.governance?.agentLocalInstructions ?? "CLAUDE.md"),
+  path.join(websiteRoot, "AGENTS.md"),
+  path.join(projectRoot, "AGENTS.md"),
+  path.join(projectRoot, "CLAUDE.md"),
+];
+for (const instructionFile of agentInstructionFiles) {
+  const label = normalize(instructionFile).replace(`${normalize(websiteRoot)}/`, "");
+  requireText(instructionFile, [sourceOfTruthDoc, "memory:refresh"], label);
+  forbidText(instructionFile, ["docs/project-brief.md", "project-brief.md"], label);
+}
 
 const deploymentDocPath = path.join(websiteRoot, config.governance?.deploymentRunbook ?? "");
 warnIfMissingText(deploymentDocPath, [
@@ -141,17 +210,21 @@ warnIfMissingText(gitignorePath, [
 ], ".gitignore");
 
 const forbiddenRootNames = [
+  "repo-state-backups",
   "website-hero-deploy",
   "website-hero-release",
+  "website-image-classify",
+  "website-image-clean-deploy",
   "website-image-source-clean-deploy",
   "website-push-audit-sweep3",
 ];
-const projectRoot = path.resolve(websiteRoot, "..");
 for (const folder of forbiddenRootNames) {
   if (existsSync(path.join(projectRoot, folder))) {
     warnings.push(`Old scratch/release folder still exists in project root: ${folder}. Move to archive when no longer needed.`);
   }
 }
+
+requireGraphDoesNotContainForbiddenSources(projectRoot);
 
 if (!quiet || critical.length || warnings.length) {
   console.log("Events4Singles project config audit");

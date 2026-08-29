@@ -181,12 +181,68 @@ const CATEGORY_HERO_IMAGES: Record<string, string> = {
   "yoga-classes": "/images/categories/heroes/yoga-classes.webp",
 };
 
+const GENERATED_CATEGORY_HERO_SLUGS = new Set([
+  "adventure-for-singles",
+  "beauty-for-singles",
+  "comedians",
+  "cruises4singles",
+  "dance-ceroc",
+  "dance-classes",
+  "dance-party-clubs",
+  "dance-salsa",
+  "dance-tango",
+  "dance-teachers",
+  "dinner-for-six",
+  "dinner-parties",
+  "finance-mortgage",
+  "fitness4singles",
+  "function-centres",
+  "golf",
+  "healing-and-happiness",
+  "houseparties",
+  "image-and-photography",
+  "intro-agencies",
+  "jazz",
+  "life-coaches",
+  "lotto4singles",
+  "mature-dating-events",
+  "nightclubs",
+  "online-dating",
+  "online-dating-international",
+  "psychics4singles",
+  "psychology",
+  "restaurants-cafes",
+  "seminars",
+  "singles-health",
+  "singles-products",
+  "sms-phone-dating",
+  "social-clubs",
+  "speed-dating",
+  "sport-adventure",
+  "tours4singles",
+  "travel-for-singles",
+  "walks4singles",
+  "wineries4singles",
+  "yoga-classes",
+]);
+
 export function getCategoryCardImage(slug: string): string | undefined {
   return CATEGORY_CARD_IMAGES[slug.replace(/_/g, "-")];
 }
 
 export function getCategoryHeroImage(slug: string): string | undefined {
-  return CATEGORY_HERO_IMAGES[slug.replace(/_/g, "-")];
+  const normalizedSlug = slug.replace(/_/g, "-");
+  if (GENERATED_CATEGORY_HERO_SLUGS.has(normalizedSlug)) {
+    const heroSlug = normalizedSlug === "online-dating-international"
+      ? "online-dating-int"
+      : normalizedSlug === "wineries4singles"
+        ? "wineries"
+        : normalizedSlug;
+    return `/images/site/category-heroes/category-hero-${heroSlug}.svg`;
+  }
+
+  return CATEGORY_HERO_IMAGES[normalizedSlug]
+    ?? CATEGORY_CARD_IMAGES[normalizedSlug]?.replace("/cards/", "/heroes/");
 }
 
 export function getCategoryCardSummary(slug: string, fallback?: string | null): string {

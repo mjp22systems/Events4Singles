@@ -2,16 +2,17 @@
 
 # CLAUDE.md — Events4Singles
 
-## This file
-For D:\ folder map and project registry: C:\Users\Matt\.claude\CLAUDE.md
-Config (ports, services, machine facts): D:\Config\ — read before touching any port or service.
+## This File
+For machine-wide folder maps only: `C:\Users\Matt\.claude\CLAUDE.md`.
 
 ## ⚠ Read before acting
-**Full project brief, all locked decisions, terminology rules, routing structure, DB schema, phase tracking:**
-`D:\Projects\Clients\Dad\Events4singles\docs\project-brief.md`
+**Project-local operational source of truth:**
+`D:\Projects\Clients\Dad\Events4singles\website\docs\events4singles-source-of-truth.md`
 
-Read that file at session start and before any structural, naming, or routing decision.
-Do not rely on memory or assumptions — the brief is the authority.
+**Machine-readable project registry:**
+`D:\Projects\Clients\Dad\Events4singles\website\project.config.json`
+
+Read the source-of-truth doc at session start and before any structural, naming, routing, data, deploy, or Graphify-loop decision. Do not rely on memory or assumptions.
 
 ## This project
 Events4Singles platform rebuild. Australian singles directory (not just events).
@@ -30,7 +31,7 @@ Events4Singles platform rebuild. Australian singles directory (not just events).
 - No better-sqlite3 (removed in D1 migration)
 - Admin and public site share the same D1 binding
 
-## Key rules (summary — full rules in project-brief.md)
+## Key rules (summary — full rules in docs/events4singles-source-of-truth.md)
 - URL structure is category-first: /dance-classes/sydney (never /sydney/dance-classes)
 - DB slugs use underscores, URL slugs use hyphens — auto-converted by toUrlSlug()/toDbSlug()
 - Neutral term for all directory entries: "listings" — never force "events" onto non-event content
@@ -74,7 +75,7 @@ node tools/purge-cloudflare-cache.mjs
 
 Skipping `build:cf` leaves `.open-next` stale. If CSS changes are not visible, purge Cloudflare via `npm run cache:purge`; do not create extra stylesheet files.
 
-## Phase tracking (summary — detail in project-brief.md)
+## Phase tracking
 - Phase 1: Foundation — ✅ COMPLETE
 - Phase 1.5: D1 migration + CF Workers — ✅ COMPLETE
 - Phase A: DB foundation + terminology rename + legacy redirects — ✅ COMPLETE 2026-08-19
@@ -85,3 +86,7 @@ Skipping `build:cf` leaves `.open-next` stale. If CSS changes are not visible, p
 - Phase 2: Portal + Payments — ⏳ pending
 - Phase 3: Events + Features — ⏳ pending
 - Phase 4: Launch — ⏳ pending
+
+## Project Memory
+
+After modifying source, tests, docs, or governance, run `npm run memory:refresh` from `website`. Use `npm run memory:status` to check the graph, hook, and refresh log.

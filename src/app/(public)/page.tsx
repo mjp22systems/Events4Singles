@@ -30,8 +30,19 @@ const FEATURED_CATS = [
   { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/site/home/browse-category-tiles/home-cat-speed-dating.webp" },
   { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/site/home/browse-category-tiles/home-cat-dinner-parties.webp" },
   { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/site/home/browse-category-tiles/home-cat-mixers.webp" },
-  { slug: "dance-classes", label: "Activities", sub: "Hiking, cooking, etc.", img: "/images/site/home/browse-category-tiles/home-cat-activities.webp" },
+  { slug: "dance-classes", label: "Dance Classes", sub: "Learn, move and meet.", img: "/images/site/home/browse-category-tiles/home-cat-activities.webp" },
+  { slug: "cruises4singles", label: "Cruises", sub: "Social outings on the water.", img: "/images/site/home/browse-category-tiles/home-cat-cruises.webp" },
+  { slug: "sport-adventure", label: "Sport & Adventure", sub: "Active ways to connect.", img: "/images/site/home/browse-category-tiles/home-cat-sport.webp" },
+  { slug: "solo-travel", label: "Solo Travel", sub: "Trips with other singles.", img: "/images/site/home/browse-category-tiles/home-cat-travel.webp" },
+  { slug: "walks4singles", label: "Social Walks", sub: "Easy outdoor conversation.", img: "/images/site/home/browse-category-tiles/home-cat-walks.webp" },
+  { slug: "yoga-classes", label: "Yoga Classes", sub: "Calm, strength and balance.", img: "/images/site/home/browse-category-tiles/home-cat-yoga.webp" },
 ];
+
+function pickFeaturedCategories() {
+  return [...FEATURED_CATS]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
+}
 
 
 const EXPERIENCES = [
@@ -53,6 +64,7 @@ export default async function HomePage() {
     getFeaturedListings(HOMEPAGE_FEATURED_LISTING_LIMIT),
     getUpcomingEvents(8),
   ]);
+  const browseCategories = pickFeaturedCategories();
 
   return (
     <>
@@ -95,7 +107,6 @@ export default async function HomePage() {
       <section className="e4s-home-section e4s-home-section--tinted" id="browse-by-intent">
         <div className="e4s-shell e4s-home-section__head">
           <div>
-            <p className="e4s-home-section__eyebrow">Start Here</p>
             <h2>What are you looking for?</h2>
             <p>Three ways in, depending on where you are right now — from quietly working on yourself, to getting out more, to actively looking to meet someone.</p>
           </div>
@@ -163,7 +174,7 @@ export default async function HomePage() {
           <Link className="e4s-home-section__more" href="/categories">View All Categories</Link>
         </div>
         <div className="e4s-shell e4s-home-cat-grid">
-          {FEATURED_CATS.map((cat) => (
+          {browseCategories.map((cat) => (
             <Link key={cat.slug} className="e4s-home-cat-tile" href={`/${cat.slug}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img alt={cat.label} loading="lazy" src={cat.img} />

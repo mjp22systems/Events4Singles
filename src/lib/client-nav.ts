@@ -4,8 +4,12 @@ const NAV_OPEN_STORAGE_KEY = "e4s-nav-open";
 const CLOSE_NAV_EVENT = "e4s:close-nav";
 const SCROLL_TOP_AFTER_NAV_KEY = "e4s_scroll_top_after_nav";
 
+function shouldCloseHeaderMenu() {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 700px)").matches;
+}
+
 export function closeHeaderMenu() {
-  if (typeof window === "undefined") return;
+  if (!shouldCloseHeaderMenu()) return;
 
   window.localStorage.setItem(NAV_OPEN_STORAGE_KEY, "0");
   document.body.classList.remove("e4s-nav-open");

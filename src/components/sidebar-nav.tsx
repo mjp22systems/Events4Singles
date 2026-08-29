@@ -21,6 +21,10 @@ const PIN_TOOLBAR_KEY = "e4s_pin_toolbar_after_refine";
 const NAV_OPEN_STORAGE_KEY = "e4s-nav-open";
 const CLOSE_NAV_EVENT = "e4s:close-nav";
 
+function shouldCloseHeaderMenu() {
+  return window.matchMedia("(max-width: 700px)").matches;
+}
+
 function getPinnedToolbarTarget() {
   const toolbar = document.querySelector<HTMLElement>(".e4s-toolbar-shield");
   if (!toolbar) return null;
@@ -41,6 +45,8 @@ function getToolbarAnchorTarget() {
 }
 
 function closeTopNavigation() {
+  if (!shouldCloseHeaderMenu()) return;
+
   localStorage.setItem(NAV_OPEN_STORAGE_KEY, "0");
   document.body.classList.remove("e4s-nav-open");
   window.dispatchEvent(new Event(CLOSE_NAV_EVENT));
