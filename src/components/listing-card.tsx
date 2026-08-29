@@ -26,6 +26,30 @@ function locationBadges(listing: Listing) {
   return [];
 }
 
+function locationKey(value: string | null | undefined) {
+  return (value || "").replace(/\s+/g, " ").trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function isInternalLocation(value: string | null | undefined) {
+  return ["", "online", "national", "international", "to be confirmed", "tbc", "no location review"].includes(locationKey(value));
+}
+
+function cardMapAddress(listing: Listing) {
+  const location = (listing.location || "").replace(/\s+/g, " ").trim();
+  if (!location || isInternalLocation(location)) return null;
+
+  const city = locationKey(listing.location_city);
+  const state = locationKey(listing.location_state);
+  const cityLabels = splitList(listing.city_labels).map(locationKey);
+  const locationOnly = locationKey(location);
+  if (locationOnly === city || locationOnly === state || cityLabels.includes(locationOnly)) return null;
+
+  return [location, listing.location_city, listing.location_state]
+    .map((part) => (part || "").replace(/\s+/g, " ").trim())
+    .filter((part) => part && !isInternalLocation(part))
+    .join(", ");
+}
+
 export default function ListingCard({ listing, context = "directory" }: Props) {
   const phone = listing.phone || listing.mobile;
   const web = listing.web || listing.business_website;
@@ -38,7 +62,7 @@ export default function ListingCard({ listing, context = "directory" }: Props) {
     : null;
 
   const ltype = listing.listing_type;
-  const address = [listing.location, listing.location_city, listing.location_state].filter(Boolean).join(", ");
+  const address = cardMapAddress(listing);
   const isCircle = ltype === "practitioner";
   const locations = locationBadges(listing);
   const hiddenLocationCount = Math.max(0, splitList(listing.city_slugs).length - locations.length);
