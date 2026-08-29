@@ -399,9 +399,11 @@
   display: flex;
   justify-content: center;
   min-height: 168px;
+  min-width: 0;
   overflow: hidden;
   padding: 0;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  width: 100%;
 }
 
 .e4s-dance-lovable-promoted .e4s-promo-banners a:hover,
