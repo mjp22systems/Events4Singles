@@ -158,6 +158,7 @@ const businessById = new Map(businesses.map((business) => [Number(business.id), 
 const updates = [];
 const businessUpdates = [];
 const review = [];
+const duplicateReview = [];
 
 function addUpdate(listing, fields, reason) {
   const changed = Object.entries(fields).some(([field, value]) => clean(listing[field]) !== clean(value));
@@ -203,6 +204,49 @@ function mirrorBusinessNameIfPolluted(listing, cleanTitle, reason) {
   }
 }
 
+function cleanListingAndBusiness(listing, fields, reason) {
+  addUpdate(listing, fields, reason);
+  if (fields.title) mirrorBusinessNameIfPolluted(listing, fields.title, "mirror title cleanup into matching business name");
+}
+
+function firstSentence(value) {
+  return clean(value).split(/(?<=[.!?])\s+/)[0] ?? "";
+}
+
+function phoneKey(value) {
+  return clean(value).replace(/\D+/g, "").replace(/^0+/, "");
+}
+
+function hostKey(value) {
+  return clean(value)
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .split(/[/?#]/)[0]
+    .replace(/\.com\.au$/, "")
+    .replace(/\.com$/, "")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function duplicateKey(value) {
+  return compact(value)
+    .replace(/\b(?:speed dating|dating dinners|dinners|club|social club|dance studios?|based|for sydney s business people)\b/g, " ")
+    .replace(/\b(?:com au|com|au)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function listingWithProposedTitle(listing) {
+  const pending = updates.find((update) => update.id === Number(listing.id));
+  return pending?.after?.title ?? clean(listing.title);
+}
+
+function repeatedEvidence(values) {
+  const counts = new Map();
+  for (const value of values.filter(Boolean)) counts.set(value, (counts.get(value) ?? 0) + 1);
+  return [...counts.entries()].filter(([, count]) => count > 1).map(([value]) => value);
+}
+
 for (const listing of listings) {
   const title = clean(listing.title);
   const tagline = clean(listing.tagline);
@@ -222,6 +266,70 @@ for (const listing of listings) {
   if (Number(listing.id) === 558) {
     addUpdate(listing, { title: "AusLatin Productions", tagline: "Surrender to the Rhythm!", location: "Hornsby & Castle Hill" }, "move Sydney placement and suburbs/tagline out of title");
     mirrorBusinessNameIfPolluted(listing, "AusLatin Productions", "mirror title cleanup into matching business name");
+    continue;
+  }
+
+  if (Number(listing.id) === 19) {
+    cleanListingAndBusiness(listing, {
+      tagline: "for Sydney's Business People",
+      description: "After Work is Sydney's most active social club for business people. Members are business owners and professionals. After Work is a modern social club that promotes cocktail evenings, dinners, tours, weekends away, theatre and social events.",
+    }, "repair mojibake description prefix and move subtitle into tagline");
+    continue;
+  }
+
+  if (Number(listing.id) === 20) {
+    cleanListingAndBusiness(listing, {
+      title: "After Work Social Club",
+      tagline: "for Sydney's Business People",
+    }, "move subtitle out of business name");
+    continue;
+  }
+
+  if (Number(listing.id) === 22) {
+    cleanListingAndBusiness(listing, {
+      title: "Age of Miracles",
+      location: "Hornsby",
+    }, "move suburb hint out of title into location");
+    continue;
+  }
+
+  if (Number(listing.id) === 63) {
+    cleanListingAndBusiness(listing, { title: "Barbs on the Walk" }, "remove Brisbane prefix already represented by city placement");
+    continue;
+  }
+
+  if (Number(listing.id) === 64) {
+    cleanListingAndBusiness(listing, { title: "Dr. Red Wine" }, "remove Brisbane prefix already represented by city placement");
+    continue;
+  }
+
+  if (Number(listing.id) === 65) {
+    cleanListingAndBusiness(listing, { title: "Straddie Views" }, "remove Brisbane prefix already represented by city placement");
+    continue;
+  }
+
+  if (Number(listing.id) === 68) {
+    cleanListingAndBusiness(listing, { title: "Aquila Retreat", location: "Buderim" }, "move Buderim locality out of title into location");
+    continue;
+  }
+
+  if (Number(listing.id) === 69) {
+    cleanListingAndBusiness(listing, { title: "Rainforest Cabins", location: "Buderim" }, "move Buderim locality out of title into location");
+    continue;
+  }
+
+  if (Number(listing.id) === 582) {
+    cleanListingAndBusiness(listing, { title: "Drinks After Work", tagline: "Social Friends" }, "move subtitle out of business name");
+    continue;
+  }
+
+  if (Number(listing.id) === 680) {
+    cleanListingAndBusiness(listing, { title: "Your Matched", tagline: "Speed Dating Dinners in Geelong" }, "move service/location wording out of business name");
+    continue;
+  }
+
+  if (Number(listing.id) === 805) {
+    cleanListingAndBusiness(listing, { title: "Amourlife", tagline: "Speed Dating" }, "move category wording out of business name");
     continue;
   }
 
@@ -271,6 +379,53 @@ for (const listing of listings) {
   }
 }
 
+const listingsByDuplicateKey = new Map();
+for (const listing of listings) {
+  const candidateTitle = listingWithProposedTitle(listing);
+  const key = duplicateKey(candidateTitle);
+  if (!key || key.length < 4) continue;
+  if (!listingsByDuplicateKey.has(key)) listingsByDuplicateKey.set(key, []);
+  listingsByDuplicateKey.get(key).push(listing);
+}
+
+for (const [key, group] of listingsByDuplicateKey) {
+  if (group.length < 2) continue;
+  const entries = group
+    .map((listing) => {
+      const business = businessById.get(Number(listing.business_id));
+      return {
+        listing_id: Number(listing.id),
+        business_id: Number(listing.business_id),
+        title: listingWithProposedTitle(listing),
+        current_title: clean(listing.title),
+        business_name: clean(business?.name),
+        phone: clean(listing.phone || business?.phone),
+        email: clean(listing.email || business?.email),
+        website: clean(listing.website || business?.website),
+        city: clean(listing.location_city),
+        location: clean(listing.location),
+        description_sample: firstSentence(listing.description),
+      };
+    });
+
+  const sharedPhones = repeatedEvidence(entries.map((entry) => phoneKey(entry.phone)));
+  const sharedEmails = repeatedEvidence(entries.map((entry) => compact(entry.email)));
+  const sharedHosts = repeatedEvidence(entries.map((entry) => hostKey(entry.website)));
+  const sharedSamples = repeatedEvidence(entries.map((entry) => compact(entry.description_sample)));
+  const evidence = [
+    sharedPhones.length ? "shared phone" : "",
+    sharedEmails.length ? "shared email" : "",
+    sharedHosts.length ? "shared website" : "",
+    sharedSamples.length ? "matching opening description" : "",
+  ].filter(Boolean);
+  duplicateReview.push({
+    key,
+    confidence: evidence.length ? "high" : "review",
+    reason: evidence.join(", ") || "similar normalized business name",
+    entries,
+  });
+}
+
 const merged = new Map();
 for (const update of updates) {
   if (!merged.has(update.id)) {
@@ -316,13 +471,14 @@ for (const update of [...mergedBusinessUpdates.values()].sort((a, b) => a.id - b
 const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 const reportPath = path.join(outDir, `title-field-cleanup-candidates-${stamp}.json`);
 const sqlPath = migrationPath || path.join(outDir, `title-field-cleanup-candidates-${stamp}.sql`);
-writeFileSync(reportPath, JSON.stringify({ dump_path: dumpPath, updates: [...merged.values()], business_updates: [...mergedBusinessUpdates.values()], review }, null, 2));
+writeFileSync(reportPath, JSON.stringify({ dump_path: dumpPath, updates: [...merged.values()], business_updates: [...mergedBusinessUpdates.values()], review, duplicate_review: duplicateReview }, null, 2));
 writeFileSync(sqlPath, `${statements.join("\n")}\n`);
 
 console.log(JSON.stringify({
   listing_updates: merged.size,
   business_updates: mergedBusinessUpdates.size,
   review_only: review.length,
+  duplicate_review: duplicateReview.length,
 }, null, 2));
 console.log(`Report: ${reportPath}`);
 console.log(`Migration: ${sqlPath}`);
