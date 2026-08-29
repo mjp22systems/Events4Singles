@@ -148,8 +148,25 @@ function stateForCitySlug(citySlug) {
   return clean(cityBySlug.get(citySlug)?.state || "");
 }
 
-function titleCityMentions(title) {
-  const text = ` ${key(title)} `;
+function shouldReplaceLocation(currentLocation, currentCity) {
+  const locationKey = key(currentLocation);
+  const cityKey = key(currentCity);
+  if (!locationKey) return true;
+  if (locationKey === cityKey) return true;
+  if (["no location review", "to be confirmed", "tbc", "online", "national", "international"].includes(locationKey)) return true;
+  if (regionLocations.has(slug(currentLocation))) return true;
+  return false;
+}
+
+function inferredLocationValue(listing, citySlug) {
+  const currentLocation = clean(listing.location);
+  const currentCity = clean(listing.location_city);
+  if (!shouldReplaceLocation(currentLocation, currentCity)) return currentLocation;
+  return titleLocationFragment(clean(listing.title), citySlug) || labelForCitySlug(citySlug);
+}
+
+function cityMentions(value) {
+  const text = ` ${key(value)} `;
   const hits = new Set();
   for (const city of cities) {
     if (["tbc", "national", "online", "international", "no_location"].includes(city.slug)) continue;
@@ -159,6 +176,47 @@ function titleCityMentions(title) {
     if (pattern.test(text)) hits.add(city.slug);
   }
   return [...hits];
+}
+
+function cityEvidence(listing) {
+  const fields = [
+    ["title", listing.title],
+    ["tagline", listing.tagline],
+    ["description", listing.description],
+    ["promo", listing.promo],
+    ["location", listing.location],
+  ];
+  const evidence = [];
+  for (const [field, value] of fields) {
+    const hits = cityMentions(value);
+    for (const citySlug of hits) {
+      evidence.push({
+        field,
+        citySlug,
+        excerpt: excerptAroundCity(value, citySlug),
+      });
+    }
+  }
+  const sourceCity = strongSourceCity(listing.source_file);
+  if (sourceCity) {
+    evidence.push({
+      field: "source_file",
+      citySlug: sourceCity,
+      excerpt: clean(listing.source_file),
+    });
+  }
+  return evidence;
+}
+
+function excerptAroundCity(value, citySlug) {
+  const text = clean(value);
+  if (!text) return "";
+  const label = labelForCitySlug(citySlug);
+  const index = text.toLowerCase().indexOf(label.toLowerCase());
+  if (index === -1) return text.slice(0, 180);
+  const start = Math.max(0, index - 70);
+  const end = Math.min(text.length, index + label.length + 70);
+  return `${start > 0 ? "..." : ""}${text.slice(start, end)}${end < text.length ? "..." : ""}`;
 }
 
 function strongSourceCity(sourceFile) {
@@ -229,23 +287,61 @@ for (const listing of listings) {
     reasons.push(`normalise internal location '${currentCity}'`);
   }
 
-  const titleCities = titleCityMentions(title);
-  const sourceCity = strongSourceCity(listing.source_file);
-  const candidateCity = titleCities.length === 1 ? titleCities[0] : sourceCity;
+  const evidence = cityEvidence(listing);
+  const titleCities = evidence.filter((item) => item.field === "title").map((item) => item.citySlug);
+  const evidenceCities = [...new Set(evidence.map((item) => item.citySlug))];
+  const sourceCity = evidence.find((item) => item.field === "source_file")?.citySlug || null;
+  const candidateCity = titleCities.length === 1 ? titleCities[0] : titleCities.length === 0 ? sourceCity : null;
   const safePlaceholder = ["", "no location review", "to be confirmed", "tbc"].includes(key(currentCity));
+  const missingCityPlacement = cityPlacements.size === 0;
+  const bodyEvidenceCity = evidenceCities.length === 1 ? evidenceCities[0] : null;
+  const canUseBodyEvidence =
+    missingCityPlacement &&
+    bodyEvidenceCity &&
+    safePlaceholder &&
+    key(listing.listing_type) !== "online";
 
-  if (candidateCity && safePlaceholder) {
+  if (evidenceCities.length > 1) {
+    review.push({
+      id,
+      title,
+      location_city: currentCity,
+      placement_cities: [...cityPlacements].join(", "),
+      reason: `multiple city mentions: ${evidenceCities.join(", ")}`,
+      evidence,
+    });
+  } else if (candidateCity && safePlaceholder) {
     update.location_city = labelForCitySlug(candidateCity);
     update.location_state = stateForCitySlug(candidateCity);
-    update.location = titleLocationFragment(title, candidateCity) || labelForCitySlug(candidateCity);
+    update.location = inferredLocationValue(listing, candidateCity);
     reasons.push(`derive city from ${titleCities.length === 1 ? "title" : "source path"}`);
     if (!cityPlacements.has(candidateCity)) {
       placementAdds.push({ id, citySlug: candidateCity, categorySlugs: [...new Set(listingPlacements.map((p) => p.category_slug).filter(Boolean))], reason: reasons.at(-1) });
     }
+  } else if (canUseBodyEvidence) {
+    update.location_city = labelForCitySlug(bodyEvidenceCity);
+    update.location_state = stateForCitySlug(bodyEvidenceCity);
+    update.location = inferredLocationValue(listing, bodyEvidenceCity);
+    reasons.push(`derive city from listing text evidence: ${evidence.map((item) => item.field).join(", ")}`);
+    placementAdds.push({
+      id,
+      citySlug: bodyEvidenceCity,
+      categorySlugs: [...new Set(listingPlacements.map((p) => p.category_slug).filter(Boolean))],
+      reason: reasons.at(-1),
+    });
   } else if (titleCities.length > 1) {
-    review.push({ id, title, location_city: currentCity, placement_cities: [...cityPlacements].join(", "), reason: `multiple title city mentions: ${titleCities.join(", ")}` });
+    review.push({ id, title, location_city: currentCity, placement_cities: [...cityPlacements].join(", "), reason: `multiple title city mentions: ${titleCities.join(", ")}`, evidence });
   } else if (titleCities.length === 1 && cityPlacements.size && !cityPlacements.has(titleCities[0])) {
-    review.push({ id, title, location_city: currentCity, placement_cities: [...cityPlacements].join(", "), reason: `title mentions ${titleCities[0]} but placements differ` });
+    review.push({ id, title, location_city: currentCity, placement_cities: [...cityPlacements].join(", "), reason: `title mentions ${titleCities[0]} but placements differ`, evidence });
+  } else if (missingCityPlacement && evidenceCities.length === 1 && !safePlaceholder) {
+    review.push({
+      id,
+      title,
+      location_city: currentCity,
+      placement_cities: "",
+      reason: `single city mention ${evidenceCities[0]}, but current location_city is not a review placeholder`,
+      evidence,
+    });
   }
 
   if (Object.keys(update).length) {
