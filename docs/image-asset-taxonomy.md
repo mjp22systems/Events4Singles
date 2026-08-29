@@ -7,6 +7,7 @@ This project keeps page-owned presentation images separate from reusable directo
 Homepage-only imagery lives under `public/images/site/home/`.
 
 - `hero/` contains the homepage hero background.
+- `hero/home-hero-mixers-enhanced.webp` is the production homepage hero. It is an AI-enhanced, wider repair derived from `hero/home-hero-mixers.webp`; keep future replacements compositionally aligned with the original rooftop mixer scene unless the homepage design is intentionally changed.
 - `intent-cards/` contains the "What are you looking for?" pathway tiles.
 - `city-cards/` contains homepage-specific city tile crops.
 - `browse-category-tiles/` contains homepage-specific Browse by Category tile crops.
