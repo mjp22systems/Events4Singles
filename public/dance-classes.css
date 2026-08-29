@@ -201,7 +201,7 @@
 .e4s-dance-lovable-hero__media {
   border: 1px solid var(--dance-border);
   border-radius: 8px;
-  height: clamp(340px, 32vw, 430px);
+  height: clamp(340px, 30vw, 411px);
   max-width: 100%;
   min-height: 340px;
   min-width: 0;
@@ -368,7 +368,7 @@
 .e4s-dance-lovable-heading > a {
   align-items: center;
   border-bottom: 1px solid var(--dance-accent);
-  color: var(--dance-accent);
+  color: var(--dance-accent) !important;
   display: inline-flex;
   font-size: 14px;
   font-weight: 750;
@@ -378,7 +378,7 @@
 
 .e4s-dance-lovable-heading > a:hover {
   border-color: var(--dance-primary);
-  color: var(--dance-primary);
+  color: var(--dance-primary) !important;
 }
 
 .e4s-dance-lovable-promoted,
