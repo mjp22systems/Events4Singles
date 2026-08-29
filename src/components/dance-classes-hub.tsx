@@ -107,7 +107,7 @@ function cityImage(city: City) {
 }
 
 function citySummary(city: City) {
-  return `${city.listing_count}`;
+  return city.state ? `${city.state} / ${city.listing_count}` : `${city.listing_count}`;
 }
 
 function seoStyleGroups(styles: Category[], cities: City[]) {
@@ -223,7 +223,7 @@ export default async function DanceClassesHub(props: Props) {
           <div className="e4s-dance-lovable-hero__copy">
             <span className="e4s-dance-lovable-chip">
               <MapPin aria-hidden="true" size={14} />
-              Australia-wide directory
+              Australia-Wide Directory
             </span>
             <h1>
               Dance classes for singles, <span>no partner required</span>
@@ -236,33 +236,33 @@ export default async function DanceClassesHub(props: Props) {
 
             <div className="e4s-dance-lovable-hero__actions">
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#styles">
-                Browse by style
+                Browse by Style
                 <ArrowRight aria-hidden="true" size={16} />
               </Link>
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="#cities">
-                Browse by city
+                Browse by City
               </Link>
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="#guidance">
-                I&apos;m not sure yet
+                I&apos;m Not Sure Yet
               </Link>
             </div>
 
             <dl className="e4s-dance-lovable-stats" aria-label="Dance classes directory summary">
               <div>
                 <dt>{listings.length}</dt>
-                <dd>Classes listed</dd>
+                <dd>Classes Listed</dd>
               </div>
               <div>
                 <dt>{sortedStyles.length}</dt>
-                <dd>Dance styles</dd>
+                <dd>Dance Styles</dd>
               </div>
               <div>
                 <dt>{cities.length}</dt>
-                <dd>Cities &amp; regions</dd>
+                <dd>Cities &amp; Regions</dd>
               </div>
               <div>
                 <dt>Guide</dt>
-                <dd>Beginner friendly</dd>
+                <dd>Beginner Friendly</dd>
               </div>
             </dl>
           </div>
@@ -279,7 +279,7 @@ export default async function DanceClassesHub(props: Props) {
             ))}
             <div>
               <BadgeCheck aria-hidden="true" size={16} />
-              Listings checked for singles-friendly policy
+              Listings Checked for Singles-Friendly Policy
             </div>
           </div>
         </section>
@@ -289,23 +289,23 @@ export default async function DanceClassesHub(props: Props) {
             {[
               {
                 icon: Music4,
-                title: "Browse by style",
+                title: "Browse by Style",
                 body: "Salsa, bachata, ballroom, swing, tango. See what each one actually feels like.",
-                cta: "See all styles",
+                cta: "See All Styles",
                 href: "#styles",
               },
               {
                 icon: MapPin,
-                title: "Browse by city",
+                title: "Browse by City",
                 body: "Every capital plus regional hubs, with class counts from the directory.",
-                cta: "See all cities",
+                cta: "See All Cities",
                 href: "#cities",
               },
               {
                 icon: Compass,
-                title: "Not sure yet?",
+                title: "Not Sure Yet?",
                 body: "Start from what you want from the night and move into a style guide.",
-                cta: "Open the style guide",
+                cta: "Open the Style Guide",
                 href: "#guidance",
               },
             ].map((card) => (
@@ -324,12 +324,12 @@ export default async function DanceClassesHub(props: Props) {
 
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-promoted" aria-labelledby="dance-promoted-title">
           <SectionHeading
-            action="Advertising options"
+            action="Advertising Options"
             actionHref="/advertise"
             eyebrow="Promoted"
             id="dance-promoted-title"
             sub="Paid placements from dance schools and promoters. Twelve slots in a 6x2 surface, ready for the existing promotion system."
-            title="Featured classes & studios"
+            title="Featured Classes & Studios"
           />
           <div className="e4s-dance-lovable-promoted-grid">
             {promotedSlots.map((listing, index) =>
@@ -347,7 +347,7 @@ export default async function DanceClassesHub(props: Props) {
                   <p>{listingSummary(listing)}</p>
                   <small>
                     <CalendarDays aria-hidden="true" size={14} />
-                    View class details
+                    View Class Details
                   </small>
                 </Link>
               ) : (
@@ -355,8 +355,8 @@ export default async function DanceClassesHub(props: Props) {
                   <span>
                     <Plus aria-hidden="true" size={18} />
                   </span>
-                  <strong>Advertise here</strong>
-                  <em>Dance class promotion slot</em>
+                  <strong>Advertise Here</strong>
+                  <em>Dance Class Promotion Slot</em>
                 </Link>
               ),
             )}
@@ -367,7 +367,7 @@ export default async function DanceClassesHub(props: Props) {
               Tiles are sold by dance category, city, or exact category and city scope.
             </p>
             <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="/advertise">
-              Reserve a dance class tile
+              Reserve a Dance Class Tile
               <ArrowRight aria-hidden="true" size={16} />
             </Link>
           </div>
@@ -376,11 +376,11 @@ export default async function DanceClassesHub(props: Props) {
         <section className="e4s-dance-lovable-band" id="styles">
           <div className="e4s-dance-lovable-shell">
             <SectionHeading
-              action="All styles"
+              action="All Styles"
               actionHref="/dance-classes/styles"
-              eyebrow="Choose by style"
+              eyebrow="Choose by Style"
               sub="Each style page lists beginner courses, drop-in classes and socials, city by city."
-              title="Pick the room that suits you"
+              title="Pick the Room That Suits You"
             />
             <div className="e4s-dance-lovable-style-grid">
               {sortedStyles.map((style) => (
@@ -388,7 +388,7 @@ export default async function DanceClassesHub(props: Props) {
                   <span className="e4s-dance-lovable-style-card__image">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt={`${styleTitle(style)} class`} loading="lazy" src={styleImage(style)} />
-                    <span>{style.listing_count} classes</span>
+                    <span>{style.listing_count} Classes</span>
                   </span>
                   <span className="e4s-dance-lovable-style-card__copy">
                     <strong>{styleTitle(style)}</strong>
@@ -409,9 +409,9 @@ export default async function DanceClassesHub(props: Props) {
 
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance" id="guidance">
           <SectionHeading
-            eyebrow="Not sure yet"
+            eyebrow="Not Sure Yet"
             sub="Four common reasons singles book a first class, and the styles that tend to deliver."
-            title="Start from what you actually want"
+            title="Start from What You Actually Want"
           />
           <div className="e4s-dance-lovable-guidance-grid">
             {danceStyleDecisionPaths.map((path, index) => {
@@ -443,11 +443,11 @@ export default async function DanceClassesHub(props: Props) {
         <section className="e4s-dance-lovable-band" id="cities">
           <div className="e4s-dance-lovable-shell">
             <SectionHeading
-              action="All locations"
+              action="All Locations"
               actionHref="/dance-classes"
-              eyebrow="Choose by city"
+              eyebrow="Choose by City"
               sub="Capital cities and regional hubs, with venues, class nights and socials."
-              title="Dance classes near you"
+              title="Dance Classes Near You"
             />
             <div className="e4s-dance-lovable-city-grid">
               {sortedCities.map((city) => (
@@ -468,10 +468,10 @@ export default async function DanceClassesHub(props: Props) {
 
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-searches" aria-labelledby="dance-searches-title">
           <SectionHeading
-            eyebrow="Popular searches"
+            eyebrow="Popular Searches"
             id="dance-searches-title"
             sub="Direct internal links to the combinations singles look for most."
-            title="Styles by city"
+            title="Styles by City"
           />
           <div className="e4s-dance-lovable-search-grid">
             {popularSearchGroups.map(({ style, cities: groupCities }) => {
@@ -504,7 +504,7 @@ export default async function DanceClassesHub(props: Props) {
               choose a room that feels comfortable.
             </p>
             <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="/dance-classes/styles">
-              Read the beginner guide
+              Read the Beginner Guide
               <ArrowRight aria-hidden="true" size={16} />
             </Link>
           </article>
@@ -517,10 +517,10 @@ export default async function DanceClassesHub(props: Props) {
             </p>
             <div>
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="/advertise">
-                List your class free
+                List Your Class Free
               </Link>
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="/advertise">
-                See advertising rates
+                See Advertising Rates
               </Link>
             </div>
           </article>
