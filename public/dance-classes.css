@@ -1,17 +1,17 @@
 #site-content.e4s-dance-lovable {
   --dance-bg: #ffffff;
-  --dance-fg: #2a2230;
-  --dance-muted: #6f6575;
+  --dance-fg: var(--e4s-ink, #14313f);
+  --dance-muted: var(--e4s-muted, #5f7180);
   --dance-card: #ffffff;
-  --dance-border: #eadfe7;
-  --dance-surface: #fcf8fb;
-  --dance-primary: #d52d78;
-  --dance-primary-deep: #9f1f58;
-  --dance-primary-soft: #fce8f2;
-  --dance-accent: #278999;
-  --dance-accent-deep: #176575;
-  --dance-accent-soft: #e7f5f6;
-  --dance-shadow: 0 18px 44px rgba(67, 44, 65, 0.11);
+  --dance-border: var(--e4s-border, #bddedb);
+  --dance-surface: var(--e4s-page-bg, #f5faf9);
+  --dance-primary: var(--e4s-pink, #8b2f43);
+  --dance-primary-deep: #6b2033;
+  --dance-primary-soft: #f7eaec;
+  --dance-accent: var(--e4s-teal-700, #087271);
+  --dance-accent-deep: var(--e4s-teal-900, #064e4d);
+  --dance-accent-soft: var(--e4s-teal-50, #f0fbfa);
+  --dance-shadow: 0 18px 44px rgba(20, 49, 63, 0.12);
   background: var(--dance-bg);
   color: var(--dance-fg);
   font-family: var(--font-sans, "Public Sans", Arial, sans-serif);
@@ -58,7 +58,7 @@
 
 .e4s-dance-lovable-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
   gap: 24px;
   align-items: stretch;
   padding-block: 32px;
@@ -195,10 +195,11 @@
 }
 
 .e4s-dance-lovable-hero__media {
-  aspect-ratio: 1.42 / 1;
+  aspect-ratio: 1.35 / 1;
   border: 1px solid var(--dance-border);
   border-radius: 8px;
-  min-height: 360px;
+  max-height: 470px;
+  min-height: 320px;
   overflow: hidden;
   position: relative;
 }
