@@ -12,14 +12,14 @@ import {
   getListingsForCity,
   getSubcategoriesForCategory,
 } from "@/lib/data";
-import { toDbSlug } from "@/lib/constants";
+import { toDbSlug, toUrlSlug } from "@/lib/constants";
 import AdvertiseCard from "@/components/advertise-card";
 import HeroImage from "@/components/hero-image";
 import LocationPager from "@/components/location-pager";
 import CategoryPager from "@/components/category-pager";
+import MobileSidePager from "@/components/mobile-side-pager";
 import CategoryCitySelect from "@/components/category-city-select";
 import NavSelect from "@/components/nav-select";
-import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import PromoBanners from "@/components/promo-banners";
 import PageSidebar from "@/components/page-sidebar";
 import CityCategorySelect from "@/components/city-category-select";
@@ -180,9 +180,6 @@ export default async function CategoryOrCityPage({ params }: Props) {
   ]);
   const parentCats = allCats.filter((c) => !c.parent_slug);
   const subcategories = await getSubcategoriesForCategory(dbSlug);
-  const mobileSubcategories = dbSlug === "dance_classes"
-    ? subcategories.filter((cat) => cat.slug !== "dance_styles")
-    : subcategories;
   if (dbSlug === "dance_classes") {
     return (
       <DanceClassesHub
@@ -195,6 +192,14 @@ export default async function CategoryOrCityPage({ params }: Props) {
   }
   const intro = categoryIntroCopy(catMeta, cities.length, listings.length);
   const footerCopy = categorySeoFooterCopy(catMeta, cities.length);
+  const sortedParentCats = [...parentCats].sort((a, b) => a.label.localeCompare(b.label));
+  const currentParentIndex = sortedParentCats.findIndex((cat) => cat.slug === dbSlug);
+  const mobilePreviousCategory = currentParentIndex >= 0 && sortedParentCats.length > 1
+    ? sortedParentCats[(currentParentIndex - 1 + sortedParentCats.length) % sortedParentCats.length]
+    : null;
+  const mobileNextCategory = currentParentIndex >= 0 && sortedParentCats.length > 1
+    ? sortedParentCats[(currentParentIndex + 1) % sortedParentCats.length]
+    : null;
   const jsonLd = [
     collectionPageJsonLd({
       name: `${catMeta.label} for Singles`,
@@ -214,9 +219,14 @@ export default async function CategoryOrCityPage({ params }: Props) {
       beforeHero={(
         <>
           <CategoryPager categories={parentCats} currentDbSlug={dbSlug} />
+          <MobileSidePager
+            label="Category navigation"
+            previous={mobilePreviousCategory ? { href: `/${toUrlSlug(mobilePreviousCategory.slug)}`, label: mobilePreviousCategory.label } : null}
+            next={mobileNextCategory ? { href: `/${toUrlSlug(mobileNextCategory.slug)}`, label: mobileNextCategory.label } : null}
+          />
           <nav
             aria-label={`${catMeta.label} mobile navigation`}
-            className={`e4s-category-child-nav e4s-category-child-nav--category-mobile${mobileSubcategories.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
+            className="e4s-category-child-nav e4s-category-child-nav--category-mobile"
           >
             <Link className="e4s-category-child-nav__back" href="/categories">
               All Categories
@@ -227,16 +237,6 @@ export default async function CategoryOrCityPage({ params }: Props) {
                   cities={cities}
                   categoryUrlSlug={param}
                   placeholder="Select city"
-                />
-              </label>
-            ) : null}
-            {mobileSubcategories.length > 0 ? (
-              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
-                <span>View style</span>
-                <SubcategoryNavSelect
-                  subcategories={mobileSubcategories}
-                  parentUrlSlug={param}
-                  placeholder="Select style"
                 />
               </label>
             ) : null}

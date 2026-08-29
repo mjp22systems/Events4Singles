@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 const projectRoot = process.cwd();
 const constantsSource = readFileSync(path.join(projectRoot, "src", "lib", "constants.ts"), "utf8");
+const categoryOverviewSource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "page.tsx"), "utf8");
 const categoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "[subcategory]", "page.tsx"), "utf8");
 const subcategoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "[subcategory]", "[city]", "page.tsx"), "utf8");
 const pageSidebarSource = readFileSync(path.join(projectRoot, "src", "components", "page-sidebar.tsx"), "utf8");
@@ -53,4 +54,14 @@ test("child category aliases redirect to the canonical child slug", () => {
   assert.match(subcategoryCitySource, /permanentRedirect\(`\/\$\{category\}\/\$\{canonicalSubcategory\}\/\$\{city\}`\)/);
   assert.match(constantsSource, /if \(childDbSlug\.endsWith\("_dance"\)\)/);
   assert.match(constantsSource, /candidates\.push\(styleSlug, `dance_\$\{styleSlug\}`\)/);
+});
+
+test("category overview pages expose mobile category paging without a second selector row", () => {
+  assert.match(categoryOverviewSource, /<CategoryPager categories=\{parentCats\} currentDbSlug=\{dbSlug\} \/>/);
+  assert.match(categoryOverviewSource, /<MobileSidePager[\s\S]*label="Category navigation"/);
+  assert.match(categoryOverviewSource, /previous=\{mobilePreviousCategory \? \{ href: `\/\$\{toUrlSlug\(mobilePreviousCategory\.slug\)\}`/);
+  assert.match(categoryOverviewSource, /next=\{mobileNextCategory \? \{ href: `\/\$\{toUrlSlug\(mobileNextCategory\.slug\)\}`/);
+  assert.match(categoryOverviewSource, /className="e4s-category-child-nav e4s-category-child-nav--category-mobile"/);
+  assert.doesNotMatch(categoryOverviewSource, /mobileSubcategories/);
+  assert.doesNotMatch(categoryOverviewSource, /placeholder="Select style"/);
 });
