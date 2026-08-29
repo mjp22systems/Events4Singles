@@ -18,15 +18,12 @@ export default function CategoryCitySelect({ cities, categoryUrlSlug, currentCit
       <select
         aria-label="Filter by city"
         value={currentCitySlug ?? ""}
-        onClick={closeHeaderMenu}
         onChange={(e) => {
           closeHeaderMenu();
           const val = e.target.value;
           if (val) router.push(`/${categoryUrlSlug}/${val}`);
           else router.push(`/${categoryUrlSlug}`);
         }}
-        onFocus={closeHeaderMenu}
-        onPointerDown={closeHeaderMenu}
       >
         <option value="">All Cities</option>
         {cities.map((c) => (

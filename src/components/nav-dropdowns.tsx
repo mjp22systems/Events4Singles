@@ -67,15 +67,12 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Cities</span>
         <select
           value=""
-          onClick={closeHeaderMenu}
           onChange={(e) => {
             const val = e.target.value;
             closeHeaderMenu();
             if (val === "__all__") router.push("/cities");
             else if (val) router.push(`/${toUrlSlug(val)}`);
           }}
-          onFocus={closeHeaderMenu}
-          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>
             {cityLabel}
@@ -94,15 +91,12 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Categories</span>
         <select
           value=""
-          onClick={closeHeaderMenu}
           onChange={(e) => {
             const val = e.target.value;
             closeHeaderMenu();
             if (val === "__all__") router.push("/categories");
             else if (val) router.push(`/${val}`);
           }}
-          onFocus={closeHeaderMenu}
-          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>
             {categoryLabel}
@@ -121,13 +115,10 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Information</span>
         <select
           value=""
-          onClick={closeHeaderMenu}
           onChange={(e) => {
             closeHeaderMenu();
             if (e.target.value) router.push(e.target.value);
           }}
-          onFocus={closeHeaderMenu}
-          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>
           <option value="/about">About</option>

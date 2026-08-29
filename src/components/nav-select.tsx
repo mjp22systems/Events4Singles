@@ -17,14 +17,11 @@ export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug = "
   return (
     <select
       value={currentCitySlug}
-      onClick={closeHeaderMenu}
       onChange={(e) => {
         if (!e.target.value) return;
         closeHeaderMenu();
         router.push(`/${categoryUrlSlug}/${toUrlSlug(e.target.value)}`);
       }}
-      onFocus={closeHeaderMenu}
-      onPointerDown={closeHeaderMenu}
       aria-label="Choose city"
     >
       {placeholder ? (
