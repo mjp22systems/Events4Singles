@@ -2,20 +2,21 @@ import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
+  CalendarDays,
   Compass,
   Heart,
   MapPin,
   Megaphone,
   Music4,
+  Plus,
   ShieldCheck,
   Sparkles,
   Users,
 } from "lucide-react";
 import BodyClass from "@/components/body-class";
-import PromoBanners from "@/components/promo-banners";
 import { danceStyleDecisionPaths, danceStyleLinks } from "@/content/dance-styles";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
-import { toCategoryChildUrlSegment, toUrlSlug } from "@/lib/constants";
+import { toCategoryChildUrlSegment, toListingSlug, toUrlSlug } from "@/lib/constants";
 import { breadcrumbJsonLd, collectionPageJsonLd } from "@/lib/seo";
 import type { Category, City, Listing } from "@/lib/types";
 
@@ -106,8 +107,7 @@ function cityImage(city: City) {
 }
 
 function citySummary(city: City) {
-  const state = city.state ? `${city.state} / ` : "";
-  return `${state}${city.listing_count} ${city.listing_count === 1 ? "option" : "options"}`;
+  return `${city.listing_count}`;
 }
 
 function seoStyleGroups(styles: Category[], cities: City[]) {
@@ -116,6 +116,24 @@ function seoStyleGroups(styles: Category[], cities: City[]) {
     style,
     cities: topCities,
   }));
+}
+
+function listingTitle(listing: Listing) {
+  return listing.business_name || listing.title;
+}
+
+function listingStyle(listing: Listing) {
+  return listing.category_label || "Dance class";
+}
+
+function listingCity(listing: Listing) {
+  if (listing.city_label) return listing.city_label;
+  if (listing.city_labels) return listing.city_labels.split(",")[0]?.trim() || "Australia";
+  return listing.location_city || "Australia";
+}
+
+function listingSummary(listing: Listing) {
+  return listing.tagline || "View class details, location, and contact options.";
 }
 
 function SectionHeading({
@@ -164,6 +182,8 @@ export default async function DanceClassesHub(props: Props) {
     }
     return b.listing_count - a.listing_count || a.label.localeCompare(b.label);
   });
+  const featuredListings = listings.slice(0, 6);
+  const promotedSlots = Array.from({ length: 12 }, (_, index) => featuredListings[index] ?? null);
   const popularSearchGroups = seoStyleGroups(sortedStyles, sortedCities);
   const jsonLd = [
     collectionPageJsonLd({
@@ -308,10 +328,39 @@ export default async function DanceClassesHub(props: Props) {
             actionHref="/advertise"
             eyebrow="Promoted"
             id="dance-promoted-title"
-            sub="Paid placements from dance schools and promoters. Twelve slots in a 6x2 surface, backed by the existing tile system."
+            sub="Paid placements from dance schools and promoters. Twelve slots in a 6x2 surface, ready for the existing promotion system."
             title="Featured classes & studios"
           />
-          <PromoBanners mode="category" categoryDbSlug="dance_classes" rows={2} />
+          <div className="e4s-dance-lovable-promoted-grid">
+            {promotedSlots.map((listing, index) =>
+              listing ? (
+                <Link
+                  key={listing.id}
+                  className="e4s-dance-lovable-feature-card"
+                  href={`/listing/${toListingSlug(listing.id, listingTitle(listing))}`}
+                >
+                  <span>Featured</span>
+                  <strong>{listingTitle(listing)}</strong>
+                  <em>
+                    {listingStyle(listing)} / {listingCity(listing)}
+                  </em>
+                  <p>{listingSummary(listing)}</p>
+                  <small>
+                    <CalendarDays aria-hidden="true" size={14} />
+                    View class details
+                  </small>
+                </Link>
+              ) : (
+                <Link key={`advertise-${index}`} className="e4s-dance-lovable-ad-card" href="/advertise">
+                  <span>
+                    <Plus aria-hidden="true" size={18} />
+                  </span>
+                  <strong>Advertise here</strong>
+                  <em>Dance class promotion slot</em>
+                </Link>
+              ),
+            )}
+          </div>
           <div className="e4s-dance-lovable-promo-note">
             <p>
               <Megaphone aria-hidden="true" size={16} />
@@ -407,8 +456,10 @@ export default async function DanceClassesHub(props: Props) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt={`Dance classes in ${city.label}`} loading="lazy" src={cityImage(city)} />
                   </span>
-                  <strong>{city.label}</strong>
-                  <em>{citySummary(city)}</em>
+                  <span className="e4s-dance-lovable-city-card__body">
+                    <strong>{city.label}</strong>
+                    <em>{citySummary(city)}</em>
+                  </span>
                 </Link>
               ))}
             </div>
