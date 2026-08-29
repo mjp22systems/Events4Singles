@@ -2,6 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
+  getAllCategories,
   getCategoryMeta,
   getCategoriesForCity,
   getCitiesForCategory,
@@ -125,24 +126,25 @@ export default async function CategoryCityPage({ params }: Props) {
       ...childMeta,
       label: categoryChildLabelForDisplay(categoryDbSlug, childMeta.label),
     };
-    const [childCities, listings, siblingSubcategories] = await Promise.all([
+    const [childCities, listings, siblingSubcategories, parentCategories] = await Promise.all([
       getCitiesForCategory(childMeta.slug),
       getListingsForCategory(childMeta.slug),
       getSubcategoriesForCategory(categoryDbSlug),
+      getAllCategories(),
     ]);
     const cities = childCities.length > 0 ? childCities : await getCitiesForCategory(catMeta.slug);
     const styleSubcategories = categoryDbSlug === "dance_classes"
       ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
       : siblingSubcategories;
-    const sortedStyleSubcategories = [...styleSubcategories].sort((a, b) => a.label.localeCompare(b.label));
-    const currentStyleIndex = sortedStyleSubcategories.findIndex((cat) => cat.slug === childMeta.slug);
-    const mobilePreviousStyle = currentStyleIndex >= 0 && sortedStyleSubcategories.length > 1
-      ? sortedStyleSubcategories[(currentStyleIndex - 1 + sortedStyleSubcategories.length) % sortedStyleSubcategories.length]
+    const parentCats = parentCategories.filter((cat) => !cat.parent_slug);
+    const sortedParentCats = [...parentCats].sort((a, b) => a.label.localeCompare(b.label));
+    const currentParentIndex = sortedParentCats.findIndex((cat) => cat.slug === categoryDbSlug);
+    const mobilePreviousCategory = currentParentIndex >= 0 && sortedParentCats.length > 1
+      ? sortedParentCats[(currentParentIndex - 1 + sortedParentCats.length) % sortedParentCats.length]
       : null;
-    const mobileNextStyle = currentStyleIndex >= 0 && sortedStyleSubcategories.length > 1
-      ? sortedStyleSubcategories[(currentStyleIndex + 1) % sortedStyleSubcategories.length]
+    const mobileNextCategory = currentParentIndex >= 0 && sortedParentCats.length > 1
+      ? sortedParentCats[(currentParentIndex + 1) % sortedParentCats.length]
       : null;
-    const stylePathFor = (childSlug: string) => `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}`;
     const intro = categoryIntroCopy(childDisplayMeta, cities.length, listings.length);
     const footerCopy = categorySeoFooterCopy(childDisplayMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
@@ -189,9 +191,9 @@ export default async function CategoryCityPage({ params }: Props) {
               parentUrlSlug={category}
             />
             <MobileSidePager
-              label={`${catMeta.label} style navigation`}
-              previous={mobilePreviousStyle ? { href: stylePathFor(mobilePreviousStyle.slug), label: categoryChildLabelForDisplay(categoryDbSlug, mobilePreviousStyle.label) } : null}
-              next={mobileNextStyle ? { href: stylePathFor(mobileNextStyle.slug), label: categoryChildLabelForDisplay(categoryDbSlug, mobileNextStyle.label) } : null}
+              label="Category navigation"
+              previous={mobilePreviousCategory ? { href: `/${toUrlSlug(mobilePreviousCategory.slug)}`, label: mobilePreviousCategory.label } : null}
+              next={mobileNextCategory ? { href: `/${toUrlSlug(mobileNextCategory.slug)}`, label: mobileNextCategory.label } : null}
             />
             <nav
               aria-label={`${childDisplayMeta.label} navigation`}
@@ -288,15 +290,6 @@ export default async function CategoryCityPage({ params }: Props) {
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
   const navigableSubcategories = styleSubcategories;
-  const sortedNavigableSubcategories = [...navigableSubcategories].sort((a, b) => a.label.localeCompare(b.label));
-  const mobilePreviousStyle = sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[sortedNavigableSubcategories.length - 1]
-    : null;
-  const mobileNextStyle = sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[0]
-    : null;
-  const cityStylePathFor = (childSlug: string) =>
-    `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}/${subcategory}`;
   const sortedCityCategories = [...cityCategories].sort((a, b) => a.label.localeCompare(b.label));
   const currentCityCategoryIndex = sortedCityCategories.findIndex((cat) => cat.slug === categoryDbSlug);
   const mobilePreviousCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
@@ -306,19 +299,13 @@ export default async function CategoryCityPage({ params }: Props) {
     ? sortedCityCategories[(currentCityCategoryIndex + 1) % sortedCityCategories.length]
     : null;
   const cityCategoryPathFor = (categorySlug: string) => categoryPathWithOptionalCity(categorySlug, subcategory);
-  const mobilePagerPrevious = mobilePreviousStyle
-    ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label }
-    : mobilePreviousCategory
-      ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label }
-      : null;
-  const mobilePagerNext = mobileNextStyle
-    ? { href: cityStylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label }
-    : mobileNextCategory
-      ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label }
-      : null;
-  const mobilePagerLabel = mobilePreviousStyle || mobileNextStyle
-    ? `${catMeta.label} style navigation`
-    : `${cityMeta.label} category navigation`;
+  const mobilePagerPrevious = mobilePreviousCategory
+    ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label }
+    : null;
+  const mobilePagerNext = mobileNextCategory
+    ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label }
+    : null;
+  const mobilePagerLabel = `${cityMeta.label} category navigation`;
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);

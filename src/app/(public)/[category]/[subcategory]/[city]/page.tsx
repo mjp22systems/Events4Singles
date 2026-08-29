@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getCategoryMeta,
+  getCategoriesForCity,
   getCitiesForCategory,
   getListingsForPage,
   getSubcategoriesForCategory,
@@ -28,6 +29,7 @@ import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCo
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCitySourceFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
+import { categoryPathWithOptionalCity } from "@/lib/category-routing";
 
 interface Props {
   params: Promise<{ category: string; subcategory: string; city: string }>;
@@ -83,10 +85,11 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   };
 
   const subcategoryUrlSlug = `${category}/${canonicalSubcategory}`;
-  const [childCities, parentCities, siblingSubcategories] = await Promise.all([
+  const [childCities, parentCities, siblingSubcategories, cityCategories] = await Promise.all([
     getCitiesForCategory(childMeta.slug),
     getCitiesForCategory(parentMeta.slug),
     getSubcategoriesForCategory(parentDbSlug),
+    getCategoriesForCity(cityDbSlug),
   ]);
   const citiesBySlug = new Map([...parentCities, ...childCities].map((entry) => [entry.slug, entry]));
   const cities = Array.from(citiesBySlug.values());
@@ -96,16 +99,15 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
     ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
     : siblingSubcategories;
   const navigableSubcategories = styleSubcategories;
-  const sortedNavigableSubcategories = [...navigableSubcategories].sort((a, b) => a.label.localeCompare(b.label));
-  const currentStyleIndex = sortedNavigableSubcategories.findIndex((cat) => cat.slug === childMeta.slug);
-  const mobilePreviousStyle = currentStyleIndex >= 0 && sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[(currentStyleIndex - 1 + sortedNavigableSubcategories.length) % sortedNavigableSubcategories.length]
+  const sortedCityCategories = [...cityCategories].sort((a, b) => a.label.localeCompare(b.label));
+  const currentCityCategoryIndex = sortedCityCategories.findIndex((cat) => cat.slug === parentDbSlug);
+  const mobilePreviousCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
+    ? sortedCityCategories[(currentCityCategoryIndex - 1 + sortedCityCategories.length) % sortedCityCategories.length]
     : null;
-  const mobileNextStyle = currentStyleIndex >= 0 && sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[(currentStyleIndex + 1) % sortedNavigableSubcategories.length]
+  const mobileNextCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
+    ? sortedCityCategories[(currentCityCategoryIndex + 1) % sortedCityCategories.length]
     : null;
-  const cityStylePathFor = (childSlug: string) =>
-    `/${category}/${toCategoryChildUrlSegment(parentDbSlug, childSlug)}/${city}`;
+  const cityCategoryPathFor = (categorySlug: string) => categoryPathWithOptionalCity(categorySlug, city);
 
   const listings = await getListingsForPage(childMeta.slug, cityDbSlug);
   const intro = categoryCityIntroCopy(childDisplayMeta, cityMeta, listings.length);
@@ -163,9 +165,9 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
             variant="secondary"
           />
           <MobileSidePager
-            label={`${parentMeta.label} style navigation`}
-            previous={mobilePreviousStyle ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: categoryChildLabelForDisplay(parentDbSlug, mobilePreviousStyle.label) } : null}
-            next={mobileNextStyle ? { href: cityStylePathFor(mobileNextStyle.slug), label: categoryChildLabelForDisplay(parentDbSlug, mobileNextStyle.label) } : null}
+            label={`${cityMeta.label} category navigation`}
+            previous={mobilePreviousCategory ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label } : null}
+            next={mobileNextCategory ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label } : null}
           />
           <nav
             aria-label={`${childDisplayMeta.label} city navigation`}

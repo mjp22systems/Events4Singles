@@ -11,6 +11,7 @@ This is the working map for Events4Singles public URLs, SEO metadata, legacy red
 - Database slugs may use underscores. Public URLs convert underscores to hyphens through `toUrlSlug()` and convert back through `toDbSlug()`.
 - Listing URLs use `/listing/name-slug-id`; profile URLs use `/profile/name-slug-id` unless a paid custom business profile slug exists.
 - Fix URL, taxonomy, and template problems at their canonical source first. Use redirects only to bridge old or indexed paths to the final canonical URL; do not keep multiple public URLs rendering the same page.
+- Cityless categories do not get city path variants and must be excluded from city-filtered category menus and previous/next paging. For example, `/online-dating` remains canonical, but a Melbourne category pager should rotate only through categories with active Melbourne listings.
 
 ## Titles And Meta
 

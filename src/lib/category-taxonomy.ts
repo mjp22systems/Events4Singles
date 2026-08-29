@@ -18,6 +18,17 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     hero_image_url: "/images/categories/heroes/singles-mixers.webp",
   },
   {
+    slug: "online_dating",
+    label: "Online Dating",
+    parent_slug: null,
+    sort_order: 22,
+    description: "Digital dating services and online options for singles who want to widen their search.",
+    seo_intro: "Online dating listings give singles a way to compare digital dating services, profile-based platforms and online options that can support a broader search.",
+    seo_title: "Online Dating Australia | Events4Singles",
+    seo_description: "Compare online dating services and digital dating options for Australian singles.",
+    hero_image_url: "/images/categories/heroes/online-dating.webp",
+  },
+  {
     slug: "christian_singles",
     label: "Christian Singles",
     parent_slug: null,

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
 
 export interface MobileSidePagerTarget {
   href: string;
@@ -20,6 +21,11 @@ export default function MobileSidePager({ previous, next, label = "Related page 
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const previousRef = useRef(previous);
   const nextRef = useRef(next);
+
+  const prepareNavigation = useCallback((href: string) => {
+    closeHeaderMenu();
+    markScrollTopAfterNavigation(href);
+  }, []);
 
   useEffect(() => {
     previousRef.current = previous;
@@ -53,7 +59,10 @@ export default function MobileSidePager({ previous, next, label = "Related page 
       if (Math.abs(dx) < 78 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
 
       const target = dx < 0 ? nextRef.current : previousRef.current;
-      if (target) router.push(target.href);
+      if (target) {
+        prepareNavigation(target.href);
+        router.push(target.href, { scroll: false });
+      }
     };
 
     document.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -62,7 +71,7 @@ export default function MobileSidePager({ previous, next, label = "Related page 
       document.removeEventListener("touchstart", onTouchStart);
       document.removeEventListener("touchend", onTouchEnd);
     };
-  }, [next, previous, router]);
+  }, [next, prepareNavigation, previous, router]);
 
   if (!previous && !next) return null;
 
@@ -73,6 +82,7 @@ export default function MobileSidePager({ previous, next, label = "Related page 
           className="e4s-mobile-side-pager__button e4s-mobile-side-pager__button--prev"
           href={previous.href}
           aria-label={`Previous: ${previous.label}`}
+          onClick={() => prepareNavigation(previous.href)}
         >
           <span className="e4s-mobile-side-pager__icon" />
         </Link>
@@ -82,6 +92,7 @@ export default function MobileSidePager({ previous, next, label = "Related page 
           className="e4s-mobile-side-pager__button e4s-mobile-side-pager__button--next"
           href={next.href}
           aria-label={`Next: ${next.label}`}
+          onClick={() => prepareNavigation(next.href)}
         >
           <span className="e4s-mobile-side-pager__icon" />
         </Link>

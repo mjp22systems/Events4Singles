@@ -1,6 +1,7 @@
 import { getD1 } from "./db";
 import { slugToLabel, toCategoryChildUrlSegment, toUrlSlug, toListingSlug, toProfileSlug, idFromProfileSlug } from "./constants";
 import { canonicalEventSlug } from "./event-slugs";
+import { categorySupportsCityRoutes } from "./category-routing";
 import type { Listing, Category, City, Banner, Business } from "./types";
 import {
   CANONICAL_CATEGORY_BY_SLUG,
@@ -889,7 +890,7 @@ export async function getCategoriesForCity(cityDbSlug: string): Promise<Category
     description: string | null; seo_title: string | null; seo_description: string | null; seo_intro: string | null; hero_image_url: string | null; listing_count: number;
   }>();
   return results
-    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug))
+    .filter((r) => !SUPPRESSED_CATEGORIES.has(r.slug) && categorySupportsCityRoutes(r.slug))
     .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 

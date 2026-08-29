@@ -5,10 +5,14 @@ import { test } from "node:test";
 
 const projectRoot = process.cwd();
 const constantsSource = readFileSync(path.join(projectRoot, "src", "lib", "constants.ts"), "utf8");
+const categoryRoutingSource = readFileSync(path.join(projectRoot, "src", "lib", "category-routing.ts"), "utf8");
+const categoryTaxonomySource = readFileSync(path.join(projectRoot, "src", "lib", "category-taxonomy.ts"), "utf8");
+const dataSource = readFileSync(path.join(projectRoot, "src", "lib", "data.ts"), "utf8");
 const categoryOverviewSource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "page.tsx"), "utf8");
 const categoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "[subcategory]", "page.tsx"), "utf8");
 const subcategoryCitySource = readFileSync(path.join(projectRoot, "src", "app", "(public)", "[category]", "[subcategory]", "[city]", "page.tsx"), "utf8");
 const pageSidebarSource = readFileSync(path.join(projectRoot, "src", "components", "page-sidebar.tsx"), "utf8");
+const mobileSidePagerSource = readFileSync(path.join(projectRoot, "src", "components", "mobile-side-pager.tsx"), "utf8");
 const subcategoryPagerSource = readFileSync(path.join(projectRoot, "src", "components", "subcategory-pager.tsx"), "utf8");
 const subcategoryNavSelectSource = readFileSync(path.join(projectRoot, "src", "components", "subcategory-nav-select.tsx"), "utf8");
 
@@ -64,4 +68,24 @@ test("category overview pages expose mobile category paging without a second sel
   assert.match(categoryOverviewSource, /className="e4s-category-child-nav e4s-category-child-nav--category-mobile"/);
   assert.doesNotMatch(categoryOverviewSource, /mobileSubcategories/);
   assert.doesNotMatch(categoryOverviewSource, /placeholder="Select style"/);
+});
+
+test("mobile side arrows use category navigation while styles stay in selectors", () => {
+  assert.match(mobileSidePagerSource, /markScrollTopAfterNavigation\(href\)/);
+  assert.match(mobileSidePagerSource, /router\.push\(target\.href, \{ scroll: false \}\)/);
+  assert.match(categoryCitySource, /<MobileSidePager[\s\S]*label="Category navigation"[\s\S]*href: `\/\$\{toUrlSlug\(mobilePreviousCategory\.slug\)\}`/);
+  assert.match(categoryCitySource, /const mobilePagerLabel = `\$\{cityMeta\.label\} category navigation`/);
+  assert.match(subcategoryCitySource, /<MobileSidePager[\s\S]*label=\{`\$\{cityMeta\.label\} category navigation`\}/);
+  assert.doesNotMatch(categoryCitySource, /mobilePreviousStyle \?\s*\{ href: cityStylePathFor/);
+  assert.doesNotMatch(subcategoryCitySource, /mobilePreviousStyle \?/);
+});
+
+test("city category navigation excludes cityless categories", () => {
+  assert.match(categoryRoutingSource, /const CITYLESS_CATEGORY_SLUGS = new Set\(\["online_dating"\]\)/);
+  assert.match(categoryTaxonomySource, /slug: "online_dating"[\s\S]*label: "Online Dating"/);
+  assert.match(categoryRoutingSource, /categoryPathWithOptionalCity[\s\S]*!cityUrlSlug \|\| !categorySupportsCityRoutes\(categoryDbSlug\)[\s\S]*return categoryPath/);
+  assert.match(dataSource, /export async function getCategoriesForCity[\s\S]*\.filter\(\(r\) => !SUPPRESSED_CATEGORIES\.has\(r\.slug\) && categorySupportsCityRoutes\(r\.slug\)\)/);
+  assert.match(categoryCitySource, /categoryPathWithOptionalCity\(categorySlug, subcategory\)/);
+  assert.doesNotMatch(categoryRoutingSource, /categoryNavigationPathWithCityContext/);
+  assert.doesNotMatch(categoryOverviewSource, /searchParams/);
 });

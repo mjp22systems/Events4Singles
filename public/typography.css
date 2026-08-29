@@ -2123,7 +2123,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow {
 
 @media (max-width: 700px) {
   .e4s-page-hero__caption h1 {
-    font-size: clamp(26px, 7.2vw, 32px);
+    font-size: clamp(22px, 6.4vw, 28px);
   }
 }
 
