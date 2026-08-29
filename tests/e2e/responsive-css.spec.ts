@@ -179,7 +179,7 @@ test.describe("responsive CSS", () => {
       };
     });
 
-    expect(bounds.backgroundImage).toContain("/images/site/home/category-cards/home-cat-mixers.webp");
+    expect(bounds.backgroundImage).toContain("/images/categories/cards/singles-mixers.webp");
 
     for (const box of [bounds.page, bounds.hero, bounds.bg]) {
       expect(box?.left, JSON.stringify(bounds)).toBeLessThanOrEqual(1);
@@ -225,7 +225,7 @@ test.describe("responsive CSS", () => {
           <body class="e4s-page-category">
             <section class="e4s-promo-banners e4s-promo-banners--one-row">
               ${Array.from({ length: 6 }, (_, index) => `
-                <a href="/advertise"><img alt="Ad ${index + 1}" src="/images/advertise-here-180x120.svg"></a>
+                <a class="e4s-promo-banners__placeholder" href="/advertise"><span>Advertise here ${index + 1}</span></a>
               `).join("")}
             </section>
           </body>
@@ -258,8 +258,8 @@ test.describe("responsive CSS", () => {
         <body class="e4s-page-category">
           <main class="e4s-category-template" id="site-content">
             <section class="e4s-promo-banners e4s-promo-banners--one-row">
-              <a href="/advertise"><img alt="Wide advertiser" src="/images/advertise-here-180x120.svg"></a>
-              <a href="/advertise"><img alt="Wide advertiser 2" src="/images/advertise-here-180x120.svg"></a>
+              <a class="e4s-promo-banners__placeholder" href="/advertise"><span>Advertise here</span></a>
+              <a class="e4s-promo-banners__placeholder" href="/advertise"><span>Advertise here</span></a>
             </section>
           </main>
         </body>

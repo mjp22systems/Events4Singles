@@ -20,8 +20,11 @@ export default async function Nav() {
     <header className="e4s-header" role="banner">
       <div className="e4s-shell e4s-header__bar">
         <Link aria-label="Events4Singles home" className="e4s-brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Events4Singles — Australia's Singles Events Directory" src="/images/site/brand/e4s-logo_new.png" title="Events4Singles" />
+          <span className="e4s-brand__mark">E4S</span>
+          <span className="e4s-brand__copy">
+            <span className="e4s-brand__name">Events4Singles</span>
+            <span className="e4s-brand__tagline">Australia&apos;s Singles Events Directory</span>
+          </span>
         </Link>
         <div className="e4s-header__actions">
           <Link href="/portal" className="e4s-header-login">Login</Link>

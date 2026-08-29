@@ -35,7 +35,7 @@ CATEGORY_IMAGES = {
     "dance_teachers": "/images/categories/cards/dance-teachers.webp",
     "dinner_for_six": "/images/categories/cards/dinner-for-six.webp",
     "dinner_parties": "/images/categories/cards/dinner-parties.webp",
-    "events": "/images/site/home/category-cards/home-cat-activities.webp",
+    "events": "/images/categories/cards/adventure-for-singles.webp",
     "finance_mortgage": "/images/categories/cards/finance-mortgage.webp",
     "fitness4singles": "/images/categories/cards/fitness4singles.webp",
     "function_centres": "/images/categories/cards/function-centres.webp",

@@ -250,9 +250,33 @@
   gap: 12px;
   min-width: 0;
   flex: 0 1 auto;
-}.e4s-brand img {
-  width: min(375px, 48vw);
-  height: auto;
+  color: #064e4d;
+  text-decoration: none;
+}.e4s-brand__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 74px;
+  height: 48px;
+  color: #064e4d;
+  font-family: var(--e4s-serif);
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}.e4s-brand__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.05;
+}.e4s-brand__name {
+  color: #064e4d;
+  font-family: var(--e4s-serif);
+  font-size: clamp(30px, 3vw, 46px);
+  font-weight: 700;
+}.e4s-brand__tagline {
+  color: #245052;
+  font-size: 15px;
+  font-weight: 500;
 }.e4s-header-cta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -752,11 +776,17 @@ body > div > table {
     gap: 8px;
   }
 
-  .e4s-brand img {
-    width: min(220px, 54vw);
+  .e4s-brand__mark {
+    width: 44px;
+    height: 32px;
+    font-size: 24px;
   }
 
-  .e4s-brand em {
+  .e4s-brand__name {
+    font-size: 22px;
+  }
+
+  .e4s-brand__tagline {
     display: none;
   }
 
@@ -893,8 +923,8 @@ body > div > table {
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   }
 
-  .e4s-promo-banners a,
-  .e4s-promo-banners span,
+  .e4s-promo-banners > a,
+  .e4s-promo-banners > span,
   .e4s-promo-banners img {
     width: 100%;
     height: auto;
@@ -966,9 +996,14 @@ body > div > table {
   width: auto;
   min-width: 0;
   overflow: hidden;
-}.e4s-brand img {
-  width: min(232px, calc(100vw - 122px));
-  max-width: 100%;
+}.e4s-brand__mark {
+  width: 48px;
+  height: 34px;
+  font-size: 26px;
+}.e4s-brand__name {
+  font-size: 24px;
+}.e4s-brand__tagline {
+  font-size: 11px;
 }.e4s-header-cta {
   display: grid;
   position: fixed;
@@ -1578,8 +1613,8 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   width: min(100%, var(--e4s-shell));
   margin: 18px auto 18px;
   padding: 0;
-}.e4s-promo-banners a,
-.e4s-promo-banners span {
+}.e4s-promo-banners > a,
+.e4s-promo-banners > span {
   display: grid;
   place-items: center;
   width: var(--e4s-image-width);
@@ -1588,6 +1623,16 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   border-radius: 8px;
   background: transparent;
   overflow: hidden;
+}.e4s-promo-banners__placeholder {
+  border: 1px dashed rgba(6, 78, 77, 0.35);
+  background: linear-gradient(135deg, #f8fbfa 0%, #e9f6f4 100%) !important;
+  color: #064e4d;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }.e4s-promo-banners img {
   display: block;
   width: 100%;
@@ -1887,17 +1932,21 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   width: var(--e4s-image-width);
   height: var(--e4s-image-height);
   margin: auto auto 0;
-  padding: 0;
-  border: 0;
+  padding: 12px;
+  border: 1px dashed rgba(6, 78, 77, 0.35);
   border-radius: 8px;
-  background: transparent;
-  overflow: visible;
-}.e4s-sidebar-ad img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
-  display: block;
+  background: linear-gradient(135deg, #f8fbfa 0%, #e9f6f4 100%);
+  color: #064e4d;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+}.e4s-sidebar-ad span {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}.e4s-sidebar-ad small {
+  color: #547173;
+  font-size: 12px;
 }.e4s-sidebar:has(.e4s-sidebar-block--empty) .e4s-sidebar-ad {
   margin: 0 auto;
 }.e4s-sidebar:has(.e4s-sidebar-back) .e4s-sidebar-nav {
@@ -3380,8 +3429,8 @@ body.e4s-page-location .e4s-page-intro--editorial p,
     grid-template-rows: repeat(2, auto);
   }
 
-  .e4s-promo-banners a,
-  .e4s-promo-banners span {
+  .e4s-promo-banners > a,
+  .e4s-promo-banners > span {
     width: 100%;
     height: auto;
     aspect-ratio: 3 / 2;
@@ -4283,7 +4332,7 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-home-hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/site/home/category-cards/home-cat-mixers.webp');
+  background-image: url('/images/categories/cards/singles-mixers.webp');
   background-size: cover;
   background-position: right center;
   z-index: 0;

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Category, City } from "@/lib/types";
-import { categoryChildLabelForDisplay, toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
-import { categoryPathWithOptionalCity } from "@/lib/category-routing";
+import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import SidebarNav from "@/components/sidebar-nav";
 
 type Props =
@@ -76,8 +75,8 @@ export default function PageSidebar(props: Props) {
         />
         <SidebarNav heading="Refine by city" items={cityItems} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+          <span>Advertise here</span>
+          <small>Promote your listing</small>
         </Link>
       </aside>
     );
@@ -87,7 +86,7 @@ export default function PageSidebar(props: Props) {
     const items = props.categories.map((cat) => ({
       key: cat.slug,
       label: cat.label,
-      href: categoryPathWithOptionalCity(cat.slug, props.cityUrlSlug),
+      href: `/${toUrlSlug(cat.slug)}/${props.cityUrlSlug}`,
       count: cat.listing_count,
     }));
 
@@ -95,8 +94,8 @@ export default function PageSidebar(props: Props) {
       <aside className="e4s-sidebar">
         <SidebarNav heading="Other Categories" items={items} />
         <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+          <span>Advertise here</span>
+          <small>Promote your listing</small>
         </Link>
       </aside>
     );
@@ -120,7 +119,7 @@ export default function PageSidebar(props: Props) {
     const childPath = `/${subcategoryBaseUrlSlug}/${childSegment}`;
     return {
       key: cat.slug,
-      label: categoryChildLabelForDisplay(subcategoryParentDbSlug, cat.label),
+      label: cat.label,
       href: props.subcategoryCityUrlSlug
         ? `${childPath}/${props.subcategoryCityUrlSlug}`
         : childPath,
@@ -164,8 +163,8 @@ export default function PageSidebar(props: Props) {
         </div>
       )}
       <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+        <span>Advertise here</span>
+        <small>Promote your listing</small>
       </Link>
     </aside>
   );

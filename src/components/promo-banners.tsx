@@ -6,9 +6,9 @@ const SLOTS_PER_ROW = 6;
 const MAX_SLOTS = SLOTS_PER_ROW * 2;
 
 type Props =
-  | { mode: "category"; categoryDbSlug: string; cityDbSlug?: string | null }
-  | { mode: "city"; cityDbSlug: string }
-  | { mode: "featured" };
+  | { mode: "category"; categoryDbSlug: string; cityDbSlug?: string | null; rows?: 1 | 2 }
+  | { mode: "city"; cityDbSlug: string; rows?: 1 | 2 }
+  | { mode: "featured"; rows?: 1 | 2 };
 
 export default async function PromoBanners(props: Props) {
   let banners: Banner[];
@@ -22,7 +22,8 @@ export default async function PromoBanners(props: Props) {
   }
 
   const visibleBanners = banners.slice(0, MAX_SLOTS);
-  const rowTarget = visibleBanners.length > SLOTS_PER_ROW ? MAX_SLOTS : SLOTS_PER_ROW;
+  const requestedSlots = props.rows === 2 ? MAX_SLOTS : SLOTS_PER_ROW;
+  const rowTarget = props.rows ? requestedSlots : visibleBanners.length > SLOTS_PER_ROW ? MAX_SLOTS : SLOTS_PER_ROW;
   const placeholderCount = visibleBanners.length === MAX_SLOTS
     ? 0
     : rowTarget - visibleBanners.length;
@@ -46,8 +47,7 @@ export default async function PromoBanners(props: Props) {
       })}
       {Array.from({ length: placeholderCount }).map((_, i) => (
         <Link key={`ph-${i}`} className="e4s-promo-banners__placeholder" href="/advertise" title="Advertise on Events4Singles">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Advertise on Events4Singles" loading="lazy" src="/images/site/placeholders/advertise-here-180x120.svg" title="Advertise on Events4Singles" />
+          <span>Advertise here</span>
         </Link>
       ))}
     </section>

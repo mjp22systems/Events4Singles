@@ -18,32 +18,32 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const FEATURED_CITIES = [
-  { slug: "sydney", label: "Sydney", img: "/images/site/home/city-cards/home-city-sydney.webp" },
-  { slug: "melbourne", label: "Melbourne", img: "/images/site/home/city-cards/home-city-melbourne.webp" },
-  { slug: "brisbane", label: "Brisbane", img: "/images/site/home/city-cards/home-city-brisbane.webp" },
-  { slug: "perth", label: "Perth", img: "/images/site/home/city-cards/home-city-perth.webp" },
-  { slug: "adelaide", label: "Adelaide", img: "/images/site/home/city-cards/home-city-adelaide.webp" },
-  { slug: "hobart", label: "Hobart", img: "/images/site/home/city-cards/home-city-hobart.webp" },
+  { slug: "sydney", label: "Sydney", img: "/images/cities/cards/home-city-sydney.webp" },
+  { slug: "melbourne", label: "Melbourne", img: "/images/cities/cards/home-city-melbourne.webp" },
+  { slug: "brisbane", label: "Brisbane", img: "/images/cities/cards/home-city-brisbane.webp" },
+  { slug: "perth", label: "Perth", img: "/images/cities/cards/home-city-perth.webp" },
+  { slug: "adelaide", label: "Adelaide", img: "/images/cities/cards/home-city-adelaide.webp" },
+  { slug: "hobart", label: "Hobart", img: "/images/cities/cards/home-city-hobart.webp" },
 ];
 
 const FEATURED_CATS = [
-  { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/site/home/category-cards/home-cat-speed-dating.webp" },
-  { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/site/home/category-cards/home-cat-dinner-parties.webp" },
-  { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/site/home/category-cards/home-cat-mixers.webp" },
-  { slug: "dance-classes", label: "Activities", sub: "Hiking, cooking, etc.", img: "/images/site/home/category-cards/home-cat-activities.webp" },
+  { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/categories/cards/speed-dating.webp" },
+  { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/categories/cards/dinner-parties.webp" },
+  { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/categories/cards/singles-mixers.webp" },
+  { slug: "dance-classes", label: "Activities", sub: "Hiking, cooking, etc.", img: "/images/categories/cards/adventure-for-singles.webp" },
 ];
 
 
 const EXPERIENCES = [
-  { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/site/home/experience-cards/home-exp-dinner-parties.jpg", href: "/dinner-parties", badge: "PREMIUM" },
-  { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/site/home/experience-cards/home-exp-dance-classes.jpg", href: "/dance-classes", badge: null },
-  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/site/home/experience-cards/home-exp-travel.jpg", href: "/solo-travel", badge: null },
+  { label: "Elegant Dinner Parties", desc: "Intimate gatherings for professionals who appreciate fine food and good company.", img: "/images/categories/cards/dinner-parties.webp", href: "/dinner-parties", badge: "PREMIUM" },
+  { label: "Dance & Connect", desc: "Salsa, swing, and ballroom mixers.", img: "/images/categories/cards/dance-classes.webp", href: "/dance-classes", badge: null },
+  { label: "Singles Travel", desc: "Group trips and local getaways.", img: "/images/categories/cards/travel-for-singles.webp", href: "/solo-travel", badge: null },
 ];
 
 const RESOURCES = [
-  { badge: "TIPS", img: "/images/site/home/resource-cards/home-blog-tips.jpg", title: "5 Icebreakers for Your Next Speed Dating Event", desc: "Nervous about what to say? These proven icebreakers will help you start meaningful conversations.", href: "/dating-resources" },
-  { badge: "SUCCESS STORIES", img: "/images/site/home/resource-cards/home-blog-success.jpg", title: "How Sarah and Mark Met at a Melbourne Mixer", desc: "How a casual Thursday night mixer led to a lasting connection.", href: "/dating-resources" },
-  { badge: "CALENDAR", img: "/images/site/home/resource-cards/home-blog-calendar.jpg", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
+  { badge: "TIPS", img: "/images/categories/cards/dating-coaches.webp", title: "5 Icebreakers for Your Next Speed Dating Event", desc: "Nervous about what to say? These proven icebreakers will help you start meaningful conversations.", href: "/dating-resources" },
+  { badge: "SUCCESS STORIES", img: "/images/categories/cards/singles-mixers.webp", title: "How Sarah and Mark Met at a Melbourne Mixer", desc: "How a casual Thursday night mixer led to a lasting connection.", href: "/dating-resources" },
+  { badge: "CALENDAR", img: "/images/categories/cards/speed-dating.webp", title: "Top Events to Attend This Spring", desc: "Our hand-picked selection of the most anticipated singles events this season.", href: "/events" },
 ];
 
 const HOMEPAGE_FEATURED_LISTING_LIMIT = 5;
