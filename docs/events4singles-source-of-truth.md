@@ -1,23 +1,30 @@
 # Events4Singles Source Of Truth
 
-Last updated: 2026-08-27
+Last updated: 2026-08-29
 
 ## Operational Source Of Truth
 
-- Canonical repo: `D:\Projects\Clients\Dad\Events4singles\website`.
+- Canonical repo: `D:\Projects\Clients\Dad\Events4singles\website` (`D:/Projects/Clients/Dad/Events4singles/website`).
 - GitHub remote: `https://github.com/mjp22systems/Events4Singles.git`.
 - Production Worker: `events4singles-v2`.
 - Production D1 database: `events4singles`.
-- Current production domain: `https://events4singles.com.au`.
+- Current production domain: `https://events4singles.com`.
+- Production alias: `https://events4singles.com.au`.
 - Legacy Pages domain: `https://legacy.events4singles.com`, backed by Cloudflare Pages project `events4singles`.
 - Legacy-clean Pages domain: `https://legacy-clean.events4singles.com`, backed by Cloudflare Pages project `events4singles-clean`.
 - No `site-clean.events4singles.com` DNS record was present on 2026-08-27.
 - Deploy command: `npm run deploy:dad`.
 - Cache purge command: `npm run cache:purge`.
+- Project config registry: `D:\Projects\Clients\Dad\Events4singles\website\project.config.json`.
+- Project config audit command from `website`: `npm run config:audit` (`node tools/audit-project-config.mjs`).
 - Graphify target: run Graphify from `D:\Projects\Clients\Dad\Events4singles` when the task needs the full project picture, including repo docs and top-level audit notes. Use `.graphifyignore` to exclude generated output, dependency folders, lock/build artifacts, and images unless the task specifically asks for media analysis.
 - Graphify output: `D:\Projects\Clients\Dad\Events4singles\graphify-out`, ignored by Git.
 - Project memory refresh command from `website`: `npm run memory:refresh`.
 - Project memory hook install command from `website`: `npm run memory:hook`.
+- Project memory status command from `website`: `npm run memory:status`.
+- Project memory audit log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh-log.jsonl`.
+- Project memory failure log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh-errors.log`.
+- Project memory lock file during active refreshes: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh.lock`.
 - Archive location for old sessions, release folders, local DB snapshots, and moved legacy non-image assets: `D:\Projects\Clients\Dad\Events4singles-archive`.
 
 The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. Do not create release clones, temporary worktrees, one-off deploy copies, scrape outputs, or database backup piles there. If a future release needs a disposable working copy, put it under `D:\Projects\Clients\Dad\Events4singles-archive\scratch` or another clearly named archive/scratch folder outside the active project container.
@@ -31,10 +38,13 @@ The durable project memory loop is:
 1. Update code, tests, docs, or source assets.
 2. Run relevant verification.
 3. Run `npm run memory:refresh` from `website`.
-4. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
-5. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
+4. Run `npm run memory:status` from `website` when checking whether the graph, hook, and refresh log are healthy.
+5. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
+6. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
 
-The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work.
+The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. Hook failures are non-blocking for Git commits, but they are recorded in `graphify-out\refresh-log.jsonl` and `graphify-out\refresh-errors.log` so later sessions can audit them. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work.
+
+The refresh script uses `graphify-out\refresh.lock` to prevent overlapping manual and post-commit refreshes. If Graphify reports community label drift, run `graphify label` from the parent project root. On this machine, `graphify label` can recluster and rewrite graph outputs without semantic names unless an LLM backend/API key is configured.
 
 ## Canonical Folder Map
 

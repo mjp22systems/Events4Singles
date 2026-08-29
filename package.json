@@ -16,8 +16,10 @@
     "images:optimize-site": "node tools/optimize-site-images.mjs",
     "audit:banners": "node tools/audit-banner-tiles.mjs --remote",
     "audit:css": "node tools/audit-css.mjs",
+    "config:audit": "node tools/audit-project-config.mjs",
     "memory:refresh": "node tools/refresh-project-memory.mjs",
     "memory:hook": "node tools/install-project-memory-hook.mjs",
+    "memory:status": "node tools/project-memory-status.mjs",
     "deploy:checked": "npm run deploy:dad",
     "deploy:dad": "node tools/deploy-cloudflare.mjs",
     "cache:purge": "node tools/purge-cloudflare-cache.mjs"

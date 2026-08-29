@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "Events4Singles",
+    "client": "Dad",
+    "canonicalRepo": "D:/Projects/Clients/Dad/Events4singles/website",
+    "projectRoot": "D:/Projects/Clients/Dad/Events4singles",
+    "archiveRoot": "D:/Projects/Clients/Dad/Events4singles-archive",
+    "githubRemote": "https://github.com/mjp22systems/Events4Singles.git"
+  },
+  "runtime": {
+    "localDevPort": 10400,
+    "framework": "Next.js App Router",
+    "deployment": "Cloudflare Workers + D1"
+  },
+  "cloudflare": {
+    "workerName": "events4singles-v2",
+    "accountId": "77513f974459dd7d8a1183712e0f41fd",
+    "databaseBinding": "DB",
+    "databaseName": "events4singles",
+    "databaseId": "0359c4e2-60ac-4037-8e56-f661971bd31a",
+    "zoneId": "c5fe90c1608ef88a0dca1e1cb96bcf2c",
+    "apiTokenEnv": "CLOUDFLARE_API_TOKEN_DAD",
+    "accountIdEnv": "CLOUDFLARE_ACCOUNT_ID_DAD"
+  },
+  "domains": {
+    "production": "https://events4singles.com",
+    "aliases": [
+      "https://events4singles.com.au"
+    ],
+    "legacy": "https://legacy.events4singles.com",
+    "legacyClean": "https://legacy-clean.events4singles.com"
+  },
+  "paths": {
+    "source": {
+      "routes": "src/app",
+      "components": "src/components",
+      "lib": "src/lib",
+      "content": "src/content",
+      "migrations": "migrations",
+      "tools": "tools",
+      "tests": "tests",
+      "docs": "docs",
+      "public": "public"
+    },
+    "assets": {
+      "publicImages": "public/images",
+      "siteImages": "public/images/site",
+      "businessImages": "public/images/businesses",
+      "junkImages": "public/images/junk",
+      "categoryHeroes": "public/images/site/category-heroes",
+      "locationHeroes": "public/images/site/location-heroes",
+      "locationPhotos": "public/images/site/location-photos",
+      "homeImages": "public/images/site/home",
+      "brandImages": "public/images/site/brand"
+    },
+    "generated": {
+      "graphifyOut": "../graphify-out",
+      "dbAudits": "tmp/db-audits",
+      "dbBackups": "tmp/db-backups",
+      "imageAudits": "tmp/image-audits",
+      "playwrightReport": "playwright-report",
+      "testResults": "test-results",
+      "openNext": ".open-next",
+      "next": ".next",
+      "wrangler": ".wrangler"
+    }
+  },
+  "commands": {
+    "dev": "next dev --port 10400",
+    "deploy": "node tools/deploy-cloudflare.mjs",
+    "cachePurge": "node tools/purge-cloudflare-cache.mjs",
+    "memoryRefresh": "node tools/refresh-project-memory.mjs",
+    "memoryHook": "node tools/install-project-memory-hook.mjs",
+    "memoryStatus": "node tools/project-memory-status.mjs",
+    "configAudit": "node tools/audit-project-config.mjs"
+  },
+  "governance": {
+    "sourceOfTruthDoc": "docs/events4singles-source-of-truth.md",
+    "deploymentRunbook": "docs/deployment-runbook.md",
+    "agentLocalInstructions": "CLAUDE.md",
+    "configDoc": "docs/project-config-registry.md",
+    "memoryRefreshRequiredAfterChanges": true,
+    "postCommitMemoryHookAvailable": true,
+    "doNotCreateReleaseCopiesInProjectRoot": true
+  }
+}

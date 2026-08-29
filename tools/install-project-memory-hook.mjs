@@ -19,6 +19,8 @@ const hookPath = path.join(hooksDir, "post-commit");
 const hookBody = `#!/bin/sh
 # Events4Singles project memory loop.
 # Keeps the parent-level Graphify graph current after commits.
+# Successes are recorded in ../graphify-out/refresh-log.jsonl.
+# Failures are recorded there too, plus ../graphify-out/refresh-errors.log.
 repo_root="$(git rev-parse --show-toplevel 2>/dev/null)"
 if [ -n "$repo_root" ] && command -v node >/dev/null 2>&1; then
   (cd "$repo_root" && node tools/refresh-project-memory.mjs --quiet-hook) || true
@@ -31,7 +33,12 @@ if (existsSync(hookPath)) {
   const marker = "Events4Singles project memory loop";
   const existing = await import("node:fs").then((fs) => fs.readFileSync(hookPath, "utf8"));
   if (existing.includes(marker)) {
-    console.log("Project memory post-commit hook is already installed.");
+    if (existing.trim() !== hookBody.trim()) {
+      writeFileSync(hookPath, hookBody, "utf8");
+      console.log("Updated project memory post-commit hook.");
+    } else {
+      console.log("Project memory post-commit hook is already installed.");
+    }
     process.exit(0);
   }
   writeFileSync(hookPath, `${existing.trimEnd()}\n\n${hookBody}`, "utf8");
