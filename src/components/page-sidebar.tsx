@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Category, City } from "@/lib/types";
-import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
+import { categoryChildLabelForDisplay, toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import { categoryPathWithOptionalCity } from "@/lib/category-routing";
 import SidebarNav from "@/components/sidebar-nav";
 
@@ -120,7 +120,7 @@ export default function PageSidebar(props: Props) {
     const childPath = `/${subcategoryBaseUrlSlug}/${childSegment}`;
     return {
       key: cat.slug,
-      label: cat.label,
+      label: categoryChildLabelForDisplay(subcategoryParentDbSlug, cat.label),
       href: props.subcategoryCityUrlSlug
         ? `${childPath}/${props.subcategoryCityUrlSlug}`
         : childPath,

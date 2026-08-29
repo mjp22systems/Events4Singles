@@ -14,25 +14,25 @@ export type DanceStyleFamily = {
 
 export const danceStyleLinks: DanceStyleLink[] = [
   {
-    title: "Salsa Dance",
+    title: "Salsa",
     href: "/dance-classes/salsa",
     summary: "Lively Latin rhythm, social rotation and a strong beginner class culture.",
     image: "/images/categories/cards/dance-salsa.webp",
   },
   {
-    title: "Bachata Dance",
+    title: "Bachata",
     href: "/dance-classes/bachata",
     summary: "A modern Latin social style with approachable timing and close musical connection.",
     image: "/images/categories/cards/dance-bachata.webp",
   },
   {
-    title: "Tango Dance",
+    title: "Tango",
     href: "/dance-classes/tango",
     summary: "Expressive partner dancing for people drawn to focus, musicality and atmosphere.",
     image: "/images/categories/cards/dance-tango.webp",
   },
   {
-    title: "Swing Dance",
+    title: "Swing",
     href: "/dance-classes/swing",
     summary: "Upbeat jive, Lindy Hop and swing classes with a playful social feel.",
     image: "/images/categories/cards/dance-swing.webp",
@@ -44,13 +44,13 @@ export const danceStyleLinks: DanceStyleLink[] = [
     image: "/images/categories/cards/dance-ceroc.webp",
   },
   {
-    title: "Ballroom Dance",
+    title: "Ballroom",
     href: "/dance-classes/ballroom-style",
     summary: "Waltz, foxtrot, quickstep and social ballroom for elegance, posture and confidence.",
     image: "/images/categories/cards/dance-ballroom-style.webp",
   },
   {
-    title: "Latin Dance",
+    title: "Latin",
     href: "/dance-classes/latin-style",
     summary: "Salsa, cha cha, rumba, samba, merengue and social Latin class pathways.",
     image: "/images/categories/cards/dance-latin-style.webp",
@@ -115,7 +115,7 @@ export const danceStyleFamilies: DanceStyleFamily[] = [
 export const danceStyleDecisionPaths = [
   {
     title: "I want something social and lively",
-    copy: "Start with Salsa, Bachata or Latin Dance. These styles often have beginner groups, social nights and a natural pathway from class into community.",
+    copy: "Start with Salsa, Bachata or Latin. These styles often have beginner groups, social nights and a natural pathway from class into community.",
   },
   {
     title: "I want to feel more confident on a dance floor",

@@ -39,10 +39,18 @@ test("active child category pages expose a style pager axis", () => {
 });
 
 test("subcategory mobile selectors land on canonical all-city routes before city refinement", () => {
-  assert.match(subcategoryNavSelectSource, /toCategoryChildUrlSegment\(toDbSlug\(parentUrlSlug\), e\.target\.value\)/);
+  assert.match(subcategoryNavSelectSource, /const parentDbSlug = toDbSlug\(parentUrlSlug\)/);
+  assert.match(subcategoryNavSelectSource, /toCategoryChildUrlSegment\(parentDbSlug, e\.target\.value\)/);
   assert.match(subcategoryNavSelectSource, /cityUrlSlug \? `\/\$\{parentUrlSlug\}\/\$\{nextSlug\}\/\$\{cityUrlSlug\}` : `\/\$\{parentUrlSlug\}\/\$\{nextSlug\}`/);
   assert.match(subcategoryPagerSource, /cityUrlSlug \? `\/\$\{parentUrlSlug\}\/\$\{childSegment\}\/\$\{cityUrlSlug\}` : `\/\$\{parentUrlSlug\}\/\$\{childSegment\}`/);
   assert.match(categoryCitySource, /<NavSelect[\s\S]*categoryUrlSlug=\{subcategoryUrlSlug\}[\s\S]*placeholder="Select city"/);
   assert.match(categoryCitySource, /<SubcategoryNavSelect[\s\S]*cityUrlSlug=\{subcategory\}/);
   assert.match(subcategoryCitySource, /<SubcategoryNavSelect[\s\S]*cityUrlSlug=\{city\}/);
+});
+
+test("child category aliases redirect to the canonical child slug", () => {
+  assert.match(categoryCitySource, /permanentRedirect\(`\/\$\{category\}\/\$\{canonicalSubcategory\}`\)/);
+  assert.match(subcategoryCitySource, /permanentRedirect\(`\/\$\{category\}\/\$\{canonicalSubcategory\}\/\$\{city\}`\)/);
+  assert.match(constantsSource, /if \(childDbSlug\.endsWith\("_dance"\)\)/);
+  assert.match(constantsSource, /candidates\.push\(styleSlug, `dance_\$\{styleSlug\}`\)/);
 });

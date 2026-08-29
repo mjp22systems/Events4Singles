@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -9,7 +9,7 @@ import {
   getListingsForCategory,
   getSubcategoriesForCategory,
 } from "@/lib/data";
-import { categoryChildDbSlugCandidates, toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
+import { categoryChildDbSlugCandidates, categoryChildLabelForDisplay, toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import ListingsSection from "@/components/listings-section";
 import AdvertiseCard from "@/components/advertise-card";
 import NavSelect from "@/components/nav-select";
@@ -62,6 +62,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!catMeta) return {};
   const childMeta = await getChildCategoryMeta(categoryDbSlug, subcategory);
   if (childMeta) {
+    const canonicalSubcategory = toCategoryChildUrlSegment(categoryDbSlug, childMeta.slug);
+    if (subcategory !== canonicalSubcategory) {
+      permanentRedirect(`/${category}/${canonicalSubcategory}`);
+    }
+    const childLabel = categoryChildLabelForDisplay(categoryDbSlug, childMeta.label);
     if (categoryDbSlug === "dance_classes" && childMeta.slug === "dance_styles") {
       return pageMetadata({
         title: "Dance Styles for Singles | Events4Singles",
@@ -72,15 +77,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       });
     }
     return pageMetadata({
-      title: `${childMeta.label} in ${catMeta.label}`,
+      title: `${childLabel} in ${catMeta.label}`,
       description:
         childMeta.seo_description ||
-        `Find ${childMeta.label.toLowerCase()} listings, classes and social dance options for singles across Australia.`,
-      path: `/${category}/${subcategory}`,
+        `Find ${childLabel.toLowerCase()} listings, classes and social dance options for singles across Australia.`,
+      path: `/${category}/${canonicalSubcategory}`,
       keywords: [
-        childMeta.label,
-        `${childMeta.label} for singles`,
-        `${catMeta.label} ${childMeta.label}`,
+        childLabel,
+        `${childLabel} for singles`,
+        `${catMeta.label} ${childLabel}`,
       ],
     });
   }
@@ -111,7 +116,15 @@ export default async function CategoryCityPage({ params }: Props) {
       return <DanceStylesGuide />;
     }
 
-    const subcategoryUrlSlug = `${category}/${subcategory}`;
+    const canonicalSubcategory = toCategoryChildUrlSegment(categoryDbSlug, childMeta.slug);
+    if (subcategory !== canonicalSubcategory) {
+      permanentRedirect(`/${category}/${canonicalSubcategory}`);
+    }
+    const subcategoryUrlSlug = `${category}/${canonicalSubcategory}`;
+    const childDisplayMeta = {
+      ...childMeta,
+      label: categoryChildLabelForDisplay(categoryDbSlug, childMeta.label),
+    };
     const [childCities, listings, siblingSubcategories] = await Promise.all([
       getCitiesForCategory(childMeta.slug),
       getListingsForCategory(childMeta.slug),
@@ -130,8 +143,8 @@ export default async function CategoryCityPage({ params }: Props) {
       ? sortedStyleSubcategories[(currentStyleIndex + 1) % sortedStyleSubcategories.length]
       : null;
     const stylePathFor = (childSlug: string) => `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}`;
-    const intro = categoryIntroCopy(childMeta, cities.length, listings.length);
-    const footerCopy = categorySeoFooterCopy(childMeta, cities.length);
+    const intro = categoryIntroCopy(childDisplayMeta, cities.length, listings.length);
+    const footerCopy = categorySeoFooterCopy(childDisplayMeta, cities.length);
     const parentCardImage = getCategoryCardImage(category);
     const parentHeroImage = getCategoryHeroImage(category);
     const parentImage = parentHeroImage ?? catMeta.hero_image_url ?? parentCardImage ?? `/images/category-hero-${category}.svg`;
@@ -153,14 +166,14 @@ export default async function CategoryCityPage({ params }: Props) {
     ];
     const jsonLd = [
       collectionPageJsonLd({
-        name: `${childMeta.label} for Singles`,
+        name: `${childDisplayMeta.label} for Singles`,
         description: intro.lead,
         path: `/${subcategoryUrlSlug}`,
       }),
       breadcrumbJsonLd([
         { name: "Home", path: "/" },
         { name: catMeta.label, path: `/${category}` },
-        { name: childMeta.label, path: `/${subcategoryUrlSlug}` },
+        { name: childDisplayMeta.label, path: `/${subcategoryUrlSlug}` },
       ]),
     ];
 
@@ -177,11 +190,11 @@ export default async function CategoryCityPage({ params }: Props) {
             />
             <MobileSidePager
               label={`${catMeta.label} style navigation`}
-              previous={mobilePreviousStyle ? { href: stylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label } : null}
-              next={mobileNextStyle ? { href: stylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label } : null}
+              previous={mobilePreviousStyle ? { href: stylePathFor(mobilePreviousStyle.slug), label: categoryChildLabelForDisplay(categoryDbSlug, mobilePreviousStyle.label) } : null}
+              next={mobileNextStyle ? { href: stylePathFor(mobileNextStyle.slug), label: categoryChildLabelForDisplay(categoryDbSlug, mobileNextStyle.label) } : null}
             />
             <nav
-              aria-label={`${childMeta.label} navigation`}
+              aria-label={`${childDisplayMeta.label} navigation`}
               className={`e4s-category-child-nav e4s-category-child-nav--has-sidebar${styleSubcategories.length > 1 && cities.length > 0 ? " e4s-category-child-nav--category-has-subcategories" : ""}`}
             >
               <Link className="e4s-category-child-nav__back" href={`/${category}`}>
@@ -211,18 +224,18 @@ export default async function CategoryCityPage({ params }: Props) {
         )}
         hero={(
           <PageHero
-            ariaLabel={childMeta.label}
+            ariaLabel={childDisplayMeta.label}
             media={(
               <CategoryCityHeroImage
-                alt={childMeta.label}
+                alt={childDisplayMeta.label}
                 categoryImage={parentImage}
                 categoryFallbacks={parentImageFallbacks}
                 cityImage={childImage}
                 cityFallbacks={childImageFallbacks}
               />
             )}
-            title={childMeta.label}
-            subtext={categoryHeroSubtext(childMeta)}
+            title={childDisplayMeta.label}
+            subtext={categoryHeroSubtext(childDisplayMeta)}
           >
             {cities.length > 0 && (
               <CategoryCitySelect cities={cities} categoryUrlSlug={subcategoryUrlSlug} />
@@ -256,7 +269,7 @@ export default async function CategoryCityPage({ params }: Props) {
       >
         <ListingsSection
           listings={listings}
-          title={childMeta.label}
+          title={childDisplayMeta.label}
           filterCities={cities}
         />
         <AdvertiseCard />

@@ -17,8 +17,17 @@ export function categoryChildDbSlugCandidates(parentDbSlug: string, childUrlSegm
   const candidates = [childDbSlug, `${parentDbSlug}_${childDbSlug}`];
   if (parentDbSlug === "dance_classes") {
     candidates.push(`dance_${childDbSlug}`);
+    if (childDbSlug.endsWith("_dance")) {
+      const styleSlug = childDbSlug.slice(0, -"_dance".length);
+      candidates.push(styleSlug, `dance_${styleSlug}`);
+    }
   }
   return [...new Set(candidates)];
+}
+
+export function categoryChildLabelForDisplay(parentDbSlug: string, childLabel: string): string {
+  if (parentDbSlug !== "dance_classes") return childLabel;
+  return childLabel.replace(/\s+Dance$/i, "");
 }
 
 export const slugToLabel = (slug: string) =>

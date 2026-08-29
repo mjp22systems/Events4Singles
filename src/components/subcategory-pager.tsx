@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Category } from "@/lib/types";
-import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
+import { categoryChildLabelForDisplay, toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
 
 interface Props {
   subcategories: Category[];
@@ -26,6 +26,7 @@ export default function SubcategoryPager({
     const childSegment = toCategoryChildUrlSegment(parentDbSlug, cat.slug);
     return cityUrlSlug ? `/${parentUrlSlug}/${childSegment}/${cityUrlSlug}` : `/${parentUrlSlug}/${childSegment}`;
   };
+  const labelFor = (cat: Category) => categoryChildLabelForDisplay(parentDbSlug, cat.label);
   const prev = sorted[(idx - 1 + sorted.length) % sorted.length];
   const next = sorted[(idx + 1) % sorted.length];
   const variantClass = variant === "secondary" ? " e4s-location-pager--secondary" : "";
@@ -34,22 +35,22 @@ export default function SubcategoryPager({
     <>
       {prev && (
         <Link
-          aria-label={`Previous style: ${prev.label}`}
+          aria-label={`Previous style: ${labelFor(prev)}`}
           className={`e4s-location-pager e4s-location-pager--prev${variantClass}`}
           href={pathFor(prev)}
         >
           <span className="e4s-location-pager__icon" />
-          <span className="e4s-location-pager__label">{prev.label}</span>
+          <span className="e4s-location-pager__label">{labelFor(prev)}</span>
         </Link>
       )}
       {next && (
         <Link
-          aria-label={`Next style: ${next.label}`}
+          aria-label={`Next style: ${labelFor(next)}`}
           className={`e4s-location-pager e4s-location-pager--next${variantClass}`}
           href={pathFor(next)}
         >
           <span className="e4s-location-pager__icon" />
-          <span className="e4s-location-pager__label">{next.label}</span>
+          <span className="e4s-location-pager__label">{labelFor(next)}</span>
         </Link>
       )}
     </>

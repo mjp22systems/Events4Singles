@@ -7,8 +7,10 @@ This is the working map for Events4Singles public URLs, SEO metadata, legacy red
 - Canonical city URLs use one clean path: `/sydney`, `/melbourne`, `/brisbane`.
 - Canonical category URLs use one clean path: `/speed-dating`, `/dinner-parties`.
 - Canonical category plus city URLs use `/category/city`, for example `/speed-dating/sydney`.
+- Canonical child category URLs use `/parent/child`, with the child slug stripped to the plain meaningful term where the parent already supplies the context. For example, use `/dance-classes/tango`, not `/dance-classes/dance-tango` or `/dance-classes/tango-dance`.
 - Database slugs may use underscores. Public URLs convert underscores to hyphens through `toUrlSlug()` and convert back through `toDbSlug()`.
 - Listing URLs use `/listing/name-slug-id`; profile URLs use `/profile/name-slug-id` unless a paid custom business profile slug exists.
+- Fix URL, taxonomy, and template problems at their canonical source first. Use redirects only to bridge old or indexed paths to the final canonical URL; do not keep multiple public URLs rendering the same page.
 
 ## Titles And Meta
 

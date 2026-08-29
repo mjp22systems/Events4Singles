@@ -16,13 +16,13 @@ This mirrors the way users browse the rest of the site: category first, then loc
 
 These should be real child categories because they map to advertiser inventory and user intent:
 
-- Salsa Dance
-- Bachata Dance
-- Tango Dance
-- Swing Dance
+- Salsa
+- Bachata
+- Tango
+- Swing
 - Ceroc Dance / Modern Jive
-- Ballroom Dance
-- Latin Dance
+- Ballroom
+- Latin
 - Line Dancing
 - Dance Fitness & Health
 - Dance Teachers
@@ -71,8 +71,8 @@ Store listings against their most specific known category and city:
 - A Sydney salsa school can be placed in `dance_salsa` + `sydney`.
 - The parent `/dance-classes` page should automatically include child category listings.
 - The parent `/dance-classes/sydney` page should include all Dance Classes child styles in Sydney.
-- The child `/dance-classes/salsa` page should include only Salsa Dance listings.
-- The child-location `/dance-classes/salsa/sydney` page should include only Salsa Dance listings in Sydney.
+- The child `/dance-classes/salsa` page should include only Salsa listings.
+- The child-location `/dance-classes/salsa/sydney` page should include only Salsa listings in Sydney.
 
 This avoids manually duplicating placements just to make parent pages work.
 

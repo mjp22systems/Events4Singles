@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
+import { categoryChildLabelForDisplay, toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
 import { closeHeaderMenu, markScrollTopAfterNavigation } from "@/lib/client-nav";
 import type { Category } from "@/lib/types";
 
@@ -20,6 +20,7 @@ export default function SubcategoryNavSelect({
   placeholder,
 }: Props) {
   const router = useRouter();
+  const parentDbSlug = toDbSlug(parentUrlSlug);
 
   return (
     <select
@@ -27,7 +28,7 @@ export default function SubcategoryNavSelect({
       onChange={(e) => {
         if (!e.target.value) return;
         closeHeaderMenu();
-        const nextSlug = toCategoryChildUrlSegment(toDbSlug(parentUrlSlug), e.target.value);
+        const nextSlug = toCategoryChildUrlSegment(parentDbSlug, e.target.value);
         const href = cityUrlSlug ? `/${parentUrlSlug}/${nextSlug}/${cityUrlSlug}` : `/${parentUrlSlug}/${nextSlug}`;
         markScrollTopAfterNavigation(href);
         router.push(href, { scroll: false });
@@ -41,7 +42,7 @@ export default function SubcategoryNavSelect({
       ) : null}
       {subcategories.map((subcategory) => (
         <option key={subcategory.slug} value={subcategory.slug}>
-          {subcategory.label} ({subcategory.listing_count})
+          {categoryChildLabelForDisplay(parentDbSlug, subcategory.label)} ({subcategory.listing_count})
         </option>
       ))}
     </select>
