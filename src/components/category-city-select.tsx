@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import type { City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
+import { closeHeaderMenu } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -11,9 +12,6 @@ interface Props {
 
 export default function CategoryCitySelect({ cities, categoryUrlSlug, currentCitySlug }: Props) {
   const router = useRouter();
-  const closeHeaderMenu = () => {
-    window.dispatchEvent(new Event("e4s:close-nav"));
-  };
 
   return (
     <div className="e4s-page-hero__city-filter">

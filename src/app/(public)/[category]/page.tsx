@@ -221,6 +221,15 @@ export default async function CategoryOrCityPage({ params }: Props) {
             <Link className="e4s-category-child-nav__back" href="/categories">
               All Categories
             </Link>
+            {cities.length > 0 ? (
+              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
+                <NavSelect
+                  cities={cities}
+                  categoryUrlSlug={param}
+                  placeholder="Select city"
+                />
+              </label>
+            ) : null}
             {mobileSubcategories.length > 0 ? (
               <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
                 <span>View style</span>
@@ -228,15 +237,6 @@ export default async function CategoryOrCityPage({ params }: Props) {
                   subcategories={mobileSubcategories}
                   parentUrlSlug={param}
                   placeholder="Select style"
-                />
-              </label>
-            ) : null}
-            {cities.length > 0 ? (
-              <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
-                <NavSelect
-                  cities={cities}
-                  categoryUrlSlug={param}
-                  placeholder="Select city"
                 />
               </label>
             ) : null}

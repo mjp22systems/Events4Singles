@@ -164,6 +164,13 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
             <Link className="e4s-category-child-nav__back" href={`/${category}`}>
               Back to {parentMeta.label}
             </Link>
+            <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
+              <NavSelect
+                cities={cities}
+                categoryUrlSlug={subcategoryUrlSlug}
+                currentCitySlug={cityDbSlug}
+              />
+            </label>
             {navigableSubcategories.length > 1 ? (
               <label className="e4s-category-child-nav__control e4s-category-child-nav__control--subcategory">
                 <span>View another style</span>
@@ -175,13 +182,6 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
                 />
               </label>
             ) : null}
-            <label className="e4s-category-child-nav__control e4s-category-child-nav__control--city">
-              <NavSelect
-                cities={cities}
-                categoryUrlSlug={subcategoryUrlSlug}
-                currentCitySlug={cityDbSlug}
-              />
-            </label>
           </nav>
         </>
       )}

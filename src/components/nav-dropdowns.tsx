@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import type { Category, City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
+import { closeHeaderMenu } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -66,11 +67,15 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Cities</span>
         <select
           value=""
+          onClick={closeHeaderMenu}
           onChange={(e) => {
             const val = e.target.value;
+            closeHeaderMenu();
             if (val === "__all__") router.push("/cities");
             else if (val) router.push(`/${toUrlSlug(val)}`);
           }}
+          onFocus={closeHeaderMenu}
+          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>
             {cityLabel}
@@ -89,11 +94,15 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Categories</span>
         <select
           value=""
+          onClick={closeHeaderMenu}
           onChange={(e) => {
             const val = e.target.value;
+            closeHeaderMenu();
             if (val === "__all__") router.push("/categories");
             else if (val) router.push(`/${val}`);
           }}
+          onFocus={closeHeaderMenu}
+          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>
             {categoryLabel}
@@ -112,9 +121,13 @@ export default function NavDropdowns({ cities, categories }: Props) {
         <span>Information</span>
         <select
           value=""
+          onClick={closeHeaderMenu}
           onChange={(e) => {
+            closeHeaderMenu();
             if (e.target.value) router.push(e.target.value);
           }}
+          onFocus={closeHeaderMenu}
+          onPointerDown={closeHeaderMenu}
         >
           <option value="" disabled>{selectedInfo || "Site Information"}</option>
           <option value="/about">About</option>
@@ -130,8 +143,8 @@ export default function NavDropdowns({ cities, categories }: Props) {
       </label>
 
       <div className="e4s-nav__events-cell">
-        <Link href="/dating-resources" className="e4s-nav__dating-btn">Dating Resources</Link>
-        <Link href="/events" className="e4s-nav__events-btn">What&apos;s On</Link>
+        <Link href="/dating-resources" className="e4s-nav__dating-btn" onClick={closeHeaderMenu}>Dating Resources</Link>
+        <Link href="/events" className="e4s-nav__events-btn" onClick={closeHeaderMenu}>What&apos;s On</Link>
       </div>
     </nav>
   );

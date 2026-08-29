@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import type { City } from "@/lib/types";
 import { toUrlSlug } from "@/lib/constants";
+import { closeHeaderMenu } from "@/lib/client-nav";
 
 interface Props {
   cities: City[];
@@ -12,9 +13,6 @@ interface Props {
 
 export default function NavSelect({ cities, categoryUrlSlug, currentCitySlug = "", placeholder }: Props) {
   const router = useRouter();
-  const closeHeaderMenu = () => {
-    window.dispatchEvent(new Event("e4s:close-nav"));
-  };
 
   return (
     <select

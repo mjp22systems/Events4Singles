@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { toCategoryChildUrlSegment, toDbSlug } from "@/lib/constants";
+import { closeHeaderMenu } from "@/lib/client-nav";
 import type { Category } from "@/lib/types";
 
 interface Props {
@@ -19,9 +20,6 @@ export default function SubcategoryNavSelect({
   placeholder,
 }: Props) {
   const router = useRouter();
-  const closeHeaderMenu = () => {
-    window.dispatchEvent(new Event("e4s:close-nav"));
-  };
 
   return (
     <select
