@@ -68,3 +68,6 @@ next-env.d.ts
 # Local build/deploy logs and superseded stylesheet snapshots
 /opennext-build.log
 /public/portal-*.css
+
+# Clerk configuration can include local secrets
+/.clerk/
