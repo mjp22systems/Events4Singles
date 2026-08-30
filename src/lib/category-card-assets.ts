@@ -226,23 +226,27 @@ const GENERATED_CATEGORY_HERO_SLUGS = new Set([
   "yoga-classes",
 ]);
 
+function getGeneratedCategoryHeroFallback(slug: string): string | undefined {
+  const normalizedSlug = slug.replace(/_/g, "-");
+  if (!GENERATED_CATEGORY_HERO_SLUGS.has(normalizedSlug)) return undefined;
+
+  const heroSlug = normalizedSlug === "online-dating-international"
+    ? "online-dating-int"
+    : normalizedSlug === "wineries4singles"
+      ? "wineries"
+      : normalizedSlug;
+  return `/images/site/category-heroes/category-hero-${heroSlug}.svg`;
+}
+
 export function getCategoryCardImage(slug: string): string | undefined {
   return CATEGORY_CARD_IMAGES[slug.replace(/_/g, "-")];
 }
 
 export function getCategoryHeroImage(slug: string): string | undefined {
   const normalizedSlug = slug.replace(/_/g, "-");
-  if (GENERATED_CATEGORY_HERO_SLUGS.has(normalizedSlug)) {
-    const heroSlug = normalizedSlug === "online-dating-international"
-      ? "online-dating-int"
-      : normalizedSlug === "wineries4singles"
-        ? "wineries"
-        : normalizedSlug;
-    return `/images/site/category-heroes/category-hero-${heroSlug}.svg`;
-  }
-
   return CATEGORY_HERO_IMAGES[normalizedSlug]
-    ?? CATEGORY_CARD_IMAGES[normalizedSlug]?.replace("/cards/", "/heroes/");
+    ?? CATEGORY_CARD_IMAGES[normalizedSlug]?.replace("/cards/", "/heroes/")
+    ?? getGeneratedCategoryHeroFallback(normalizedSlug);
 }
 
 export function getCategoryCardSummary(slug: string, fallback?: string | null): string {
