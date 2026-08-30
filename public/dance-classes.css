@@ -480,7 +480,7 @@
 
 .e4s-dance-lovable-ad-card {
   align-items: center;
-  aspect-ratio: var(--e4s-image-width, 180) / var(--e4s-image-height, 120);
+  aspect-ratio: 3 / 2;
   background: var(--dance-primary-soft);
   border: 1px dashed rgba(139, 47, 67, 0.42);
   display: flex;
