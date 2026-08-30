@@ -14,7 +14,7 @@
   --dance-shadow: 0 18px 44px rgba(20, 49, 63, 0.12);
   background: var(--dance-bg);
   color: var(--dance-fg);
-  font-family: var(--font-sans, "Public Sans", Arial, sans-serif);
+  font-family: var(--e4s-font-sans, "Hanken Grotesk", Arial, sans-serif);
   min-height: 100vh;
 }
 
@@ -89,7 +89,7 @@
 
 .e4s-dance-lovable-hero h1 {
   color: var(--dance-fg);
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: clamp(34px, 3.4vw, 44px);
   font-weight: 650;
   letter-spacing: 0;
@@ -299,7 +299,7 @@
 
 .e4s-dance-lovable-path-card h3 {
   color: var(--dance-fg);
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: 20px;
   font-weight: 720;
   letter-spacing: 0;
@@ -349,7 +349,7 @@
 
 .e4s-dance-lovable-heading h2 {
   color: var(--dance-accent-deep);
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: clamp(28px, 3vw, 36px);
   font-weight: 720;
   letter-spacing: 0;
@@ -388,6 +388,7 @@
 }
 
 .e4s-dance-lovable-promoted-grid {
+  align-items: start;
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -425,7 +426,7 @@
 .e4s-dance-lovable-feature-card strong {
   color: var(--dance-fg);
   display: -webkit-box;
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: 16px;
   font-weight: 680;
   letter-spacing: 0;
@@ -479,11 +480,13 @@
 
 .e4s-dance-lovable-ad-card {
   align-items: center;
+  aspect-ratio: var(--e4s-image-width, 180) / var(--e4s-image-height, 120);
   background: var(--dance-primary-soft);
   border: 1px dashed rgba(139, 47, 67, 0.42);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-height: 0;
   text-align: center;
 }
 
@@ -679,7 +682,7 @@
 
 .e4s-dance-lovable-guidance-grid h3 {
   color: var(--dance-fg);
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: 18px;
   font-weight: 680;
   letter-spacing: 0;
@@ -859,7 +862,7 @@
 
 .e4s-dance-lovable-editorial h2 {
   color: var(--dance-fg);
-  font-family: var(--font-display, Georgia, serif);
+  font-family: var(--e4s-font-serif, "Source Serif 4", Georgia, serif);
   font-size: 28px;
   font-weight: 720;
   letter-spacing: 0;
@@ -972,8 +975,7 @@
     width: fit-content;
   }
 
-  .e4s-dance-lovable-feature-card,
-  .e4s-dance-lovable-ad-card {
+  .e4s-dance-lovable-feature-card {
     min-height: 132px;
   }
 }

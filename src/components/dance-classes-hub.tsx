@@ -107,7 +107,7 @@ function cityImage(city: City) {
 }
 
 function citySummary(city: City) {
-  return city.state ? `${city.state} / ${city.listing_count}` : `${city.listing_count}`;
+  return city.state ? `${city.state} · ${city.listing_count}` : `${city.listing_count}`;
 }
 
 function seoStyleGroups(styles: Category[], cities: City[]) {
