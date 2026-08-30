@@ -452,7 +452,7 @@ export default async function DanceClassesHub(props: Props) {
             <div className="e4s-dance-lovable-city-grid">
               {sortedCities.map((city) => (
                 <Link key={city.slug} className="e4s-dance-lovable-city-card" href={`/dance-classes/${toUrlSlug(city.slug)}`}>
-                  <span>
+                  <span className="e4s-dance-lovable-city-card__image">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img alt={`Dance classes in ${city.label}`} loading="lazy" src={cityImage(city)} />
                   </span>

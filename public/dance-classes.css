@@ -740,7 +740,7 @@
   transform: translateY(-2px);
 }
 
-.e4s-dance-lovable-city-card > span {
+.e4s-dance-lovable-city-card__image {
   aspect-ratio: 5 / 4;
   display: block;
   overflow: hidden;
