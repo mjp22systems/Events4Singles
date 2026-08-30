@@ -2,12 +2,14 @@ import Link from "next/link";
 import type { Category, City } from "@/lib/types";
 import { toCategoryChildUrlSegment, toDbSlug, toUrlSlug } from "@/lib/constants";
 import SidebarNav from "@/components/sidebar-nav";
+import AdPlaceholderTile from "@/components/ad-placeholder-tile";
 
-function SidebarAdvertiseLink() {
+function SidebarAdvertiseLink({ label }: { label?: string }) {
   return (
-    <Link className="e4s-sidebar-ad" href="/advertise" title="Advertise on Events4Singles">
-      <img alt="Advertise here" loading="lazy" src="/images/site/placeholders/advertise-here-160x120.svg" />
-    </Link>
+    <AdPlaceholderTile
+      className="e4s-sidebar-ad"
+      label={label}
+    />
   );
 }
 
@@ -26,11 +28,13 @@ type Props =
       subcategoryHeading?: string;
       guideHref?: string;
       guideLabel?: string;
+      advertiseLabel?: string;
     }
   | {
       mode: "city";
       categories: Category[];
       cityUrlSlug: string;
+      advertiseLabel?: string;
     }
   | {
       mode: "featured";
@@ -38,6 +42,7 @@ type Props =
       cities: City[];
       activeCategoryDbSlug?: string | null;
       activeCityDbSlug?: string | null;
+      advertiseLabel?: string;
     };
 
 export default function PageSidebar(props: Props) {
@@ -82,7 +87,7 @@ export default function PageSidebar(props: Props) {
           topItem={hasActiveFilter ? { label: "All featured", href: "/featured-listings" } : undefined}
         />
         <SidebarNav heading="Refine by city" items={cityItems} />
-        <SidebarAdvertiseLink />
+        <SidebarAdvertiseLink label={props.advertiseLabel ?? "Featured Directory Slot"} />
       </aside>
     );
   }
@@ -98,7 +103,7 @@ export default function PageSidebar(props: Props) {
     return (
       <aside className="e4s-sidebar">
         <SidebarNav heading="Other Categories" items={items} />
-        <SidebarAdvertiseLink />
+        <SidebarAdvertiseLink label={props.advertiseLabel} />
       </aside>
     );
   }
@@ -164,7 +169,7 @@ export default function PageSidebar(props: Props) {
           <p className="e4s-sidebar-block__heading">{emptySidebarHeading}</p>
         </div>
       )}
-      <SidebarAdvertiseLink />
+      <SidebarAdvertiseLink label={props.advertiseLabel} />
     </aside>
   );
 }

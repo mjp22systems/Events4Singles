@@ -14,6 +14,8 @@ import {
   Users,
 } from "lucide-react";
 import BodyClass from "@/components/body-class";
+import CategoryPager from "@/components/category-pager";
+import MobileSidePager from "@/components/mobile-side-pager";
 import { danceStyleDecisionPaths, danceStyleLinks } from "@/content/dance-styles";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
 import { toCategoryChildUrlSegment, toListingSlug, toUrlSlug } from "@/lib/constants";
@@ -169,7 +171,7 @@ function SectionHeading({
 }
 
 export default async function DanceClassesHub(props: Props) {
-  const { category, cities, listings, subcategories } = props;
+  const { category, cities, listings, subcategories, parentCategories } = props;
   const styles = subcategories.filter((cat) => cat.slug !== "dance_styles" && cat.listing_count > 0);
   const sortedStyles = [...styles].sort((a, b) => b.listing_count - a.listing_count || a.label.localeCompare(b.label));
   const sortedCities = [...cities].sort((a, b) => {
@@ -185,6 +187,14 @@ export default async function DanceClassesHub(props: Props) {
   const featuredListings = listings.slice(0, 6);
   const promotedSlots = Array.from({ length: 12 }, (_, index) => featuredListings[index] ?? null);
   const popularSearchGroups = seoStyleGroups(sortedStyles, sortedCities);
+  const sortedParentCategories = [...parentCategories].sort((a, b) => a.label.localeCompare(b.label));
+  const currentParentIndex = sortedParentCategories.findIndex((cat) => cat.slug === category.slug);
+  const previousCategory = currentParentIndex >= 0 && sortedParentCategories.length > 1
+    ? sortedParentCategories[(currentParentIndex - 1 + sortedParentCategories.length) % sortedParentCategories.length]
+    : null;
+  const nextCategory = currentParentIndex >= 0 && sortedParentCategories.length > 1
+    ? sortedParentCategories[(currentParentIndex + 1) % sortedParentCategories.length]
+    : null;
   const jsonLd = [
     collectionPageJsonLd({
       name: "Dance Classes for Singles",
@@ -194,6 +204,7 @@ export default async function DanceClassesHub(props: Props) {
     }),
     breadcrumbJsonLd([
       { name: "Home", path: "/" },
+      { name: "Categories", path: "/categories" },
       { name: category.label, path: "/dance-classes" },
     ]),
   ];
@@ -208,12 +219,18 @@ export default async function DanceClassesHub(props: Props) {
       />
       <BodyClass add="e4s-page-category" />
       <BodyClass add="e4s-page-dance-hub" />
+      <CategoryPager categories={parentCategories} currentDbSlug={category.slug} />
+      <MobileSidePager
+        label="Category navigation"
+        previous={previousCategory ? { href: `/${toUrlSlug(previousCategory.slug)}`, label: previousCategory.label } : null}
+        next={nextCategory ? { href: `/${toUrlSlug(nextCategory.slug)}`, label: nextCategory.label } : null}
+      />
       <main className="e4s-dance-hub e4s-dance-lovable" id="site-content">
         <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
           <nav aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span>/</span>
-            <Link href="/categories">Activities</Link>
+            <Link href="/categories">Categories</Link>
             <span>/</span>
             <strong>Dance Classes</strong>
           </nav>

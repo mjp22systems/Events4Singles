@@ -228,7 +228,7 @@ export default async function CategoryCityPage({ params }: Props) {
             )}
           </PageHero>
         )}
-        promo={<PromoBanners mode="category" categoryDbSlug={childMeta.slug} />}
+        promo={<PromoBanners mode="category" categoryDbSlug={childMeta.slug} categoryLabel={childMeta.label} />}
         intro={(
           <EditorialIntro
             lead={intro.lead}
@@ -249,6 +249,7 @@ export default async function CategoryCityPage({ params }: Props) {
             subcategoryHeading={categoryDbSlug === "dance_classes" ? "Other Styles" : undefined}
             guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
             guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
+            advertiseLabel={`${childMeta.label} Promotion Slot`}
           />
         )}
         after={<SeoSupportSection {...footerCopy} />}
@@ -393,7 +394,7 @@ export default async function CategoryCityPage({ params }: Props) {
           subtext={categoryCityHeroSubtext(catMeta, cityMeta)}
         />
       )}
-      promo={<PromoBanners mode="category" categoryDbSlug={categoryDbSlug} cityDbSlug={cityDbSlug} />}
+      promo={<PromoBanners mode="category" categoryDbSlug={categoryDbSlug} cityDbSlug={cityDbSlug} categoryLabel={catMeta.label} cityLabel={cityMeta.label} />}
       intro={(
         <EditorialIntro
           lead={intro.lead}
@@ -414,6 +415,7 @@ export default async function CategoryCityPage({ params }: Props) {
           subcategoryHeading={categoryDbSlug === "dance_classes" ? "Other Styles" : undefined}
           guideHref={categoryDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
           guideLabel={categoryDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
+          advertiseLabel={`${catMeta.label} in ${cityMeta.label}`}
         />
       )}
       after={<SeoSupportSection {...footerCopy} />}

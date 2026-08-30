@@ -1589,20 +1589,50 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   background: transparent;
   overflow: hidden;
 }.e4s-promo-banners__placeholder {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
   border: 1px dashed rgba(6, 78, 77, 0.35);
-  background: linear-gradient(135deg, #f8fbfa 0%, #e9f6f4 100%) !important;
-  color: #064e4d;
-  font-size: 12px;
-  font-weight: 800;
+  background: #fff4f7 !important;
+  color: var(--e4s-ink);
   text-align: center;
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }.e4s-promo-banners img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}.e4s-promo-banners__placeholder > span,
+.e4s-sidebar-ad > span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--e4s-pink);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}.e4s-promo-banners__placeholder strong,
+.e4s-sidebar-ad strong {
+  display: block;
+  color: var(--e4s-pink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.12;
+}.e4s-promo-banners__placeholder em,
+.e4s-sidebar-ad em {
+  display: block;
+  color: var(--e4s-muted);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1.2;
+  text-wrap: balance;
 }.e4s-calendar-cta {
   display: grid;
   min-height: 136px;
@@ -1892,15 +1922,23 @@ body.e4s-page-location .e4s-page-intro--editorial p,
 }.e4s-sidebar-nav__count {
   flex: 0 0 auto;
 }.e4s-sidebar-ad {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   flex: 0 0 auto;
   width: 160px;
   height: 120px;
+  gap: 5px;
   margin: 0 auto;
-  border: 1px solid var(--e4s-border);
+  padding: 10px;
+  border: 1px dashed rgba(6, 78, 77, 0.35);
   border-radius: 8px;
-  background: transparent;
+  background: #fff4f7;
+  color: var(--e4s-ink);
   overflow: hidden;
+  text-align: center;
+  text-decoration: none;
 }.e4s-sidebar-ad img {
   display: block;
   width: 100%;

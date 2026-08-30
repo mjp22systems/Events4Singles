@@ -183,6 +183,7 @@ export default async function FeaturedListingsPage({ searchParams }: { searchPar
           cities={cityOptions}
           activeCategoryDbSlug={activeCategoryDbSlug}
           activeCityDbSlug={activeCityDbSlug}
+          advertiseLabel="Featured Directory Slot"
         />
       )}
     >

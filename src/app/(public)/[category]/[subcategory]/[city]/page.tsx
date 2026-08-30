@@ -217,6 +217,8 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           mode="category"
           categoryDbSlug={childMeta.slug}
           cityDbSlug={cityDbSlug}
+          categoryLabel={childMeta.label}
+          cityLabel={cityMeta.label}
         />
       )}
       intro={(
@@ -241,6 +243,7 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           subcategoryHeading={parentDbSlug === "dance_classes" ? "Other Styles" : undefined}
           guideHref={parentDbSlug === "dance_classes" ? `/${category}/styles` : undefined}
           guideLabel={parentDbSlug === "dance_classes" ? "Dance Styles guide" : undefined}
+          advertiseLabel={`${childMeta.label} in ${cityMeta.label}`}
         />
       )}
       after={<SeoSupportSection {...footerCopy} />}

@@ -127,7 +127,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
             subtext={cityHeroSubtext(cityMeta)}
           />
         )}
-        promo={<PromoBanners mode="city" cityDbSlug={dbSlug} />}
+        promo={<PromoBanners mode="city" cityDbSlug={dbSlug} cityLabel={cityMeta.label} />}
         intro={(
           <EditorialIntro
             lead={intro.lead}
@@ -135,7 +135,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
             support={intro.support}
           />
         )}
-        sidebar={<PageSidebar mode="city" categories={categories} cityUrlSlug={param} />}
+        sidebar={<PageSidebar mode="city" categories={categories} cityUrlSlug={param} advertiseLabel={`${cityMeta.label} Promotion Slot`} />}
         after={(
           <>
             <section className="e4s-location-followup">
@@ -268,7 +268,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
           )}
         </PageHero>
       )}
-      promo={<PromoBanners mode="category" categoryDbSlug={dbSlug} />}
+      promo={<PromoBanners mode="category" categoryDbSlug={dbSlug} categoryLabel={catMeta.label} />}
       intro={(
         <EditorialIntro
           lead={intro.lead}
@@ -282,6 +282,7 @@ export default async function CategoryOrCityPage({ params }: Props) {
           cities={cities}
           categoryUrlSlug={param}
           subcategories={subcategories}
+          advertiseLabel={`${catMeta.label} Promotion Slot`}
         />
       )}
       after={<SeoSupportSection {...footerCopy} />}
