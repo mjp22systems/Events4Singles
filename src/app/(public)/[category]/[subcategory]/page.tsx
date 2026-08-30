@@ -274,8 +274,15 @@ export default async function CategoryCityPage({ params }: Props) {
   const styleSubcategories = categoryDbSlug === "dance_classes"
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
-  const cityCategorySlugs = new Set(cityCategories.map((cat) => cat.slug));
-  const navigableSubcategories = styleSubcategories.filter((cat) => cityCategorySlugs.has(cat.slug));
+  const subcategoryCityChecks = await Promise.all(
+    styleSubcategories.map(async (cat) => ({
+      category: cat,
+      cities: await getCitiesForCategory(cat.slug),
+    })),
+  );
+  const navigableSubcategories = subcategoryCityChecks
+    .filter((entry) => entry.cities.some((city) => city.slug === cityDbSlug))
+    .map((entry) => entry.category);
   const parentCityCategories = cityCategories.filter((cat) => !cat.parent_slug);
   const sortedCityCategories = [...parentCityCategories].sort((a, b) => a.label.localeCompare(b.label));
   const currentCityCategoryIndex = sortedCityCategories.findIndex((cat) => cat.slug === categoryDbSlug);

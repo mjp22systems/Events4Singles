@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getCategoryMeta,
-  getCategoriesForCity,
   getCitiesForCategory,
   getListingsForPage,
   getSubcategoriesForCategory,
@@ -73,11 +72,10 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   if (!parentMeta || !childMeta) notFound();
 
   const subcategoryUrlSlug = `${category}/${subcategory}`;
-  const [childCities, parentCities, siblingSubcategories, cityCategories] = await Promise.all([
+  const [childCities, parentCities, siblingSubcategories] = await Promise.all([
     getCitiesForCategory(childMeta.slug),
     getCitiesForCategory(parentMeta.slug),
     getSubcategoriesForCategory(parentDbSlug),
-    getCategoriesForCity(cityDbSlug),
   ]);
   const citiesBySlug = new Map([...parentCities, ...childCities].map((entry) => [entry.slug, entry]));
   const cities = Array.from(citiesBySlug.values());
@@ -86,8 +84,15 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const styleSubcategories = parentDbSlug === "dance_classes"
     ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
     : siblingSubcategories;
-  const cityCategorySlugs = new Set(cityCategories.map((cat) => cat.slug));
-  const citySubcategories = styleSubcategories.filter((cat) => cityCategorySlugs.has(cat.slug));
+  const subcategoryCityChecks = await Promise.all(
+    styleSubcategories.map(async (cat) => ({
+      category: cat,
+      cities: await getCitiesForCategory(cat.slug),
+    })),
+  );
+  const citySubcategories = subcategoryCityChecks
+    .filter((entry) => entry.cities.some((city) => city.slug === cityDbSlug))
+    .map((entry) => entry.category);
   const navigableSubcategories = citySubcategories.some((cat) => cat.slug === childMeta.slug)
     ? citySubcategories
     : [childMeta, ...citySubcategories];
