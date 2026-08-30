@@ -17,7 +17,7 @@ import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import CategoryCitySelect from "@/components/category-city-select";
 import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
-import CategoryCityPager from "@/components/category-city-pager";
+import CategoryInCityPager from "@/components/category-in-city-pager";
 import PageSidebar from "@/components/page-sidebar";
 import SubcategoryPager from "@/components/subcategory-pager";
 import MobileSidePager from "@/components/mobile-side-pager";
@@ -274,17 +274,10 @@ export default async function CategoryCityPage({ params }: Props) {
   const styleSubcategories = categoryDbSlug === "dance_classes"
     ? subcategories.filter((cat) => cat.slug !== "dance_styles")
     : subcategories;
-  const navigableSubcategories = styleSubcategories;
-  const sortedNavigableSubcategories = [...navigableSubcategories].sort((a, b) => a.label.localeCompare(b.label));
-  const mobilePreviousStyle = sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[sortedNavigableSubcategories.length - 1]
-    : null;
-  const mobileNextStyle = sortedNavigableSubcategories.length > 1
-    ? sortedNavigableSubcategories[0]
-    : null;
-  const cityStylePathFor = (childSlug: string) =>
-    `/${category}/${toCategoryChildUrlSegment(categoryDbSlug, childSlug)}/${subcategory}`;
-  const sortedCityCategories = [...cityCategories].sort((a, b) => a.label.localeCompare(b.label));
+  const cityCategorySlugs = new Set(cityCategories.map((cat) => cat.slug));
+  const navigableSubcategories = styleSubcategories.filter((cat) => cityCategorySlugs.has(cat.slug));
+  const parentCityCategories = cityCategories.filter((cat) => !cat.parent_slug);
+  const sortedCityCategories = [...parentCityCategories].sort((a, b) => a.label.localeCompare(b.label));
   const currentCityCategoryIndex = sortedCityCategories.findIndex((cat) => cat.slug === categoryDbSlug);
   const mobilePreviousCategory = currentCityCategoryIndex >= 0 && sortedCityCategories.length > 1
     ? sortedCityCategories[(currentCityCategoryIndex - 1 + sortedCityCategories.length) % sortedCityCategories.length]
@@ -293,19 +286,13 @@ export default async function CategoryCityPage({ params }: Props) {
     ? sortedCityCategories[(currentCityCategoryIndex + 1) % sortedCityCategories.length]
     : null;
   const cityCategoryPathFor = (categorySlug: string) => `/${toUrlSlug(categorySlug)}/${subcategory}`;
-  const mobilePagerPrevious = mobilePreviousStyle
-    ? { href: cityStylePathFor(mobilePreviousStyle.slug), label: mobilePreviousStyle.label }
-    : mobilePreviousCategory
-      ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label }
-      : null;
-  const mobilePagerNext = mobileNextStyle
-    ? { href: cityStylePathFor(mobileNextStyle.slug), label: mobileNextStyle.label }
-    : mobileNextCategory
-      ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label }
-      : null;
-  const mobilePagerLabel = mobilePreviousStyle || mobileNextStyle
-    ? `${catMeta.label} style navigation`
-    : `${cityMeta.label} category navigation`;
+  const mobilePagerPrevious = mobilePreviousCategory
+    ? { href: cityCategoryPathFor(mobilePreviousCategory.slug), label: mobilePreviousCategory.label }
+    : null;
+  const mobilePagerNext = mobileNextCategory
+    ? { href: cityCategoryPathFor(mobileNextCategory.slug), label: mobileNextCategory.label }
+    : null;
+  const mobilePagerLabel = `${cityMeta.label} category navigation`;
 
   const listings = await getListingsForPage(categoryDbSlug, cityDbSlug);
   const intro = categoryCityIntroCopy(catMeta, cityMeta, listings.length);
@@ -342,7 +329,7 @@ export default async function CategoryCityPage({ params }: Props) {
       bodyClasses={["e4s-page-category", "e4s-page-child"]}
       beforeHero={(
         <>
-          <CategoryCityPager cities={cities} currentCityDbSlug={cityDbSlug} categoryUrlSlug={category} />
+          <CategoryInCityPager categories={sortedCityCategories} currentDbSlug={categoryDbSlug} cityUrlSlug={subcategory} />
           <MobileSidePager
             label={mobilePagerLabel}
             previous={mobilePagerPrevious}
@@ -409,7 +396,7 @@ export default async function CategoryCityPage({ params }: Props) {
           categoryUrlSlug={category}
           currentCityDbSlug={cityDbSlug}
           backLabel={catMeta.label}
-          subcategories={styleSubcategories}
+          subcategories={navigableSubcategories}
           subcategoryBaseUrlSlug={category}
           subcategoryCityUrlSlug={subcategory}
           subcategoryHeading={categoryDbSlug === "dance_classes" ? "Other Styles" : undefined}

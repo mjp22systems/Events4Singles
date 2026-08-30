@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getCategoryMeta,
+  getCategoriesForCity,
   getCitiesForCategory,
   getListingsForPage,
   getSubcategoriesForCategory,
@@ -14,7 +15,6 @@ import NavSelect from "@/components/nav-select";
 import SubcategoryNavSelect from "@/components/subcategory-nav-select";
 import CategoryCityHeroImage from "@/components/category-city-hero-image";
 import PromoBanners from "@/components/promo-banners";
-import CategoryCityPager from "@/components/category-city-pager";
 import PageSidebar from "@/components/page-sidebar";
 import SubcategoryPager from "@/components/subcategory-pager";
 import MobileSidePager from "@/components/mobile-side-pager";
@@ -73,10 +73,11 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   if (!parentMeta || !childMeta) notFound();
 
   const subcategoryUrlSlug = `${category}/${subcategory}`;
-  const [childCities, parentCities, siblingSubcategories] = await Promise.all([
+  const [childCities, parentCities, siblingSubcategories, cityCategories] = await Promise.all([
     getCitiesForCategory(childMeta.slug),
     getCitiesForCategory(parentMeta.slug),
     getSubcategoriesForCategory(parentDbSlug),
+    getCategoriesForCity(cityDbSlug),
   ]);
   const citiesBySlug = new Map([...parentCities, ...childCities].map((entry) => [entry.slug, entry]));
   const cities = Array.from(citiesBySlug.values());
@@ -85,7 +86,11 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const styleSubcategories = parentDbSlug === "dance_classes"
     ? siblingSubcategories.filter((cat) => cat.slug !== "dance_styles")
     : siblingSubcategories;
-  const navigableSubcategories = styleSubcategories;
+  const cityCategorySlugs = new Set(cityCategories.map((cat) => cat.slug));
+  const citySubcategories = styleSubcategories.filter((cat) => cityCategorySlugs.has(cat.slug));
+  const navigableSubcategories = citySubcategories.some((cat) => cat.slug === childMeta.slug)
+    ? citySubcategories
+    : [childMeta, ...citySubcategories];
   const sortedNavigableSubcategories = [...navigableSubcategories].sort((a, b) => a.label.localeCompare(b.label));
   const currentStyleIndex = sortedNavigableSubcategories.findIndex((cat) => cat.slug === childMeta.slug);
   const mobilePreviousStyle = currentStyleIndex >= 0 && sortedNavigableSubcategories.length > 1
@@ -147,13 +152,8 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
       bodyClasses={["e4s-page-category", "e4s-page-child", "e4s-page-deep-child"]}
       beforeHero={(
         <>
-          <CategoryCityPager
-            cities={cities}
-            currentCityDbSlug={cityDbSlug}
-            categoryUrlSlug={subcategoryUrlSlug}
-          />
           <SubcategoryPager
-            subcategories={styleSubcategories}
+            subcategories={navigableSubcategories}
             currentDbSlug={childMeta.slug}
             parentUrlSlug={category}
             cityUrlSlug={city}
@@ -236,7 +236,7 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
           currentCityDbSlug={cityDbSlug}
           backLabel={parentMeta.label}
           backHref={`/${category}`}
-          subcategories={styleSubcategories}
+          subcategories={navigableSubcategories}
           currentSubcategoryDbSlug={childMeta.slug}
           subcategoryBaseUrlSlug={category}
           subcategoryCityUrlSlug={city}
