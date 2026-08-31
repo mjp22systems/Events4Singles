@@ -57,6 +57,15 @@ async function getChildCategoryMeta(parentDbSlug: string, childUrlSegment: strin
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category, subcategory } = await params;
   const categoryDbSlug = toDbSlug(category);
+  if (categoryDbSlug === "dance_classes" && subcategory === "styles") {
+    return pageMetadata({
+      title: "Dance Styles for Singles | Events4Singles",
+      description:
+        "Explore dance styles, beginner-friendly class paths and social dance options for singles, from salsa and tango to swing, Ceroc, ballroom and dance fitness.",
+      path: "/dance-classes/styles",
+      keywords: ["dance styles", "dance classes for singles", "adult beginner dance classes"],
+    });
+  }
   const catMeta = await getCategoryMeta(categoryDbSlug);
   if (!catMeta) return {};
   const childMeta = await getChildCategoryMeta(categoryDbSlug, subcategory);
@@ -100,6 +109,10 @@ export default async function CategoryCityPage({ params }: Props) {
   const { category, subcategory } = await params;
   const categoryDbSlug = toDbSlug(category);
   const cityDbSlug = toDbSlug(subcategory);
+
+  if (categoryDbSlug === "dance_classes" && subcategory === "styles") {
+    return <DanceStylesGuide />;
+  }
 
   const catMeta = await getCategoryMeta(categoryDbSlug);
   if (!catMeta) notFound();
