@@ -228,8 +228,6 @@ export default function DanceStylesGuide() {
 
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-css-tags */}
-      <link href="/dance-classes.css" rel="stylesheet" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

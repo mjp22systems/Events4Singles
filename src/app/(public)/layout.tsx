@@ -10,7 +10,10 @@ export const dynamic = "force-dynamic";
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <link rel="stylesheet" href="/site.css" />
+      {/* eslint-disable-next-line @next/next/no-css-tags */}
+      <link rel="stylesheet" href="/site.css" precedence="default" />
+      {/* eslint-disable-next-line @next/next/no-css-tags */}
+      <link rel="stylesheet" href="/dance-classes.css" precedence="e4s-page" />
       <HeaderHeight />
       <PublicRouteStateReset />
       <NavigationTracker />
