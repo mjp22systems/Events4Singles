@@ -6,7 +6,7 @@ export default function HeaderHeight() {
     const header = document.querySelector(".e4s-header") as HTMLElement | null;
     if (!header) return;
     const apply = () => {
-      const h = header.getBoundingClientRect().height;
+      const h = Math.round(header.getBoundingClientRect().height);
       if (h < 40) return;
       document.documentElement.style.setProperty("--e4s-header-height", `${h}px`);
       document.documentElement.style.setProperty("--e4s-sticky-top", `${h - 1}px`);

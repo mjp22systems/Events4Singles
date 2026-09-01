@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
-import BodyClass from "@/components/body-class";
 import { PATHWAYS } from "@/lib/pathways";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -39,7 +38,7 @@ export default function WhatAreYouLookingForPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BodyClass add="e4s-page-pathway" />
+      <style>{`body{--e4s-page-bg:#ffffff;background:#ffffff}`}</style>
       <main className="e4s-dance-lovable e4s-looking-hub" id="site-content">
         <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
           <nav aria-label="Breadcrumb">

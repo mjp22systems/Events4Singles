@@ -10,7 +10,6 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import BodyClass from "@/components/body-class";
 import PathwayPager from "@/components/pathway-pager";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
 import { toUrlSlug } from "@/lib/constants";
@@ -151,7 +150,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BodyClass add="e4s-page-pathway" />
+      <style>{`body{--e4s-page-bg:#ffffff;background:#ffffff}`}</style>
       <PathwayPager currentSlug={pathway.slug} />
       <main className={`e4s-dance-lovable e4s-pathway-lovable e4s-pathway-lovable--${pathway.id}`} id="site-content">
         <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
