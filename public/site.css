@@ -4476,6 +4476,14 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }.e4s-home-cat-tile__sub {
   opacity: 0.85;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 3px;
+  padding: 4px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 6px;
+  background: rgba(139, 47, 67, 0.78);
+  opacity: 1;
 }.e4s-home-cat-tile::after {
   content: '';
   position: absolute;
@@ -5154,6 +5162,13 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   z-index: 1;
 }.e4s-home-intent-tile__media-copy p {
   margin: 0 0 4px;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 6px;
+  background: rgba(139, 47, 67, 0.78);
 }.e4s-home-intent-tile__media-copy h3 {
   margin: 0;
 }.e4s-home-intent-tile__body {
@@ -5759,7 +5774,14 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   .e4s-dance-hub-hero__actions a {
     flex: 1 1 100%;
   }
-}/* =========================================================
+}
+
+.e4s-page-pathway {
+  --e4s-page-bg: #ffffff;
+  background: #ffffff;
+}
+
+/* =========================================================
    DANCE CLASSES HUB - OPTION B REFINEMENT
    ========================================================= */
 #site-content.e4s-dance-hub {
@@ -6200,6 +6222,8 @@ body.e4s-page-location .e4s-page-intro--editorial p,
   border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 999px;
   color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
   background: rgba(6, 78, 77, 0.78);
   backdrop-filter: blur(10px);
   box-shadow: 0 12px 28px rgba(6, 78, 77, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.24);

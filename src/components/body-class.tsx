@@ -5,6 +5,7 @@ const PAGE_BG: Record<string, string> = {
   "e4s-page-category": "#539592",
   "e4s-page-location": "#539592",
   "e4s-page-child":    "#539592",
+  "e4s-page-pathway":  "#ffffff",
 };
 
 export default function BodyClass({ add }: { add: string }) {

@@ -3129,6 +3129,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow {
 
 .e4s-event-back-pager {
   color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   font-size: 0.82rem;
   font-weight: 800;
   text-decoration: none;
@@ -3137,6 +3138,7 @@ a.e4s-listing-detail__ci:hover .e4s-listing-detail__ci-arrow {
 .e4s-event-back-pager:hover,
 .e4s-event-back-pager:focus-visible {
   color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .e4s-event-detail__kicker span {

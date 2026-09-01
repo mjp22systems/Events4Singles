@@ -494,7 +494,7 @@ export default function DanceStylesGuide() {
               Browse Dance Classes
               <ArrowRight aria-hidden="true" size={16} />
             </Link>
-            <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="/dance-classes#cities">
+            <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="/dance-classes#dance-classes-near-you">
               Find Classes Near Me
             </Link>
           </div>

@@ -1,11 +1,105 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Compass,
+  HandHeart,
+  HeartHandshake,
+  Map,
+  Sparkles,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import BodyClass from "@/components/body-class";
 import PathwayPager from "@/components/pathway-pager";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
+import { toUrlSlug } from "@/lib/constants";
 import type { PathwayContent } from "@/lib/pathways";
 import { breadcrumbJsonLd, collectionPageJsonLd } from "@/lib/seo";
 
+const pathwayUi: Record<
+  PathwayContent["id"],
+  {
+    chip: string;
+    heroLine: string;
+    icon: LucideIcon;
+    imageAlt: string;
+    stats: [string, string][];
+  }
+> = {
+  partner: {
+    chip: "Dating Intention",
+    heroLine: "with clearer intent",
+    icon: HeartHandshake,
+    imageAlt: "Singles meeting through a hosted dating event",
+    stats: [
+      ["8", "Dating paths"],
+      ["3", "Ways to meet"],
+      ["100%", "Purpose-led"],
+    ],
+  },
+  social: {
+    chip: "Social Momentum",
+    heroLine: "without forcing it",
+    icon: Users,
+    imageAlt: "Singles enjoying a relaxed social activity together",
+    stats: [
+      ["8", "Social paths"],
+      ["3", "Pressure reducers"],
+      ["100%", "Solo-arrival friendly"],
+    ],
+  },
+  growth: {
+    chip: "Confidence & Wellbeing",
+    heroLine: "for a fuller life",
+    icon: Sparkles,
+    imageAlt: "Single adult investing in wellbeing and personal growth",
+    stats: [
+      ["11", "Growth paths"],
+      ["3", "Foundations"],
+      ["100%", "Self-led"],
+    ],
+  },
+};
+
+const benefitIcons = [Compass, HandHeart, BadgeCheck];
+
+function SectionHeading({
+  action,
+  actionHref,
+  eyebrow,
+  id,
+  sub,
+  title,
+}: {
+  action?: string;
+  actionHref?: string;
+  eyebrow: string;
+  id?: string;
+  sub?: string;
+  title: string;
+}) {
+  return (
+    <div className="e4s-dance-lovable-heading">
+      <div>
+        <p>{eyebrow}</p>
+        <h2 id={id}>{title}</h2>
+        {sub ? <span>{sub}</span> : null}
+      </div>
+      {action && actionHref ? (
+        <Link href={actionHref}>
+          {action}
+          <ArrowRight aria-hidden="true" size={16} />
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
 export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
+  const ui = pathwayUi[pathway.id];
+  const HeroIcon = ui.icon;
+  const branchCategories = pathway.categories.slice(0, 4);
   const jsonLd = [
     collectionPageJsonLd({
       name: pathway.seoTitle,
@@ -32,101 +126,191 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
 
   return (
     <>
+      {/* eslint-disable-next-line @next/next/no-css-tags */}
+      <link href="/dance-classes.css" rel="stylesheet" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BodyClass add="e4s-page-info" />
+      <BodyClass add="e4s-page-pathway" />
       <PathwayPager currentSlug={pathway.slug} />
-      <main className={`e4s-pathway-page e4s-pathway-page--${pathway.id}`} id="site-content">
-        <section className="e4s-pathway-hero">
-          <div className="e4s-shell e4s-pathway-hero__grid">
-            <div className="e4s-pathway-hero__copy">
-              <p className="e4s-pathway-eyebrow">{pathway.eyebrow}</p>
-              <h1>{pathway.title}</h1>
-              <p className="e4s-pathway-hero__lead">{pathway.heroLead}</p>
-              <div className="e4s-pathway-hero__actions">
-                <Link className="e4s-pathway-btn e4s-pathway-btn--primary" href="#pathway-benefits">
-                  {pathway.primaryCta}
-                </Link>
-                <Link className="e4s-pathway-btn" href="#pathway-categories">
-                  {pathway.secondaryCta}
-                </Link>
-              </div>
-            </div>
-            <div className="e4s-pathway-hero__image">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt={pathway.title} src={pathway.image} />
-              <span>{pathway.number}</span>
-            </div>
-          </div>
-        </section>
+      <main className={`e4s-dance-lovable e4s-pathway-lovable e4s-pathway-lovable--${pathway.id}`} id="site-content">
+        <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
+          <nav aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            <span>/</span>
+            <span>What Are You Looking For</span>
+            <span>/</span>
+            <strong>{pathway.title}</strong>
+          </nav>
+        </div>
 
-        <section className="e4s-shell e4s-pathway-intro">
-          {pathway.intro.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </section>
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-hero" aria-label={pathway.title}>
+          <div className="e4s-dance-lovable-hero__copy">
+            <span className="e4s-dance-lovable-chip">
+              <HeroIcon aria-hidden="true" size={14} />
+              {ui.chip}
+            </span>
+            <h1>
+              {pathway.title} <span>{ui.heroLine}</span>
+            </h1>
+            <p>{pathway.heroLead}</p>
 
-        <section className="e4s-pathway-band" id="pathway-benefits">
-          <div className="e4s-shell">
-            <div className="e4s-pathway-section-head">
-              <p className="e4s-pathway-eyebrow">Why it helps</p>
-              <h2>The beauty of this path</h2>
+            <div className="e4s-dance-lovable-hero__actions">
+              <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-fit">
+                {pathway.primaryCta}
+                <ArrowRight aria-hidden="true" size={16} />
+              </Link>
+              <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="#pathway-categories">
+                {pathway.secondaryCta}
+              </Link>
             </div>
-            <div className="e4s-pathway-benefits">
-              {pathway.benefits.map((benefit) => (
-                <article key={benefit.title} className="e4s-pathway-benefit">
-                  <h3>{benefit.title}</h3>
-                  <p>{benefit.copy}</p>
-                </article>
+
+            <dl className="e4s-dance-lovable-stats" aria-label={`${pathway.title} summary`}>
+              {ui.stats.map(([value, label]) => (
+                <div key={label}>
+                  <dt>{value}</dt>
+                  <dd>{label}</dd>
+                </div>
               ))}
+            </dl>
+          </div>
+
+          <div className="e4s-dance-lovable-hero__media">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt={ui.imageAlt} src={pathway.image} />
+            <div>
+              <BadgeCheck aria-hidden="true" size={16} />
+              {pathway.number} / {pathway.eyebrow}
             </div>
           </div>
         </section>
 
-        <section className="e4s-shell e4s-pathway-categories" id="pathway-categories">
-          <div className="e4s-pathway-section-head">
-            <p className="e4s-pathway-eyebrow">Explore categories</p>
-            <h2>Services and experiences in this direction</h2>
+        <section className="e4s-dance-styles-strip">
+          <div className="e4s-dance-lovable-shell">
+            <p>
+              <Map aria-hidden="true" size={16} />
+              {pathway.shortIntro}
+            </p>
+            <span>2 min read</span>
           </div>
-          <div className="e4s-home-cat-grid e4s-pathway-category-grid">
-            {pathway.categories.map((category) => {
-              const image = getCategoryCardImage(category.slug);
+        </section>
+
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance" id="pathway-fit">
+          <SectionHeading
+            eyebrow="Choose by feel"
+            sub="Four useful starting points before you browse the full category set."
+            title="Start from what you want out of it"
+          />
+          <div className="e4s-dance-lovable-guidance-grid">
+            {branchCategories.map((category, index) => {
+              const Icon = benefitIcons[index] ?? BadgeCheck;
               return (
-                <Link key={category.slug} className="e4s-home-cat-tile" href={`/${category.slug}`}>
-                  {image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img alt={category.label} loading="lazy" src={image} />
-                  ) : (
-                    <span className="e4s-home-cat-tile__fallback" aria-hidden="true" />
-                  )}
-                  <span className="e4s-home-cat-tile__copy">
-                    <span className="e4s-home-cat-tile__label">{category.label}</span>
-                    <span className="e4s-home-cat-tile__sub">{getCategoryCardSummary(category.slug, category.note)}</span>
+                <article key={category.slug}>
+                  <span>
+                    <Icon aria-hidden="true" size={18} />
                   </span>
-                </Link>
+                  <h3>{category.label}</h3>
+                  <p>{category.note}</p>
+                  <div>
+                    <Link href={`/${toUrlSlug(category.slug)}`}>
+                      Browse {category.label}
+                    </Link>
+                  </div>
+                </article>
               );
             })}
           </div>
         </section>
 
-        <section className="e4s-shell e4s-pathway-editorial">
+        <section className="e4s-dance-lovable-band" id="pathway-categories">
+          <div className="e4s-dance-lovable-shell">
+            <SectionHeading
+              eyebrow="Explore categories"
+              sub="Services and experiences in this direction, using the same card shape as the newer dance hubs."
+              title="Choose the room that fits this season"
+            />
+            <div className="e4s-dance-lovable-style-grid e4s-pathway-lovable-category-grid">
+              {pathway.categories.map((category) => {
+                const image = getCategoryCardImage(category.slug);
+                return (
+                  <Link key={category.slug} className="e4s-dance-lovable-style-card" href={`/${toUrlSlug(category.slug)}`}>
+                    <span className="e4s-dance-lovable-style-card__image">
+                      {image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img alt={category.label} loading="lazy" src={image} />
+                      ) : (
+                        <span className="e4s-pathway-lovable-fallback" aria-hidden="true" />
+                      )}
+                      <span>Explore</span>
+                    </span>
+                    <span className="e4s-dance-lovable-style-card__copy">
+                      <strong>{category.label}</strong>
+                      <em>{getCategoryCardSummary(category.slug, category.note)}</em>
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance e4s-pathway-lovable-story">
+          <SectionHeading
+            eyebrow="How to think about it"
+            sub="The fuller context from the original pages is still here, but broken into easier-to-scan editorial blocks."
+            title="A richer way into the decision"
+          />
+          <div className="e4s-dance-lovable-guidance-grid">
+            {pathway.intro.map((paragraph, index) => (
+              <article key={paragraph}>
+                <span>{index + 1}</span>
+                <p>{paragraph}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance e4s-pathway-lovable-benefits" id="pathway-benefits">
+          <SectionHeading
+            eyebrow="Why it helps"
+            sub="The original pathway benefits, shaped into the same guidance-card language as the dance pages."
+            title="The beauty of this path"
+          />
+          <div className="e4s-dance-lovable-guidance-grid">
+            {pathway.benefits.map((benefit, index) => {
+              const Icon = benefitIcons[index] ?? BadgeCheck;
+              return (
+                <article key={benefit.title}>
+                  <span>
+                    <Icon aria-hidden="true" size={18} />
+                  </span>
+                  <h3>{benefit.title}</h3>
+                  <p>{benefit.copy}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-editorial">
           {pathway.sections.map((section) => (
             <article key={section.title}>
+              <Compass aria-hidden="true" size={24} />
               <h2>{section.title}</h2>
               <p>{section.copy}</p>
             </article>
           ))}
         </section>
 
-        <section className="e4s-pathway-band e4s-pathway-band--light">
-          <div className="e4s-shell e4s-pathway-faq">
-            <div className="e4s-pathway-section-head">
-              <p className="e4s-pathway-eyebrow">Good to know</p>
-              <h2>Questions singles often ask</h2>
-            </div>
-            <div className="e4s-pathway-faq__list">
+        <section className="e4s-dance-lovable-band e4s-pathway-lovable-faq">
+          <div className="e4s-dance-lovable-shell">
+            <SectionHeading
+              eyebrow="Good to know"
+              sub="Practical doubts answered before someone commits to the next click."
+              title="Questions singles often ask"
+            />
+            <div className="e4s-dance-styles-faq-grid">
               {pathway.faqs.map((faq) => (
                 <article key={faq.question}>
                   <h3>{faq.question}</h3>
@@ -137,12 +321,20 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           </div>
         </section>
 
-        <section className="e4s-shell e4s-pathway-final">
-          <h2>Ready to choose your next step?</h2>
-          <p>{pathway.description}</p>
-          <Link className="e4s-pathway-btn e4s-pathway-btn--primary" href="#pathway-benefits">
-            {pathway.primaryCta}
-          </Link>
+        <section className="e4s-dance-lovable-shell e4s-dance-styles-final e4s-pathway-lovable-final">
+          <div>
+            <h2>Ready to choose your next step?</h2>
+            <p>{pathway.description}</p>
+          </div>
+          <div>
+            <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-categories">
+              {pathway.primaryCta}
+              <ArrowRight aria-hidden="true" size={16} />
+            </Link>
+            <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="/">
+              Back to Home
+            </Link>
+          </div>
         </section>
       </main>
     </>

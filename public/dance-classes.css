@@ -28,6 +28,11 @@ body.e4s-page-category.e4s-page-dance-styles ::-webkit-scrollbar-track {
   background: #ffffff;
 }
 
+body.e4s-page-pathway {
+  --e4s-page-bg: #ffffff;
+  background: #ffffff;
+}
+
 #site-content.e4s-dance-lovable *,
 #site-content.e4s-dance-lovable *::before,
 #site-content.e4s-dance-lovable *::after {
@@ -37,6 +42,16 @@ body.e4s-page-category.e4s-page-dance-styles ::-webkit-scrollbar-track {
 #site-content.e4s-dance-lovable a {
   color: inherit;
   text-decoration: none;
+}
+
+#site-content.e4s-dance-lovable #styles,
+#site-content.e4s-dance-lovable #cities,
+#site-content.e4s-dance-lovable #guidance,
+#site-content.e4s-dance-lovable #feel,
+#site-content.e4s-dance-lovable #dance-classes-near-you,
+#site-content.e4s-dance-lovable #pathway-benefits,
+#site-content.e4s-dance-lovable #pathway-categories {
+  scroll-margin-top: 110px;
 }
 
 .e4s-dance-lovable-shell {
@@ -897,6 +912,96 @@ body.e4s-page-category.e4s-page-dance-styles ::-webkit-scrollbar-track {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-hero__media {
+  min-height: 430px;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-pathways {
+  padding: 0 0 56px;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-pathways > .e4s-dance-lovable-shell {
+  margin-top: -36px;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-path-card {
+  min-height: 280px;
+}
+
+.e4s-pathway-lovable-category-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.e4s-pathway-lovable-category-grid .e4s-dance-lovable-style-card__image > span {
+  background: var(--dance-accent);
+  color: #ffffff;
+}
+
+.e4s-pathway-lovable-category-grid .e4s-dance-lovable-style-card:hover .e4s-dance-lovable-style-card__image > span {
+  background: var(--dance-primary);
+}
+
+.e4s-pathway-lovable-category-grid .e4s-dance-lovable-style-card__copy strong {
+  color: var(--dance-primary);
+}
+
+.e4s-pathway-lovable-category-grid .e4s-dance-lovable-style-card:hover .e4s-dance-lovable-style-card__copy strong {
+  color: var(--dance-accent);
+}
+
+.e4s-pathway-lovable-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--dance-primary), var(--dance-accent));
+}
+
+.e4s-pathway-lovable-story {
+  padding-top: 64px;
+}
+
+.e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid {
+  grid-template-columns: 1fr;
+}
+
+.e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid article {
+  min-height: auto;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  padding: 22px 24px;
+}
+
+.e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid article > span {
+  color: var(--dance-primary);
+  font-family: var(--e4s-font-serif, Georgia, serif);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid p {
+  margin: 0;
+}
+
+.e4s-pathway-lovable-benefits {
+  padding-top: 0;
+}
+
+.e4s-pathway-lovable-benefits .e4s-dance-lovable-guidance-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.e4s-pathway-lovable-faq {
+  margin-top: 0;
+}
+
+.e4s-pathway-lovable-final {
+  margin-top: 64px;
 }
 
 .e4s-dance-styles-guide .e4s-dance-lovable-hero {
