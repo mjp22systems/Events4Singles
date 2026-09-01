@@ -1014,13 +1014,17 @@ body > div > table {
   display: grid;
 }.e4s-footer__brand {
   display: grid;
-  grid-template-columns: minmax(0, 65fr) minmax(118px, 35fr);
+  grid-template-columns: minmax(0, 72fr) minmax(88px, 28fr);
   gap: 12px;
   align-items: start;
 }.e4s-footer__brand .e4s-footer__accordion-btn {
   gap: 8px;
   justify-content: flex-start;
+  min-width: 0;
   white-space: normal;
+}.e4s-footer__brand .e4s-footer__accordion-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }.e4s-footer__advertise-nav a {
   overflow-wrap: anywhere;
   white-space: normal;

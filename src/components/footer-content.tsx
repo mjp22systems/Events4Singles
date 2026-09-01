@@ -74,7 +74,7 @@ function Accordion({
           onClick={onToggle}
           type="button"
         >
-          {heading}
+          <span className="e4s-footer__accordion-label">{heading}</span>
           <Chevron open={open} />
         </button>
       </h2>
