@@ -128,6 +128,7 @@ const expectedScripts = {
   "deploy:dad": config.commands?.deploy,
   "cache:purge": config.commands?.cachePurge,
   "memory:refresh": config.commands?.memoryRefresh,
+  "memory:refresh:semantic": config.commands?.memorySemanticRefresh,
   "memory:hook": config.commands?.memoryHook,
   "memory:status": config.commands?.memoryStatus,
   "config:audit": config.commands?.configAudit,
@@ -180,6 +181,7 @@ warnIfMissingText(sourceDocPath, [
   config.cloudflare?.databaseName,
   config.cloudflare?.workerName,
   config.commands?.configAudit,
+  config.commands?.memorySemanticRefresh,
 ], "source-of-truth doc");
 
 const agentInstructionFiles = [

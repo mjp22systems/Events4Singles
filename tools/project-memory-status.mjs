@@ -8,6 +8,8 @@ const graphifyOut = path.join(projectRoot, "graphify-out");
 const graphPath = path.join(graphifyOut, "graph.json");
 const refreshLogPath = path.join(graphifyOut, "refresh-log.jsonl");
 const refreshErrorPath = path.join(graphifyOut, "refresh-errors.log");
+const semanticLogPath = path.join(graphifyOut, "semantic-refresh-log.jsonl");
+const semanticErrorPath = path.join(graphifyOut, "semantic-refresh-errors.log");
 
 function runGit(args) {
   const result = spawnSync("git", args, {
@@ -57,8 +59,16 @@ function readGraphStats() {
 }
 
 function readRefreshLog() {
-  if (!existsSync(refreshLogPath)) return [];
-  return readFileSync(refreshLogPath, "utf8")
+  return readJsonlLog(refreshLogPath);
+}
+
+function readSemanticLog() {
+  return readJsonlLog(semanticLogPath);
+}
+
+function readJsonlLog(filePath) {
+  if (!existsSync(filePath)) return [];
+  return readFileSync(filePath, "utf8")
     .split(/\r?\n/)
     .filter(Boolean)
     .map((line) => {
@@ -100,8 +110,11 @@ function freshness(lastSuccess, headIso) {
 
 const graph = readGraphStats();
 const entries = readRefreshLog();
+const semanticEntries = readSemanticLog();
 const lastEntry = entries.at(-1);
 const lastSuccess = lastSuccessfulRefresh(entries);
+const lastSemanticEntry = semanticEntries.at(-1);
+const lastSemanticSuccess = lastSuccessfulRefresh(semanticEntries);
 const head = runGit(["rev-parse", "--short", "HEAD"]) || "unknown";
 const headIso = runGit(["log", "-1", "--format=%cI"]) || null;
 const dirtyEntries = statusCount();
@@ -132,10 +145,25 @@ if (lastSuccess) {
   console.log(`Last successful refresh: ${lastSuccess.mode ?? "unknown"} at ${formatDate(lastSuccess.finished_at)}`);
 }
 
+if (lastSemanticEntry) {
+  const outcome = lastSemanticEntry.ok ? "ok" : "failed";
+  console.log(`Last semantic refresh: ${outcome} at ${formatDate(lastSemanticEntry.finished_at)}`);
+} else {
+  console.log("Last semantic refresh: no semantic-refresh-log.jsonl entries yet");
+}
+
+if (lastSemanticSuccess) {
+  console.log(`Last successful semantic refresh: ${formatDate(lastSemanticSuccess.finished_at)}`);
+}
+
 console.log(`Freshness: ${freshness(lastSuccess, headIso)}`);
 
 if (existsSync(refreshErrorPath)) {
   console.log(`Failure log: ${refreshErrorPath}`);
+}
+
+if (existsSync(semanticErrorPath)) {
+  console.log(`Semantic failure log: ${semanticErrorPath}`);
 }
 
 if (recentFailures.length) {

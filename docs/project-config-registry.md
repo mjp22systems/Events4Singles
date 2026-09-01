@@ -12,6 +12,7 @@ Use it for:
 - canonical image folder roles
 - required project commands
 - project memory and Graphify governance
+- separate semantic Graphify refresh governance for docs and source-of-truth changes
 
 Do not use workstation-level config such as `D:\Config` as the authority for Events4Singles project facts. That folder can describe the machine, but this project must carry its own operational registry inside the repo.
 
@@ -24,8 +25,11 @@ When a project fact changes:
 3. Run `npm run config:audit`.
 4. Run the relevant build/test/audit.
 5. Run `npm run memory:refresh`.
+6. Run `npm run memory:refresh:semantic` when the change materially alters docs, governance, architecture descriptions, or source-of-truth content that should be represented semantically in Graphify.
 
 The `memory:refresh` script is intentionally wired to run `config:audit` first. That means the Graphify memory loop will fail early if the project registry and executable scripts drift apart.
+
+The `memory:refresh:semantic` script is the heavier document-aware companion. It runs the same config audit, preserves the project `.graphifyignore` exclusions, and calls Graphify full extraction from the parent project root. It requires a headless Graphify LLM backend in the environment; routine post-commit hooks use the cheaper AST/code refresh instead.
 
 ## Audit Scope
 
@@ -39,6 +43,7 @@ The `memory:refresh` script is intentionally wired to run `config:audit` first. 
 - agent instruction files point at the registered source-of-truth doc and do not reference retired project briefs
 - `graphify-out/graph.json` is not contaminated by backup/scratch source folders
 - generated folders remain identified as generated output
+- semantic refresh command and source-of-truth references stay registered
 
 Critical drift fails the command. Documentation drift is reported as a warning unless it would make automation unsafe. Agent-entrypoint drift and Graphify corpus contamination are critical failures because they can make later sessions reason from stale or duplicate project history.
 

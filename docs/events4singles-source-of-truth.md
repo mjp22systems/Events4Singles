@@ -20,10 +20,12 @@ Last updated: 2026-08-29
 - Graphify target: run Graphify from `D:\Projects\Clients\Dad\Events4singles` when the task needs the full project picture, including repo docs and top-level audit notes. Use `.graphifyignore` to exclude generated output, dependency folders, lock/build artifacts, and images unless the task specifically asks for media analysis.
 - Graphify output: `D:\Projects\Clients\Dad\Events4singles\graphify-out`, ignored by Git.
 - Project memory refresh command from `website`: `npm run memory:refresh`.
+- Project semantic memory refresh command from `website`: `npm run memory:refresh:semantic` (`node tools/refresh-project-memory-semantic.mjs`).
 - Project memory hook install command from `website`: `npm run memory:hook`.
 - Project memory status command from `website`: `npm run memory:status`.
 - Project memory audit log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh-log.jsonl`.
 - Project memory failure log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh-errors.log`.
+- Project semantic memory audit log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\semantic-refresh-log.jsonl`.
 - Project memory lock file during active refreshes: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh.lock`.
 - Archive location for old sessions, release folders, local DB snapshots, and moved legacy non-image assets: `D:\Projects\Clients\Dad\Events4singles-archive`.
 
@@ -40,13 +42,14 @@ The durable project memory loop is:
 1. Update code, tests, docs, or source assets.
 2. Run relevant verification.
 3. Run `npm run memory:refresh` from `website`.
-4. Run `npm run memory:status` from `website` when checking whether the graph, hook, and refresh log are healthy.
-5. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
-6. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
+4. Run `npm run memory:refresh:semantic` from `website` after substantial docs, governance, source-of-truth, or architecture narrative changes that need semantic Graphify extraction. This command runs `graphify extract . --out .` from the parent project root and requires a headless Graphify LLM backend such as `GEMINI_API_KEY` or `GOOGLE_API_KEY`. Images remain excluded by `.graphifyignore` unless the ignore rules are intentionally changed.
+5. Run `npm run memory:status` from `website` when checking whether the graph, hook, refresh log, and semantic refresh log are healthy.
+6. Use `graphify query`, `graphify path`, or `graphify explain` from the parent project root before answering architecture questions.
+7. If Graphify reveals drift, update the source-of-truth docs, tests, or code and refresh again.
 
 The loop must fail closed on governance drift. `npm run memory:refresh` runs `npm run config:audit` first. The audit checks that agent instruction files point at this document, do not reference retired project briefs, and that the current graph is not carrying nodes sourced from backup or scratch folders. If those checks fail, fix the source boundary or documentation pointer first, then rebuild or refresh Graphify.
 
-The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. Hook failures are non-blocking for Git commits, but they are recorded in `graphify-out\refresh-log.jsonl` and `graphify-out\refresh-errors.log` so later sessions can audit them. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work.
+The website repo also has a local post-commit hook installer: `npm run memory:hook`. The hook calls `tools/refresh-project-memory.mjs` after commits, so committed code changes refresh the parent `graphify-out` automatically. Hook failures are non-blocking for Git commits, but they are recorded in `graphify-out\refresh-log.jsonl` and `graphify-out\refresh-errors.log` so later sessions can audit them. It is a safety net, not a replacement for an explicit `memory:refresh` during active uncommitted work. The hook deliberately does not run `memory:refresh:semantic`, because full semantic extraction can require paid LLM calls and longer runtime.
 
 The refresh script uses `graphify-out\refresh.lock` to prevent overlapping manual and post-commit refreshes. If Graphify reports community label drift, run `graphify label` from the parent project root. On this machine, `graphify label` can recluster and rewrite graph outputs without semantic names unless an LLM backend/API key is configured.
 

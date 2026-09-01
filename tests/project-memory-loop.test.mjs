@@ -13,6 +13,7 @@ test("package exposes project memory loop commands", () => {
   const pkg = JSON.parse(read("package.json"));
 
   assert.equal(pkg.scripts["memory:refresh"], "node tools/refresh-project-memory.mjs");
+  assert.equal(pkg.scripts["memory:refresh:semantic"], "node tools/refresh-project-memory-semantic.mjs");
   assert.equal(pkg.scripts["memory:hook"], "node tools/install-project-memory-hook.mjs");
   assert.equal(pkg.scripts["memory:status"], "node tools/project-memory-status.mjs");
 });
@@ -29,6 +30,18 @@ test("refresh command records auditable successes and non-blocking hook failures
   assert.match(source, /mode: refreshMode/);
   assert.match(source, /if \(quietHook\)/);
   assert.match(source, /process\.exitCode = 1/);
+});
+
+test("semantic refresh command runs full extraction with explicit backend requirements", () => {
+  const source = read("tools/refresh-project-memory-semantic.mjs");
+
+  assert.match(source, /"extract", "\.", "--out", "\."/);
+  assert.match(source, /hasHeadlessSemanticBackend/);
+  assert.match(source, /GEMINI_API_KEY/);
+  assert.match(source, /GOOGLE_API_KEY/);
+  assert.match(source, /semantic-refresh-log\.jsonl/);
+  assert.match(source, /semantic-refresh-errors\.log/);
+  assert.match(source, /public\/images/);
 });
 
 test("refresh command excludes backup and scratch folders from graphify corpus", () => {
@@ -53,6 +66,7 @@ test("project audit fails closed on source-of-truth and graph corpus drift", () 
   assert.match(source, /forbidden backup\/scratch sources/);
   assert.match(source, /retired source-of-truth path/);
   assert.match(source, /memory:refresh/);
+  assert.match(source, /memory:refresh:semantic/);
 });
 
 test("agent instructions point at the registered source-of-truth document", () => {
@@ -71,6 +85,8 @@ test("status command reports graph freshness and hook state from durable files",
 
   assert.match(source, /refresh-log\.jsonl/);
   assert.match(source, /refresh-errors\.log/);
+  assert.match(source, /semantic-refresh-log\.jsonl/);
+  assert.match(source, /semantic-refresh-errors\.log/);
   assert.match(source, /Freshness:/);
   assert.match(source, /Events4Singles project memory loop/);
 });

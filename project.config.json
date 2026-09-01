@@ -71,6 +71,7 @@
     "deploy": "node tools/deploy-cloudflare.mjs",
     "cachePurge": "node tools/purge-cloudflare-cache.mjs",
     "memoryRefresh": "node tools/refresh-project-memory.mjs",
+    "memorySemanticRefresh": "node tools/refresh-project-memory-semantic.mjs",
     "memoryHook": "node tools/install-project-memory-hook.mjs",
     "memoryStatus": "node tools/project-memory-status.mjs",
     "configAudit": "node tools/audit-project-config.mjs"
@@ -81,6 +82,7 @@
     "agentLocalInstructions": "CLAUDE.md",
     "configDoc": "docs/project-config-registry.md",
     "memoryRefreshRequiredAfterChanges": true,
+    "semanticMemoryRefreshRequiredAfterGovernanceChanges": true,
     "postCommitMemoryHookAvailable": true,
     "doNotCreateReleaseCopiesInProjectRoot": true
   }
