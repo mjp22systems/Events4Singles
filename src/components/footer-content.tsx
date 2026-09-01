@@ -1,21 +1,37 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { toUrlSlug } from "@/lib/constants";
 import type { City, Category } from "@/lib/types";
 
 function usePersisted(key: string, defaultVal: boolean): [boolean, (v: boolean | ((p: boolean) => boolean)) => void] {
-  const [val, setVal] = useState(() => {
+  const getSnapshot = useCallback(() => {
     if (typeof window === "undefined") return defaultVal;
     const saved = window.localStorage.getItem(key);
     return saved === null ? defaultVal : saved === "1";
-  });
+  }, [defaultVal, key]);
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      if (typeof window === "undefined") return () => {};
+      const storageEventName = `e4s-storage:${key}`;
+      const onStorage = (event: StorageEvent) => {
+        if (event.key === key) onStoreChange();
+      };
+
+      window.addEventListener("storage", onStorage);
+      window.addEventListener(storageEventName, onStoreChange);
+      return () => {
+        window.removeEventListener("storage", onStorage);
+        window.removeEventListener(storageEventName, onStoreChange);
+      };
+    },
+    [key],
+  );
+  const val = useSyncExternalStore(subscribe, getSnapshot, () => defaultVal);
   function set(next: boolean | ((p: boolean) => boolean)) {
-    setVal((prev) => {
-      const resolved = typeof next === "function" ? next(prev) : next;
-      window.localStorage.setItem(key, resolved ? "1" : "0");
-      return resolved;
-    });
+    const resolved = typeof next === "function" ? next(getSnapshot()) : next;
+    window.localStorage.setItem(key, resolved ? "1" : "0");
+    window.dispatchEvent(new Event(`e4s-storage:${key}`));
   }
   return [val, set];
 }
