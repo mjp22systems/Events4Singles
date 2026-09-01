@@ -139,7 +139,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           <nav aria-label="Breadcrumb">
             <Link href="/">Home</Link>
             <span>/</span>
-            <span>What Are You Looking For</span>
+            <Link href="/what-are-you-looking-for">What Are You Looking For</Link>
             <span>/</span>
             <strong>{pathway.title}</strong>
           </nav>

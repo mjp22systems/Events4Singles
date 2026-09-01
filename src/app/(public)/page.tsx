@@ -110,6 +110,7 @@ export default async function HomePage() {
             <h2>What are you looking for?</h2>
             <p>Three ways in, depending on where you are right now — from quietly working on yourself, to getting out more, to actively looking to meet someone.</p>
           </div>
+          <Link className="e4s-home-section__more" href="/what-are-you-looking-for">Compare Paths</Link>
         </div>
         <div className="e4s-shell e4s-home-intent-grid">
           {PATHWAYS.map((group) => (

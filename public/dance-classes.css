@@ -918,8 +918,19 @@ body.e4s-page-pathway {
   min-height: 430px;
 }
 
+.e4s-pathway-lovable .e4s-dance-lovable-hero__media img {
+  animation: none;
+  opacity: 1;
+  transform: scale(1.02);
+}
+
 .e4s-pathway-lovable .e4s-dance-lovable-stats {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.e4s-pathway-side-pager,
+.e4s-pathway-side-pager:visited {
+  display: grid;
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-pathways {
@@ -1002,6 +1013,65 @@ body.e4s-page-pathway {
 
 .e4s-pathway-lovable-final {
   margin-top: 64px;
+}
+
+.e4s-looking-hub .e4s-dance-lovable-hero__media img:nth-child(2) {
+  animation-delay: 6s;
+}
+
+.e4s-looking-hub .e4s-dance-lovable-hero__media img:nth-child(3) {
+  animation-delay: 12s;
+}
+
+.e4s-looking-hub-paths {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.e4s-looking-hub-paths .e4s-dance-lovable-style-card__image {
+  aspect-ratio: 16 / 11;
+}
+
+.e4s-looking-hub-paths .e4s-dance-lovable-style-card__image > span {
+  background: var(--dance-accent);
+  color: #ffffff;
+}
+
+.e4s-looking-hub-paths .e4s-dance-lovable-style-card__copy strong {
+  color: var(--dance-primary);
+  font-size: 16px;
+}
+
+.e4s-looking-hub-paths .e4s-dance-lovable-style-card:hover .e4s-dance-lovable-style-card__copy strong {
+  color: var(--dance-accent);
+}
+
+@media (max-width: 1220px) {
+  .e4s-pathway-side-pager,
+  .e4s-pathway-side-pager:visited {
+    display: grid;
+  }
+}
+
+@media (max-width: 820px) {
+  .e4s-pathway-side-pager,
+  .e4s-pathway-side-pager:visited {
+    display: none;
+  }
+
+  .e4s-pathway-lovable-benefits .e4s-dance-lovable-guidance-grid,
+  .e4s-pathway-lovable .e4s-dance-lovable-editorial {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid article {
+    grid-template-columns: 1fr;
+  }
+
+  .e4s-looking-hub .e4s-looking-hub-paths {
+    grid-template-columns: 1fr;
+  }
 }
 
 .e4s-dance-styles-guide .e4s-dance-lovable-hero {
