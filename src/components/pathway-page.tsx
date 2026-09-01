@@ -64,6 +64,24 @@ const pathwayUi: Record<
 
 const benefitIcons = [Compass, HandHeart, BadgeCheck];
 
+const pathwayHeroImages: Record<PathwayContent["id"], { src: string; alt: string }[]> = {
+  partner: [
+    { src: "/images/site/home/intent-cards/intent-partner.jpg", alt: "Singles meeting through a hosted dating event" },
+    { src: "/images/categories/cards/singles-mixers.webp", alt: "Singles talking at a relaxed mixer" },
+    { src: "/images/categories/cards/dinner-parties.webp", alt: "Singles dinner party table setting" },
+  ],
+  social: [
+    { src: "/images/site/home/intent-cards/intent-social.jpg", alt: "Singles enjoying a relaxed social activity together" },
+    { src: "/images/categories/cards/dance-classes.webp", alt: "Singles taking a dance class together" },
+    { src: "/images/categories/cards/cruises4singles.webp", alt: "Singles social outing on the water" },
+  ],
+  growth: [
+    { src: "/images/site/home/intent-cards/intent-growth.jpg", alt: "Single adult investing in wellbeing and personal growth" },
+    { src: "/images/categories/cards/yoga-classes.webp", alt: "Yoga class for calm and confidence" },
+    { src: "/images/categories/cards/retreats-for-singles.webp", alt: "Wellbeing retreat for singles" },
+  ],
+};
+
 function SectionHeading({
   action,
   actionHref,
@@ -100,6 +118,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
   const ui = pathwayUi[pathway.id];
   const HeroIcon = ui.icon;
   const branchCategories = pathway.categories.slice(0, 4);
+  const heroImages = pathwayHeroImages[pathway.id] ?? [{ src: pathway.image, alt: ui.imageAlt }];
   const jsonLd = [
     collectionPageJsonLd({
       name: pathway.seoTitle,
@@ -177,8 +196,15 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           </div>
 
           <div className="e4s-dance-lovable-hero__media">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt={ui.imageAlt} src={pathway.image} />
+            {heroImages.map((image, index) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={image.src}
+                alt={image.alt}
+                src={image.src}
+                style={{ animationDelay: `${index * 6}s` }}
+              />
+            ))}
             <div>
               <BadgeCheck aria-hidden="true" size={16} />
               {pathway.number} / {pathway.eyebrow}

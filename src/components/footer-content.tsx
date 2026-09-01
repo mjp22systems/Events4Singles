@@ -1,19 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { toUrlSlug } from "@/lib/constants";
 import type { City, Category } from "@/lib/types";
 
 function usePersisted(key: string, defaultVal: boolean): [boolean, (v: boolean | ((p: boolean) => boolean)) => void] {
-  const [val, setVal] = useState(defaultVal);
-  useEffect(() => {
-    const saved = localStorage.getItem(key);
-    if (saved !== null) setVal(saved === "1");
-  }, [key]);
+  const [val, setVal] = useState(() => {
+    if (typeof window === "undefined") return defaultVal;
+    const saved = window.localStorage.getItem(key);
+    return saved === null ? defaultVal : saved === "1";
+  });
   function set(next: boolean | ((p: boolean) => boolean)) {
     setVal((prev) => {
       const resolved = typeof next === "function" ? next(prev) : next;
-      localStorage.setItem(key, resolved ? "1" : "0");
+      window.localStorage.setItem(key, resolved ? "1" : "0");
       return resolved;
     });
   }
@@ -105,12 +105,12 @@ export default function FooterContent({ cities, categories, catMid }: Props) {
               </p>
             </section>
             <Accordion
-              heading="Advertise with Us"
+              heading="Site Information"
               id="footer-advertise"
               open={advertOpen}
               onToggle={() => setAdvertOpen((v) => !v)}
             >
-              <nav aria-label="Footer advertise" className="e4s-footer__advertise-nav">
+              <nav aria-label="Footer site information" className="e4s-footer__advertise-nav">
                 <Link href="/advertise">List Your Business</Link>
                 <Link href="/advertise#pricing">Pricing Plans</Link>
                 <Link href="/portal">Advertiser Portal</Link>

@@ -918,10 +918,12 @@ body.e4s-page-pathway {
   min-height: 430px;
 }
 
-.e4s-pathway-lovable .e4s-dance-lovable-hero__media img {
-  animation: none;
-  opacity: 1;
-  transform: scale(1.02);
+.e4s-pathway-lovable .e4s-dance-lovable-hero__media img:nth-child(2) {
+  animation-delay: 6s;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-hero__media img:nth-child(3) {
+  animation-delay: 12s;
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-stats {
