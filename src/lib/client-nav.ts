@@ -21,6 +21,10 @@ export function markScrollTopAfterNavigation(href: string) {
 
   const url = new URL(href, window.location.href);
   window.sessionStorage.setItem(SCROLL_TOP_AFTER_NAV_KEY, url.pathname);
+
+  if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
 }
 
 export function consumeScrollTopAfterNavigation(pathname: string) {
