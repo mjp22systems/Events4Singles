@@ -252,11 +252,11 @@ body.e4s-page-pathway {
 }
 
 .e4s-dance-lovable-hero__media img:nth-child(2) {
-  animation-delay: -12s;
+  animation-delay: -12s !important;
 }
 
 .e4s-dance-lovable-hero__media img:nth-child(3) {
-  animation-delay: -6s;
+  animation-delay: -6s !important;
 }
 
 .e4s-dance-lovable-hero__media div {
@@ -928,11 +928,11 @@ body.e4s-page-pathway {
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-hero__media img:nth-child(2) {
-  animation-delay: -12s;
+  animation-delay: -12s !important;
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-hero__media img:nth-child(3) {
-  animation-delay: -6s;
+  animation-delay: -6s !important;
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-stats {
@@ -1027,11 +1027,11 @@ body.e4s-page-pathway {
 }
 
 .e4s-looking-hub .e4s-dance-lovable-hero__media img:nth-child(2) {
-  animation-delay: -12s;
+  animation-delay: -12s !important;
 }
 
 .e4s-looking-hub .e4s-dance-lovable-hero__media img:nth-child(3) {
-  animation-delay: -6s;
+  animation-delay: -6s !important;
 }
 
 .e4s-looking-hub-paths {
