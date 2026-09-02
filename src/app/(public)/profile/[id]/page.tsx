@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
@@ -130,9 +130,14 @@ function formatEventPrice(min: number | null) {
   return `From $${(min / 100).toFixed(0)}`;
 }
 
+function profileHref(profile: { id: number; name: string | null; profile_slug: string | null }) {
+  return `/profile/${profile.profile_slug ?? toProfileSlug(profile.id, profile.name || "profile")}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id: slug } = await params;
-  const { business, listings } = await getProfileData(slug);
+  const { business, listings, redirectToProfile } = await getProfileData(slug);
+  if (redirectToProfile) return {};
   if (!business && listings.length === 0) return {};
   const name = business?.name || listings[0]?.business_name || listings[0]?.title || "Profile";
   const canonicalSlug = business?.profile_slug ?? (business ? toProfileSlug(business.id, name) : slug);
@@ -153,6 +158,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const search = searchParams ? await searchParams : {};
   const eventFilter = search.events === "past" ? "past" : "upcoming";
   const profileData = await getProfileData(slug, eventFilter);
+  if (profileData.redirectToProfile) redirect(profileHref(profileData.redirectToProfile));
   const { business, listings } = profileData;
   const banners = profileData.banners ?? [];
   const events = profileData.events ?? [];
@@ -199,9 +205,6 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const mapsUrl = address
     ? `https://maps.google.com/?q=${encodeURIComponent(address)}`
     : null;
-  const profileHref = (profile: { id: number; name: string; profile_slug: string | null }) =>
-    `/profile/${profile.profile_slug ?? toProfileSlug(profile.id, profile.name)}`;
-
   return (
     <PublicMain>
       {showAdminEditor && <link rel="stylesheet" href="/admin.css" precedence="high" />}

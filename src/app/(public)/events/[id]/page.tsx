@@ -9,7 +9,7 @@ import { cleanEventDescription } from "@/lib/event-text";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 import { PublicMain, PublicPageFoot } from "@/components/public-page";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type Props = { params: Promise<{ id: string }> };
 

@@ -32,7 +32,7 @@ interface Props {
   params: Promise<{ category: string; subcategory: string; city: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 async function getChildCategoryMeta(parentDbSlug: string, childUrlSegment: string) {
   for (const candidate of categoryChildDbSlugCandidates(parentDbSlug, childUrlSegment)) {

@@ -1061,6 +1061,7 @@ export interface ProfileData {
   nextEvent: PublicEvent | null;
   totalEvents: number;
   directoryPager: BusinessDirectoryPager;
+  redirectToProfile: BusinessDirectoryNeighbor | null;
 }
 
 export type ProfileEventFilter = "upcoming" | "past";
@@ -1098,6 +1099,29 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
       nextEvent: null,
       totalEvents: 0,
       directoryPager: { previous: null, next: null },
+      redirectToProfile: null,
+    };
+  }
+
+  const redirectToProfile = await db.prepare(`
+    SELECT target.id, target.name, target.profile_slug
+    FROM businesses source
+    JOIN businesses target ON target.id = source.merged_into_business_id
+    WHERE source.id = ?
+      AND source.merged_into_business_id IS NOT NULL
+    LIMIT 1
+  `).bind(businessId).first<BusinessDirectoryNeighbor>() ?? null;
+
+  if (redirectToProfile) {
+    return {
+      business: null,
+      listings: [],
+      banners: [],
+      events: [],
+      nextEvent: null,
+      totalEvents: 0,
+      directoryPager: { previous: null, next: null },
+      redirectToProfile,
     };
   }
 
@@ -1105,7 +1129,7 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
     SELECT id, name, description, logo_url, website,
            contact_name, phone, mobile, email,
            facebook_url, instagram_url, tiktok_url, youtube_url, linkedin_url,
-           advertiser_id, profile_slug
+           advertiser_id, profile_slug, merged_into_business_id
     FROM businesses WHERE id = ?
   `).bind(businessId).first<Business>() ?? null;
 
@@ -1228,7 +1252,7 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
 
   const directoryPager = business ? await getBusinessDirectoryPager(business.id) : { previous: null, next: null };
 
-  return { business, listings, banners, events, nextEvent, totalEvents, directoryPager };
+  return { business, listings, banners, events, nextEvent, totalEvents, directoryPager, redirectToProfile: null };
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────

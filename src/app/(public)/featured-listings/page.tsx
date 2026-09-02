@@ -15,7 +15,7 @@ import { slugToLabel, toDbSlug } from "@/lib/constants";
 import type { Category, City, Listing } from "@/lib/types";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = pageMetadata({
   title: "Featured Singles Listings - Australia",

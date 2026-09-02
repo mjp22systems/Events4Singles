@@ -47,7 +47,7 @@ interface Props {
   params: Promise<{ category: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category: param } = await params;

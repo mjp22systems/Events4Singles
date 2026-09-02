@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],
       },
       {
+        source: "/:path((?!api|admin|portal|media|listing|profile|_next).*)",
+        headers: [{ key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" }],
+      },
+      {
         source: "/listing/:slug*",
         headers: [{ key: "Cache-Control", value: "private, no-store" }],
       },

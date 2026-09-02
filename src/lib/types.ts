@@ -96,6 +96,7 @@ export interface Business {
   linkedin_url: string | null;
   advertiser_id: number | null;
   profile_slug: string | null;
+  merged_into_business_id?: number | null;
 }
 
 export interface PlacementCombo {

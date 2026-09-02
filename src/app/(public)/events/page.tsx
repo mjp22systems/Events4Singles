@@ -9,7 +9,7 @@ import { PublicMain, PublicPageFoot } from "@/components/public-page";
 import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = pageMetadata({
   title: "What's On — Upcoming Singles Events Australia",
