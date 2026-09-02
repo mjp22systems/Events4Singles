@@ -14,9 +14,10 @@ interface Props {
   previous?: MobileSidePagerTarget | null;
   next?: MobileSidePagerTarget | null;
   label?: string;
+  className?: string;
 }
 
-export default function MobileSidePager({ previous, next, label = "Related page navigation" }: Props) {
+export default function MobileSidePager({ className, previous, next, label = "Related page navigation" }: Props) {
   const router = useRouter();
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const previousRef = useRef(previous);
@@ -76,7 +77,7 @@ export default function MobileSidePager({ previous, next, label = "Related page 
   if (!previous && !next) return null;
 
   return (
-    <nav className="e4s-mobile-side-pager" aria-label={label}>
+    <nav className={`e4s-mobile-side-pager${className ? ` ${className}` : ""}`} aria-label={label}>
       {previous ? (
         <Link
           className="e4s-mobile-side-pager__button e4s-mobile-side-pager__button--prev"

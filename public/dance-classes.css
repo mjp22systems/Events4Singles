@@ -53,6 +53,10 @@ body.e4s-page-pathway {
 #site-content.e4s-dance-lovable #pathway-fit-heading,
 #site-content.e4s-dance-lovable #pathway-categories,
 #site-content.e4s-dance-lovable #pathway-categories-heading,
+#site-content.e4s-dance-lovable #pathway-story-heading,
+#site-content.e4s-dance-lovable #pathway-benefits-heading,
+#site-content.e4s-dance-lovable #pathway-practical,
+#site-content.e4s-dance-lovable #pathway-faq-heading,
 #site-content.e4s-dance-lovable #pathways,
 #site-content.e4s-dance-lovable #pathways-heading {
   scroll-margin-top: calc(var(--e4s-header-height, 86px) + 18px);
@@ -947,6 +951,56 @@ body.e4s-page-pathway {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.e4s-pathway-jump-nav {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  padding-block: 18px 4px;
+}
+
+.e4s-pathway-jump-nav > span {
+  color: var(--dance-primary);
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.e4s-pathway-jump-nav > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.e4s-pathway-jump-nav a,
+.e4s-pathway-jump-nav a:visited {
+  align-items: center;
+  background: var(--dance-card);
+  border: 1px solid var(--dance-border);
+  border-radius: 999px;
+  color: var(--dance-accent-deep) !important;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  min-height: 34px;
+  padding: 9px 12px;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  white-space: nowrap;
+}
+
+.e4s-pathway-jump-nav a:hover,
+.e4s-pathway-jump-nav a:focus-visible {
+  background: var(--dance-primary-soft);
+  border-color: rgba(139, 47, 67, 0.34);
+  color: var(--dance-primary-deep) !important;
+  outline: none;
+  transform: translateY(-1px);
+}
+
 .e4s-pathway-side-pager,
 .e4s-pathway-side-pager:visited {
   display: grid;
@@ -1083,7 +1137,56 @@ body.e4s-page-pathway {
   }
 }
 
+@media (max-width: 760px) {
+  .e4s-pathway-mobile-pager .e4s-mobile-side-pager__button,
+  .e4s-pathway-mobile-pager .e4s-mobile-side-pager__button:visited {
+    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    height: 48px !important;
+    top: auto !important;
+    transform: none !important;
+    width: 36px !important;
+  }
+}
+
 @media (max-width: 720px) {
+  .e4s-pathway-jump-nav {
+    align-items: flex-start;
+    gap: 10px;
+    overflow: hidden;
+    padding-block: 14px 0;
+    position: sticky;
+    top: calc(var(--e4s-sticky-top, var(--e4s-header-height, 86px)) - 1px);
+    z-index: 25;
+  }
+
+  .e4s-pathway-jump-nav::before {
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid var(--dance-border);
+    content: "";
+    inset: 0 calc((100vw - 100%) / -2) auto;
+    min-height: 100%;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .e4s-pathway-jump-nav > div {
+    flex-wrap: nowrap;
+    margin-inline: -2px;
+    overflow-x: auto;
+    padding: 0 2px 12px;
+    scrollbar-width: none;
+  }
+
+  .e4s-pathway-jump-nav > div::-webkit-scrollbar {
+    display: none;
+  }
+
+  .e4s-pathway-jump-nav a,
+  .e4s-pathway-jump-nav a:visited {
+    min-height: 32px;
+    padding-inline: 11px;
+  }
+
   .e4s-pathway-lovable-story .e4s-dance-lovable-guidance-grid article {
     grid-template-columns: 1fr;
   }

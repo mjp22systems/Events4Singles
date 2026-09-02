@@ -7,6 +7,11 @@ const TARGETS: Record<string, string> = {
   "#pathway-fit-heading": "pathway-fit-heading",
   "#pathway-categories": "pathway-categories-heading",
   "#pathway-categories-heading": "pathway-categories-heading",
+  "#pathway-story-heading": "pathway-story-heading",
+  "#pathway-benefits": "pathway-benefits-heading",
+  "#pathway-benefits-heading": "pathway-benefits-heading",
+  "#pathway-practical": "pathway-practical",
+  "#pathway-faq-heading": "pathway-faq-heading",
   "#pathways": "pathways-heading",
   "#pathways-heading": "pathways-heading",
 };

@@ -65,6 +65,15 @@ const pathwayUi: Record<
 
 const benefitIcons = [Compass, HandHeart, BadgeCheck];
 
+const pathwayJumpLinks = [
+  { href: "#pathway-fit-heading", label: "Start" },
+  { href: "#pathway-categories-heading", label: "Categories" },
+  { href: "#pathway-story-heading", label: "Context" },
+  { href: "#pathway-benefits-heading", label: "Benefits" },
+  { href: "#pathway-practical", label: "Approach" },
+  { href: "#pathway-faq-heading", label: "Questions" },
+] as const;
+
 const pathwayHeroImages: Record<PathwayContent["id"], { src: string; alt: string }[]> = {
   partner: [
     { src: "/images/site/home/intent-cards/intent-partner.jpg", alt: "Singles meeting through a hosted dating event" },
@@ -221,6 +230,17 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           </div>
         </section>
 
+        <nav className="e4s-dance-lovable-shell e4s-pathway-jump-nav" aria-label={`${pathway.title} sections`}>
+          <span>Jump to</span>
+          <div>
+            {pathwayJumpLinks.map((link) => (
+              <SectionJumpLink key={link.href} href={link.href}>
+                {link.label}
+              </SectionJumpLink>
+            ))}
+          </div>
+        </nav>
+
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance" id="pathway-fit">
           <SectionHeading
             eyebrow="Choose by feel"
@@ -285,6 +305,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance e4s-pathway-lovable-story">
           <SectionHeading
             eyebrow="How to think about it"
+            id="pathway-story-heading"
             sub="The fuller context from the original pages is still here, but broken into easier-to-scan editorial blocks."
             title="A richer way into the decision"
           />
@@ -301,6 +322,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance e4s-pathway-lovable-benefits" id="pathway-benefits">
           <SectionHeading
             eyebrow="Why it helps"
+            id="pathway-benefits-heading"
             sub="The original pathway benefits, shaped into the same guidance-card language as the dance pages."
             title="The beauty of this path"
           />
@@ -320,7 +342,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           </div>
         </section>
 
-        <section className="e4s-dance-lovable-shell e4s-dance-lovable-editorial">
+        <section className="e4s-dance-lovable-shell e4s-dance-lovable-editorial" id="pathway-practical">
           {pathway.sections.map((section) => (
             <article key={section.title}>
               <Compass aria-hidden="true" size={24} />
@@ -334,6 +356,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           <div className="e4s-dance-lovable-shell">
             <SectionHeading
               eyebrow="Good to know"
+              id="pathway-faq-heading"
               sub="Practical doubts answered before someone commits to the next click."
               title="Questions singles often ask"
             />
