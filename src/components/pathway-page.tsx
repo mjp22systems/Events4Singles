@@ -193,13 +193,12 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           </div>
 
           <div className="e4s-dance-lovable-hero__media">
-            {heroImages.map((image, index) => (
+            {heroImages.map((image) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={image.src}
                 alt={image.alt}
                 src={image.src}
-                style={{ animationDelay: `${index * 6}s` }}
               />
             ))}
             <div>
