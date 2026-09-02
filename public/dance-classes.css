@@ -50,8 +50,12 @@ body.e4s-page-pathway {
 #site-content.e4s-dance-lovable #feel,
 #site-content.e4s-dance-lovable #dance-classes-near-you,
 #site-content.e4s-dance-lovable #pathway-benefits,
-#site-content.e4s-dance-lovable #pathway-categories {
-  scroll-margin-top: 110px;
+#site-content.e4s-dance-lovable #pathway-fit-heading,
+#site-content.e4s-dance-lovable #pathway-categories,
+#site-content.e4s-dance-lovable #pathway-categories-heading,
+#site-content.e4s-dance-lovable #pathways,
+#site-content.e4s-dance-lovable #pathways-heading {
+  scroll-margin-top: calc(var(--e4s-header-height, 86px) + 18px);
 }
 
 .e4s-dance-lovable-shell {
@@ -924,7 +928,11 @@ body.e4s-page-pathway {
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-hero__media {
-  min-height: 430px;
+  min-height: 340px;
+}
+
+.e4s-pathway-lovable .e4s-dance-lovable-hero__copy {
+  justify-content: flex-start;
 }
 
 .e4s-pathway-lovable .e4s-dance-lovable-hero__media img:nth-child(2) {

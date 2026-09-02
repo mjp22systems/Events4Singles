@@ -7,7 +7,6 @@ import { markScrollTopAfterNavigation } from "@/lib/client-nav";
 function handlePathwayClick(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
   if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   markScrollTopAfterNavigation(href);
-  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 export default function PathwayPager({ currentSlug }: { currentSlug: string }) {

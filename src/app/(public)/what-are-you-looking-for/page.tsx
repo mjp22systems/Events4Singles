@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
+import SectionAnchorCleaner from "@/components/section-anchor-cleaner";
+import SectionJumpLink from "@/components/section-jump-link";
 import { PATHWAYS } from "@/lib/pathways";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -37,6 +39,7 @@ export default function WhatAreYouLookingForPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <style>{`body{--e4s-page-bg:#ffffff;background:#ffffff}`}</style>
+      <SectionAnchorCleaner />
       <main className="e4s-dance-lovable e4s-looking-hub" id="site-content">
         <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
           <nav aria-label="Breadcrumb">
@@ -62,10 +65,10 @@ export default function WhatAreYouLookingForPage() {
             </p>
 
             <div className="e4s-dance-lovable-hero__actions">
-              <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathways">
+              <SectionJumpLink className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathways-heading">
                 Compare the three paths
                 <ArrowRight aria-hidden="true" size={16} />
-              </Link>
+              </SectionJumpLink>
               <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="/categories">
                 Browse all categories
               </Link>
@@ -115,7 +118,7 @@ export default function WhatAreYouLookingForPage() {
             <div className="e4s-dance-lovable-heading">
               <div>
                 <p>Choose by intent</p>
-                <h2>Three useful ways to begin</h2>
+                <h2 id="pathways-heading">Three useful ways to begin</h2>
                 <span>Each pathway gathers related categories, examples and next steps.</span>
               </div>
             </div>

@@ -11,6 +11,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import PathwayPager from "@/components/pathway-pager";
+import SectionAnchorCleaner from "@/components/section-anchor-cleaner";
+import SectionJumpLink from "@/components/section-jump-link";
 import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
 import { toUrlSlug } from "@/lib/constants";
 import type { PathwayContent } from "@/lib/pathways";
@@ -149,6 +151,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <style>{`body{--e4s-page-bg:#ffffff;background:#ffffff}`}</style>
+      <SectionAnchorCleaner />
       <PathwayPager currentSlug={pathway.slug} />
       <main className={`e4s-dance-lovable e4s-pathway-lovable e4s-pathway-lovable--${pathway.id}`} id="site-content">
         <div className="e4s-dance-lovable-shell e4s-dance-lovable-breadcrumb">
@@ -173,13 +176,13 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
             <p>{pathway.heroLead}</p>
 
             <div className="e4s-dance-lovable-hero__actions">
-              <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-fit">
+              <SectionJumpLink className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-fit-heading">
                 {pathway.primaryCta}
                 <ArrowRight aria-hidden="true" size={16} />
-              </Link>
-              <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="#pathway-categories">
+              </SectionJumpLink>
+              <SectionJumpLink className="e4s-dance-lovable-button e4s-dance-lovable-button--accent" href="#pathway-categories-heading">
                 {pathway.secondaryCta}
-              </Link>
+              </SectionJumpLink>
             </div>
 
             <dl className="e4s-dance-lovable-stats" aria-label={`${pathway.title} summary`}>
@@ -221,6 +224,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
         <section className="e4s-dance-lovable-shell e4s-dance-lovable-guidance" id="pathway-fit">
           <SectionHeading
             eyebrow="Choose by feel"
+            id="pathway-fit-heading"
             sub="Four useful starting points before you browse the full category set."
             title="Start from what you want out of it"
           />
@@ -249,6 +253,7 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
           <div className="e4s-dance-lovable-shell">
             <SectionHeading
               eyebrow="Explore categories"
+              id="pathway-categories-heading"
               sub="Services and experiences in this direction, using the same card shape as the newer dance hubs."
               title="Choose the room that fits this season"
             />
@@ -349,10 +354,10 @@ export default function PathwayPage({ pathway }: { pathway: PathwayContent }) {
             <p>{pathway.description}</p>
           </div>
           <div>
-            <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-categories">
+            <SectionJumpLink className="e4s-dance-lovable-button e4s-dance-lovable-button--primary" href="#pathway-categories-heading">
               {pathway.primaryCta}
               <ArrowRight aria-hidden="true" size={16} />
-            </Link>
+            </SectionJumpLink>
             <Link className="e4s-dance-lovable-button e4s-dance-lovable-button--ghost" href="/">
               Back to Home
             </Link>
