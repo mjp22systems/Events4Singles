@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -27,6 +27,7 @@ import { categoryCityHeroSubtext, categoryCityIntroCopy, categoryCitySeoFooterCo
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCitySourceFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
+import { categoryRedirectTarget } from "@/lib/category-taxonomy";
 
 interface Props {
   params: Promise<{ category: string; subcategory: string; city: string }>;
@@ -66,6 +67,10 @@ export default async function CategorySubcategoryCityPage({ params }: Props) {
   const { category, subcategory, city } = await params;
   const parentDbSlug = toDbSlug(category);
   const cityDbSlug = toDbSlug(city);
+  const redirectCategory = categoryRedirectTarget(parentDbSlug);
+  if (redirectCategory) {
+    redirect(`/${toUrlSlug(redirectCategory)}/${subcategory}/${city}`);
+  }
 
   const parentMeta = await getCategoryMeta(parentDbSlug);
   const childMeta = await getChildCategoryMeta(parentDbSlug, subcategory);

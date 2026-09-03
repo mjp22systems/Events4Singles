@@ -64,7 +64,7 @@ export const PATHWAYS: PathwayContent[] = [
     categories: [
       { slug: "speed_dating", label: "Speed Dating", note: "Short, hosted introductions with a clear dating purpose." },
       { slug: "singles_mixers", label: "Singles Mixers", note: "Relaxed hosted socials where meeting new people is the point." },
-      { slug: "dinner_parties", label: "Dinner Parties", note: "Longer conversations over a shared meal." },
+      { slug: "dinner_parties", label: "Dinner Parties", note: "Hosted dinners, Dinner for Six style tables and shared meals." },
       { slug: "intro_agencies", label: "Introduction Agencies", note: "Personalised matching and more guided support." },
       { slug: "online_dating", label: "Online Dating", note: "Digital dating options to support your wider search." },
       { slug: "christian_singles", label: "Christian Singles", note: "Faith-aligned events, groups and services for Christian singles." },
@@ -138,10 +138,10 @@ export const PATHWAYS: PathwayContent[] = [
       { slug: "dance_classes", label: "Dance Classes", note: "Learn, move and meet people in a relaxed class setting." },
       { slug: "dance_party_clubs", label: "Dance Party Clubs", note: "Music, movement and social nights with energy." },
       { slug: "nightclubs", label: "Nightclubs", note: "Late-night venues and social dance floors." },
-      { slug: "adventure_for_singles", label: "Adventure for Singles", note: "Active days out and shared outdoor experiences." },
+      { slug: "adventure_for_singles", label: "Adventure for Singles", note: "Sport, outdoor activities and active days out." },
       { slug: "cruises4singles", label: "Cruises for Singles", note: "Social outings on the water with room to mingle." },
       { slug: "social_walks", label: "Social Walks", note: "Low-pressure walks and outdoor catch-ups with easy conversation." },
-      { slug: "solo_travel", label: "Solo Travel", note: "Travel experiences built for independent singles and solo guests." }
+      { slug: "solo_travel", label: "Solo Travel", note: "Tours, group trips and getaways for independent singles." }
     ],
     sections: [
       {

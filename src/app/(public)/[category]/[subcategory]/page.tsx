@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -39,6 +39,7 @@ import {
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCitySourceFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
+import { categoryRedirectTarget } from "@/lib/category-taxonomy";
 
 interface Props {
   params: Promise<{ category: string; subcategory: string }>;
@@ -109,6 +110,10 @@ export default async function CategoryCityPage({ params }: Props) {
   const { category, subcategory } = await params;
   const categoryDbSlug = toDbSlug(category);
   const cityDbSlug = toDbSlug(subcategory);
+  const redirectCategory = categoryRedirectTarget(categoryDbSlug);
+  if (redirectCategory) {
+    redirect(`/${toUrlSlug(redirectCategory)}/${subcategory}`);
+  }
 
   if (categoryDbSlug === "dance_classes" && subcategory === "styles") {
     return <DanceStylesGuide />;

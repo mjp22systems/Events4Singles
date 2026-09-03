@@ -31,8 +31,16 @@ test("category metadata falls back to canonical repairs before returning 404", (
 });
 
 test("legacy travel and walk placements feed their canonical category pages", () => {
-  assert.match(taxonomySource, /slug:\s*"solo_travel"[\s\S]*aliases:\s*\["travel_for_singles"\]/);
+  assert.match(taxonomySource, /slug:\s*"solo_travel"[\s\S]*aliases:\s*\["travel_for_singles", "tours4singles"\]/);
   assert.match(taxonomySource, /slug:\s*"social_walks"[\s\S]*aliases:\s*\["walks4singles"\]/);
+});
+
+test("merged category buckets feed their canonical category pages", () => {
+  assert.match(taxonomySource, /slug:\s*"dinner_parties"[\s\S]*aliases:\s*\["dinner_for_six"\]/);
+  assert.match(taxonomySource, /slug:\s*"adventure_for_singles"[\s\S]*aliases:\s*\["sport_adventure"\]/);
+  assert.match(dataSource, /"dinner_for_six"/);
+  assert.match(dataSource, /"sport_adventure"/);
+  assert.match(dataSource, /"tours4singles"/);
 });
 
 test("admin event forms use the shared category list", () => {

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -42,6 +42,7 @@ import SeoSupportSection from "@/components/seo-support-section";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { getCategoryCardImage, getCategoryHeroImage } from "@/lib/category-card-assets";
 import { getCityHeroFallbacks, getCitySourceImage } from "@/lib/city-hero-assets";
+import { categoryRedirectTarget } from "@/lib/category-taxonomy";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -85,6 +86,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryOrCityPage({ params }: Props) {
   const { category: param } = await params;
   const dbSlug = toDbSlug(param);
+  const redirectCategory = categoryRedirectTarget(dbSlug);
+  if (redirectCategory) {
+    redirect(`/${toUrlSlug(redirectCategory)}`);
+  }
 
   // City overview page
   const cityMeta = await getCityMeta(dbSlug);

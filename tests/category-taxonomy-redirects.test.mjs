@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 const projectRoot = process.cwd();
 const nextConfig = readFileSync(path.join(projectRoot, "next.config.ts"), "utf8");
+const staticRedirects = readFileSync(path.join(projectRoot, "public/_redirects"), "utf8");
 
 const EXPECTED_REDIRECTS = new Map([
   ["/dance_ballroom_style.htm", "/dance-classes/ballroom-style"],
@@ -22,6 +23,12 @@ const EXPECTED_REDIRECTS = new Map([
   ["/dance_classes_tango.htm", "/dance-classes/tango"],
   ["/travel-for-singles", "/solo-travel"],
   ["/travel_for_singles.htm", "/solo-travel"],
+  ["/tours4singles", "/solo-travel"],
+  ["/tours4singles.htm", "/solo-travel"],
+  ["/dinner-for-six", "/dinner-parties"],
+  ["/dinner_for_six.htm", "/dinner-parties"],
+  ["/sport-adventure", "/adventure-for-singles"],
+  ["/sport_adventure.htm", "/adventure-for-singles"],
   ["/walks4singles", "/social-walks"],
   ["/walks4singles.htm", "/social-walks"],
   ["/lotto4singles", "/dating-resources"],
@@ -34,8 +41,8 @@ const EXPECTED_REDIRECTS = new Map([
   ["/singles_news.htm", "/dating-resources"],
   ["/finance-mortgage", "/life-coaches"],
   ["/finance_mortgage.htm", "/life-coaches"],
-  ["/golf", "/sport-adventure"],
-  ["/golf.htm", "/sport-adventure"],
+  ["/golf", "/adventure-for-singles"],
+  ["/golf.htm", "/adventure-for-singles"],
   ["/toastmasters", "/seminars"],
   ["/toastmasters.htm", "/seminars"],
   ["/art-galleries", "/social-clubs"],
@@ -54,5 +61,26 @@ test("retired and renamed category routes redirect to active destinations", () =
     const sourceIndex = nextConfig.search(sourcePattern);
     const destinationIndex = nextConfig.slice(sourceIndex, sourceIndex + 160).search(destinationPattern);
     assert.notEqual(destinationIndex, -1, `${source} should redirect to ${destination}`);
+  }
+});
+
+test("static legacy redirects avoid retired category hops", () => {
+  const expectedStaticRedirects = new Map([
+    ["/dinner_for_six.htm", "/dinner-parties"],
+    ["/dinner_for_six_brisbane.htm", "/dinner-parties/brisbane"],
+    ["/dinner_for_six_sydney.htm", "/dinner-parties/sydney"],
+    ["/sport_adventure.htm", "/adventure-for-singles"],
+    ["/golf.htm", "/adventure-for-singles"],
+    ["/nosmo.htm", "/adventure-for-singles"],
+    ["/tours4singles.htm", "/solo-travel"],
+    ["/travel_for_singles.htm", "/solo-travel"],
+    ["/accomonline.htm", "/solo-travel"],
+    ["/firstclasstravel.htm", "/solo-travel"],
+    ["/spiritofthewest.htm", "/solo-travel"],
+    ["/tripmate.htm", "/solo-travel"],
+  ]);
+
+  for (const [source, destination] of expectedStaticRedirects) {
+    assert.match(staticRedirects, new RegExp(`^${source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+${destination.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+301$`, "m"));
   }
 });

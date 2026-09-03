@@ -37,7 +37,7 @@
 
 # ── Category/listing page redirects ───────────────────────────
 /Copy%20of%20dinner_parties_sydney.htm /dinner-parties/sydney 301
-/accomonline.htm /travel-for-singles 301
+/accomonline.htm /solo-travel 301
 /adventure_for_singles.htm /adventure-for-singles 301
 /beauty_for_singles.htm /beauty-for-singles 301
 /comedians.htm /comedians 301
@@ -61,12 +61,12 @@
 /dance_party_clubs_perth.htm /dance-party-clubs/perth 301
 /dance_party_clubs_sydney.htm /dance-party-clubs/sydney 301
 /dance_teachers.htm /dance-teachers 301
-/dinner_for_six.htm /dinner-for-six 301
-/dinner_for_six_brisbane.htm /dinner-for-six/brisbane 301
-/dinner_for_six_darwin.htm /dinner-for-six/darwin 301
-/dinner_for_six_gold_coast.htm /dinner-for-six/gold-coast 301
-/dinner_for_six_melbourne.htm /dinner-for-six/melbourne 301
-/dinner_for_six_sydney.htm /dinner-for-six/sydney 301
+/dinner_for_six.htm /dinner-parties 301
+/dinner_for_six_brisbane.htm /dinner-parties/brisbane 301
+/dinner_for_six_darwin.htm /dinner-parties/darwin 301
+/dinner_for_six_gold_coast.htm /dinner-parties/gold-coast 301
+/dinner_for_six_melbourne.htm /dinner-parties/melbourne 301
+/dinner_for_six_sydney.htm /dinner-parties/sydney 301
 /dinner_parties_adelaide.htm /dinner-parties/adelaide 301
 /dinner_parties_goldcoast.htm /dinner-parties/gold-coast 301
 /dinner_parties_melbourne.htm /dinner-parties/melbourne 301
@@ -121,10 +121,10 @@
 /events-sydney /sydney 301
 /events-toowoomba /toowoomba 301
 /finance_mortgage.htm /finance-mortgage 301
-/firstclasstravel.htm /travel-for-singles 301
+/firstclasstravel.htm /solo-travel 301
 /fitness4singles.htm /fitness4singles 301
 /function_centres.htm /function-centres 301
-/golf.htm /golf 301
+/golf.htm /adventure-for-singles 301
 /healing_and_happiness.htm /dating-resources/wellbeing-and-the-single-life 301
 /hirisedance.htm /dance-classes 301
 /houseparties.htm /houseparties 301
@@ -141,7 +141,7 @@
 /love_life_coaches.htm /life-coaches 301
 /mature_dating_events.htm /mature-dating-events 301
 /nightclubs.htm /nightclubs 301
-/nosmo.htm /sport-adventure 301
+/nosmo.htm /adventure-for-singles 301
 /perfectmatch.htm /intro-agencies 301
 /psychics4singles.htm /psychics4singles 301
 /psychology.htm /dating-resources/wellbeing-and-the-single-life 301
@@ -158,12 +158,12 @@
 /speed_dating_melbourne.htm /speed-dating/melbourne 301
 /speed_dating_perth.htm /speed-dating/perth 301
 /speed_dating_sydney.htm /speed-dating/sydney 301
-/spiritofthewest.htm /tours4singles 301
-/sport_adventure.htm /sport-adventure 301
+/spiritofthewest.htm /solo-travel 301
+/sport_adventure.htm /adventure-for-singles 301
 /ssingle.htm /life-coaches 301
 /supercoach.htm /life-coaches 301
-/tours4singles.htm /tours4singles 301
-/travel_for_singles.htm /travel-for-singles 301
-/tripmate.htm /travel-for-singles 301
+/tours4singles.htm /solo-travel 301
+/travel_for_singles.htm /solo-travel 301
+/tripmate.htm /solo-travel 301
 /walks4singles.htm /walks4singles 301
 /yoga_classes.htm /yoga-classes 301

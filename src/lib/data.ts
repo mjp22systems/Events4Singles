@@ -23,6 +23,9 @@ const SUPPRESSED_CATEGORIES = new Set([
   "special_offers",
   "spiritual_path",
   "toastmasters",
+  "dinner_for_six",
+  "sport_adventure",
+  "tours4singles",
   "travel_for_singles",
   "walks4singles",
 ]);

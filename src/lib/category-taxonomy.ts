@@ -33,11 +33,12 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     label: "Dinner Parties",
     parent_slug: null,
     sort_order: 20,
-    description: "Hosted dinners and shared-table events where singles can meet over a meal.",
-    seo_intro: "Singles dinner parties create a warmer pace for meeting people, with more time for conversation than quick introductions alone.",
-    seo_title: "Singles Dinner Parties Australia | Events4Singles",
-    seo_description: "Find singles dinner parties, hosted dinners and social dining events in Australia.",
-    hero_image_url: "/images/categories/heroes/dinner-parties.webp",
+    description: "Hosted dinner parties, Dinner for Six style tables and shared dining events where singles can meet over a meal.",
+    seo_intro: "Singles dinner parties create a warmer pace for meeting people, from intimate Dinner for Six style tables through to hosted shared meals with more time for real conversation.",
+    seo_title: "Singles Dinner Parties and Dinner for Six Australia | Events4Singles",
+    seo_description: "Find singles dinner parties, hosted dinners, Dinner for Six style tables and social dining events in Australia.",
+    hero_image_url: "/images/categories/heroes/dinner-for-six.webp",
+    aliases: ["dinner_for_six"],
   },
   {
     slug: "intro_agencies",
@@ -143,11 +144,12 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     label: "Adventure for Singles",
     parent_slug: null,
     sort_order: 40,
-    description: "Active days out, outdoor activities and shared experiences for singles.",
-    seo_intro: "Adventure for singles is for people who would rather meet while doing something active, outdoors or memorable.",
-    seo_title: "Adventure for Singles Australia | Events4Singles",
-    seo_description: "Find adventure activities, outdoor experiences and active events for singles in Australia.",
+    description: "Sport, adventure, outdoor activities and active days out for singles who prefer doing something together.",
+    seo_intro: "Adventure for singles brings sport, active outings and outdoor experiences into one place for people who would rather meet while moving, exploring or sharing something memorable.",
+    seo_title: "Adventure, Sport and Outdoor Activities for Singles Australia | Events4Singles",
+    seo_description: "Find sport, adventure activities, outdoor experiences and active events for singles in Australia.",
     hero_image_url: "/images/categories/heroes/adventure-for-singles.webp",
+    aliases: ["sport_adventure"],
   },
   {
     slug: "cruises4singles",
@@ -165,12 +167,12 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     label: "Solo Travel",
     parent_slug: null,
     sort_order: 44,
-    description: "Travel experiences built for independent singles and solo guests.",
-    seo_intro: "Solo travel listings help independent singles find trips, tours and getaways designed to be comfortable for people travelling on their own.",
-    seo_title: "Solo Travel for Singles Australia | Events4Singles",
-    seo_description: "Find solo travel, tours and getaway options for Australian singles.",
-    hero_image_url: "/images/categories/heroes/solo-travel.webp",
-    aliases: ["travel_for_singles"],
+    description: "Solo travel, tours for singles, group trips and getaways built for independent guests.",
+    seo_intro: "Solo travel listings help independent singles find tours, group trips and getaways designed to feel comfortable when you are travelling on your own but still want shared company.",
+    seo_title: "Solo Travel and Tours for Singles Australia | Events4Singles",
+    seo_description: "Find solo travel, tours for singles, group trips and getaway options for Australian singles.",
+    hero_image_url: "/images/categories/heroes/tours4singles.webp",
+    aliases: ["travel_for_singles", "tours4singles"],
   },
   {
     slug: "social_walks",
@@ -311,11 +313,22 @@ export const CANONICAL_CATEGORY_BY_SLUG = new Map(
   CANONICAL_CATEGORY_REPAIRS.map((category) => [category.slug, category]),
 );
 
+const CATEGORY_REDIRECT_TARGETS = new Map([
+  ["dinner_for_six", "dinner_parties"],
+  ["sport_adventure", "adventure_for_singles"],
+  ["tours4singles", "solo_travel"],
+  ["travel_for_singles", "solo_travel"],
+  ["walks4singles", "social_walks"],
+]);
+
+export function categoryRedirectTarget(categorySlug: string): string | undefined {
+  return CATEGORY_REDIRECT_TARGETS.get(categorySlug);
+}
+
 export const EVENT_CATEGORY_OPTIONS = [
   "speed_dating",
   "singles_mixers",
   "dinner_parties",
-  "dinner_for_six",
   "intro_agencies",
   "online_dating",
   "christian_singles",
@@ -326,7 +339,6 @@ export const EVENT_CATEGORY_OPTIONS = [
   "dance_party_clubs",
   "nightclubs",
   "adventure_for_singles",
-  "sport_adventure",
   "cruises4singles",
   "social_walks",
   "solo_travel",
