@@ -1096,6 +1096,10 @@ body.e4s-page-pathway {
   animation-delay: -6s !important;
 }
 
+.e4s-looking-hub .e4s-dance-lovable-stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .e4s-looking-hub-paths {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
