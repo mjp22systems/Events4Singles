@@ -84,7 +84,7 @@ export function CityDirectoryGrid({ cities, lead, title }: { cities: CityTile[] 
 }
 
 export function CategoryDirectoryGrid({ categories, lead, title }: { categories: CategoryTile[] } & DirectoryBrowserCopy) {
-  const [sort, setSort] = useState<SortValue>("listings");
+  const [sort, setSort] = useState<SortValue>("alpha");
   const sortedCategories = useMemo(() => sortTiles(categories, sort), [categories, sort]);
 
   return (

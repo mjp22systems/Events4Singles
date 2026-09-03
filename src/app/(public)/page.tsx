@@ -29,10 +29,10 @@ const FEATURED_CITIES = [
 const FEATURED_CATS = [
   { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/site/home/browse-category-tiles/home-cat-speed-dating.webp" },
   { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/site/home/browse-category-tiles/home-cat-dinner-parties.webp" },
-  { slug: "social-clubs", label: "Mixers", sub: "Casual, after-work drinks.", img: "/images/site/home/browse-category-tiles/home-cat-mixers.webp" },
-  { slug: "dance-classes", label: "Dance Classes", sub: "Learn, move and meet.", img: "/images/site/home/browse-category-tiles/home-cat-activities.webp" },
+  { slug: "social-clubs", label: "Social Clubs", sub: "Clubs, groups and hosted socials.", img: "/images/categories/cards/social-clubs.webp" },
+  { slug: "dance-classes", label: "Dance Classes", sub: "Learn, move and meet.", img: "/images/categories/cards/dance-classes.webp" },
   { slug: "cruises4singles", label: "Cruises", sub: "Social outings on the water.", img: "/images/site/home/browse-category-tiles/home-cat-cruises.webp" },
-  { slug: "sport-adventure", label: "Sport & Adventure", sub: "Active ways to connect.", img: "/images/site/home/browse-category-tiles/home-cat-sport.webp" },
+  { slug: "sport-adventure", label: "Sport & Adventure", sub: "Active ways to connect.", img: "/images/site/home/browse-category-tiles/home-cat-activities.webp" },
   { slug: "solo-travel", label: "Solo Travel", sub: "Trips with other singles.", img: "/images/site/home/browse-category-tiles/home-cat-travel.webp" },
   { slug: "walks4singles", label: "Social Walks", sub: "Easy outdoor conversation.", img: "/images/site/home/browse-category-tiles/home-cat-walks.webp" },
   { slug: "yoga-classes", label: "Yoga Classes", sub: "Calm, strength and balance.", img: "/images/site/home/browse-category-tiles/home-cat-yoga.webp" },
