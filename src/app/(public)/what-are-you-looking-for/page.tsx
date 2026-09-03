@@ -114,6 +114,13 @@ export default function WhatAreYouLookingForPage() {
           </div>
         </section>
 
+        <section className="e4s-dance-lovable-shell e4s-looking-hub-bridge" aria-label="Pathway guide note">
+          <p>
+            Start with the reason first, then choose a category route once the branch feels right.
+          </p>
+          <span>Intent first</span>
+        </section>
+
         <section className="e4s-dance-lovable-band" id="pathways">
           <div className="e4s-dance-lovable-shell">
             <div className="e4s-dance-lovable-heading">
