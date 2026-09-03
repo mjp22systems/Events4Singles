@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ArrowRight, Compass, Map, Sparkles } from "lucide-react";
 import SectionAnchorCleaner from "@/components/section-anchor-cleaner";
 import SectionJumpLink from "@/components/section-jump-link";
+import { toUrlSlug } from "@/lib/constants";
 import { PATHWAYS } from "@/lib/pathways";
 import { breadcrumbJsonLd, collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 
@@ -135,6 +136,30 @@ export default function WhatAreYouLookingForPage() {
                     <em>{pathway.description}</em>
                   </span>
                 </Link>
+              ))}
+            </div>
+            <div className="e4s-looking-hub-routes" aria-label="Popular routes by pathway">
+              {PATHWAYS.map((pathway) => (
+                <section key={`${pathway.slug}-routes`} className="e4s-looking-hub-route">
+                  <div className="e4s-looking-hub-route__heading">
+                    <span>{pathway.eyebrow}</span>
+                    <h3>{pathway.title}</h3>
+                  </div>
+                  <ul>
+                    {pathway.categories.slice(0, 6).map((category) => (
+                      <li key={category.slug}>
+                        <Link href={`/${toUrlSlug(category.slug)}`}>
+                          <strong>{category.label}</strong>
+                          <span>{category.note}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link className="e4s-looking-hub-route__more" href={`/${pathway.slug}`}>
+                    View full pathway
+                    <ArrowRight aria-hidden="true" size={14} />
+                  </Link>
+                </section>
               ))}
             </div>
           </div>
