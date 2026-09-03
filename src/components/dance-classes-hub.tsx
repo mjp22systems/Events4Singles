@@ -457,8 +457,6 @@ export default async function DanceClassesHub(props: Props) {
         <section className="e4s-dance-lovable-band" id="cities">
           <div className="e4s-dance-lovable-shell">
             <SectionHeading
-              action="All Locations"
-              actionHref="/dance-classes"
               eyebrow="Choose by City"
               id="dance-classes-near-you"
               sub="Capital cities and regional hubs, with venues, class nights and socials."
