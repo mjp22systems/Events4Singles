@@ -121,7 +121,7 @@ export default function FooterContent({ cities, categories, catMid }: Props) {
               </p>
             </section>
             <Accordion
-              heading="Site Information"
+              heading="Information"
               id="footer-advertise"
               open={advertOpen}
               onToggle={() => setAdvertOpen((v) => !v)}

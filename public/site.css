@@ -1014,7 +1014,7 @@ body > div > table {
   display: grid;
 }.e4s-footer__brand {
   display: grid;
-  grid-template-columns: minmax(0, 72fr) minmax(88px, 28fr);
+  grid-template-columns: minmax(0, 62fr) minmax(112px, 38fr);
   gap: 12px;
   align-items: start;
 }.e4s-footer__brand .e4s-footer__accordion-btn {
