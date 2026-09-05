@@ -56,8 +56,8 @@ UPDATE businesses SET status = 'merged', merged_into_business_id = 402, merged_a
 UPDATE listings SET business_id = 415, updated_at = datetime('now') WHERE business_id = 641;
 UPDATE businesses SET status = 'merged', merged_into_business_id = 415, merged_at = strftime('%s','now'), updated_at = datetime('now') WHERE id = 641;
 
-UPDATE listings SET business_id = 423, updated_at = datetime('now') WHERE business_id = 646;
-UPDATE businesses SET status = 'merged', merged_into_business_id = 423, merged_at = strftime('%s','now'), updated_at = datetime('now') WHERE id = 646;
+UPDATE listings SET business_id = 646, updated_at = datetime('now') WHERE business_id = 423;
+UPDATE businesses SET status = 'merged', merged_into_business_id = 646, merged_at = strftime('%s','now'), updated_at = datetime('now') WHERE id = 423;
 
 UPDATE listings SET business_id = 534, updated_at = datetime('now') WHERE business_id = 663;
 UPDATE businesses SET status = 'merged', merged_into_business_id = 534, merged_at = strftime('%s','now'), updated_at = datetime('now') WHERE id = 663;

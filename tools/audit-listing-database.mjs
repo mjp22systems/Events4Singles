@@ -90,7 +90,6 @@ const categories = dumpTables.categories;
 const cities = dumpTables.cities;
 
 const businessById = new Map(businesses.map((row) => [Number(row.id), row]));
-const listingById = new Map(listings.map((row) => [Number(row.id), row]));
 const categoryBySlug = new Map(categories.map((row) => [row.slug, row]));
 const cityBySlug = new Map(cities.map((row) => [row.slug, row]));
 const placementsByListing = new Map();
@@ -344,15 +343,16 @@ for (const banner of banners) {
   }
 }
 
-function urlCandidate(row) {
-  return clean(row.web || row.website || row.click_url || row.link_url || row.ticket_url || row.source_url || "");
+function urlCandidates(row) {
+  const fields = [row.web, row.website, row.click_url, row.link_url, row.ticket_url, row.source_url];
+  return [...new Set(fields.flatMap((field) => splitValues(field, "url")))];
 }
 
 const urlRows = [
-  ...listings.map((row) => ({ type: "listing", id: row.id, title: row.title, url: urlCandidate(row) })),
-  ...businesses.map((row) => ({ type: "business", id: row.id, title: row.name, url: urlCandidate(row) })),
-  ...banners.map((row) => ({ type: "banner", id: row.id, title: row.title || row.alt_text, url: urlCandidate(row) })),
-  ...events.map((row) => ({ type: "event", id: row.id, title: row.title, url: urlCandidate(row) })),
+  ...listings.flatMap((row) => urlCandidates(row).map((url) => ({ type: "listing", id: row.id, title: row.title, url }))),
+  ...businesses.flatMap((row) => urlCandidates(row).map((url) => ({ type: "business", id: row.id, title: row.name, url }))),
+  ...banners.flatMap((row) => urlCandidates(row).map((url) => ({ type: "banner", id: row.id, title: row.title || row.alt_text, url }))),
+  ...events.flatMap((row) => urlCandidates(row).map((url) => ({ type: "event", id: row.id, title: row.title, url }))),
 ].filter((row) => row.url);
 
 const uniqueUrls = new Map();
