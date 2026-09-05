@@ -121,6 +121,35 @@
       "dance-bachata",
       "dance-swing",
       "dance-line-dancing"
+    ],
+    "sheet-intro-life-people-fix-20260905.png": [
+      "intro-agencies",
+      "life-coaches"
     ]
-  }
+  },
+  "revisions": [
+    {
+      "date": "2026-09-05",
+      "reason": "Restore selected prior category card choices and replace weak object-only people-service cards.",
+      "changes": {
+        "restoredPrevious": [
+          "cruises4singles",
+          "solo-travel",
+          "yoga-classes"
+        ],
+        "replacedFromHomepage": [
+          "social-clubs"
+        ],
+        "generatedPeopleBased": [
+          "intro-agencies",
+          "life-coaches"
+        ],
+        "preservedLegacy": [
+          "social-clubs-legacy",
+          "intro-agencies-legacy",
+          "life-coaches-legacy"
+        ]
+      }
+    }
+  ]
 }

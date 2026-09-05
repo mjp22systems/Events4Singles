@@ -149,7 +149,7 @@ export const CANONICAL_CATEGORY_REPAIRS: CanonicalCategory[] = [
     seo_title: "Adventure, Sport and Outdoor Activities for Singles Australia | Events4Singles",
     seo_description: "Find sport, adventure activities, outdoor experiences and active events for singles in Australia.",
     hero_image_url: "/images/categories/heroes/adventure-for-singles.webp",
-    aliases: ["sport_adventure"],
+    aliases: ["sport_adventure", "golf"],
   },
   {
     slug: "cruises4singles",
@@ -316,6 +316,7 @@ export const CANONICAL_CATEGORY_BY_SLUG = new Map(
 const CATEGORY_REDIRECT_TARGETS = new Map([
   ["dinner_for_six", "dinner_parties"],
   ["sport_adventure", "adventure_for_singles"],
+  ["golf", "adventure_for_singles"],
   ["tours4singles", "solo_travel"],
   ["travel_for_singles", "solo_travel"],
   ["walks4singles", "social_walks"],

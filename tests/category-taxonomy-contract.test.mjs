@@ -37,7 +37,7 @@ test("legacy travel and walk placements feed their canonical category pages", ()
 
 test("merged category buckets feed their canonical category pages", () => {
   assert.match(taxonomySource, /slug:\s*"dinner_parties"[\s\S]*aliases:\s*\["dinner_for_six"\]/);
-  assert.match(taxonomySource, /slug:\s*"adventure_for_singles"[\s\S]*aliases:\s*\["sport_adventure"\]/);
+  assert.match(taxonomySource, /slug:\s*"adventure_for_singles"[\s\S]*aliases:\s*\["sport_adventure", "golf"\]/);
   assert.match(dataSource, /"dinner_for_six"/);
   assert.match(dataSource, /"sport_adventure"/);
   assert.match(dataSource, /"tours4singles"/);
