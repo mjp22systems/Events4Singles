@@ -221,6 +221,23 @@ const regionalLocationFragments = [
   "tasmania",
 ];
 
+const callToActionFragments = [
+  "join now",
+  "book now",
+  "click here",
+  "check website",
+  "register now",
+];
+
+const oldEventWords = [
+  "festival",
+  "tour",
+  "event",
+  "workshop",
+  "seminar",
+  "cruise",
+];
+
 const categoryLabels = new Set();
 for (const category of categories) {
   categoryLabels.add(compact(category.label));
@@ -294,6 +311,28 @@ function leadingLocationTitle(title) {
   const locationHits = findLocationInText(match[1]);
   if (!locationHits.length) return null;
   return { base: clean(match[2]), location: locationHits[0] };
+}
+
+function hasMissingInternalSpace(title) {
+  return /\b(?:with|the|better|Coast|Jazz|House)[A-Z][a-z]/.test(clean(title));
+}
+
+function oldYearEvidence(row) {
+  const titleAndTagline = `${clean(row.title)} ${clean(row.tagline)}`;
+  const description = clean(row.description);
+  const datedText = [
+    titleAndTagline,
+    ...[...description.matchAll(/\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december|tour|festival|event)\b.{0,80}\b(20[01]\d|200\d)\b/gi)].map((match) => match[0]),
+  ].join(" ");
+  const years = [...datedText.matchAll(/\b(20[01]\d|200\d)\b/g)].map((match) => Number(match[1]));
+  if (!years.length) return null;
+  const oldest = Math.min(...years);
+  const newest = Math.max(...years);
+  if (newest > 2019) return null;
+  const titleKey = compact(row.title);
+  const sourceKey = compact(row.source_file);
+  const looksEventLike = oldEventWords.some((word) => titleKey.includes(word) || sourceKey.includes(word));
+  return looksEventLike ? { oldest, newest } : null;
 }
 
 function suffixService(title) {
@@ -379,6 +418,7 @@ for (const row of activeListings) {
   const isDescription = splitIsDescription(title);
   const year = trailingYear(title);
   const leadingLocation = leadingLocationTitle(title);
+  const oldEvent = oldYearEvidence(row);
   const titleLocations = findLocationInText(title);
   const descriptionLocations = findLocationInText(row.description);
   const evidence = listingEvidence(row, business);
@@ -413,6 +453,34 @@ for (const row of activeListings) {
     addIssue(row, "title_missing_location_qualifier", "fixable", "Title matches a category, but domain/body evidence points to a qualified business name.", {
       title: titleCase(evidence.domain.replace(/\.(com|net|org)(\.au)?$/i, "").replace(/([a-z])([A-Z])/g, "$1 $2")),
       linked_domain: evidence.domain,
+    });
+  }
+
+  if (/[-:;,]\s*$/.test(title)) {
+    addIssue(row, "title_has_trailing_punctuation", "fixable", "Title ends with stray punctuation.", {
+      title: title.replace(/[-:;,]\s*$/, "").trim(),
+    });
+  }
+
+  if (hasMissingInternalSpace(title)) {
+    addIssue(row, "title_has_missing_internal_space", "fixable", "Title appears to have words joined together by scrape damage.", {
+      action: "review_or_fix_spacing",
+    });
+  }
+
+  const cta = callToActionFragments.find((fragment) => titleKey.includes(fragment));
+  if (cta) {
+    addIssue(row, "title_contains_call_to_action", "fixable", "Title contains call-to-action copy that belongs in tagline or body text.", {
+      action: "remove_from_title",
+      fragment: cta,
+    });
+  }
+
+  if (oldEvent) {
+    addIssue(row, "old_dated_event_or_tour", "critical", "Listing has old event/tour date evidence and should not be active launch content without a current rewrite.", {
+      action: "archive_or_rewrite_current",
+      oldest_year: oldEvent.oldest,
+      newest_year: oldEvent.newest,
     });
   }
 
@@ -513,7 +581,8 @@ for (const row of activeListings) {
     }
   }
 
-  if (descriptionLocations.length && !findLocationInText(`${row.location} ${row.location_city}`).length) {
+  const broadLocation = /^(national|international)$/i.test(clean(row.location_city)) || /^(national|international)$/i.test(clean(row.location));
+  if (descriptionLocations.length && !broadLocation && !findLocationInText(`${row.location} ${row.location_city}`).length) {
     addIssue(row, "description_mentions_location_missing_from_fields", "review", "Description mentions location detail that is not represented in listing location fields.", {
       suggested_locations: descriptionLocations,
     });
