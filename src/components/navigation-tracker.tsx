@@ -24,7 +24,7 @@ export default function NavigationTracker() {
       if (!link) return;
 
       const href = new URL(link.href, window.location.href);
-      if (!href.pathname.startsWith("/listing/")) return;
+      if (!href.pathname.startsWith("/listing/") && !href.pathname.startsWith("/profile/")) return;
 
       const card = target?.closest<HTMLElement>("[data-e4s-listing-card]");
       if (!card?.id) return;
@@ -37,7 +37,7 @@ export default function NavigationTracker() {
     return () => document.removeEventListener("click", onClick);
   }, [pathname]);
 
-  // Restore scroll position when navigating back to a non-listing page
+  // Restore scroll position when navigating back to a non-detail page
   useEffect(() => {
     if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
 
