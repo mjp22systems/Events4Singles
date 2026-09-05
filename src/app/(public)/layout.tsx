@@ -5,7 +5,8 @@ import BackToTop from "@/components/back-to-top";
 import HeaderHeight from "@/components/header-height";
 import PublicRouteStateReset from "@/components/public-route-state-reset";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -13,7 +13,8 @@ export const metadata: Metadata = pageMetadata({
   keywords: ["singles business directory", "singles event organisers", "dating services Australia"],
 });
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function BusinessesPage() {
   const businesses = await getAllBusinessesForDirectory();
