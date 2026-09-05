@@ -6,6 +6,7 @@ import sharp from "sharp";
 
 const projectRoot = process.cwd();
 const mappingFile = path.join(projectRoot, "src", "lib", "category-card-assets.ts");
+const homePageFile = path.join(projectRoot, "src", "app", "(public)", "page.tsx");
 const categoriesPageFile = path.join(projectRoot, "src", "app", "(public)", "categories", "page.tsx");
 const danceHubFile = path.join(projectRoot, "src", "components", "dance-classes-hub.tsx");
 
@@ -135,6 +136,7 @@ test("category hero-specific images use optimized website assets", async () => {
 });
 
 test("category card surfaces do not render hero images", () => {
+  const homePage = readFileSync(homePageFile, "utf8");
   const categoriesPage = readFileSync(categoriesPageFile, "utf8");
   const danceHub = readFileSync(danceHubFile, "utf8");
 
@@ -147,8 +149,11 @@ test("category card surfaces do not render hero images", () => {
     danceHub.indexOf("<span className=\"e4s-dance-style-card__copy\">"),
   );
 
+  assert.match(homePage, /CANONICAL_CATEGORY_REPAIRS/);
+  assert.match(homePage, /getCategoryCardImage\(slug\)/);
+  assert.doesNotMatch(homePage, /const FEATURED_CATS|\/images\/site\/home\/browse-category-tiles\//);
   assert.match(categoryTileBlock, /imageUrl:\s*getCategoryCardImage\(slug\) \?\? null/);
   assert.doesNotMatch(categoryTileBlock, /hero_image_url/);
-  assert.match(danceStyleBlock, /src=\{getCategoryCardImage\(styleUrlSlug\) \?\? "\/images\/categories\/cards\/dance-classes\.webp"\}/);
+  assert.match(danceHub, /getCategoryCardImage\(toUrlSlug\(style\.slug\)\) \?\? "\/images\/categories\/cards\/dance-classes\.webp"/);
   assert.doesNotMatch(danceStyleBlock, /hero_image_url/);
 });

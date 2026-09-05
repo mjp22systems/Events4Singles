@@ -5,6 +5,9 @@ import { getFeaturedListings, getUpcomingEvents } from "@/lib/data";
 import NewsletterForm from "@/components/newsletter-form";
 import HomeFeatured from "@/components/home-featured";
 import EventCardGrid from "@/components/event-card-grid";
+import { getCategoryCardImage, getCategoryCardSummary } from "@/lib/category-card-assets";
+import { CANONICAL_CATEGORY_REPAIRS } from "@/lib/category-taxonomy";
+import { toUrlSlug } from "@/lib/constants";
 import { PATHWAYS } from "@/lib/pathways";
 import { pageMetadata, collectionPageJsonLd } from "@/lib/seo";
 import BodyClass from "@/components/body-class";
@@ -26,20 +29,23 @@ const FEATURED_CITIES = [
   { slug: "hobart", label: "Hobart", img: "/images/site/home/city-cards/home-city-hobart.webp" },
 ];
 
-const FEATURED_CATS = [
-  { slug: "speed-dating", label: "Speed Dating", sub: "Quick, fun introductions.", img: "/images/site/home/browse-category-tiles/home-cat-speed-dating.webp" },
-  { slug: "dinner-parties", label: "Dinner Parties", sub: "Elegant, curated meals.", img: "/images/site/home/experience-cards/home-exp-dinner-parties.jpg" },
-  { slug: "social-clubs", label: "Social Clubs", sub: "Clubs, groups and hosted socials.", img: "/images/categories/cards/social-clubs.webp" },
-  { slug: "dance-classes", label: "Dance Classes", sub: "Learn, move and meet.", img: "/images/categories/cards/dance-classes.webp" },
-  { slug: "cruises4singles", label: "Cruises", sub: "Social outings on the water.", img: "/images/site/home/browse-category-tiles/home-cat-cruises.webp" },
-  { slug: "adventure-for-singles", label: "Adventure for Singles", sub: "Active ways to connect.", img: "/images/site/home/browse-category-tiles/home-cat-activities.webp" },
-  { slug: "solo-travel", label: "Solo Travel", sub: "Trips with other singles.", img: "/images/categories/cards/tours4singles.webp" },
-  { slug: "walks4singles", label: "Social Walks", sub: "Easy outdoor conversation.", img: "/images/site/home/browse-category-tiles/home-cat-walks.webp" },
-  { slug: "yoga-classes", label: "Yoga Classes", sub: "Calm, strength and balance.", img: "/images/site/home/browse-category-tiles/home-cat-yoga.webp" },
-];
-
 function pickFeaturedCategories() {
-  return [...FEATURED_CATS]
+  return CANONICAL_CATEGORY_REPAIRS
+    .filter((cat) => !cat.parent_slug)
+    .map((cat) => {
+      const slug = toUrlSlug(cat.slug);
+      const img = getCategoryCardImage(slug);
+
+      if (!img) return null;
+
+      return {
+        slug,
+        label: cat.label,
+        sub: getCategoryCardSummary(slug, cat.description),
+        img,
+      };
+    })
+    .filter((cat): cat is NonNullable<typeof cat> => cat !== null)
     .sort(() => Math.random() - 0.5)
     .slice(0, 4);
 }
