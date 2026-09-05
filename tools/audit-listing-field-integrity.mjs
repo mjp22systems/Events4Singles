@@ -82,6 +82,10 @@ function compact(value) {
   return clean(value).toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+function compactJoined(value) {
+  return compact(value).replace(/\s+/g, "");
+}
+
 function words(value) {
   return compact(value).split(/\s+/).filter(Boolean);
 }
@@ -147,13 +151,26 @@ for (const city of cities) {
 }
 
 const localityHints = new Map([
+  ["adelaide", { location: "Adelaide", city: "Adelaide", state: "SA", confidence: "high" }],
+  ["australia wide", { location: "Australia wide", city: "National", state: "", confidence: "review" }],
+  ["brisbane", { location: "Brisbane", city: "Brisbane", state: "QLD", confidence: "high" }],
   ["lane cove", { location: "Lane Cove", city: "Sydney", state: "NSW", confidence: "high" }],
+  ["clare valley", { location: "Clare Valley", city: "No Location Review", state: "SA", confidence: "review" }],
+  ["fitzroy", { location: "Fitzroy", city: "Melbourne", state: "VIC", confidence: "high" }],
+  ["france", { location: "France", city: "International", state: "", confidence: "review" }],
+  ["hobart", { location: "Hobart", city: "Hobart", state: "TAS", confidence: "high" }],
   ["murwillumbah", { location: "Murwillumbah", city: "Byron Bay", state: "NSW", confidence: "review" }],
   ["via murwillumbah", { location: "Via Murwillumbah", city: "Byron Bay", state: "NSW", confidence: "review" }],
   ["hornsby", { location: "Hornsby", city: "Sydney", state: "NSW", confidence: "high" }],
+  ["kingaroy", { location: "Kingaroy", city: "Brisbane", state: "QLD", confidence: "review" }],
   ["castle hill", { location: "Castle Hill", city: "Sydney", state: "NSW", confidence: "high" }],
+  ["la rochelle", { location: "La Rochelle", city: "International", state: "", confidence: "review" }],
   ["penrith", { location: "Penrith", city: "Sydney", state: "NSW", confidence: "high" }],
   ["liverpool", { location: "Liverpool", city: "Sydney", state: "NSW", confidence: "high" }],
+  ["new zealand", { location: "New Zealand", city: "International", state: "", confidence: "review" }],
+  ["newcastle", { location: "Newcastle", city: "Newcastle", state: "NSW", confidence: "high" }],
+  ["noosa", { location: "Noosa", city: "Sunshine Coast", state: "QLD", confidence: "review" }],
+  ["noosaville", { location: "Noosaville", city: "Sunshine Coast", state: "QLD", confidence: "review" }],
   ["surry hills", { location: "Surry Hills", city: "Sydney", state: "NSW", confidence: "high" }],
   ["leichhardt", { location: "Leichhardt", city: "Sydney", state: "NSW", confidence: "high" }],
   ["kenthurst", { location: "Kenthurst", city: "Sydney", state: "NSW", confidence: "high" }],
@@ -171,12 +188,10 @@ const serviceSuffixes = [
   "matchmaking service",
   "marketing services",
   "image consultancy",
-  "dance classes",
-  "dance company",
-  "dance academy",
-  "latin dance co",
   "dating services directory",
   "photography for online profiles",
+  "free dating site and forum",
+  "australia and overseas tours",
 ];
 
 const headingLike = new Set([
@@ -191,6 +206,20 @@ const headingLike = new Set([
   "sydney and nsw",
   "events4singles retreats4singles",
 ]);
+
+const regionalLocationFragments = [
+  "north coast",
+  "south coast",
+  "sth coast",
+  "provence france",
+  "france sth coast",
+  "new south wales",
+  "nsw",
+  "qld",
+  "queensland",
+  "victoria",
+  "tasmania",
+];
 
 const categoryLabels = new Set();
 for (const category of categories) {
@@ -216,6 +245,55 @@ function splitDashFragment(title) {
   const match = clean(title).match(/^(.+?)\s+[-–]\s+(.+)$/);
   if (!match) return null;
   return { base: clean(match[1]), fragment: clean(match[2]) };
+}
+
+function splitColonFragment(title) {
+  const match = clean(title).match(/^(.+?):\s+(.+)$/);
+  if (!match) return null;
+  return { base: clean(match[1]), fragment: clean(match[2]) };
+}
+
+function splitSlashFragment(title) {
+  const match = clean(title).match(/^(.+?)\s+\/\s+(.+)$/);
+  if (!match) return null;
+  return { base: clean(match[1]), fragment: clean(match[2]) };
+}
+
+function splitEllipsisFragment(title) {
+  const parts = clean(title).split(/\s*(?:\.{2,}|…)\s*/).map(clean).filter(Boolean);
+  if (parts.length < 2) return null;
+  return { base: parts[0], fragment: parts.slice(1).join(", ") };
+}
+
+function splitPresentsFragment(title) {
+  const match = clean(title).match(/^(.+?)\s+presents\s+(.+)$/i);
+  if (!match) return null;
+  return { presenter: clean(match[1]), presented: clean(match[2]) };
+}
+
+function splitIsDescription(title) {
+  const match = clean(title).match(/^(.+?)\s+is\s+(.+)$/i);
+  if (!match) return null;
+  return { base: clean(match[1]), fragment: clean(match[2]) };
+}
+
+function trailingYear(title) {
+  const match = clean(title).match(/^(.+?)\s+(19|20)\d{2}$/);
+  if (!match) return null;
+  const year = clean(title).match(/(19|20)\d{2}$/)?.[0] ?? "";
+  return { base: clean(match[1]), year };
+}
+
+function leadingLocationTitle(title) {
+  const normalized = clean(title)
+    .replace(/\bQld\b\.?/gi, "QLD")
+    .replace(/\bNsw\b\.?/gi, "NSW")
+    .replace(/\bAust\b\.?/gi, "Australia");
+  const match = normalized.match(/^([A-Za-z][A-Za-z\s.'-]+?)\s+(?:QLD|NSW|VIC|SA|WA|TAS|Australia|Aust\.?)+(?:[,\s.]*)\s+(.+)$/i);
+  if (!match) return null;
+  const locationHits = findLocationInText(match[1]);
+  if (!locationHits.length) return null;
+  return { base: clean(match[2]), location: locationHits[0] };
 }
 
 function suffixService(title) {
@@ -294,6 +372,13 @@ for (const row of activeListings) {
   const titleKey = compact(title);
   const businessNameKey = compact(business?.name);
   const dash = splitDashFragment(title);
+  const colon = splitColonFragment(title);
+  const slash = splitSlashFragment(title);
+  const ellipsis = splitEllipsisFragment(title);
+  const presents = splitPresentsFragment(title);
+  const isDescription = splitIsDescription(title);
+  const year = trailingYear(title);
+  const leadingLocation = leadingLocationTitle(title);
   const titleLocations = findLocationInText(title);
   const descriptionLocations = findLocationInText(row.description);
   const evidence = listingEvidence(row, business);
@@ -302,17 +387,48 @@ for (const row of activeListings) {
     words(title).length <= 4 &&
     !compact(evidence.domain).includes(words(titleKey)[0] ?? "") &&
     !titleKey.includes(compact(evidence.domain));
+  const titleIsCategory = categoryLabels.has(titleKey);
+  const descriptionKey = compact(row.description);
+  const domainKey = compactJoined(evidence.domain);
+  const titleMatchesDomain = domainKey && domainKey.includes(compactJoined(titleKey));
+  const titleLikelyCategoryPage =
+    titleIsCategory &&
+    (/^events4singles lists\b/.test(descriptionKey) ||
+      /^this page directs you\b/.test(descriptionKey) ||
+      (!titleMatchesDomain && !descriptionKey.includes(titleKey)));
+  const titleMissingDomainQualifier =
+    titleIsCategory &&
+    titleMatchesDomain &&
+    domainKey.length > compactJoined(titleKey).length + 2 &&
+    findLocationInText(domainKey).length;
 
-  if (headingLike.has(titleKey) || categoryLabels.has(titleKey)) {
+  if (headingLike.has(titleKey) || titleLikelyCategoryPage) {
     addIssue(row, "heading_or_category_scraped_as_listing", "critical", "Title looks like a page heading/category label rather than a business listing.", {
       action: "review_archive_or_rename",
       linked_domain: evidence.domain,
     });
   }
 
+  if (titleMissingDomainQualifier) {
+    addIssue(row, "title_missing_location_qualifier", "fixable", "Title matches a category, but domain/body evidence points to a qualified business name.", {
+      title: titleCase(evidence.domain.replace(/\.(com|net|org)(\.au)?$/i, "").replace(/([a-z])([A-Z])/g, "$1 $2")),
+      linked_domain: evidence.domain,
+    });
+  }
+
   if (dash) {
     const fragmentLocations = findLocationInText(dash.fragment);
-    if (fragmentLocations.length) {
+    const baseLocations = findLocationInText(dash.base);
+    if (baseLocations.length && regionalLocationFragments.some((fragment) => compact(dash.fragment).includes(compact(fragment)))) {
+      const best = baseLocations[0];
+      addIssue(row, "title_is_location_only", "critical", "Dash title looks like a location/region label, not a listing name.", {
+        action: "review_archive_or_rename",
+        location: best.location,
+        location_city: best.city,
+        location_state: best.state,
+        region_fragment: dash.fragment,
+      });
+    } else if (fragmentLocations.length) {
       const best = fragmentLocations[0];
       addIssue(row, "title_contains_location", best.confidence === "high" ? "fixable" : "review", "Dash/comma title fragment looks like location detail.", {
         title: dash.base,
@@ -326,6 +442,61 @@ for (const row of activeListings) {
         tagline: dash.fragment,
       });
     }
+  }
+
+  if (colon && /\b(?:free|dating|site|forum|service|club|tour|tours|classes|agency|directory|profiles?)\b/i.test(colon.fragment)) {
+    addIssue(row, "title_contains_colon_tagline", "fixable", "Colon title fragment looks like tagline/service wording.", {
+      title: colon.base,
+      tagline: colon.fragment,
+    });
+  }
+
+  if (slash) {
+    const fragmentLocations = findLocationInText(slash.fragment);
+    if (fragmentLocations.length || /^[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2}$/.test(slash.fragment)) {
+      addIssue(row, "title_contains_slash_fragment", "fixable", "Slash title fragment looks like a contact name or location detail.", {
+        title: slash.base,
+        contact_or_location: slash.fragment,
+      });
+    }
+  }
+
+  if (ellipsis) {
+    addIssue(row, "title_contains_body_bleed", "fixable", "Title contains ellipsis-separated marketing fragments that belong in tagline/content.", {
+      title: ellipsis.base,
+      tagline: ellipsis.fragment,
+    });
+  }
+
+  if (presents) {
+    addIssue(row, "title_contains_presenter", "fixable", "Title combines a presenting business with the listed product/event.", {
+      title: presents.presented,
+      business_name: presents.presenter,
+      tagline: `${presents.presenter} presents`,
+    });
+  }
+
+  if (isDescription && /\b(?:leading|premier|fastest|growing|social|club|service|professional|single|people)\b/i.test(isDescription.fragment)) {
+    addIssue(row, "title_contains_sentence_description", "fixable", "Title reads like the start of a description rather than a name.", {
+      title: isDescription.base,
+      tagline: isDescription.fragment,
+    });
+  }
+
+  if (year) {
+    addIssue(row, "title_contains_year", "review", "Title ends with a year/date marker that likely belongs in event metadata or tagline.", {
+      title: year.base,
+      date_or_tagline: year.year,
+    });
+  }
+
+  if (leadingLocation) {
+    addIssue(row, "title_starts_with_location", "review", "Title appears to start with location/state text before the actual name.", {
+      title: leadingLocation.base,
+      location: leadingLocation.location.location,
+      location_city: leadingLocation.location.city,
+      location_state: leadingLocation.location.state,
+    });
   }
 
   const service = suffixService(title);
