@@ -14,7 +14,7 @@ import { toUrlSlug, toProfileSlug, slugToLabel } from "@/lib/constants";
 import { verifyAdminToken, SESSION_COOKIE } from "@/lib/admin-auth";
 import { eventPath } from "@/lib/event-slugs";
 import { eventDescriptionExcerpt } from "@/lib/event-text";
-import { LISTING_TYPE_CONFIG, normalizeListingType } from "@/lib/listing-types";
+import { inferListingDisplayType, listingDisplayTypeConfig, normalizeListingType } from "@/lib/listing-types";
 import type { Listing } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -188,10 +188,11 @@ export default async function ProfilePage({ params, searchParams }: Props) {
 
   const isVerified = !!business?.advertiser_id;
   const ltype = normalizeListingType(primary?.listing_type);
-  const typeConf = LISTING_TYPE_CONFIG[ltype] ?? LISTING_TYPE_CONFIG.standard;
-  const isVenue = ltype === "venue";
+  const displayType = inferListingDisplayType(primary ?? {});
+  const typeConf = listingDisplayTypeConfig(primary ?? {});
+  const isVenue = displayType === "venue";
   const isPractitioner = ltype === "practitioner";
-  const isOnline = ltype === "online";
+  const isOnline = displayType === "online";
 
   const cityLinks = collectCityLinks(listings, 20);
   const locationLabels = collectLocationLabels(listings);
@@ -254,19 +255,17 @@ export default async function ProfilePage({ params, searchParams }: Props) {
                   </div>
                 )}
                 <span className="e4s-profile-head__name">{name}</span>
+                {tagline && <span className="e4s-profile-head__tagline-inline">{tagline}</span>}
                 {isVerified && <span className="e4s-listing-card__verified">✓ Verified</span>}
               </div>
-              {tagline && <p className="e4s-profile-head__tagline">{tagline}</p>}
             </div>
             <div className="e4s-profile-head__right">
               {businessId && (
                 <span className="e4s-profile-head__id">Profile ID {businessId}</span>
               )}
-              {ltype && ltype !== "standard" && (
-                <span className={`e4s-type-badge ${typeConf.cls}`}>
-                  {typeConf.icon} {typeConf.label}
-                </span>
-              )}
+              <span className={`e4s-type-badge ${typeConf.cls}`}>
+                {[typeConf.icon, typeConf.label].filter(Boolean).join(" ")}
+              </span>
             </div>
           </div>
 

@@ -9,7 +9,7 @@ const includeUrlHealth = process.argv.includes("--url-health") && !process.argv.
 
 function latestDumpPath() {
   const files = readdirSync(outDir)
-    .filter((name) => /^events4singles-prod-\d{8}-\d{6}\.sql$/i.test(name))
+    .filter((name) => /^events4singles-prod-(?:post-\d{4}-)?\d{8}-\d{6}\.sql$/i.test(name))
     .map((name) => ({ name, fullPath: path.join(outDir, name) }))
     .sort((a, b) => b.name.localeCompare(a.name));
   if (!files.length) {
