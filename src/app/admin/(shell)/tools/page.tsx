@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import AdminActionsMenu from "@/components/admin/actions-menu";
 import AdminBulkSelectAll from "@/components/admin/bulk-select-all";
-import { getNeedsReviewListings, getNoImageListings, getLowConfidenceListings, getTbcPlacementListings, getUnplacedListings } from "@/lib/admin-db";
+import { getNeedsReviewListings, getNoContentListings, getNoImageListings, getNoUrlListings, getLowConfidenceListings, getTbcPlacementListings, getUnplacedListings } from "@/lib/admin-db";
 
 export const metadata: Metadata = { title: "Listing Review" };
 export const dynamic = "force-dynamic";
@@ -10,6 +10,8 @@ export const dynamic = "force-dynamic";
 const TABS = [
   { id: "needs-review", label: "Needs Review" },
   { id: "tbc", label: "TBC Placement" },
+  { id: "no-url", label: "No URL" },
+  { id: "no-content", label: "No Content" },
   { id: "no-image", label: "No Image" },
   { id: "low-confidence", label: "Low Confidence" },
   { id: "unplaced", label: "Unplaced" },
@@ -33,6 +35,8 @@ export default async function AdminTools({ searchParams }: PageProps) {
 
   const needsReview = tab === "needs-review" ? await getNeedsReviewListings() : [];
   const tbc = tab === "tbc" ? await getTbcPlacementListings() : [];
+  const noUrl = tab === "no-url" ? await getNoUrlListings() : [];
+  const noContent = tab === "no-content" ? await getNoContentListings() : [];
   const noImage = tab === "no-image" ? await getNoImageListings() : [];
   const lowConf = tab === "low-confidence" ? await getLowConfidenceListings(70) : [];
   const unplaced = tab === "unplaced" ? await getUnplacedListings() : [];
@@ -42,11 +46,15 @@ export default async function AdminTools({ searchParams }: PageProps) {
       ? needsReview
       : tab === "tbc"
         ? tbc
-        : tab === "no-image"
-          ? noImage
-          : tab === "low-confidence"
-            ? lowConf
-            : unplaced;
+        : tab === "no-url"
+          ? noUrl
+          : tab === "no-content"
+            ? noContent
+            : tab === "no-image"
+              ? noImage
+              : tab === "low-confidence"
+                ? lowConf
+                : unplaced;
 
   return (
     <>

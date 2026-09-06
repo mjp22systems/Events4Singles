@@ -1133,7 +1133,9 @@ export async function getProfileData(slugOrId: string, eventFilter: ProfileEvent
            contact_name, phone, mobile, email,
            facebook_url, instagram_url, tiktok_url, youtube_url, linkedin_url,
            advertiser_id, profile_slug, merged_into_business_id
-    FROM businesses WHERE id = ?
+    FROM businesses
+    WHERE id = ?
+      AND COALESCE(status, 'active') != 'archived'
   `).bind(businessId).first<Business>() ?? null;
 
   const { results: listings } = await db.prepare(`

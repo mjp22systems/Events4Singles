@@ -194,7 +194,13 @@ function listingReviewWhere(review?: string): string {
     )`;
   }
   if (review === "missing-contact") {
-    return ` AND COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), '')) IS NULL`;
+    return ` AND COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), ''), NULLIF(TRIM(b.website), ''), NULLIF(TRIM(b.email), ''), NULLIF(TRIM(b.phone), ''), NULLIF(TRIM(b.mobile), '')) IS NULL`;
+  }
+  if (review === "no-url") {
+    return ` AND COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(b.website), '')) IS NULL`;
+  }
+  if (review === "no-content") {
+    return ` AND COALESCE(NULLIF(TRIM(l.description), ''), NULLIF(TRIM(l.tagline), ''), NULLIF(TRIM(l.promo), ''), NULLIF(TRIM(b.description), '')) IS NULL`;
   }
   if (review === "needs-review") {
     return ` AND (
@@ -207,7 +213,9 @@ function listingReviewWhere(review?: string): string {
       OR l.image_url IS NULL
       OR TRIM(l.image_url) = ''
       OR (l.confidence_score IS NOT NULL AND l.confidence_score < 70)
-      OR COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), '')) IS NULL
+      OR COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(l.email), ''), NULLIF(TRIM(l.phone), ''), NULLIF(TRIM(l.mobile), ''), NULLIF(TRIM(b.website), ''), NULLIF(TRIM(b.email), ''), NULLIF(TRIM(b.phone), ''), NULLIF(TRIM(b.mobile), '')) IS NULL
+      OR COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(b.website), '')) IS NULL
+      OR COALESCE(NULLIF(TRIM(l.description), ''), NULLIF(TRIM(l.tagline), ''), NULLIF(TRIM(l.promo), ''), NULLIF(TRIM(b.description), '')) IS NULL
     )`;
   }
   return "";
@@ -792,6 +800,42 @@ export async function getUnplacedListings(limit = 100): Promise<ToolListing[]> {
        LEFT JOIN businesses b ON b.id = l.business_id
        WHERE l.deleted_at IS NULL
          AND NOT EXISTS (SELECT 1 FROM listing_placements lp WHERE lp.listing_id = l.id)
+       ORDER BY l.id DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all<ToolListing>();
+  return results;
+}
+
+export async function getNoUrlListings(limit = 100): Promise<ToolListing[]> {
+  const db = await getD1();
+  const { results } = await db
+    .prepare(
+      `SELECT l.id, l.title, l.image_url, l.confidence_score, l.status,
+              b.name AS business_name
+       FROM listings l
+       LEFT JOIN businesses b ON b.id = l.business_id
+       WHERE l.deleted_at IS NULL
+         AND COALESCE(NULLIF(TRIM(l.web), ''), NULLIF(TRIM(b.website), '')) IS NULL
+       ORDER BY l.id DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all<ToolListing>();
+  return results;
+}
+
+export async function getNoContentListings(limit = 100): Promise<ToolListing[]> {
+  const db = await getD1();
+  const { results } = await db
+    .prepare(
+      `SELECT l.id, l.title, l.image_url, l.confidence_score, l.status,
+              b.name AS business_name
+       FROM listings l
+       LEFT JOIN businesses b ON b.id = l.business_id
+       WHERE l.deleted_at IS NULL
+         AND COALESCE(NULLIF(TRIM(l.description), ''), NULLIF(TRIM(l.tagline), ''), NULLIF(TRIM(l.promo), ''), NULLIF(TRIM(b.description), '')) IS NULL
        ORDER BY l.id DESC
        LIMIT ?`
     )
