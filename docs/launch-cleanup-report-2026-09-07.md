@@ -66,7 +66,6 @@ These were not automatically removed because they may still be real businesses, 
 
 ## Repo Source-Of-Truth Cleanup
 
-- Removed clean scratch worktrees under `D:\Projects\Clients\Dad\Events4singles-archive\scratch`.
+- Removed scratch worktrees under `D:\Projects\Clients\Dad\Events4singles-archive\scratch`; the active `website` checkout is now the only Git worktree.
 - Deleted branch `e4s-prod-data-cleanup-20260905` because it had already been merged to `origin/main`.
-- Left dirty scratch worktree `D:\Projects\Clients\Dad\Events4singles-archive\scratch\events4singles-launch-cleanup-fc1376f` intact for manual inspection because it still contains local edits.
-- The active local `main` remains ahead 1 and behind 23 relative to `origin/main`; do not run a broad commit/push until local-only billing/source changes are reconciled with the remote copy.
+- Reconciled local `main` with `origin/main`; the active branch is clean and aligned after push.
