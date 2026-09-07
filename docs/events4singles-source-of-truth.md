@@ -28,10 +28,13 @@ Last updated: 2026-08-29
 - Project semantic memory audit log: `D:\Projects\Clients\Dad\Events4singles\graphify-out\semantic-refresh-log.jsonl`.
 - Project memory lock file during active refreshes: `D:\Projects\Clients\Dad\Events4singles\graphify-out\refresh.lock`.
 - Archive location for old sessions, release folders, local DB snapshots, and moved legacy non-image assets: `D:\Projects\Clients\Dad\Events4singles-archive`.
+- Branch/worktree discipline: `main` in the canonical `website` folder is the normal working source of truth. Do not create a new branch, release clone, or disposable worktree for routine cleanup or launch work. If a launch branch is explicitly needed, reuse one named launch/release lane and switch between that and `main` rather than creating timestamped variants.
 
 The parent folder `D:\Projects\Clients\Dad\Events4singles` is only a container. Do not create release clones, temporary worktrees, one-off deploy copies, scrape outputs, or database backup piles there. If a future release needs a disposable working copy, put it under `D:\Projects\Clients\Dad\Events4singles-archive\scratch` or another clearly named archive/scratch folder outside the active project container.
 
 Current cleanup rule: the active repo should contain source, tracked migrations, tracked tools, tests, public assets needed by live data, and documentation. Generated folders such as `.next`, `.open-next`, `.wrangler`, reports, local SQLite snapshots, and QA screenshots are not source of truth.
+
+Launch listing cleanup rule: obvious finance, mortgage, generic products, web-hosting, SEO, domain, or unrelated business-resource listings should be soft-deleted from the public launch set. External URLs that return a hard failure such as 400, 404, 410, or 526 during a launch audit should be paused and hidden from public pages, not hard-deleted, so a later customer claim/update flow can recover the profile if the business is real. Timeout, 403, 429, and other ambiguous URL results are review signals rather than automatic removal. Active business listings with neither a URL nor an email are review signals, even when a phone number exists.
 
 Backup and scratch folders in the parent project container, including `repo-state-backups`, `website-hero-release`, `website-image-classify`, `website-image-clean-deploy`, `website-image-source-clean-deploy`, and `website-push-audit-sweep3`, are not source-of-truth inputs. Neither is `website/tmp`, which holds local DB backups and audit output. These paths must be excluded from `.graphifyignore` and should be moved to `D:\Projects\Clients\Dad\Events4singles-archive` when no longer needed.
 
@@ -429,6 +432,17 @@ It should explain and visually show:
 - Optional newsletter/member promotion add-ons later.
 
 Older package thinking included Free, Starter, Professional, and Premium tiers, with prices from early planning treated as drafts, not final commercial commitments.
+
+Current advertiser portal billing skeleton:
+
+- Product catalog lives in `src/lib/advertising-products.ts`.
+- Portal product selection lives at `/portal/subscription`.
+- Free listing selection updates the advertiser account immediately.
+- Paid products redirect to Stripe Checkout through `/api/portal/billing/checkout`.
+- Existing Stripe customers can open the Stripe Customer Portal through `/api/portal/billing/portal`.
+- Stripe webhooks are received at `/api/stripe/webhook` and require `STRIPE_WEBHOOK_SECRET`.
+- Required Stripe env vars for paid checkout are `STRIPE_SECRET_KEY`, `STRIPE_PRICE_GROWTH_LISTING`, `STRIPE_PRICE_EVENT_PROMOTER`, and `STRIPE_PRICE_CAMPAIGN`.
+- Paid checkout updates billing state only after Stripe confirms through webhook; listings, events, banners, and creative still require admin approval before live placement.
 
 Paid placement logic:
 

@@ -18,6 +18,8 @@ DROP TABLE IF EXISTS listing_transfer_requests;
 DROP TABLE IF EXISTS event_external_refs;
 DROP TABLE IF EXISTS media_assets;
 DROP TABLE IF EXISTS integrations;
+DROP TABLE IF EXISTS advertiser_billing_sessions;
+DROP TABLE IF EXISTS stripe_webhook_events;
 DROP TABLE IF EXISTS advertiser_accounts;
 DROP TABLE IF EXISTS listings;
 DROP TABLE IF EXISTS categories;
@@ -297,6 +299,27 @@ CREATE TABLE IF NOT EXISTS integrations (
   UNIQUE(account_id, platform)
 );
 
+CREATE TABLE IF NOT EXISTS advertiser_billing_sessions (
+  id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  account_id TEXT NOT NULL,
+  product_id TEXT NOT NULL,
+  checkout_mode TEXT NOT NULL,
+  stripe_session_id TEXT UNIQUE,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
+  status TEXT NOT NULL DEFAULT 'created',
+  amount_label TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (account_id) REFERENCES advertiser_accounts(id)
+);
+
+CREATE TABLE IF NOT EXISTS stripe_webhook_events (
+  id TEXT PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  processed_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS advertiser_account_businesses (
   account_id TEXT NOT NULL,
   business_id INTEGER NOT NULL,
@@ -384,6 +407,8 @@ CREATE INDEX IF NOT EXISTS idx_events_account ON events(account_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_profile_slug ON businesses(profile_slug) WHERE profile_slug IS NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS idx_listings_slug ON listings(slug) WHERE slug IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_integrations_account ON integrations(account_id);
+CREATE INDEX IF NOT EXISTS idx_abs_account ON advertiser_billing_sessions(account_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_abs_stripe_session ON advertiser_billing_sessions(stripe_session_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_events_source_id ON events(source, source_id) WHERE source_id IS NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS idx_aa_id_unique ON advertiser_accounts(id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_aa_clerk_unique ON advertiser_accounts(clerk_user_id);
