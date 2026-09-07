@@ -59,7 +59,46 @@ Migration `0065_launch_relevance_and_dead_url_cleanup.sql` applies the launch cl
 These were not automatically removed because they may still be real businesses, phone-led legacy records, temporarily blocked sites, or listings that need manual category/content judgement.
 
 - URL audit still needs human review for ambiguous failures: 313 timeout/unreachable results, 23 `403`, 4 `429`, 3 `405`, 2 `409`, and one each of `406` and `417`.
-- Active listings with neither listing email nor listing URL: 38. Notable examples include Arthur Murray Dance Studio (#30), Ceroc Canberra (#78), several life coach records (#95, #200, #204), phone-only social/speed dating listings (#579, #592, #616, #621, #622, #642, #648), and event/dance rows such as Tuesday Danceroc Night at Rigby's (#673), Forever Dance (#769), Just Good Friends (#774), and Venus & Mars Speed Dating (#778).
+- Active listings with neither listing email nor listing URL: 38. Full flat review list:
+
+#30 Arthur Murray Dance Studio - dance_classes - Melbourne - phone 1300326231
+#78 Ceroc Canberra - dance_classes, dance_ceroc - Canberra - mobile 412557751
+#95 Clinton Smith - life_coaches - Sydney, Central Coast - phone 243248897
+#200 Jennifer Twohig - life_coaches - Sydney - mobile 438681753
+#204 Joanne Mansell - life_coaches - Sydney - mobile 416181654
+#313 O'Malleys - nightclubs - Brisbane - phone 732119881
+#339 Perfect Match - online_dating, intro_agencies - Gold Coast - phone 733970123
+#551 A friendly way to connect - seminars - no city - phone 0422 859 954
+#552 Above All Healing - yoga_classes - no city - phone 07-5576-0555
+#557 Ashtanga Yoga Melbourne - yoga_classes - Melbourne - phone 03-9419-1598
+#560 Beauty Health and Wellness - healing_and_happiness - Sydney - phone 02-9907-8408
+#571 City Roc - dance_party_clubs - no city - phone 0414-888-710
+#579 Dinner For Six - speed_dating - no city - phone 0412-229-884
+#580 Divorce, Success and You - life_coaches - no city - phone 1300-655-095
+#581 Drinks After Work - dinner_parties, intro_agencies - Sydney - phone 435801602
+#592 Fun Food and Friendship - social_clubs - Melbourne - phone 03-9111-0121
+#601 Judith Ayre - psychology - no city - phone 417105444
+#606 La Vegas Nightclub - nightclubs - no city - phone 430518851
+#612 Lucy Baker - psychics4singles - no city - phone 410930726
+#614 Matchmates House Party - houseparties - no city - phone 395636999
+#616 Network Social Club - social_clubs - Melbourne - phone 0432 887 472
+#621 Partners & Friends North Metro - social_clubs - Perth - phone 08)9445-594
+#622 Perth Dating Services - intro_agencies - Perth - phone 08-9344-2355
+#624 Psyche-Care - singles_health - no city - phone 0431 683 662
+#625 RETRO NITES - dance_party_clubs - Wollongong - phone 0412 321 619
+#638 Singles Holiday Travel - solo_travel - no city - phone 0435 801 602
+#640 Singles World Travel - solo_travel - no city - phone 0435 801 602
+#642 Social Elements - speed_dating - Perth - phone 0451-116-327
+#643 Socializing Newcastle - beauty_for_singles - Newcastle - phone 02-4953-8222
+#646 Soulmate Success - seminars - Melbourne - phone 354207366
+#648 Spark Dating - speed_dating - Melbourne - phone 0405 629 020
+#661 TROPICAL SOUL DANCE STUDIO - dance_classes, dance_salsa, dance_bachata, dance_latin_style - Sydney - phone 0421 448 780
+#666 Thailand Golf Tours - adventure_for_singles - no city - phone 0419 264 800
+#669 The Love Doctor - healing_and_happiness - no city - phone 0418 807 487
+#673 Tuesday Danceroc Night at Rigby's - dance_classes, dance_ceroc, dance_party_clubs - Perth, Adelaide, Melbourne, Sydney - phone 08-9368-6410
+#769 Forever Dance - dance_classes, dance_salsa, dance_ballroom_style, dance_latin_style - Melbourne - phone 411401634
+#774 Just Good Friends - events - Adelaide - phone 883734141
+#778 Venus & Mars Speed Dating - events - Melbourne - phone 422759972
 - Potential title/content cleanup remains for Tuesday Danceroc Night at Rigby's (#673), Sunday Singles (#689), and Hey Saturday (#763). The first two look more suspicious than Hey Saturday because "Saturday" can be part of the brand.
 - Contact-only descriptions remain for Imperial Dating (#694), Ideal Introductions (#705), and Jus Dance (#751).
 - Missing image work should use the existing image-audit tooling and contact sheets before changing live rows, because `public/images` contains many legacy assets whose filenames do not reliably match listing names.
