@@ -30,6 +30,7 @@ export default function BackLink() {
   return (
     <Link
       href={back.href}
+      scroll={false}
       className="e4s-listing-detail__back-link"
       onClick={() => sessionStorage.setItem("e4s_back_nav", back.href)}
     >

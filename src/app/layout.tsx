@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     (function () {
       try {
         if ("scrollRestoration" in window.history) {
-          window.history.scrollRestoration = "auto";
+          window.history.scrollRestoration = "manual";
         }
       } catch (error) {}
     })();
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     (function () {
       try {
         if ("scrollRestoration" in window.history) {
-          window.history.scrollRestoration = "auto";
+          window.history.scrollRestoration = "manual";
         }
         if (window.localStorage.getItem("e4s-nav-open") === "1") {
           document.body.classList.add("e4s-nav-open");

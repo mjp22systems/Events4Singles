@@ -1,12 +1,13 @@
 # Launch Cleanup Report - 2026-09-07
 
-Source dump reviewed: `tmp/db-audits/events4singles-prod-post-0064-20260906-224311.sql`
+Source dump reviewed: `tmp/db-audits/events4singles-prod-post-0066-20260907-212120.sql`
 
 Audit reports used:
 
 - `tmp/db-audits/listing-database-audit-2026-09-07T09-14-13-019Z.json`
 - `tmp/db-audits/listing-field-integrity-audit-2026-09-07T09-12-22-019Z.json`
 - `tmp/db-audits/near-duplicate-listing-audit-2026-09-07T09-12-22-573Z.json`
+- `tmp/db-audits/launch-listing-quality-audit-2026-09-07T11-20-51-917Z.json`
 
 ## Cleanup Applied
 
@@ -108,3 +109,85 @@ These were not automatically removed because they may still be real businesses, 
 - Removed scratch worktrees under `D:\Projects\Clients\Dad\Events4singles-archive\scratch`; the active `website` checkout is now the only Git worktree.
 - Deleted branch `e4s-prod-data-cleanup-20260905` because it had already been merged to `origin/main`.
 - Reconciled local `main` with `origin/main`; the active branch is clean and aligned after push.
+
+## Cleanup Applied - Second Sweep
+
+Migration `0066_stale_promotional_listing_sweep.sql` was applied to production on 2026-09-07.
+
+Recovered or standardised legitimate listings with internet-supported contact data:
+
+- #78 Ceroc Canberra renamed to Canberra Modern Jive; URL set to `https://canberradance.com.au/`; email set to `info@canberradance.com.au`.
+- #557 Ashtanga Yoga Melbourne; URL set to `https://www.ashtangamelbourne.com.au/`; email set to `info@ashtangamelbourne.com.au`.
+- #571 City Roc renamed to Cityroc Dance; email set to `les@dataglobal.com.au`; city/state normalised to Newcastle, NSW.
+- #592 Fun Food and Friendship; URL set to `https://www.funff.com.au/`.
+- #616 Network Social Club; URL set to `https://networksocialclub.org.au/`; email set to `admin@networksocialclub.org.au`.
+- #648 Spark Dating; URL set to `https://www.spark-dating.com.au/`.
+- #661 TROPICAL SOUL DANCE STUDIO renamed to Tropical Soul Dance Studio; URL set to `https://tsdance.com.au/`.
+
+Archived from public launch as stale festival/event adverts or phone-only promotions:
+
+- #134 Echuca-Moama Riverboats Jazz
+- #142 Eve Harbour Cruises
+- #197 Jazz in the Tops
+- #282 Melbourne Jazz
+- #304 Newcastle Jazz Festival
+- #306 Noosa Jazz
+- #395 Shoalhaven Jazz
+- #469 Tasmanian Jazz Promotions
+- #495 Thredbo Blues festival
+- #551 A friendly way to connect
+- #606 La Vegas Nightclub
+- #614 Matchmates House Party
+- #625 RETRO NITES
+- #646 Soulmate Success
+- #665 Tasmania Jazz in Tasmanian towns
+- #666 Thailand Golf Tours
+- #668 The Coopers East End Jazz Festival
+- #669 The Love Doctor
+- #673 Tuesday Danceroc Night at Rigby's
+- #766 Singles Social Dance
+- #772 Two Minute Tango
+- #774 Just Good Friends
+- #778 Venus & Mars Speed Dating
+
+Deleted from public launch as generic products, affiliate/resource pages, or non-fitting legacy content:
+
+- #47 Beauty Health and Wellness Nutritionals, Herbals, Skincare
+- #128 Dr Dating
+- #253 Love Directory
+- #254 Love Index
+- #262 LuvSource
+- #275 Mat-tastic
+- #277 Match Makers Quest
+- #390 Selfchanges
+- #408 Singles-online-dating
+- #424 Sounds of Sirius
+- #560 Beauty Health and Wellness
+
+## Current Flat Decision List
+
+These are the active rows still flagged after the second sweep. They are left live for now because they may be real businesses, but they need your decision.
+
+#137 Elle Bache - Beauty for Singles / Adventure for Singles, Brisbane - has URL/email - decision: keep as beauty/wellbeing listing or delete as too generic.
+#305 Newtown Gym - Fitness for Singles / Singles Health, Sydney - has URL/email - decision: keep as fitness/wellbeing listing or delete as too generic.
+#483 The Illawara Jazz Club - Jazz, Sydney - has URL/email - decision: keep as a club or archive because body copy leans on festival/event promotion.
+#552 Above All Healing - Yoga Classes, no city - phone only - decision: find URL/email, rewrite as service, or archive.
+#30 Arthur Murray Dance Studio - Dance Classes, Melbourne - phone only - decision: needs exact branch URL/email or archive.
+#95 Clinton Smith - Life Coaches, Sydney/Central Coast - phone only - decision: needs exact URL/email or archive.
+#579 Dinner For Six - Speed Dating, no city - phone only - decision: needs exact URL/email or archive.
+#580 Divorce, Success and You - Life Coaches, no city - phone only - decision: needs exact URL/email or archive.
+#581 Drinks After Work - Dinner Parties / Introduction Agencies, Sydney - phone only - decision: likely old Events4Singles-linked row; confirm or archive.
+#769 Forever Dance - Dance Classes / Salsa / Ballroom & Latin, Melbourne - phone only - decision: needs exact URL/email or archive.
+#200 Jennifer Twohig - Life Coaches, Sydney - phone only - decision: needs exact URL/email or archive.
+#204 Joanne Mansell - Life Coaches, Sydney - phone only - decision: needs exact URL/email or archive.
+#601 Judith Ayre - Psychology, no city - phone only - decision: needs exact URL/email or archive.
+#612 Lucy Baker - Psychics for Singles, no city - phone only - decision: needs exact URL/email or archive.
+#313 O'Malleys - Nightclubs, Brisbane - phone only - decision: likely legacy venue; confirm current venue/URL or archive.
+#621 Partners & Friends North Metro - Social Clubs, Perth - phone only - decision: needs exact URL/email or archive.
+#339 Perfect Match - Online Dating / Introduction Agencies, Gold Coast - phone only - decision: needs exact URL/email or archive.
+#622 Perth Dating Services - Introduction Agencies, Perth - phone only - decision: possible Louanne Ward/People's Introduction Bureau successor; confirm before renaming.
+#624 Psyche-Care - Singles Health, no city - phone only - decision: needs exact URL/email or archive.
+#638 Singles Holiday Travel - Solo Travel, no city - phone only - decision: likely old Events4Singles-linked row; confirm or archive.
+#640 Singles World Travel - Solo Travel, no city - phone only - decision: likely old Events4Singles-linked row; confirm or archive.
+#642 Social Elements - Speed Dating, Perth - phone only - decision: needs exact URL/email or archive.
+#643 Socializing Newcastle - Beauty for Singles, Newcastle - phone only - decision: category/name look suspicious; confirm or archive.

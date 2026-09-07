@@ -9,10 +9,12 @@ const homePageFile = path.join(projectRoot, "src", "app", "(public)", "page.tsx"
 const listingPageFile = path.join(projectRoot, "src", "app", "(public)", "listing", "[slug]", "page.tsx");
 const listingsPageFile = path.join(projectRoot, "src", "app", "(public)", "listings", "page.tsx");
 const featuredListingsPageFile = path.join(projectRoot, "src", "app", "(public)", "featured-listings", "page.tsx");
+const rootLayoutFile = path.join(projectRoot, "src", "app", "layout.tsx");
 const dataFile = path.join(projectRoot, "src", "lib", "data.ts");
 const promoBannersFile = path.join(projectRoot, "src", "components", "promo-banners.tsx");
 const onlineCardFile = path.join(projectRoot, "src", "components", "online-card.tsx");
 const pageSidebarFile = path.join(projectRoot, "src", "components", "page-sidebar.tsx");
+const backLinkFile = path.join(projectRoot, "src", "components", "back-link.tsx");
 const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
@@ -200,4 +202,14 @@ test("sidebar refine links update in place without resetting scroll", () => {
   assert.match(source, /localStorage\.setItem\(NAV_OPEN_STORAGE_KEY, "0"\)/);
   assert.match(source, /restorePinnedToolbar/);
   assert.match(source, /e4s-sidebar-block--pending/);
+});
+
+test("listing back links preserve source scroll position", () => {
+  const backLinkSource = readFileSync(backLinkFile, "utf8");
+  const layoutSource = readFileSync(rootLayoutFile, "utf8");
+
+  assert.match(backLinkSource, /scroll=\{false\}/);
+  assert.match(backLinkSource, /sessionStorage\.setItem\("e4s_back_nav", back\.href\)/);
+  assert.match(layoutSource, /window\.history\.scrollRestoration = "manual"/);
+  assert.doesNotMatch(layoutSource, /window\.history\.scrollRestoration = "auto"/);
 });
