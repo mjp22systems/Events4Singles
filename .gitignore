@@ -47,6 +47,7 @@ next-env.d.ts
 *.db-wal
 
 # Temp/QA dirs
+/.firecrawl/
 /homepage-qa/
 /backups/
 /scripts/
