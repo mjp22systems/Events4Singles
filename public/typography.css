@@ -489,11 +489,6 @@ body {
   text-overflow: ellipsis;
 }
 
-.e4s-businesses__meta {
-  font-size: 0.78rem;
-  color: var(--e4s-text-muted);
-}
-
 .e4s-businesses__link:hover {
   color: var(--e4s-teal-600);
   text-decoration: underline;

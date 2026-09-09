@@ -236,6 +236,7 @@ test("business directory exposes type and location filters", () => {
   assert.match(businessPage, /id="biz-location-filter"/);
   assert.match(businessPage, /data-types=\{biz\.type_slugs\}/);
   assert.match(businessPage, /data-locations=\{biz\.location_slugs\}/);
+  assert.doesNotMatch(businessPage, /e4s-businesses__meta/);
   assert.match(businessPage, /matchesType/);
   assert.match(businessPage, /matchesLocation/);
 });

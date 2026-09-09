@@ -111,7 +111,6 @@ export default async function BusinessesPage() {
                   <Link className="e4s-businesses__link" href={profileHref(biz)}>
                     {biz.name}
                   </Link>
-                  <span className="e4s-businesses__meta">{biz.type_labels} · {biz.location_labels}</span>
                 </li>
               ))}
             </ul>
