@@ -4,6 +4,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { consumeScrollTopAfterNavigation } from "@/lib/client-nav";
 
 const RESTORE_ON_POP_KEY = "e4s_restore_scroll_on_next_route";
+const PENDING_RESTORE_PATH_KEY = "e4s_pending_restore_path";
+const SUPPRESS_SCROLL_SAVE_UNTIL_KEY = "e4s_suppress_scroll_save_until";
 
 export default function NavigationTracker() {
   const pathname = usePathname();
@@ -30,6 +32,7 @@ export default function NavigationTracker() {
 
       sessionStorage.setItem("e4s_prev_path", currentPath);
       sessionStorage.setItem(`e4s_scroll_${currentPath}`, String(window.scrollY));
+      sessionStorage.setItem(PENDING_RESTORE_PATH_KEY, currentPath);
 
       const card = target?.closest<HTMLElement>("[data-e4s-listing-card]");
       if (card?.id) {
@@ -75,12 +78,21 @@ export default function NavigationTracker() {
     }
 
     const backTarget = sessionStorage.getItem("e4s_back_nav");
+    const pendingRestorePath = sessionStorage.getItem(PENDING_RESTORE_PATH_KEY);
     const shouldRestorePopScroll = sessionStorage.getItem(RESTORE_ON_POP_KEY) === "1";
-    if (backTarget === currentPath || backTarget === pathname || shouldRestorePopScroll) {
+    if (
+      backTarget === currentPath ||
+      backTarget === pathname ||
+      pendingRestorePath === currentPath ||
+      pendingRestorePath === pathname ||
+      shouldRestorePopScroll
+    ) {
       sessionStorage.removeItem("e4s_back_nav");
+      sessionStorage.removeItem(PENDING_RESTORE_PATH_KEY);
       sessionStorage.removeItem(RESTORE_ON_POP_KEY);
       const savedY = sessionStorage.getItem(`e4s_scroll_${currentPath}`) ?? sessionStorage.getItem(`e4s_scroll_${pathname}`);
       if (savedY) {
+        sessionStorage.setItem(SUPPRESS_SCROLL_SAVE_UNTIL_KEY, String(Date.now() + 1200));
         const restore = () => window.scrollTo(0, parseInt(savedY, 10));
         requestAnimationFrame(() => {
           restore();
@@ -100,6 +112,11 @@ export default function NavigationTracker() {
       if (!ticking) {
         ticking = true;
         requestAnimationFrame(() => {
+          const suppressUntil = parseInt(sessionStorage.getItem(SUPPRESS_SCROLL_SAVE_UNTIL_KEY) || "0", 10);
+          if (suppressUntil && Date.now() < suppressUntil) {
+            ticking = false;
+            return;
+          }
           sessionStorage.setItem(key, String(window.scrollY));
           ticking = false;
         });

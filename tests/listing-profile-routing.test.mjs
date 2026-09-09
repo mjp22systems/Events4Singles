@@ -216,6 +216,8 @@ test("listing back links preserve source scroll position", () => {
   assert.doesNotMatch(layoutSource, /window\.history\.scrollRestoration = "auto"/);
   assert.match(trackerSource, /e4s_scroll_\$\{currentPath\}/);
   assert.match(trackerSource, /sessionStorage\.setItem\(`e4s_scroll_\$\{currentPath\}`, String\(window\.scrollY\)\)/);
+  assert.match(trackerSource, /e4s_pending_restore_path/);
+  assert.match(trackerSource, /e4s_suppress_scroll_save_until/);
   assert.match(trackerSource, /window\.setTimeout\(restore, 350\)/);
 });
 
