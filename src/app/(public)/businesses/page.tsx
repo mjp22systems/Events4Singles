@@ -23,6 +23,15 @@ export default async function BusinessesPage() {
   const typeOptions = typeOrder
     .filter((type) => businesses.some((biz) => biz.type_slugs.split(" ").includes(type)))
     .map((type) => ({ value: type, label: LISTING_TYPE_CONFIG[type].label }));
+  const categoryOptions = [...new Map(
+    businesses.flatMap((biz) => {
+      const slugs = biz.category_slugs.split(" ").filter(Boolean);
+      const labels = biz.category_labels.split(",").map((label) => label.trim()).filter(Boolean);
+      return slugs.map((slug, index) => [slug, labels[index] || slug] as const);
+    })
+  ).entries()]
+    .sort((a, b) => a[1].localeCompare(b[1]))
+    .map(([value, label]) => ({ value, label }));
   const locationOptions = [...new Map(
     businesses.flatMap((biz) => {
       const slugs = biz.location_slugs.split(" ").filter(Boolean);
@@ -78,6 +87,12 @@ export default async function BusinessesPage() {
               <option value={type.value} key={type.value}>{type.label}</option>
             ))}
           </select>
+          <select className="e4s-businesses__select" id="biz-category-filter" aria-label="Filter businesses by category">
+            <option value="">All categories</option>
+            {categoryOptions.map((category) => (
+              <option value={category.value} key={category.value}>{category.label}</option>
+            ))}
+          </select>
           <select className="e4s-businesses__select" id="biz-location-filter" aria-label="Filter businesses by location">
             <option value="">All locations</option>
             {locationOptions.map((location) => (
@@ -105,6 +120,7 @@ export default async function BusinessesPage() {
                   className="e4s-businesses__item"
                   data-title={biz.name.toLowerCase()}
                   data-types={biz.type_slugs}
+                  data-categories={biz.category_slugs}
                   data-locations={biz.location_slugs}
                   key={biz.id}
                 >
@@ -124,6 +140,7 @@ export default async function BusinessesPage() {
 (function () {
   var input = document.getElementById('biz-search');
   var typeFilter = document.getElementById('biz-type-filter');
+  var categoryFilter = document.getElementById('biz-category-filter');
   var locationFilter = document.getElementById('biz-location-filter');
   var list = document.getElementById('biz-list');
   var index = document.getElementById('biz-index');
@@ -131,10 +148,11 @@ export default async function BusinessesPage() {
   function applyFilters() {
     var q = input.value.trim().toLowerCase();
     var type = typeFilter ? typeFilter.value : '';
+    var category = categoryFilter ? categoryFilter.value : '';
     var location = locationFilter ? locationFilter.value : '';
     var items = list.querySelectorAll('.e4s-businesses__item');
     var groups = list.querySelectorAll('.e4s-businesses__group');
-    if (!q && !type && !location) {
+    if (!q && !type && !category && !location) {
       items.forEach(function(el){ el.hidden = false; });
       groups.forEach(function(el){ el.hidden = false; });
       if (index) index.hidden = false;
@@ -146,8 +164,9 @@ export default async function BusinessesPage() {
       group.querySelectorAll('.e4s-businesses__item').forEach(function (item) {
         var matchesSearch = !q || item.dataset.title.indexOf(q) !== -1;
         var matchesType = !type || (' ' + item.dataset.types + ' ').indexOf(' ' + type + ' ') !== -1;
+        var matchesCategory = !category || (' ' + item.dataset.categories + ' ').indexOf(' ' + category + ' ') !== -1;
         var matchesLocation = !location || (' ' + item.dataset.locations + ' ').indexOf(' ' + location + ' ') !== -1;
-        var match = matchesSearch && matchesType && matchesLocation;
+        var match = matchesSearch && matchesType && matchesCategory && matchesLocation;
         item.hidden = !match;
         if (match) visible++;
       });
@@ -156,6 +175,7 @@ export default async function BusinessesPage() {
   }
   input.addEventListener('input', applyFilters);
   if (typeFilter) typeFilter.addEventListener('change', applyFilters);
+  if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
   if (locationFilter) locationFilter.addEventListener('change', applyFilters);
 })();
 `,

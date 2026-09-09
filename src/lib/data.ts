@@ -338,6 +338,8 @@ export interface BusinessDirectoryEntry {
   profile_slug: string | null;
   type_slugs: string;
   type_labels: string;
+  category_slugs: string;
+  category_labels: string;
   location_slugs: string;
   location_labels: string;
 }
@@ -350,7 +352,7 @@ function normalizeDirectoryLocationSlug(value: string | null | undefined): strin
 function directoryLocationLabel(slug: string, fallback: string | null | undefined): string {
   const label = (fallback || "").trim();
   if (label) return label;
-  if (slug === "no_location") return "No Location";
+  if (slug === "no_location") return "No Location Review";
   return slugToLabel(slug);
 }
 
@@ -394,12 +396,17 @@ export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryE
       GROUP_CONCAT(DISTINCT COALESCE(l.listing_type, 'standard')) AS listing_types,
       GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs,
       GROUP_CONCAT(
+        DISTINCT COALESCE(p.category_slug, 'uncategorised') || '::' ||
+        COALESCE(cat.label, p.category_slug, 'Uncategorised')
+      ) AS category_pairs,
+      GROUP_CONCAT(
         DISTINCT COALESCE(p.city_slug, l.location_city, 'no_location') || '::' ||
-        COALESCE(ci.label, p.city_slug, l.location_city, 'No Location')
+        COALESCE(ci.label, p.city_slug, l.location_city, 'No Location Review')
       ) AS location_pairs
     FROM directory_candidates d
     LEFT JOIN listings l ON l.business_id = d.id AND l.status = 'active'
     LEFT JOIN listing_placements p ON p.listing_id = l.id AND COALESCE(p.is_active, 1) = 1
+    LEFT JOIN categories cat ON cat.slug = p.category_slug
     LEFT JOIN cities ci ON ci.slug = p.city_slug
     WHERE d.duplicate_rank = 1
     GROUP BY d.id, d.name, d.profile_slug
@@ -410,6 +417,7 @@ export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryE
     profile_slug: string | null;
     listing_types: string | null;
     category_slugs: string | null;
+    category_pairs: string | null;
     location_pairs: string | null;
   }>();
 
@@ -424,8 +432,17 @@ export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryE
       }));
     }
     const typeSlugs = [...displayTypes].sort();
+    const categories = new Map<string, string>();
+    const categoryPairs = (row.category_pairs || "uncategorised::Uncategorised").split(",");
+    categoryPairs.forEach((pair) => {
+      const [value, ...labelParts] = pair.split("::");
+      const slug = String(value || "").trim();
+      if (!slug) return;
+      categories.set(slug, labelParts.join("::").trim() || slugToLabel(slug));
+    });
+    const sortedCategories = [...categories.entries()].sort((a, b) => a[1].localeCompare(b[1]));
     const locations = new Map<string, string>();
-    const locationPairs = (row.location_pairs || "no_location::No Location").split(",");
+    const locationPairs = (row.location_pairs || "no_location::No Location Review").split(",");
     locationPairs.forEach((pair) => {
       const [value, ...labelParts] = pair.split("::");
       const slug = normalizeDirectoryLocationSlug(value);
@@ -439,6 +456,8 @@ export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryE
       profile_slug: row.profile_slug,
       type_slugs: typeSlugs.join(" "),
       type_labels: typeSlugs.map((type) => LISTING_TYPE_CONFIG[type].label).join(", "),
+      category_slugs: sortedCategories.map(([slug]) => slug).join(" "),
+      category_labels: sortedCategories.map(([, label]) => label).join(", "),
       location_slugs: sortedLocations.map(([slug]) => slug).join(" "),
       location_labels: sortedLocations.map(([, label]) => label).join(", "),
     };

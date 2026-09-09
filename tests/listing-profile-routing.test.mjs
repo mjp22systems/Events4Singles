@@ -222,7 +222,7 @@ test("listing back links preserve source scroll position", () => {
   assert.match(trackerSource, /window\.setTimeout\(restore, 350\)/);
 });
 
-test("business directory exposes type and location filters", () => {
+test("business directory exposes type, category, and location filters", () => {
   const businessPage = readFileSync(path.join(projectRoot, "src", "app", "(public)", "businesses", "page.tsx"), "utf8");
   const dataSource = readFileSync(dataFile, "utf8");
 
@@ -230,13 +230,17 @@ test("business directory exposes type and location filters", () => {
   assert.match(dataSource, /inferListingDisplayType/);
   assert.match(dataSource, /AND EXISTS \(/);
   assert.match(dataSource, /l\.status = 'active'/);
+  assert.match(dataSource, /AS category_pairs/);
   assert.match(dataSource, /AS location_pairs/);
-  assert.match(dataSource, /no_location::No Location/);
+  assert.match(dataSource, /No Location Review/);
   assert.match(businessPage, /id="biz-type-filter"/);
+  assert.match(businessPage, /id="biz-category-filter"/);
   assert.match(businessPage, /id="biz-location-filter"/);
   assert.match(businessPage, /data-types=\{biz\.type_slugs\}/);
+  assert.match(businessPage, /data-categories=\{biz\.category_slugs\}/);
   assert.match(businessPage, /data-locations=\{biz\.location_slugs\}/);
   assert.doesNotMatch(businessPage, /e4s-businesses__meta/);
   assert.match(businessPage, /matchesType/);
+  assert.match(businessPage, /matchesCategory/);
   assert.match(businessPage, /matchesLocation/);
 });
