@@ -380,6 +380,12 @@ export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryE
         AND TRIM(b.name) != ''
         AND COALESCE(b.status, 'active') = 'active'
         AND b.merged_into_business_id IS NULL
+        AND EXISTS (
+          SELECT 1
+          FROM listings l
+          WHERE l.business_id = b.id
+            AND l.status = 'active'
+        )
     )
     SELECT
       d.id,

@@ -227,6 +227,8 @@ test("business directory exposes type and location filters", () => {
 
   assert.match(dataSource, /BusinessDirectoryEntry/);
   assert.match(dataSource, /inferListingDisplayType/);
+  assert.match(dataSource, /AND EXISTS \(/);
+  assert.match(dataSource, /l\.status = 'active'/);
   assert.match(dataSource, /AS location_pairs/);
   assert.match(dataSource, /no_location::No Location/);
   assert.match(businessPage, /id="biz-type-filter"/);
