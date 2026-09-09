@@ -33,6 +33,7 @@ export default function NavigationTracker() {
       sessionStorage.setItem("e4s_prev_path", currentPath);
       sessionStorage.setItem(`e4s_scroll_${currentPath}`, String(window.scrollY));
       sessionStorage.setItem(PENDING_RESTORE_PATH_KEY, currentPath);
+      sessionStorage.setItem(SUPPRESS_SCROLL_SAVE_UNTIL_KEY, String(Date.now() + 1200));
 
       const card = target?.closest<HTMLElement>("[data-e4s-listing-card]");
       if (card?.id) {
@@ -41,8 +42,8 @@ export default function NavigationTracker() {
       }
     };
 
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    document.addEventListener("click", onClick, { capture: true });
+    return () => document.removeEventListener("click", onClick, { capture: true });
   }, [currentPath]);
 
   // Restore scroll position when navigating back to a non-detail page
