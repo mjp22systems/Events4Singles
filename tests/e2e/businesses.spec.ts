@@ -34,11 +34,48 @@ test.describe("Businesses directory page", () => {
     await expect(search).toBeVisible();
   });
 
-  test("type and location filters are present", async ({ page }) => {
+  test("type, category, and location filters fit in the filter bar", async ({ page }) => {
+    await page.setViewportSize({ width: 1180, height: 820 });
+    await page.reload();
+
+    await expect(page.locator("#biz-search")).toBeVisible();
     await expect(page.locator("#biz-type-filter")).toBeVisible();
+    await expect(page.locator("#biz-category-filter")).toBeVisible();
     await expect(page.locator("#biz-location-filter")).toBeVisible();
     await expect(page.locator("#biz-type-filter option").first()).toHaveText("All types");
+    await expect(page.locator("#biz-category-filter option").first()).toHaveText("All categories");
     await expect(page.locator("#biz-location-filter option").first()).toHaveText("All locations");
+
+    const layout = await page.locator(".e4s-businesses__filters").evaluate((filters) => {
+      const filterRect = filters.getBoundingClientRect();
+      const controls = Array.from(filters.querySelectorAll("input, select")).map((control) => {
+        const rect = control.getBoundingClientRect();
+        return {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          scrollWidth: (control as HTMLElement).scrollWidth,
+          clientWidth: (control as HTMLElement).clientWidth,
+        };
+      });
+      return {
+        filterLeft: filterRect.left,
+        filterRight: filterRect.right,
+        scrollWidth: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth,
+        controls,
+      };
+    });
+
+    expect(layout.controls).toHaveLength(4);
+    expect(layout.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(layout.viewportWidth + 1);
+    for (const control of layout.controls) {
+      expect(control.left, JSON.stringify(layout)).toBeGreaterThanOrEqual(layout.filterLeft - 1);
+      expect(control.right, JSON.stringify(layout)).toBeLessThanOrEqual(layout.filterRight + 1);
+      expect(control.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(control.clientWidth + 24);
+      expect(Math.abs(control.top - layout.controls[0].top), JSON.stringify(layout)).toBeLessThanOrEqual(2);
+    }
   });
 
   test("at least one business group is rendered", async ({ page }) => {
