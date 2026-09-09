@@ -3,6 +3,7 @@ import { slugToLabel, toCategoryChildUrlSegment, toUrlSlug, toListingSlug, toPro
 import { canonicalEventSlug } from "./event-slugs";
 import { categorySupportsCityRoutes } from "./category-routing";
 import type { Listing, Category, City, Banner, Business } from "./types";
+import { inferListingDisplayType, LISTING_TYPE_CONFIG, type ListingType } from "./listing-types";
 import {
   CANONICAL_CATEGORY_BY_SLUG,
   CANONICAL_CATEGORY_REPAIRS,
@@ -331,7 +332,29 @@ export async function getFeaturedListingCities(): Promise<City[]> {
     .map((r) => ({ ...r, label: r.label || slugToLabel(r.slug) }));
 }
 
-export async function getAllBusinessesForDirectory(): Promise<{ id: number; name: string; profile_slug: string | null }[]> {
+export interface BusinessDirectoryEntry {
+  id: number;
+  name: string;
+  profile_slug: string | null;
+  type_slugs: string;
+  type_labels: string;
+  location_slugs: string;
+  location_labels: string;
+}
+
+function normalizeDirectoryLocationSlug(value: string | null | undefined): string {
+  const slug = String(value || "").trim().toLowerCase().replace(/[^a-z0-9_ -]+/g, "").replace(/[\s-]+/g, "_");
+  return slug || "no_location";
+}
+
+function directoryLocationLabel(slug: string, fallback: string | null | undefined): string {
+  const label = (fallback || "").trim();
+  if (label) return label;
+  if (slug === "no_location") return "No Location";
+  return slugToLabel(slug);
+}
+
+export async function getAllBusinessesForDirectory(): Promise<BusinessDirectoryEntry[]> {
   const db = await getD1();
   const { results } = await db.prepare(`
     WITH directory_candidates AS (
@@ -358,12 +381,62 @@ export async function getAllBusinessesForDirectory(): Promise<{ id: number; name
         AND COALESCE(b.status, 'active') = 'active'
         AND b.merged_into_business_id IS NULL
     )
-    SELECT id, name, profile_slug
-    FROM directory_candidates
-    WHERE duplicate_rank = 1
-    ORDER BY name COLLATE NOCASE ASC, id ASC
-  `).all<{ id: number; name: string; profile_slug: string | null }>();
-  return results;
+    SELECT
+      d.id,
+      d.name,
+      d.profile_slug,
+      GROUP_CONCAT(DISTINCT COALESCE(l.listing_type, 'standard')) AS listing_types,
+      GROUP_CONCAT(DISTINCT p.category_slug) AS category_slugs,
+      GROUP_CONCAT(
+        DISTINCT COALESCE(p.city_slug, l.location_city, 'no_location') || '::' ||
+        COALESCE(ci.label, p.city_slug, l.location_city, 'No Location')
+      ) AS location_pairs
+    FROM directory_candidates d
+    LEFT JOIN listings l ON l.business_id = d.id AND l.status = 'active'
+    LEFT JOIN listing_placements p ON p.listing_id = l.id AND COALESCE(p.is_active, 1) = 1
+    LEFT JOIN cities ci ON ci.slug = p.city_slug
+    WHERE d.duplicate_rank = 1
+    GROUP BY d.id, d.name, d.profile_slug
+    ORDER BY d.name COLLATE NOCASE ASC, d.id ASC
+  `).all<{
+    id: number;
+    name: string;
+    profile_slug: string | null;
+    listing_types: string | null;
+    category_slugs: string | null;
+    location_pairs: string | null;
+  }>();
+
+  return results.map((row) => {
+    const categorySlugs = (row.category_slugs || "").split(",").filter(Boolean);
+    const listingTypes = (row.listing_types || "").split(",").filter(Boolean);
+    const displayTypes = new Set<ListingType>();
+    for (const listingType of listingTypes.length ? listingTypes : ["standard"]) {
+      displayTypes.add(inferListingDisplayType({
+        listing_type: listingType,
+        category_slugs: categorySlugs.join(","),
+      }));
+    }
+    const typeSlugs = [...displayTypes].sort();
+    const locations = new Map<string, string>();
+    const locationPairs = (row.location_pairs || "no_location::No Location").split(",");
+    locationPairs.forEach((pair) => {
+      const [value, ...labelParts] = pair.split("::");
+      const slug = normalizeDirectoryLocationSlug(value);
+      locations.set(slug, directoryLocationLabel(slug, labelParts.join("::")));
+    });
+    const sortedLocations = [...locations.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+
+    return {
+      id: row.id,
+      name: row.name,
+      profile_slug: row.profile_slug,
+      type_slugs: typeSlugs.join(" "),
+      type_labels: typeSlugs.map((type) => LISTING_TYPE_CONFIG[type].label).join(", "),
+      location_slugs: sortedLocations.map(([slug]) => slug).join(" "),
+      location_labels: sortedLocations.map(([, label]) => label).join(", "),
+    };
+  });
 }
 
 export interface BusinessDirectoryNeighbor {

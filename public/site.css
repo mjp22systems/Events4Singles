@@ -399,6 +399,11 @@
   border-bottom: 3px solid var(--e4s-pink);
 }.e4s-businesses__head p {
   margin-bottom: 1rem;
+}.e4s-businesses__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }.e4s-businesses__search {
   width: 100%;
   max-width: 400px;
@@ -406,7 +411,15 @@
   border: 1px solid var(--e4s-border);
   border-radius: 6px;
   background: var(--e4s-surface);
-}.e4s-businesses__search:focus {
+}.e4s-businesses__select {
+  width: 100%;
+  max-width: 220px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--e4s-border);
+  border-radius: 6px;
+  background: var(--e4s-surface);
+}.e4s-businesses__search:focus,
+.e4s-businesses__select:focus {
   outline: 2px solid var(--e4s-teal-600);
   outline-offset: 1px;
 }.e4s-businesses__index {
@@ -441,10 +454,16 @@
   display: block;
   padding: 2px 0;
   overflow: hidden;
+}.e4s-businesses__meta {
+  display: block;
+  margin-top: 2px;
+  color: var(--e4s-text-muted);
 }@media (max-width: 900px) {.e4s-businesses__grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 } }@media (max-width: 600px) {.e4s-businesses__grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}.e4s-businesses__select {
+  max-width: 400px;
 } }/* 06. Footer */
 .e4s-footer {
   margin-top: 24px;

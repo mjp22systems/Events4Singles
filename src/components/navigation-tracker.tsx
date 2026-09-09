@@ -1,12 +1,14 @@
 "use client";
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { consumeScrollTopAfterNavigation } from "@/lib/client-nav";
 
 const RESTORE_ON_POP_KEY = "e4s_restore_scroll_on_next_route";
 
 export default function NavigationTracker() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPath = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
 
   useEffect(() => {
     const onPopState = () => {
@@ -26,31 +28,34 @@ export default function NavigationTracker() {
       const href = new URL(link.href, window.location.href);
       if (!href.pathname.startsWith("/listing/") && !href.pathname.startsWith("/profile/")) return;
 
-      const card = target?.closest<HTMLElement>("[data-e4s-listing-card]");
-      if (!card?.id) return;
+      sessionStorage.setItem("e4s_prev_path", currentPath);
+      sessionStorage.setItem(`e4s_scroll_${currentPath}`, String(window.scrollY));
 
-      sessionStorage.setItem("e4s_listing_source_path", pathname);
-      sessionStorage.setItem("e4s_listing_source_card", card.id);
+      const card = target?.closest<HTMLElement>("[data-e4s-listing-card]");
+      if (card?.id) {
+        sessionStorage.setItem("e4s_listing_source_path", currentPath);
+        sessionStorage.setItem("e4s_listing_source_card", card.id);
+      }
     };
 
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
-  }, [pathname]);
+  }, [currentPath]);
 
   // Restore scroll position when navigating back to a non-detail page
   useEffect(() => {
     if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
 
-    sessionStorage.setItem("e4s_prev_path", pathname);
+    sessionStorage.setItem("e4s_prev_path", currentPath);
 
-    if (consumeScrollTopAfterNavigation(pathname)) {
+    if (consumeScrollTopAfterNavigation(currentPath) || consumeScrollTopAfterNavigation(pathname)) {
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
       return;
     }
 
     const listingSourcePath = sessionStorage.getItem("e4s_listing_source_path");
     const listingSourceCard = sessionStorage.getItem("e4s_listing_source_card");
-    if (listingSourcePath === pathname && listingSourceCard) {
+    if ((listingSourcePath === currentPath || listingSourcePath === pathname) && listingSourceCard) {
       sessionStorage.removeItem("e4s_listing_source_path");
       sessionStorage.removeItem("e4s_listing_source_card");
       requestAnimationFrame(() => {
@@ -71,24 +76,25 @@ export default function NavigationTracker() {
 
     const backTarget = sessionStorage.getItem("e4s_back_nav");
     const shouldRestorePopScroll = sessionStorage.getItem(RESTORE_ON_POP_KEY) === "1";
-    if (backTarget === pathname || shouldRestorePopScroll) {
+    if (backTarget === currentPath || backTarget === pathname || shouldRestorePopScroll) {
       sessionStorage.removeItem("e4s_back_nav");
       sessionStorage.removeItem(RESTORE_ON_POP_KEY);
-      const savedY = sessionStorage.getItem(`e4s_scroll_${pathname}`);
+      const savedY = sessionStorage.getItem(`e4s_scroll_${currentPath}`) ?? sessionStorage.getItem(`e4s_scroll_${pathname}`);
       if (savedY) {
         const restore = () => window.scrollTo(0, parseInt(savedY, 10));
         requestAnimationFrame(() => {
           restore();
           window.setTimeout(restore, 120);
+          window.setTimeout(restore, 350);
         });
       }
     }
-  }, [pathname]);
+  }, [currentPath, pathname]);
 
   // Save scroll position continuously for non-listing pages
   useEffect(() => {
     if (pathname.startsWith("/listing/") || pathname.startsWith("/profile/")) return;
-    const key = `e4s_scroll_${pathname}`;
+    const key = `e4s_scroll_${currentPath}`;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
@@ -101,7 +107,7 @@ export default function NavigationTracker() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+  }, [currentPath, pathname]);
 
   return null;
 }

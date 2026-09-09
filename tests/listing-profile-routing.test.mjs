@@ -18,6 +18,7 @@ const backLinkFile = path.join(projectRoot, "src", "components", "back-link.tsx"
 const adminCssFile = path.join(projectRoot, "public", "admin.css");
 const publicLayoutFile = path.join(projectRoot, "src", "app", "(public)", "layout.tsx");
 const publicRouteResetFile = path.join(projectRoot, "src", "components", "public-route-state-reset.tsx");
+const navigationTrackerFile = path.join(projectRoot, "src", "components", "navigation-tracker.tsx");
 const homeFeaturedFile = path.join(projectRoot, "src", "components", "home-featured.tsx");
 const sidebarNavFile = path.join(projectRoot, "src", "components", "sidebar-nav.tsx");
 const adminEditDrawerFile = path.join(projectRoot, "src", "components", "admin-edit-drawer.tsx");
@@ -207,9 +208,29 @@ test("sidebar refine links update in place without resetting scroll", () => {
 test("listing back links preserve source scroll position", () => {
   const backLinkSource = readFileSync(backLinkFile, "utf8");
   const layoutSource = readFileSync(rootLayoutFile, "utf8");
+  const trackerSource = readFileSync(navigationTrackerFile, "utf8");
 
   assert.match(backLinkSource, /scroll=\{false\}/);
   assert.match(backLinkSource, /sessionStorage\.setItem\("e4s_back_nav", back\.href\)/);
   assert.match(layoutSource, /window\.history\.scrollRestoration = "manual"/);
   assert.doesNotMatch(layoutSource, /window\.history\.scrollRestoration = "auto"/);
+  assert.match(trackerSource, /e4s_scroll_\$\{currentPath\}/);
+  assert.match(trackerSource, /sessionStorage\.setItem\(`e4s_scroll_\$\{currentPath\}`, String\(window\.scrollY\)\)/);
+  assert.match(trackerSource, /window\.setTimeout\(restore, 350\)/);
+});
+
+test("business directory exposes type and location filters", () => {
+  const businessPage = readFileSync(path.join(projectRoot, "src", "app", "(public)", "businesses", "page.tsx"), "utf8");
+  const dataSource = readFileSync(dataFile, "utf8");
+
+  assert.match(dataSource, /BusinessDirectoryEntry/);
+  assert.match(dataSource, /inferListingDisplayType/);
+  assert.match(dataSource, /AS location_pairs/);
+  assert.match(dataSource, /no_location::No Location/);
+  assert.match(businessPage, /id="biz-type-filter"/);
+  assert.match(businessPage, /id="biz-location-filter"/);
+  assert.match(businessPage, /data-types=\{biz\.type_slugs\}/);
+  assert.match(businessPage, /data-locations=\{biz\.location_slugs\}/);
+  assert.match(businessPage, /matchesType/);
+  assert.match(businessPage, /matchesLocation/);
 });

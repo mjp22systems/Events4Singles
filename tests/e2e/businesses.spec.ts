@@ -34,8 +34,35 @@ test.describe("Businesses directory page", () => {
     await expect(search).toBeVisible();
   });
 
+  test("type and location filters are present", async ({ page }) => {
+    await expect(page.locator("#biz-type-filter")).toBeVisible();
+    await expect(page.locator("#biz-location-filter")).toBeVisible();
+    await expect(page.locator("#biz-type-filter option").first()).toHaveText("All types");
+    await expect(page.locator("#biz-location-filter option").first()).toHaveText("All locations");
+  });
+
   test("at least one business group is rendered", async ({ page }) => {
     const groups = page.locator(".e4s-businesses__group");
     await expect(groups.first()).toBeVisible({ timeout: 10000 });
+  });
+
+  test("back navigation restores directory scroll position", async ({ page }) => {
+    const links = page.locator(".e4s-businesses__link");
+    const linkCount = await links.count();
+    test.skip(linkCount < 8, "Local smoke data is too small to test scroll restoration on the business directory.");
+
+    await links.nth(linkCount - 1).scrollIntoViewIfNeeded();
+    const before = await page.evaluate(() => window.scrollY);
+    expect(before).toBeGreaterThan(100);
+
+    await links.nth(linkCount - 1).click();
+    await expect(page).toHaveURL(/\/profile\//);
+
+    await page.goBack();
+    await expect(page).toHaveURL(/\/businesses$/);
+    await page.waitForTimeout(500);
+
+    const after = await page.evaluate(() => window.scrollY);
+    expect(after).toBeGreaterThan(100);
   });
 });
