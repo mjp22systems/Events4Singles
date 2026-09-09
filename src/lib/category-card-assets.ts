@@ -2,7 +2,7 @@ const CATEGORY_CARD_IMAGES: Record<string, string> = {
   "adventure-for-singles": "/images/categories/cards/adventure-for-singles.webp",
   "beauty-for-singles": "/images/categories/cards/beauty-for-singles.webp",
   "comedians": "/images/categories/cards/comedians.webp",
-  "cruises4singles": "/images/categories/cards/cruises4singles.webp",
+  "cruises4singles": "/images/categories/cards/cruises4singles-legacy.webp",
   "dance-ballroom-style": "/images/categories/cards/dance-ballroom-style.webp",
   "dance-bachata": "/images/categories/cards/dance-bachata.webp",
   "dance-ceroc": "/images/categories/cards/dance-ceroc.webp",
@@ -56,7 +56,7 @@ const CATEGORY_CARD_IMAGES: Record<string, string> = {
   "travel-for-singles": "/images/categories/cards/travel-for-singles.webp",
   "walks4singles": "/images/categories/cards/walks4singles.webp",
   "wineries4singles": "/images/categories/cards/wineries4singles.webp",
-  "yoga-classes": "/images/categories/cards/yoga-classes.webp",
+  "yoga-classes": "/images/categories/cards/yoga-classes-legacy.webp",
 };
 
 const CATEGORY_CARD_SUMMARIES: Record<string, string> = {

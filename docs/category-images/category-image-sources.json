@@ -150,6 +150,20 @@
           "life-coaches-legacy"
         ]
       }
+    },
+    {
+      "date": "2026-09-09",
+      "reason": "Restore people-centred category card alternates for Cruises for Singles and Yoga Classes after Cortex/session audit confirmed these were suspect regression points.",
+      "changes": {
+        "mappedToPreservedAlternate": [
+          "cruises4singles-legacy",
+          "yoga-classes-legacy"
+        ],
+        "preservedCurrentAlternates": [
+          "cruises4singles",
+          "yoga-classes"
+        ]
+      }
     }
   ]
 }
