@@ -191,3 +191,33 @@ These are the active rows still flagged after the second sweep. They are left li
 #640 Singles World Travel - Solo Travel, no city - phone only - decision: likely old Events4Singles-linked row; confirm or archive.
 #642 Social Elements - Speed Dating, Perth - phone only - decision: needs exact URL/email or archive.
 #643 Socializing Newcastle - Beauty for Singles, Newcastle - phone only - decision: category/name look suspicious; confirm or archive.
+
+## Owner Decision - Remove Remaining Review List
+
+On 2026-09-09, the owner reviewed the flat decision list and chose to remove all remaining rows from the public launch set. Migration `0067_archive_remaining_launch_review_listings.sql` archives those listings, disables their placements and banners, and archives linked businesses only where they have no other active listing.
+
+Removed from public launch by owner decision:
+
+- #137 Elle Bache
+- #305 Newtown Gym
+- #483 The Illawara Jazz Club
+- #552 Above All Healing
+- #30 Arthur Murray Dance Studio
+- #95 Clinton Smith
+- #579 Dinner For Six
+- #580 Divorce, Success and You
+- #581 Drinks After Work
+- #769 Forever Dance
+- #200 Jennifer Twohig
+- #204 Joanne Mansell
+- #601 Judith Ayre
+- #612 Lucy Baker
+- #313 O'Malleys
+- #621 Partners & Friends North Metro
+- #339 Perfect Match
+- #622 Perth Dating Services
+- #624 Psyche-Care
+- #638 Singles Holiday Travel
+- #640 Singles World Travel
+- #642 Social Elements
+- #643 Socializing Newcastle
